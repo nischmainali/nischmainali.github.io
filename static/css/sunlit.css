@@ -1,0 +1,421 @@
+/* Sunlit dynamic background effect */
+
+/* CSS Variables for sunlit colors */
+body {
+  --day: #fffdfa;
+  --evening: #fccc83;
+  --dusk: #db7a2a;
+  --night: #0f131c;
+  --dawn: #16132b;
+  --morning: #9fb3bf;
+
+  --sunlit-light: var(--day);
+  --sunlit-dark: var(--night);
+  --shadow: #1a1917;
+  --bounce-light: #f5d7a6;
+  --timing-fn: cubic-bezier(0.455, 0.190, 0.000, 0.985);
+
+  background-color: var(--sunlit-light);
+}
+
+body.animation-ready {
+  animation: sunrise 1s forwards linear;
+}
+
+body.animation-ready.dark {
+  animation: sunset 1.7s forwards linear;
+}
+
+body.dark {
+  --sunlit-light: #12100e;
+  --sunlit-dark: var(--day);
+  --shadow: #2a2018;
+  --bounce-light: #4a3020;
+  background-color: #12100e;
+}
+
+@keyframes sunrise {
+  0% {
+    background-color: var(--night);
+  }
+  10% {
+    background-color: var(--dawn);
+  }
+  35% {
+    background-color: var(--morning);
+  }
+  100% {
+    background-color: var(--day);
+  }
+}
+
+@keyframes sunset {
+  0% {
+    background-color: var(--day);
+  }
+  30% {
+    background-color: var(--evening);
+  }
+  60% {
+    background-color: var(--dusk);
+  }
+  90% {
+    background-color: #1a1410;
+  }
+  100% {
+    background-color: #12100e;
+  }
+}
+
+/* Dappled light container */
+#dappled-light {
+  pointer-events: none;
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+/* Progressive blur effect */
+#progressive-blur {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+#progressive-blur > div {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  inset: 0;
+  backdrop-filter: blur(var(--blur-amount));
+  -webkit-backdrop-filter: blur(var(--blur-amount));
+  mask-image: linear-gradient(252deg, transparent, transparent var(--stop1), black var(--stop2), black);
+  -webkit-mask-image: linear-gradient(252deg, transparent, transparent var(--stop1), black var(--stop2), black);
+}
+
+#progressive-blur > div:nth-child(1) {
+  --blur-amount: 6px;
+  --stop1: 0%;
+  --stop2: 0%;
+}
+
+#progressive-blur > div:nth-child(2) {
+  --blur-amount: 12px;
+  --stop1: 40%;
+  --stop2: 80%;
+}
+
+#progressive-blur > div:nth-child(3) {
+  --blur-amount: 48px;
+  --stop1: 40%;
+  --stop2: 70%;
+}
+
+#progressive-blur > div:nth-child(4) {
+  --blur-amount: 96px;
+  --stop1: 70%;
+  --stop2: 80%;
+}
+
+/* Glow effects */
+#glow {
+  position: absolute;
+  background: linear-gradient(309deg, var(--bounce-light), var(--bounce-light) 20%, transparent);
+  transition: background 1.0s var(--timing-fn);
+  height: 100%;
+  width: 100%;
+  opacity: 0.5;
+}
+
+#glow-bounce {
+  content: "";
+  position: absolute;
+  background: linear-gradient(355deg, var(--bounce-light) 0%, transparent 30%, transparent 100%);
+  transition: background 1.0s var(--timing-fn);
+  opacity: 0.5;
+  height: 100%;
+  width: 100%;
+  bottom: 0;
+}
+
+/* Perspective container for blinds and leaves */
+.perspective {
+  position: absolute;
+  transition: transform 1.7s var(--timing-fn), opacity 4s ease;
+  top: -30vh;
+  right: 0;
+  width: 80vw;
+  height: 130vh;
+  opacity: 0.07;
+  background-blend-mode: darken;
+  transform-origin: top right;
+  transform-style: preserve-3d;
+  transform: matrix3d(0.7500, -0.0625, 0.0000, 0.0008,
+      0.0000, 1.0000, 0.0000, 0.0000,
+      0.0000, 0.0000, 1.0000, 0.0000,
+      0.0000, 0.0000, 0.0000, 1.0000);
+}
+
+.dark .perspective {
+  opacity: 0.2;
+  transform: matrix3d(0.8333, 0.0833, 0.0000, 0.0003,
+      0.0000, 1.0000, 0.0000, 0.0000,
+      0.0000, 0.0000, 1.0000, 0.0000,
+      0.0000, 0.0000, 0.0000, 1.0000);
+}
+
+/* Leaves effect */
+#leaves {
+  position: absolute;
+  background-size: cover;
+  background-repeat: no-repeat;
+  bottom: -20px;
+  right: -700px;
+  width: 1600px;
+  height: 1400px;
+  background-image: url("/leaves.png");
+  filter: url(#wind);
+  animation: billow 8s ease-in-out infinite;
+}
+
+/* Blinds effect */
+#blinds {
+  position: relative;
+  width: 100%;
+}
+
+#blinds .shutter,
+#blinds .bar {
+  background-color: var(--shadow);
+}
+
+#blinds > .shutters {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  gap: 60px;
+  transition: gap 1.0s var(--timing-fn);
+}
+
+.dark #blinds > .shutters {
+  gap: 20px;
+}
+
+#blinds > .vertical {
+  top: 0;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.vertical > .bar {
+  width: 5px;
+  height: 100%;
+}
+
+.shutter {
+  width: 100%;
+  height: 40px;
+  transition: height 1.0s var(--timing-fn);
+}
+
+.dark .shutter {
+  height: 80px;
+}
+
+@keyframes billow {
+  0% {
+    transform: perspective(400px) rotateX(0deg) rotateY(0deg) scale(1);
+  }
+  25% {
+    transform: perspective(400px) rotateX(1deg) rotateY(2deg) scale(1.02);
+  }
+  50% {
+    transform: perspective(400px) rotateX(-4deg) rotateY(-2deg) scale(0.97);
+  }
+  75% {
+    transform: perspective(400px) rotateX(1deg) rotateY(-1deg) scale(1.04);
+  }
+  100% {
+    transform: perspective(400px) rotateX(0deg) rotateY(0deg) scale(1);
+  }
+}
+
+/* Dark mode text and element colors */
+body.dark {
+  color: #ccc8c0;
+}
+
+body.dark a {
+  color: #d4a060;
+}
+
+body.dark .menu .active {
+  border-color: #d4a060;
+}
+
+body.dark .single .main h2 {
+  color: #c4b090;
+}
+
+body.dark .single .main h3 {
+  color: #d4a878;
+}
+
+body.dark h1.title::before {
+  color: #a08060;
+  opacity: 0.12;
+}
+
+body.dark .nav-top {
+  border-color: rgba(140, 120, 100, 0.25);
+}
+
+body.dark .dots {
+  border-color: rgba(140, 120, 100, 0.25);
+}
+
+body.dark .single blockquote {
+  background: rgba(35, 30, 25, 0.5);
+  border-left-color: rgba(100, 80, 60, 0.5);
+}
+
+body.dark .single .main h2 {
+  border-color: rgba(100, 85, 70, 0.35);
+}
+
+body.dark table thead th {
+  border-color: rgba(100, 85, 70, 0.35);
+}
+
+body.dark hr {
+  color: rgba(100, 85, 70, 0.35);
+}
+
+body.dark #TableOfContents {
+  background-color: rgba(35, 30, 25, 0.5);
+}
+
+body.dark blockquote,
+body.dark .toc-list,
+body.dark .toc-list ul {
+  border-left-color: rgba(100, 80, 60, 0.5);
+}
+
+body.dark thead,
+body.dark tfoot,
+body.dark tr:nth-child(even),
+body.dark code {
+  background: rgba(35, 30, 25, 0.5);
+}
+
+/* Remove old dark mode filter - we're using sunlit instead */
+@media (prefers-color-scheme: dark) {
+  html, img, video, iframe {
+    filter: none;
+  }
+}
+
+/* Theme toggle button - minimal and elegant */
+#theme-toggle {
+  position: fixed;
+  bottom: 1.5em;
+  right: 1.5em;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(90, 80, 66, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 253, 250, 0.4);
+  color: #766553;
+  cursor: pointer;
+  padding: 0;
+  opacity: 0.72;
+  transition: opacity 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#theme-toggle:hover {
+  opacity: 1;
+  border-color: rgba(90, 80, 66, 0.34);
+}
+
+#theme-toggle:focus-visible {
+  outline: 2px solid #005077;
+  outline-offset: 2px;
+}
+
+#theme-toggle svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  fill: none;
+}
+
+/* Hide moon in dark mode, sun in light mode */
+#theme-toggle .sun { display: block; }
+#theme-toggle .moon { display: none; }
+body.dark #theme-toggle .sun { display: none; }
+body.dark #theme-toggle .moon { display: block; }
+body.dark #theme-toggle {
+  border-color: rgba(212, 160, 96, 0.4);
+  background: rgba(27, 22, 18, 0.5);
+  color: #d4a060;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.animation-ready,
+  body.animation-ready.dark {
+    animation: none;
+  }
+
+  .perspective,
+  #glow,
+  #glow-bounce,
+  .shutter {
+    transition: none;
+  }
+
+  #leaves,
+  #leaves * {
+    animation: none !important;
+  }
+
+  #leaves {
+    filter: none;
+  }
+
+  #progressive-blur > div {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  #progressive-blur > div:nth-child(n+2) {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  #progressive-blur > div:nth-child(3),
+  #progressive-blur > div:nth-child(4) {
+    display: none;
+  }
+
+  .perspective {
+    opacity: 0.05;
+  }
+}
+
+@media (max-width: 768px) {
+  #theme-toggle {
+    bottom: 1em;
+    right: 1em;
+  }
+}

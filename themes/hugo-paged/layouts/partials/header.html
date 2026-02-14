@@ -12,14 +12,17 @@
     <meta property="og:title" content="{{ .Title }} - {{ .Site.Title }}">
     {{ end }}
     <meta name="twitter:card" content="summary">
-    {{ if eq .RelPermalink "/" }}
-    <meta property="description" content="{{ .Site.Params.description }}">
-    {{ else }}
+    {{ $description := .Site.Params.description }}
+    {{ if ne .RelPermalink "/" }}
       {{ with (trim (partial "summary.html" .) "\n ") }}
-      <meta property="description" content="{{- . -}}">
-      <meta property="og:description" content="{{- . -}}">
+        {{ $description = . }}
       {{ end }}
     {{ end }}
+    {{ with $description }}
+    <meta name="description" content="{{- . -}}">
+    <meta property="og:description" content="{{- . -}}">
+    {{ end }}
+    <link rel="canonical" href="{{ .Permalink }}">
 
     {{ $autoImage := false }}
     {{ range (findRE "<img src=\"https?://[^\"]+" .Content 1) }}
@@ -40,7 +43,7 @@
     <link href="{{ .RelPermalink }}" rel="alternate" type="application/rss+xml" title="{{ $.Site.Title }}">
     {{ end }}
 
-    {{ range (slice "style" "fonts" "custom") }}
+    {{ range (slice "style" "fonts" "custom" "sunlit") }}
     <link rel="stylesheet" href="{{ printf "css/%s.css" . | relURL }}">
     {{ end }}
     {{ partial "head_custom.html" . }}
@@ -49,7 +52,26 @@
   {{ $section := (replaceRE "^/([^/]+)/.*" "$1" .RelPermalink) }}
   {{ if eq $section "/" }}{{ $section = "" }}{{ end }}
   {{ $.Scratch.Set "section" $section }}
-  <body class="{{ if .IsPage }}single{{ end }}{{ with $section }} {{ . }}{{ end }}{{ if (in .Content `<div class="footnotes"`) }} has-sidenotes{{ end }}{{ with .Params.page_class }} {{ . }}{{ end }}">
+  <body class="no-js{{ if .IsPage }} single{{ end }}{{ with $section }} {{ . }}{{ end }}{{ if (in .Content `<div class="footnotes"`) }} has-sidenotes{{ end }}{{ with .Params.page_class }} {{ . }}{{ end }}">
+    <script>
+      // Apply theme instantly before any rendering
+      (function() {
+        document.body.classList.remove('no-js');
+        document.body.classList.add('js');
+        var stored = null;
+        try {
+          stored = localStorage.getItem('sunlit-theme');
+        } catch (e) {
+          stored = null;
+        }
+        var system = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        var theme = stored || system;
+        if (theme === 'dark') {
+          document.body.classList.add('dark');
+        }
+      })();
+    </script>
+    {{ partial "sunlit.html" . }}
     <div class="crop-h"></div><div class="crop-v"></div><div class="crop-c"></div>
     <nav class="nav-top small">
     <div class="logo">

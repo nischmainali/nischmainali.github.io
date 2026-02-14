@@ -12,7 +12,7 @@
 body {
   max-width: var(--body-width);
   min-height: calc(100vh - 3em);
-  background-color: var(--bg-body);
+  background-color: transparent;
   margin: auto;
   padding: 1em;
   line-height: 1.5;
@@ -277,7 +277,7 @@ h1.title::before {
   }
   .crop-c {
     inset: 1em;
-    border: 1.5em solid var(--bg-body);
+    border: 1.5em solid transparent;
   }
   .menu {
     margin-left: 2em;
@@ -316,19 +316,4 @@ h1.title::before {
     white-space: pre;
   }
 }
-@media (prefers-color-scheme: dark) {
-  /* :root { */
-  /*   --bg-body: #fbf7f0; */
-  /*   --bg-block: rgba(240, 216, 207, 0.4); */
-  /*   --border-color: rgba(110, 103, 143, 0.2); */
-  /*   --box-shadow: 5px 5px 5px #ffead8; */
-  /* } */
-
-  h1.title::before {
-    content: "❧";
-    opacity: .1;
-  }
-  html, img, video, iframe {
-    filter: invert(1);
-  }
-}
+/* Old dark mode removed - now using sunlit dynamic background */

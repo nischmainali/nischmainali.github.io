@@ -1,8 +1,8 @@
 {{ partial "header.html" . }}
 <div class="article-meta">
-<h1 class="title" style="font-size: 2.3rem">{{ .Title | markdownify }}</h1>
-{{ with .Params.subtitle }}<h2 class="subtitle" style="opacity: 0.8; margin-top: -1.3rem;">{{ . | markdownify }}</h2>{{ end }}
-<h3 class="meta-line">
+<h1 class="title">{{ .Title | markdownify }}</h1>
+{{ with .Params.subtitle }}<h2 class="subtitle">{{ . | markdownify }}</h2>{{ end }}
+<p class="meta-line" aria-label="Post metadata">
   <span>{{ partial "meta.html" . }}</span>
   <span class="term">
   {{ with .Params.categories }}
@@ -17,10 +17,10 @@
   {{ end }}
   {{ end }}
   </span>
-</h3>
+</p>
 </div>
 
-<div class="main" style="font-size: 100%">
+<div class="main">
 {{ $toc := partial "toc.html" . }}
 {{ $toc_len := strings.Count `<li><a` $toc }}
 {{ if (default (ge $toc_len (default .Site.Params.toc_threshold 3)) .Params.show_toc) }}

@@ -1,1 +1,90 @@
 /* h1.title::before { content: "❧"; } */
+
+/* === Remove link hover shift behavior === */
+@media (hover: hover) and (pointer: fine) {
+  :not(.logo) > a:hover {
+    position: static;
+    inset: auto;
+  }
+}
+
+/* === Docs Listing Page Improvements === */
+
+/* Remove dotted lines and page numbers from blog list */
+.blog:not(.single) .toc-line .dots,
+.blog:not(.single) .toc-line .page-num {
+  display: none;
+}
+
+/* Clean title styling for blog list */
+.blog:not(.single) .toc-line {
+  margin-bottom: 0.2em;
+}
+
+.blog:not(.single) .toc-line a {
+  font-size: 1.2em;
+}
+
+/* Fix meta-line spacing - remove negative margins from inline styles */
+.blog:not(.single) .meta-line.small {
+  margin-top: 0.2em !important;
+  margin-bottom: 0.8em !important;
+  opacity: 0.68;
+}
+
+/* Improve blockquote summary styling */
+.blog:not(.single) blockquote {
+  border-left-width: 2px;
+  padding: 0.4em 0.8em;
+  margin: 0 0 2em 0;
+}
+
+/* === Single Post Improvements === */
+
+/* Article meta container - controls title/subtitle/date group */
+.single .article-meta {
+  margin-bottom: 1rem;
+}
+
+/* Title - keep existing margin-top, reduce bottom */
+.single h1.title {
+  margin-bottom: 0.2rem;
+  font-size: clamp(1.95rem, 4.4vw, 2.35rem);
+}
+
+/* Subtitle - remove the negative margin from inline styles */
+.single .subtitle {
+  margin-top: 0.2rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.9;
+}
+
+/* Meta-line (date + categories/tags) - tighter spacing */
+.single .meta-line {
+  margin-top: 0.3rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.78;
+}
+
+/* Very subtle categories and tags */
+.single .term {
+  font-size: 0.88em;
+  opacity: 0.92;
+}
+
+/* Mute the category/tag link styling */
+.single .term a {
+  color: inherit;
+}
+
+/* Better content padding from borders */
+.single .main {
+  padding-top: 0;
+}
+
+/* Add some breathing room from the crop marks/borders */
+@media (min-width: 768px) {
+  .single .article-meta {
+    margin-top: 0.5rem;
+  }
+}
