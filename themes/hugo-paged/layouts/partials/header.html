@@ -43,8 +43,9 @@
     <link href="{{ .RelPermalink }}" rel="alternate" type="application/rss+xml" title="{{ $.Site.Title }}">
     {{ end }}
 
+    {{ $assetVersion := now.Unix }}
     {{ range (slice "style" "fonts" "custom" "sunlit") }}
-    <link rel="stylesheet" href="{{ printf "css/%s.css" . | relURL }}">
+    <link rel="stylesheet" href="{{ printf "%s?v=%d" (printf "css/%s.css" . | relURL) $assetVersion }}">
     {{ end }}
     {{ partial "head_custom.html" . }}
   </head>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-US">
 
-  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1314&amp;path=livereload" data-no-instant defer></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
@@ -10,11 +10,16 @@
     
     <meta name="twitter:card" content="summary">
     
+    
       
-      <meta property="description" content="The searching is performed via fuse.js. For the search keywords, white spaces act as the AND operator, and | acts as the OR operator. To match an exact phrase, double quote it. For example, R Markdown &amp;hellip;">
-      <meta property="og:description" content="The searching is performed via fuse.js. For the search keywords, white spaces act as the AND operator, and | acts as the OR operator. To match an exact phrase, double quote it. For example, R Markdown &amp;hellip;">
+        
       
     
+    
+    <meta name="description" content="The searching is performed via fuse.js. For the search keywords, white spaces act as the AND operator, and | acts as the OR operator. To match an exact phrase, double quote it. For example, R Markdown &amp;hellip;">
+    <meta property="og:description" content="The searching is performed via fuse.js. For the search keywords, white spaces act as the AND operator, and | acts as the OR operator. To match an exact phrase, double quote it. For example, R Markdown &amp;hellip;">
+    
+    <link rel="canonical" href="//localhost:1314/search/">
 
     
     
@@ -25,11 +30,14 @@
     
 
     
-    <link rel="stylesheet" href="/css/style.css">
     
-    <link rel="stylesheet" href="/css/fonts.css">
+    <link rel="stylesheet" href="/css/style.css?v=1771150900">
     
-    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="stylesheet" href="/css/fonts.css?v=1771150900">
+    
+    <link rel="stylesheet" href="/css/custom.css?v=1771150900">
+    
+    <link rel="stylesheet" href="/css/sunlit.css?v=1771150900">
     
     <link rel="stylesheet" href="https://indestructibletype.com/fonts/Jost.css">
 
@@ -38,7 +46,86 @@
   
   
   
-  <body class="single search">
+  <body class="no-js single search">
+    <script>
+      
+      (function() {
+        document.body.classList.remove('no-js');
+        document.body.classList.add('js');
+        var stored = null;
+        try {
+          stored = localStorage.getItem('sunlit-theme');
+        } catch (e) {
+          stored = null;
+        }
+        var system = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        var theme = stored || system;
+        if (theme === 'dark') {
+          document.body.classList.add('dark');
+        }
+      })();
+    </script>
+    
+<div id="dappled-light" aria-hidden="true">
+  <div id="glow"></div>
+  <div id="glow-bounce"></div>
+  <div class="perspective">
+    <div id="leaves">
+      <svg style="width: 0; height: 0; position: absolute;">
+        <defs>
+          <filter id="wind" x="-20%" y="-20%" width="140%" height="140%">
+            <feTurbulence type="fractalNoise" numOctaves="2" seed="1">
+              <animate attributeName="baseFrequency" dur="16s" keyTimes="0;0.33;0.66;1"
+                values="0.005 0.003;0.01 0.009;0.008 0.004;0.005 0.003" repeatCount="indefinite" />
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic">
+              <animate attributeName="scale" dur="20s" keyTimes="0;0.25;0.5;0.75;1" values="45;55;75;55;45"
+                repeatCount="indefinite" />
+            </feDisplacementMap>
+          </filter>
+        </defs>
+      </svg>
+    </div>
+    <div id="blinds">
+      <div class="shutters">
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+      </div>
+      <div class="vertical">
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+    </div>
+  </div>
+  <div id="progressive-blur">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</div>
+
     <div class="crop-h"></div><div class="crop-v"></div><div class="crop-c"></div>
     <nav class="nav-top small">
     <div class="logo">
@@ -58,10 +145,10 @@
     </nav>
 
 <div class="article-meta">
-<h1 class="title" style="font-size: 2.3rem">Search</h1>
+<h1 class="title">Search</h1>
 
-<h3 class="meta-line">
-  <span>
+<p class="meta-line" aria-label="Post metadata">
+  <span class="meta-primary">
 
 
 
@@ -70,14 +157,12 @@
 
 
 </span>
-  <span class="term">
   
   
-  </span>
-</h3>
+</p>
 </div>
 
-<div class="main" style="font-size: 100%">
+<div class="main">
 
 
 
@@ -122,9 +207,9 @@
 </div>
   <footer class="small">
   
-<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/key-buttons.min.js" defer></script>
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@xiee/utils/css/key-buttons.min.css">
-<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/heading-anchor.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@xiee/utils/js/key-buttons.min.js" defer></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xiee/utils/css/key-buttons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@xiee/utils/js/heading-anchor.min.js" defer></script>
 
   <script>
   MathJax = {
@@ -134,14 +219,14 @@
       processEscapes: true,
       processEnvironments: true,
       tags: 'ams',
-      packages: {'[+]': ['ams', 'noerrors', 'physics']}
+      packages: {'[+]': ['noerrors', 'physics']}
     },
     options: {
       ignoreHtmlClass: 'tex2jax_ignore',
       processHtmlClass: 'tex2jax_process'
     },
     loader: {
-      load: ['[tex]/ams', '[tex]/noerrors', '[tex]/physics']
+      load: ['[tex]/noerrors', '[tex]/physics']
     },
     svg: {
       fontCache: 'global'
@@ -152,6 +237,7 @@
 
   
   </footer>
+  <script src="/js/sunlit.js"></script>
   </body>
 </html>
 

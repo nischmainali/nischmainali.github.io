@@ -12,7 +12,7 @@
 body {
   max-width: var(--body-width);
   min-height: calc(100vh - 3em);
-  background-color: var(--bg-body);
+  background-color: transparent;
   margin: auto;
   padding: 1em;
   line-height: 1.5;
@@ -264,20 +264,25 @@ h1.title::before {
   .crop-h, .crop-v, .crop-c {
     position: absolute;
     z-index: -1;
+    pointer-events: none;
+    color: inherit;
   }
-  .crop-h {
-    inset: 2em 0;
-    border-top: 1px solid;
-    border-bottom: 1px solid;
-  }
-  .crop-v {
-    inset: 0 2em;
-    border-left: 1px solid;
-    border-right: 1px solid;
+  .crop-h, .crop-v {
+    display: none;
   }
   .crop-c {
-    inset: 1em;
-    border: 1.5em solid var(--bg-body);
+    --crop-gap: 1em;
+    --crop-offset: 2em;
+    inset: 0;
+    background:
+      linear-gradient(currentColor, currentColor) left 0 top var(--crop-offset) / var(--crop-gap) 1px no-repeat,
+      linear-gradient(currentColor, currentColor) left var(--crop-offset) top 0 / 1px var(--crop-gap) no-repeat,
+      linear-gradient(currentColor, currentColor) right 0 top var(--crop-offset) / var(--crop-gap) 1px no-repeat,
+      linear-gradient(currentColor, currentColor) right var(--crop-offset) top 0 / 1px var(--crop-gap) no-repeat,
+      linear-gradient(currentColor, currentColor) left 0 bottom var(--crop-offset) / var(--crop-gap) 1px no-repeat,
+      linear-gradient(currentColor, currentColor) left var(--crop-offset) bottom 0 / 1px var(--crop-gap) no-repeat,
+      linear-gradient(currentColor, currentColor) right 0 bottom var(--crop-offset) / var(--crop-gap) 1px no-repeat,
+      linear-gradient(currentColor, currentColor) right var(--crop-offset) bottom 0 / 1px var(--crop-gap) no-repeat;
   }
   .menu {
     margin-left: 2em;
@@ -316,19 +321,4 @@ h1.title::before {
     white-space: pre;
   }
 }
-@media (prefers-color-scheme: dark) {
-  /* :root { */
-  /*   --bg-body: #fbf7f0; */
-  /*   --bg-block: rgba(240, 216, 207, 0.4); */
-  /*   --border-color: rgba(110, 103, 143, 0.2); */
-  /*   --box-shadow: 5px 5px 5px #ffead8; */
-  /* } */
-
-  h1.title::before {
-    content: "❧";
-    opacity: .1;
-  }
-  html, img, video, iframe {
-    filter: invert(1);
-  }
-}
+/* Old dark mode removed - now using sunlit dynamic background */

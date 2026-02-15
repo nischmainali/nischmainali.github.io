@@ -3,20 +3,25 @@
 <h1 class="title">{{ .Title | markdownify }}</h1>
 {{ with .Params.subtitle }}<h2 class="subtitle">{{ . | markdownify }}</h2>{{ end }}
 <p class="meta-line" aria-label="Post metadata">
-  <span>{{ partial "meta.html" . }}</span>
-  <span class="term">
+  <span class="meta-primary">{{ partial "meta.html" . }}</span>
   {{ with .Params.categories }}
-  {{ range first 1 . }}
-  <a href="{{ relURL (print "categories/" . "/" | urlize) }}" class="term-cat">{ {{ . }} }</a> ·
-  {{ end }}
-  {{ end }}
-  {{ with .Params.tags }}
+  <span class="meta-group meta-categories">
+  <span class="meta-label">in&nbsp;</span>
   {{ $len := sub (len .) 1 }}
   {{ range $i, $v := . }}
-  <a href="{{ relURL (print "tags/" $v "/" | urlize) }}" class="term-tag">{{ if eq $i 0 }}[ {{ end }}{{ $v }}{{ if lt $i $len }}, {{ else }} ]{{ end }}</a>
-  {{ end }}
+  <a href="{{ relURL (print "categories/" $v "/" | urlize) }}" class="term-cat">{{ $v }}</a>{{ if lt $i $len }}<span class="meta-sep">·</span>{{ end }}
   {{ end }}
   </span>
+  {{ end }}
+  {{ with .Params.tags }}
+  <span class="meta-group meta-tags">
+  <span class="meta-label">topics&nbsp;</span>
+  {{ $len := sub (len .) 1 }}
+  {{ range $i, $v := . }}
+  <a href="{{ relURL (print "tags/" $v "/" | urlize) }}" class="term-tag">{{ $v }}</a>{{ if lt $i $len }}<span class="meta-sep">·</span>{{ end }}
+  {{ end }}
+  </span>
+  {{ end }}
 </p>
 </div>
 

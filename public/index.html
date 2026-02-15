@@ -2,7 +2,7 @@
 <html lang="en-US">
 
   <head>
-	<meta name="generator" content="Hugo 0.128.0"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+	<meta name="generator" content="Hugo 0.128.0"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1314&amp;path=livereload" data-no-instant defer></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
@@ -12,8 +12,12 @@
     
     <meta name="twitter:card" content="summary">
     
-    <meta property="description" content="Nischal&#39;s adress on the web">
     
+    
+    <meta name="description" content="Nischal&#39;s adress on the web">
+    <meta property="og:description" content="Nischal&#39;s adress on the web">
+    
+    <link rel="canonical" href="//localhost:1314/">
 
     
     
@@ -26,11 +30,14 @@
     
 
     
-    <link rel="stylesheet" href="/css/style.css">
     
-    <link rel="stylesheet" href="/css/fonts.css">
+    <link rel="stylesheet" href="/css/style.css?v=1771150193">
     
-    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="stylesheet" href="/css/fonts.css?v=1771150193">
+    
+    <link rel="stylesheet" href="/css/custom.css?v=1771150193">
+    
+    <link rel="stylesheet" href="/css/sunlit.css?v=1771150193">
     
     <link rel="stylesheet" href="https://indestructibletype.com/fonts/Jost.css">
 
@@ -39,7 +46,86 @@
   
   
   
-  <body class="">
+  <body class="no-js">
+    <script>
+      
+      (function() {
+        document.body.classList.remove('no-js');
+        document.body.classList.add('js');
+        var stored = null;
+        try {
+          stored = localStorage.getItem('sunlit-theme');
+        } catch (e) {
+          stored = null;
+        }
+        var system = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        var theme = stored || system;
+        if (theme === 'dark') {
+          document.body.classList.add('dark');
+        }
+      })();
+    </script>
+    
+<div id="dappled-light" aria-hidden="true">
+  <div id="glow"></div>
+  <div id="glow-bounce"></div>
+  <div class="perspective">
+    <div id="leaves">
+      <svg style="width: 0; height: 0; position: absolute;">
+        <defs>
+          <filter id="wind" x="-20%" y="-20%" width="140%" height="140%">
+            <feTurbulence type="fractalNoise" numOctaves="2" seed="1">
+              <animate attributeName="baseFrequency" dur="16s" keyTimes="0;0.33;0.66;1"
+                values="0.005 0.003;0.01 0.009;0.008 0.004;0.005 0.003" repeatCount="indefinite" />
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic">
+              <animate attributeName="scale" dur="20s" keyTimes="0;0.25;0.5;0.75;1" values="45;55;75;55;45"
+                repeatCount="indefinite" />
+            </feDisplacementMap>
+          </filter>
+        </defs>
+      </svg>
+    </div>
+    <div id="blinds">
+      <div class="shutters">
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+        <div class="shutter"></div>
+      </div>
+      <div class="vertical">
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+    </div>
+  </div>
+  <div id="progressive-blur">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</div>
+
     <div class="crop-h"></div><div class="crop-v"></div><div class="crop-c"></div>
     <nav class="nav-top small">
     <div class="logo">
@@ -61,111 +147,6 @@
 
 
 <div class="home">
-<style type="text/css">
-.home h1 {
-  font-size: 1.8em;
-  font-style: normal;
-}
-
-.home h2 {
-  font-style: italic;
-  font-weight: normal;
-}
-
-.home h3 {
-  font-weight: normal;
-  padding-right: 18em;
-}
-
-.profile-image {
-  position: absolute;
-  top: 10.5em;
-  right: 0;
-  width: 18em;
-  height: auto;
-  object-fit: cover;
-  margin-right: 3.7em;
-  border-radius: 10px;
-}
-
-.publications {
-  margin-top: 1.5em;
-}
-
-.publications h2 {
-  margin-bottom: 0.5em;
-}
-
-.publications ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.publications a {
-  color: #000000;
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-  padding: 2px 4px;
-  transition: color 0s, background-color 0s, border-bottom 0s;
-}
-
-.publications a:hover {
-  color: white;
-  background-color: #005077;
-}
-
-.publications a:hover {
-  position: static;
-  inset: auto;
-}
-
-/* Media Queries for Responsive Design */
-@media screen and (max-width: 768px) {
-  .home h3 {
-    padding-right: 0;
-    margin-bottom: 1em; /* Reduced from 20em to 1em */
-  }
-
-  .profile-image {
-    position: relative;
-    top: auto;
-    right: auto;
-    width: 100%;
-    max-width: 18em;
-    margin: 1em auto;
-    display: block;
-  }
-
-  .publications {
-    margin-top: 1em;
-  }
-
-  .publications a {
-    display: block;
-    padding: 0.5em 0;
-  }
-}
-
-/* For very small screens */
-@media screen and (max-width: 480px) {
-  .home h1 {
-    font-size: 1.5em;
-  }
-
-  .home h2 {
-    font-size: 1.2em;
-  }
-
-  .home h3 {
-    font-size: 1em;
-    margin-bottom: 1em; /* Reduced from 15em to 1em */
-  }
-
-  .profile-image {
-    max-width: 15em;
-  }
-}
-</style>
 <h1 class="title">Nischal Mainali</h1>
 <h3>
 <p>Hi, I&rsquo;m Nisch, a PhD candidate in Neuroscience at the Burak lab in the Hebrew University of Jerusalem.
@@ -208,11 +189,11 @@ Exact Learning Dynamics of In-Context Learning in Linear Transformers and Its Ap
 
 
   <footer class="small">
-  <script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/center-img.min.js" defer></script>
-<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/alt-title.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@xiee/utils/js/center-img.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@xiee/utils/js/alt-title.min.js" defer></script>
 
-<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/heading-anchor.min.js" defer></script>
-<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/external-link.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@xiee/utils/js/heading-anchor.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@xiee/utils/js/external-link.min.js" defer></script>
 
   <script>
   MathJax = {
@@ -222,14 +203,14 @@ Exact Learning Dynamics of In-Context Learning in Linear Transformers and Its Ap
       processEscapes: true,
       processEnvironments: true,
       tags: 'ams',
-      packages: {'[+]': ['ams', 'noerrors', 'physics']}
+      packages: {'[+]': ['noerrors', 'physics']}
     },
     options: {
       ignoreHtmlClass: 'tex2jax_ignore',
       processHtmlClass: 'tex2jax_process'
     },
     loader: {
-      load: ['[tex]/ams', '[tex]/noerrors', '[tex]/physics']
+      load: ['[tex]/noerrors', '[tex]/physics']
     },
     svg: {
       fontCache: 'global'
@@ -240,6 +221,7 @@ Exact Learning Dynamics of In-Context Learning in Linear Transformers and Its Ap
 
   
   </footer>
+  <script src="/js/sunlit.js"></script>
   </body>
 </html>
 

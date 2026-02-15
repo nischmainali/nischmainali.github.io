@@ -1,4 +1,4 @@
-{{ if .Section }}
+{{ if (default false (or .Params.show_post_nav .Site.Params.show_post_nav)) }}
 <nav class="post-nav fullwidth">
   <span>{{ with .NextInSection }}&larr; <a href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a>{{ end }}</span>
   <span>{{ with .PrevInSection }}<a href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a> &rarr;{{ end }}</span>

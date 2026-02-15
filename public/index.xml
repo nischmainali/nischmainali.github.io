@@ -2,52 +2,52 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Home on Nisch&#39;s homepage</title>
-    <link>//localhost:1313/</link>
+    <link>/</link>
     <description>Recent content in Home on Nisch&#39;s homepage</description>
     <generator>Hugo</generator>
     <language>en-US</language>
     <lastBuildDate>Fri, 15 Nov 2024 00:00:00 +0000</lastBuildDate>
-    <atom:link href="//localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Introduction</title>
-      <link>//localhost:1313/docs/01-intro/</link>
+      <link>/docs/01-intro/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/docs/01-intro/</guid>
+      <guid>/docs/01-intro/</guid>
       <description>The Hugo Paged theme was inspired by the paged.js website.&#xA;The paged.js website The paged.js library is awesome. Its website is also beautiful.&#xA;The crop marks I love the crop marks. I couldn&amp;rsquo;t imagine that they were made from three rectangles:&#xA;&amp;lt;div class=&amp;quot;crop-h&amp;quot;&amp;gt;&amp;lt;/div&amp;gt; &amp;lt;!-- horizontal lines --&amp;gt; &amp;lt;div class=&amp;quot;crop-v&amp;quot;&amp;gt;&amp;lt;/div&amp;gt; &amp;lt;!-- vertical lines --&amp;gt; &amp;lt;div class=&amp;quot;crop-c&amp;quot;&amp;gt;&amp;lt;/div&amp;gt; &amp;lt;!-- cover some segments --&amp;gt; Make their position absolute, and shrink them a little bit:</description>
     </item>
     <item>
       <title>Getting started</title>
-      <link>//localhost:1313/docs/02-get-started/</link>
+      <link>/docs/02-get-started/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/docs/02-get-started/</guid>
+      <guid>/docs/02-get-started/</guid>
       <description>There are two ways to get started with this theme, depending on whether you use R or Hugo.&#xA;R users If you use R, the easiest way to get started is to install the blogdown package, and create a new site with this theme:&#xA;install.packages(&#39;blogdown&#39;) blogdown::new_site(theme = &#39;yihui/hugo-paged&#39;) Or you can create a new RStudio blogdown project (if you use RStudio) with the yihui/hugo-paged theme.&#xA;Hugo users Create a new Hugo site with hugo new.</description>
     </item>
     <item>
       <title>Customization</title>
-      <link>//localhost:1313/docs/03-customization/</link>
+      <link>/docs/03-customization/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/docs/03-customization/</guid>
+      <guid>/docs/03-customization/</guid>
       <description>The more you know, the less real work you will get done. You have been warned.&#xA;Site config In your site config file (hugo.yaml or config.yaml), you can customize some options such as the top menu or footer, which should be straightforward to understand if you take a look at the exampleSite&amp;rsquo;s config file.&#xA;If you want to add a logo to the left of the top navigation bar, you can use the logo parameter, e.</description>
     </item>
     <item>
       <title>Notes on properties of Gaussian process neural code</title>
-      <link>//localhost:1313/blog/gp-code-notes/</link>
+      <link>/blog/gp-code-notes/</link>
       <pubDate>Fri, 15 Nov 2024 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/blog/gp-code-notes/</guid>
+      <guid>/blog/gp-code-notes/</guid>
       <description>These are notes on properties of Gaussian processes relevant to their study as models of neural representations in the brain. These ideas and techniques were used in our work on statistics of place fields measured across a few different animal species, while they were navigating small and large environments of dimensions 1, 2, and 3. In the work, we showed the observed neural representations can be well explained in terms of threshold crossings of a Gaussian process, and these notes include how one can study structure of such threshold crossings of Gaussian process.</description>
     </item>
     <item>
       <title>About Hugo Paged</title>
-      <link>//localhost:1313/about/</link>
+      <link>/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/about/</guid>
+      <guid>/about/</guid>
       <description>I immediately loved the design of the paged.js website when I first saw it a couple of years ago.1 I have published a few books before, so the crop marks on the website caught my attention first, which gave me a familiar feel of printed books. The second thing that I appreciated was the rotated floral heart bullet behind the title of each page, i.e.,&#xA;❧ So I wrote a Hugo theme that mimics the style of the paged.</description>
     </item>
     <item>
       <title>Search</title>
-      <link>//localhost:1313/search/</link>
+      <link>/search/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/search/</guid>
+      <guid>/search/</guid>
       <description>The searching is performed via fuse.js. For the search keywords, white spaces act as the AND operator, and | acts as the OR operator. To match an exact phrase, double quote it. For example, R Markdown matches articles that contain both R and Markdown, R | Markdown matches articles that contain R or Markdown, and &amp;quot;R Markdown&amp;quot; matches articles that contain the whole phrase R Markdown.</description>
     </item>
   </channel>

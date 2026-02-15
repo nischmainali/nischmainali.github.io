@@ -2,53 +2,53 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>//localhost:1313/docs/01-intro/</loc>
+    <loc>/docs/01-intro/</loc>
   </url><url>
-    <loc>//localhost:1313/docs/02-get-started/</loc>
+    <loc>/docs/02-get-started/</loc>
   </url><url>
-    <loc>//localhost:1313/docs/03-customization/</loc>
+    <loc>/docs/03-customization/</loc>
   </url><url>
-    <loc>//localhost:1313/categories/</loc>
+    <loc>/categories/</loc>
     <lastmod>2024-11-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>//localhost:1313/blog/</loc>
+    <loc>/blog/</loc>
     <lastmod>2024-11-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>//localhost:1313/tags/gaussian-process/</loc>
+    <loc>/tags/gaussian-process/</loc>
     <lastmod>2024-11-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>//localhost:1313/</loc>
+    <loc>/</loc>
     <lastmod>2024-11-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>//localhost:1313/categories/notes/</loc>
+    <loc>/categories/notes/</loc>
     <lastmod>2024-11-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>//localhost:1313/blog/gp-code-notes/</loc>
+    <loc>/blog/gp-code-notes/</loc>
     <lastmod>2024-11-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>//localhost:1313/categories/pdf/</loc>
+    <loc>/categories/pdf/</loc>
     <lastmod>2024-11-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>//localhost:1313/tags/place-cells/</loc>
+    <loc>/tags/place-cells/</loc>
     <lastmod>2024-11-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>//localhost:1313/tags/</loc>
+    <loc>/tags/</loc>
     <lastmod>2024-11-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>//localhost:1313/about/</loc>
+    <loc>/about/</loc>
   </url><url>
-    <loc>//localhost:1313/tags/blogdown/</loc>
+    <loc>/tags/blogdown/</loc>
   </url><url>
-    <loc>//localhost:1313/categories/example/</loc>
+    <loc>/categories/example/</loc>
   </url><url>
-    <loc>//localhost:1313/tags/hugo/</loc>
+    <loc>/tags/hugo/</loc>
   </url><url>
-    <loc>//localhost:1313/categories/hugo/</loc>
+    <loc>/categories/hugo/</loc>
   </url><url>
-    <loc>//localhost:1313/docs/</loc>
+    <loc>/docs/</loc>
   </url><url>
-    <loc>//localhost:1313/search/</loc>
+    <loc>/search/</loc>
   </url><url>
-    <loc>//localhost:1313/tags/tutorial/</loc>
+    <loc>/tags/tutorial/</loc>
   </url>
 </urlset>

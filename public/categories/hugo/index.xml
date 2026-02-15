@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Hugo on Nisch&#39;s homepage</title>
-    <link>//localhost:1313/categories/hugo/</link>
+    <link>/categories/hugo/</link>
     <description>Recent content in Hugo on Nisch&#39;s homepage</description>
     <generator>Hugo</generator>
     <language>en-US</language>
-    <atom:link href="//localhost:1313/categories/hugo/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/categories/hugo/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Introduction</title>
-      <link>//localhost:1313/docs/01-intro/</link>
+      <link>/docs/01-intro/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/docs/01-intro/</guid>
+      <guid>/docs/01-intro/</guid>
       <description>The Hugo Paged theme was inspired by the paged.js website.&#xA;The paged.js website The paged.js library is awesome. Its website is also beautiful.&#xA;The crop marks I love the crop marks. I couldn&amp;rsquo;t imagine that they were made from three rectangles:&#xA;&amp;lt;div class=&amp;quot;crop-h&amp;quot;&amp;gt;&amp;lt;/div&amp;gt; &amp;lt;!-- horizontal lines --&amp;gt; &amp;lt;div class=&amp;quot;crop-v&amp;quot;&amp;gt;&amp;lt;/div&amp;gt; &amp;lt;!-- vertical lines --&amp;gt; &amp;lt;div class=&amp;quot;crop-c&amp;quot;&amp;gt;&amp;lt;/div&amp;gt; &amp;lt;!-- cover some segments --&amp;gt; Make their position absolute, and shrink them a little bit:</description>
     </item>
   </channel>
