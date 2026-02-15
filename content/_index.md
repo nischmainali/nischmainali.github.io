@@ -17,7 +17,9 @@ Here is my <a href="/pdfs/cv.pdf">cv</a>.
 
 </h3>
 
-<img src="nisch.jpg" alt="Nischal Mainali" class="profile-image">
+<figure class="profile-burn">
+  <img src="nisch.jpg" alt="Nischal Mainali" class="profile-image">
+</figure>
 <div class="publications">
   <h2>Selected works</h2>
   <ul>
