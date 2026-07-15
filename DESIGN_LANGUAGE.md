@@ -136,6 +136,13 @@ gratuitous hover motion are not part of this language. At Nisch's explicit
 request, grain, falling leaves, and mode transitions continue even when
 `prefers-reduced-motion` is active. Do not silently restore a motion override.
 
+Page navigation must preserve one environmental moment. The chosen state is
+applied before first paint, and the grain, fern, and falling leaves share a
+session-wide clock so that following a link does not replay or visibly jump the
+scene. Do not add a page-loading veil over the background. A deliberate press of
+the sun/moon control should still produce the full atmospheric transition:
+content pages change; the light does not.
+
 ### 5. An unboxed portrait
 
 On the home page the portrait occupies the right side of the introductory area.
@@ -281,8 +288,10 @@ The site is intentionally small:
 - `static/textures/lokta-raking-relief.svg` — non-repeating paired fibres that
   become visible only as sunset settles;
 - `static/js/sunlit.js` — viewport-derived slats, deterministic sparse peepal
-  leaves, persistence, and state control;
+  leaves, responsive scene setup, persistence, and state control;
 - `layouts/partials/sunlit.html` — the fixed environmental layer and theme control;
+- `themes/hugo-paged/layouts/partials/header.html` — pre-paint theme state and the
+  session-wide environmental motion epoch;
 - `themes/hugo-paged/` — a vendored and locally modified base theme;
 - `/Users/nisch/code/site/hugo-paged` — a separate current upstream checkout for
   reference only.
@@ -320,6 +329,9 @@ The following behavior was observed in the accepted worktree:
 - Linden Hill and Jost load successfully in the browser.
 - The theme toggle changes the environmental geometry and atmosphere and persists
   the choice for later page loads. Text remains daylight ink in both states.
+- Link navigation preserves the settled shade/sunset geometry and the shared
+  animation phase without inserting a loading-color flash. Only an intentional
+  theme-toggle press replays the atmospheric transition.
 - The initial toggle label states the actual action; its pressed state and label
   update correctly after each theme change.
 - No browser console warnings or errors appeared in the tested flow.

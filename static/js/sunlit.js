@@ -136,19 +136,14 @@
 
   function init() {
     var scene = document.getElementById('sunlit-scene');
-    var loading = document.querySelector('.sunlit-loading-overlay');
     var button = document.getElementById('theme-toggle');
     var state = getStoredState();
     var resizeTimer = null;
+    var leafLayout = window.innerWidth < 600 ? 'mobile' : 'desktop';
 
     if (!scene) return;
-    if (loading) loading.classList.add('is-visible');
     renderFallingLeaves();
     applyState(state, false);
-
-    window.setTimeout(function() {
-      if (loading) loading.classList.remove('is-visible');
-    }, 250);
 
     if (button) {
       button.addEventListener('click', function() {
@@ -160,19 +155,17 @@
     window.addEventListener('resize', function() {
       window.clearTimeout(resizeTimer);
       resizeTimer = window.setTimeout(function() {
-        if (loading) loading.classList.add('is-visible');
-        renderFallingLeaves();
+        var nextLeafLayout = window.innerWidth < 600 ? 'mobile' : 'desktop';
+        if (nextLeafLayout !== leafLayout) {
+          leafLayout = nextLeafLayout;
+          renderFallingLeaves();
+        }
         applyState(document.body.classList.contains('sunset') ? 'sunset' : 'shade', false);
-        window.setTimeout(function() {
-          if (loading) loading.classList.remove('is-visible');
-        }, 250);
       }, 120);
     });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+  // This script is loaded at the end of body, so initialize before the first
+  // paint instead of waiting for DOMContentLoaded on every document navigation.
+  init();
 })();

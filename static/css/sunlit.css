@@ -3,6 +3,10 @@
  * Sunlit Place's environmental physics, re-authored through Nepali paper and foliage.
  */
 
+:root {
+  --sunlit-clock: 0s;
+}
+
 body {
   --sunlit-paper-warm: #f5f2e8;
   --sunlit-paper-light: #fbf8ee;
@@ -13,7 +17,6 @@ body {
   --sunlit-botanical-soft: #879583;
   --sunlit-sunset-amber: #d9ad84;
   --sunlit-sunset-coral: rgba(143, 58, 65, 0.15);
-  --sunlit-loading: #e2e5da;
   --sunlit-utility-ink: #28352d;
   background-color: transparent;
 }
@@ -57,7 +60,7 @@ body {
   transition: opacity 2.4s ease-in-out, transform 3.4s ease-in-out;
 }
 
-#sunlit-scene.is-sunset .sunlit-paper-relief {
+body.sunset #sunlit-scene .sunlit-paper-relief {
   opacity: 0.11;
   transform: translate3d(0, 0, 0) scale(1.018);
   transition:
@@ -74,7 +77,7 @@ body {
   transition: transform 1.2s ease-out;
 }
 
-#sunlit-scene.is-sunset .sunlit-container {
+body.sunset #sunlit-scene .sunlit-container {
   transform: rotate(-16deg) translateX(10vw);
 }
 
@@ -105,7 +108,7 @@ body {
     opacity 1.8s ease-in-out;
 }
 
-#sunlit-scene.is-sunset .sunlit-shutter {
+body.sunset #sunlit-scene .sunlit-shutter {
   height: 20px !important;
   margin-top: 18px;
   filter: blur(7.5px);
@@ -125,7 +128,7 @@ body {
   transition: filter 1.8s ease-in-out, opacity 1.8s ease-in-out;
 }
 
-#sunlit-scene.is-sunset .sunlit-vertical-shutter {
+body.sunset #sunlit-scene .sunlit-vertical-shutter {
   filter: blur(7.5px);
   opacity: 0.72;
 }
@@ -141,7 +144,7 @@ body {
   transition: opacity 1.6s ease-in-out, transform 2.4s ease-in-out, filter 2.4s ease-in-out;
 }
 
-#sunlit-scene.is-sunset .sunlit-tree-shadows {
+body.sunset #sunlit-scene .sunlit-tree-shadows {
   filter: blur(4px);
   opacity: 0.3;
   transform: translate3d(-0.8vw, 1.2vh, 0) scale(1.035);
@@ -160,6 +163,7 @@ body {
   transform-box: fill-box;
   transform-origin: 92% 4%;
   animation: sunlit-fern-sway 19s ease-in-out infinite alternate;
+  animation-delay: var(--sunlit-clock);
 }
 
 .sunlit-fern-rachis {
@@ -178,7 +182,7 @@ body {
   opacity: 0.5;
   transform-origin: 100% 36%;
   animation-duration: 24s;
-  animation-delay: -9s;
+  animation-delay: calc(var(--sunlit-clock) - 9s);
 }
 
 @keyframes sunlit-fern-sway {
@@ -196,7 +200,7 @@ body {
   transition: opacity 1.4s ease-out, transform 2.2s ease-in-out;
 }
 
-#sunlit-scene.is-sunset .sunlit-falling-leaves {
+body.sunset #sunlit-scene .sunlit-falling-leaves {
   opacity: 0.58;
   transform: translate3d(-0.5vw, 0, 0);
   transition: opacity 2s ease-out 0.35s, transform 2.2s ease-in-out;
@@ -221,6 +225,7 @@ body {
   color: var(--sunlit-botanical);
   transform-origin: 50% 18%;
   animation: sunlit-peepal-fall var(--leaf-duration) ease-in-out var(--leaf-delay) infinite;
+  animation-delay: calc(var(--leaf-delay) + var(--sunlit-clock));
 }
 
 .sunlit-peepal-blade {
@@ -362,7 +367,7 @@ body {
   transition: opacity 3s ease-in-out;
 }
 
-#sunlit-scene.is-sunset .sunlit-sunset-overlay {
+body.sunset #sunlit-scene .sunlit-sunset-overlay {
   opacity: 0.72;
 }
 
@@ -386,6 +391,7 @@ body {
   background-image: url("https://upload.wikimedia.org/wikipedia/commons/5/5c/Image_gaussian_noise_example.png");
   opacity: 0.075;
   animation: sunlit-noise 1s steps(2) infinite;
+  animation-delay: var(--sunlit-clock);
 }
 
 @keyframes sunlit-noise {
@@ -400,20 +406,6 @@ body {
   80% { transform: translate3d(-4.5rem, 0.5rem, 0); }
   90% { transform: translate3d(3rem, -2.5rem, 0); }
   100% { transform: translate3d(-3.5rem, 0, 0); }
-}
-
-.sunlit-loading-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-}
-
-.sunlit-loading-overlay.is-visible {
-  background: var(--sunlit-loading);
-  opacity: 1;
 }
 
 #theme-toggle {
@@ -486,7 +478,7 @@ body.sunset #theme-toggle .moon { opacity: 0.5; transition: opacity 0.15s ease-o
     background-position: 53% 50%;
   }
 
-  #sunlit-scene.is-sunset .sunlit-paper-relief {
+  body.sunset #sunlit-scene .sunlit-paper-relief {
     opacity: 0.075;
   }
 
@@ -497,7 +489,7 @@ body.sunset #theme-toggle .moon { opacity: 0.5; transition: opacity 0.15s ease-o
     transform: translate3d(11vw, -2vh, 0) scale(1.08);
   }
 
-  #sunlit-scene.is-sunset .sunlit-tree-shadows {
+  body.sunset #sunlit-scene .sunlit-tree-shadows {
     filter: blur(4.5px);
     opacity: 0.27;
     transform: translate3d(8vw, 0, 0) scale(1.1);
@@ -507,7 +499,7 @@ body.sunset #theme-toggle .moon { opacity: 0.5; transition: opacity 0.15s ease-o
     display: none;
   }
 
-  #sunlit-scene.is-sunset .sunlit-falling-leaves {
+  body.sunset #sunlit-scene .sunlit-falling-leaves {
     opacity: 0.44;
   }
 

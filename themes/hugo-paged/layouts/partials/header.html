@@ -60,6 +60,21 @@
       (function() {
         document.body.classList.remove('no-js');
         document.body.classList.add('js');
+        var now = Date.now();
+        var motionEpoch = now;
+        try {
+          var storedEpoch = Number(sessionStorage.getItem('sunlit-motion-epoch'));
+          if (storedEpoch > 0 && storedEpoch <= now) {
+            motionEpoch = storedEpoch;
+          } else {
+            sessionStorage.setItem('sunlit-motion-epoch', String(now));
+          }
+        } catch (e) {
+          motionEpoch = now;
+        }
+        var elapsed = Math.max(0, (now - motionEpoch) / 1000);
+        document.documentElement.style.setProperty('--sunlit-clock', (-elapsed).toFixed(3) + 's');
+
         var stored = null;
         try {
           stored = localStorage.getItem('sunlit-theme');
