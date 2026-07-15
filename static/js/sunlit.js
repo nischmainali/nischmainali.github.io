@@ -1,106 +1,183 @@
-// Sunlit theme - follows system preference, with manual override
+// Shade/sunset controller and procedural foliage for the Sunlit scene.
 (function() {
   var STORAGE_KEY = 'sunlit-theme';
 
-  // SVG icons
-  var sunIcon = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>';
-  var moonIcon = '<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
-
-  function getSystemPreference() {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  function normalizeState(value) {
+    return value === 'sunset' || value === 'dark' ? 'sunset' : 'shade';
   }
 
-  function getStoredPreference() {
+  function getStoredState() {
     try {
-      return localStorage.getItem(STORAGE_KEY);
-    } catch (e) {
-      return null;
+      return normalizeState(localStorage.getItem(STORAGE_KEY));
+    } catch (error) {
+      return 'shade';
     }
   }
 
-  function setStoredPreference(theme) {
+  function storeState(state) {
     try {
-      localStorage.setItem(STORAGE_KEY, theme);
-    } catch (e) {
-      // Ignore storage failures (private mode / blocked storage)
+      localStorage.setItem(STORAGE_KEY, state);
+    } catch (error) {
+      // The default shade state remains complete when storage is unavailable.
     }
   }
 
-  function applyTheme(theme, animate) {
-    var isDark = theme === 'dark';
-    var wasDark = document.body.classList.contains('dark');
+  function makeLeaf(className) {
+    var leaf = document.createElement('div');
+    leaf.className = className;
+    return leaf;
+  }
 
-    if (isDark !== wasDark) {
-      if (animate) {
-        document.body.classList.add('animation-ready');
-        void document.body.offsetWidth;
+  function layoutShutters(isSunset) {
+    var shutters = document.querySelector('.sunlit-shutters');
+    if (!shutters) return;
+
+    var count = Math.ceil(window.innerHeight / 36);
+    var height = window.innerWidth < 600 ? 42 : 56;
+    var gap = window.innerWidth < 600 ? 16 : 8;
+    var spacing = height + gap;
+
+    if (shutters.children.length !== count) {
+      shutters.replaceChildren();
+      for (var index = 0; index < count; index += 1) {
+        var shutter = document.createElement('div');
+        shutter.className = 'sunlit-shutter';
+        shutters.appendChild(shutter);
       }
+    }
 
-      document.body.classList.toggle('dark', isDark);
+    Array.prototype.forEach.call(shutters.children, function(shutter, index) {
+      shutter.style.top = (index * spacing * (isSunset ? 1.15 : 1) - 300) + 'px';
+      shutter.style.left = '-' + (window.innerWidth * 0.01 * index) + 'px';
+      shutter.style.height = (isSunset ? 20 : height) + 'px';
+    });
+  }
 
-      if (animate) {
-        setTimeout(function() {
-          document.body.classList.remove('animation-ready');
-        }, 2000);
+  function renderFoliage() {
+    var fallingLayer = document.querySelector('.sunlit-falling-leaves');
+    var treeLayer = document.querySelector('.sunlit-tree-shadows');
+    if (!fallingLayer || !treeLayer) return;
+
+    fallingLayer.replaceChildren();
+    treeLayer.replaceChildren();
+
+    var width = window.innerWidth;
+    var height = window.innerHeight;
+
+    for (var fallingIndex = 0; fallingIndex < 30; fallingIndex += 1) {
+      var fallingX = Math.random() * width * 0.25 + width * 0.8;
+      var fallingY = Math.random() * height * 0.5;
+      var fallingType = Math.ceil(Math.random() * 4);
+      var fallingDepth = Math.random() + 1;
+      var fallingBlur = 4 + 8 * fallingDepth;
+      var fallingScale = 0.2 + 0.4 * fallingDepth;
+      var fallingOpacity = 0.8 * (2 - fallingDepth);
+      // The reference generates (but does not render) an initial rotation value.
+      Math.random();
+
+      var fallingWrapper = document.createElement('div');
+      fallingWrapper.className = 'sunlit-leaf-wrapper';
+      fallingWrapper.style.top = fallingY + 'px';
+      fallingWrapper.style.left = fallingX + 'px';
+      fallingWrapper.style.transform = 'scale(' + fallingScale + ')';
+
+      var fallingLeaf = makeLeaf('sunlit-leaf-' + fallingType);
+      fallingLeaf.style.opacity = fallingOpacity;
+      fallingLeaf.style.filter = 'blur(' + fallingBlur + 'px)';
+      fallingLeaf.style.animationDelay = (Math.random() * 3) + 's';
+      fallingLeaf.style.animationDuration = (3 + Math.random() * 3) + 's';
+      fallingWrapper.appendChild(fallingLeaf);
+      fallingLayer.appendChild(fallingWrapper);
+    }
+
+    var clusterX = [0.95 * width, 0.75 * width];
+    var clusterY = [0.15 * height, 0.4 * height];
+    var offsets = [-100, -70, -40, -10, 20, 50, 80, 110, 140, 170];
+    var xSpread = 0.2 * width;
+    var ySpread = 0.4 * height;
+
+    for (var cluster = 0; cluster < 2; cluster += 1) {
+      var baseX = clusterX[cluster] + 0.2 * offsets[cluster];
+      var baseY = clusterY[cluster] + 5 * offsets[cluster];
+
+      for (var group = 0; group < 10; group += 1) {
+        for (var leafIndex = 0; leafIndex < 15; leafIndex += 1) {
+          var treeX = baseX + Math.random() * xSpread * 2 - xSpread;
+          var treeY = baseY + Math.random() * ySpread * 2 - ySpread + 0.4 * (treeX - baseX);
+          var treeType = Math.ceil(Math.random() * 4);
+          var treeDepth = Math.random() + 1;
+          var treeBlur = 4 + 4 * treeDepth;
+          var treeScale = 0.2 + 0.6 * treeDepth;
+          var treeOpacity = 2 - 1.1 * treeDepth;
+          var treeRotation = 45 + Math.random() * 180;
+
+          var treeWrapper = document.createElement('div');
+          treeWrapper.className = 'sunlit-tree-leaf-wrapper';
+          treeWrapper.style.top = treeY + 'px';
+          treeWrapper.style.left = treeX + 'px';
+          treeWrapper.style.transform = 'scale(' + treeScale + ') rotate(' + treeRotation + 'deg)';
+
+          var treeLeaf = makeLeaf('sunlit-leaf-' + treeType);
+          treeLeaf.style.opacity = treeOpacity;
+          treeLeaf.style.filter = 'blur(' + treeBlur + 'px)';
+          treeWrapper.appendChild(treeLeaf);
+          treeLayer.appendChild(treeWrapper);
+        }
       }
     }
-
-    updateToggleButton();
   }
 
-  function toggleTheme() {
-    var currentTheme = document.body.classList.contains('dark') ? 'dark' : 'light';
-    var newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    setStoredPreference(newTheme);
-    applyTheme(newTheme, true);
+  function updateToggle(state) {
+    var button = document.getElementById('theme-toggle');
+    if (!button) return;
+    var isSunset = state === 'sunset';
+    button.setAttribute('aria-label', isSunset ? 'Switch to daylight' : 'Switch to sunset');
+    button.setAttribute('aria-pressed', String(isSunset));
   }
 
-  function updateToggleButton() {
-    var btn = document.getElementById('theme-toggle');
-    if (btn) {
-      btn.innerHTML = '<span class="sun">' + sunIcon + '</span><span class="moon">' + moonIcon + '</span>';
-      btn.setAttribute('aria-label', document.body.classList.contains('dark') ? 'Switch to light mode' : 'Switch to dark mode');
-    }
-  }
-
-  function createToggleButton() {
-    if (document.getElementById('theme-toggle')) {
-      return;
-    }
-    var btn = document.createElement('button');
-    btn.id = 'theme-toggle';
-    btn.setAttribute('aria-label', 'Toggle theme');
-    btn.innerHTML = '<span class="sun">' + sunIcon + '</span><span class="moon">' + moonIcon + '</span>';
-    btn.addEventListener('click', toggleTheme);
-    document.body.appendChild(btn);
+  function applyState(state, persist) {
+    var isSunset = state === 'sunset';
+    var scene = document.getElementById('sunlit-scene');
+    document.body.classList.toggle('sunset', isSunset);
+    document.body.setAttribute('data-theme', state);
+    if (scene) scene.classList.toggle('is-sunset', isSunset);
+    layoutShutters(isSunset);
+    updateToggle(state);
+    if (persist) storeState(state);
   }
 
   function init() {
-    // Determine initial theme: stored preference > system preference
-    var stored = getStoredPreference();
-    var system = getSystemPreference();
-    var theme = stored || system;
+    var scene = document.getElementById('sunlit-scene');
+    var loading = document.querySelector('.sunlit-loading-overlay');
+    var button = document.getElementById('theme-toggle');
+    var state = getStoredState();
 
-    applyTheme(theme, false);
-    createToggleButton();
+    if (!scene) return;
+    if (loading) loading.classList.add('is-visible');
+    renderFoliage();
+    applyState(state, false);
 
-    // Listen for system preference changes
-    var mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    var onChange = function(e) {
-      // Only auto-switch if user hasn't set a manual preference
-      if (!getStoredPreference()) {
-        applyTheme(e.matches ? 'dark' : 'light', true);
-      }
-    };
+    window.setTimeout(function() {
+      if (loading) loading.classList.remove('is-visible');
+    }, 250);
 
-    if (typeof mediaQuery.addEventListener === 'function') {
-      mediaQuery.addEventListener('change', onChange);
-    } else if (typeof mediaQuery.addListener === 'function') {
-      mediaQuery.addListener(onChange);
+    if (button) {
+      button.addEventListener('click', function() {
+        state = document.body.classList.contains('sunset') ? 'shade' : 'sunset';
+        applyState(state, true);
+      });
     }
+
+    window.addEventListener('resize', function() {
+      if (loading) loading.classList.add('is-visible');
+      renderFoliage();
+      applyState(document.body.classList.contains('sunset') ? 'sunset' : 'shade', false);
+      window.setTimeout(function() {
+        if (loading) loading.classList.remove('is-visible');
+      }, 250);
+    });
   }
 
-  // Run on DOM ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {

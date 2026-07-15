@@ -1,450 +1,343 @@
-/* Sunlit dynamic background effect */
+/*
+ * Sunlit environmental layer
+ * Independently reconstructed from the visible behavior of sunlit.place.
+ */
 
-/* CSS Variables for sunlit colors */
 body {
-  --day: #fffdfa;
-  --evening: #fccc83;
-  --dusk: #db7a2a;
-  --night: #0f131c;
-  --dawn: #16132b;
-  --morning: #9fb3bf;
-
-  --sunlit-light: var(--day);
-  --sunlit-dark: var(--night);
-  --shadow: #1a1917;
-  --bounce-light: #f5d7a6;
-  --timing-fn: cubic-bezier(0.455, 0.190, 0.000, 0.985);
-
-  background-color: var(--sunlit-light);
+  --sunlit-bg-light: #fff;
+  --sunlit-bg-light-2: #fbf9fa;
+  --sunlit-sunset: #ffbd8d;
+  --sunlit-shadow: #c7c7c7;
+  --sunlit-shadow-transition: rgba(232, 230, 229, 0.647);
+  --sunlit-loading: #d1d1d1;
+  background-color: transparent;
 }
 
-body.animation-ready {
-  animation: sunrise 1s forwards linear;
-}
-
-body.animation-ready.dark {
-  animation: sunset 1.7s forwards linear;
-}
-
-body.dark {
-  --sunlit-light: #12100e;
-  --sunlit-dark: var(--day);
-  --shadow: #2a2018;
-  --bounce-light: #4a3020;
-  background-color: #12100e;
-}
-
-@keyframes sunrise {
-  0% {
-    background-color: var(--night);
-  }
-  10% {
-    background-color: var(--dawn);
-  }
-  35% {
-    background-color: var(--morning);
-  }
-  100% {
-    background-color: var(--day);
-  }
-}
-
-@keyframes sunset {
-  0% {
-    background-color: var(--day);
-  }
-  30% {
-    background-color: var(--evening);
-  }
-  60% {
-    background-color: var(--dusk);
-  }
-  90% {
-    background-color: #1a1410;
-  }
-  100% {
-    background-color: #12100e;
-  }
-}
-
-/* Dappled light container */
-#dappled-light {
+#sunlit-scene {
   pointer-events: none;
   position: fixed;
-  height: 100vh;
-  width: 100vw;
-  top: 0;
-  left: 0;
-  z-index: -1;
-}
-
-/* Progressive blur effect */
-#progressive-blur {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-}
-
-#progressive-blur > div {
-  position: absolute;
-  height: 100%;
-  width: 100%;
   inset: 0;
-  backdrop-filter: blur(var(--blur-amount));
-  -webkit-backdrop-filter: blur(var(--blur-amount));
-  mask-image: linear-gradient(252deg, transparent, transparent var(--stop1), black var(--stop2), black);
-  -webkit-mask-image: linear-gradient(252deg, transparent, transparent var(--stop1), black var(--stop2), black);
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: -1;
+  background: linear-gradient(85deg, var(--sunlit-bg-light), var(--sunlit-bg-light-2));
 }
 
-#progressive-blur > div:nth-child(1) {
-  --blur-amount: 6px;
-  --stop1: 0%;
-  --stop2: 0%;
+.sunlit-container {
+  position: fixed;
+  width: 100vw;
+  perspective: 50vw;
+  transform: rotate(-20deg);
+  transition: transform 1.2s ease-out;
 }
 
-#progressive-blur > div:nth-child(2) {
-  --blur-amount: 12px;
-  --stop1: 40%;
-  --stop2: 80%;
+#sunlit-scene.is-sunset .sunlit-container {
+  transform: rotate(-16deg) translateX(10vw);
 }
 
-#progressive-blur > div:nth-child(3) {
-  --blur-amount: 48px;
-  --stop1: 40%;
-  --stop2: 70%;
-}
-
-#progressive-blur > div:nth-child(4) {
-  --blur-amount: 96px;
-  --stop1: 70%;
-  --stop2: 80%;
-}
-
-/* Glow effects */
-#glow {
-  position: absolute;
-  background: linear-gradient(309deg, var(--bounce-light), var(--bounce-light) 20%, transparent);
-  transition: background 1.0s var(--timing-fn);
-  height: 100%;
-  width: 100%;
-  opacity: 0.5;
-}
-
-#glow-bounce {
-  content: "";
-  position: absolute;
-  background: linear-gradient(355deg, var(--bounce-light) 0%, transparent 30%, transparent 100%);
-  transition: background 1.0s var(--timing-fn);
-  opacity: 0.5;
-  height: 100%;
-  width: 100%;
-  bottom: 0;
-}
-
-/* Perspective container for blinds and leaves */
-.perspective {
-  position: absolute;
-  transition: transform 1.7s var(--timing-fn), opacity 4s ease;
-  top: -30vh;
-  right: 0;
-  width: 80vw;
-  height: 130vh;
-  opacity: 0.07;
-  background-blend-mode: darken;
-  transform-origin: top right;
-  transform-style: preserve-3d;
-  transform: matrix3d(0.7500, -0.0625, 0.0000, 0.0008,
-      0.0000, 1.0000, 0.0000, 0.0000,
-      0.0000, 0.0000, 1.0000, 0.0000,
-      0.0000, 0.0000, 0.0000, 1.0000);
-}
-
-.dark .perspective {
-  opacity: 0.2;
-  transform: matrix3d(0.8333, 0.0833, 0.0000, 0.0003,
-      0.0000, 1.0000, 0.0000, 0.0000,
-      0.0000, 0.0000, 1.0000, 0.0000,
-      0.0000, 0.0000, 0.0000, 1.0000);
-}
-
-/* Leaves effect */
-#leaves {
-  position: absolute;
-  background-size: cover;
-  background-repeat: no-repeat;
-  bottom: -20px;
-  right: -700px;
-  width: 1600px;
-  height: 1400px;
-  background-image: url("/leaves.png");
-  filter: url(#wind);
-  animation: billow 8s ease-in-out infinite;
-}
-
-/* Blinds effect */
-#blinds {
-  position: relative;
-  width: 100%;
-}
-
-#blinds .shutter,
-#blinds .bar {
-  background-color: var(--shadow);
-}
-
-#blinds > .shutters {
+.sunlit-shutters {
   display: flex;
   flex-direction: column;
-  align-items: end;
-  gap: 60px;
-  transition: gap 1.0s var(--timing-fn);
+  transform-style: preserve-3d;
+  transition: transform 1.8s ease-in-out;
 }
 
-.dark #blinds > .shutters {
-  gap: 20px;
+.sunlit-shutter {
+  position: fixed;
+  right: 0;
+  width: 80vw;
+  box-sizing: content-box;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 100vw solid var(--sunlit-shadow);
+  background: linear-gradient(200deg, var(--sunlit-shadow), var(--sunlit-shadow-transition) 30%, transparent), url(#noiseFilter);
+  filter: blur(6px);
+  transform: translateX(12vw) rotateY(4deg);
+  transition: top 0.5s ease-in-out, left 0.5s ease-in-out, height 0.5s ease-in-out;
 }
 
-#blinds > .vertical {
+#sunlit-scene.is-sunset .sunlit-shutter {
+  height: 20px !important;
+  margin-top: 18px;
+}
+
+.sunlit-vertical-shutter {
+  position: fixed;
   top: 0;
-  position: absolute;
-  height: 100%;
+  right: 30vw;
+  width: 24px;
+  height: 100vh;
+  background: var(--sunlit-shadow);
+  filter: blur(6px);
+}
+
+.sunlit-tree-shadows {
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
+}
+
+#sunlit-scene.is-sunset .sunlit-tree-shadows {
+  opacity: 1;
+  transition: opacity 1s ease-out;
+}
+
+.sunlit-leaf-wrapper,
+.sunlit-tree-leaf-wrapper {
+  position: fixed;
+  width: 100px;
+  height: 100px;
+}
+
+.sunlit-leaf-wrapper,
+.sunlit-leaf-wrapper > div {
+  border-radius: 0 70px;
+}
+
+.sunlit-leaf-wrapper > div,
+.sunlit-tree-leaf-wrapper > div {
   width: 100%;
-  display: flex;
-  justify-content: space-around;
+  height: 100px;
+  background: var(--sunlit-shadow);
 }
 
-.vertical > .bar {
-  width: 5px;
-  height: 100%;
+.sunlit-leaf-wrapper > div {
+  animation: sunlit-fall ease-in-out infinite;
 }
 
-.shutter {
-  width: 100%;
-  height: 40px;
-  transition: height 1.0s var(--timing-fn);
-}
+.sunlit-leaf-1 { border-radius: 0 70px; }
+.sunlit-leaf-2 { border-radius: 0 80px; }
+.sunlit-leaf-3 { border-radius: 0 90px; }
+.sunlit-leaf-4 { border-radius: 0 100px; }
 
-.dark .shutter {
-  height: 80px;
-}
-
-@keyframes billow {
+@keyframes sunlit-fall {
   0% {
-    transform: perspective(400px) rotateX(0deg) rotateY(0deg) scale(1);
+    opacity: 0;
+    transform: translateY(0) translateX(0) scale(1) rotate(0deg);
   }
-  25% {
-    transform: perspective(400px) rotateX(1deg) rotateY(2deg) scale(1.02);
+  20% {
+    opacity: 0.8;
+    transform: translateY(20vh) translateX(-50px) scale(1) rotate(45deg);
   }
-  50% {
-    transform: perspective(400px) rotateX(-4deg) rotateY(-2deg) scale(0.97);
-  }
-  75% {
-    transform: perspective(400px) rotateX(1deg) rotateY(-1deg) scale(1.04);
+  40% {
+    opacity: 0.8;
+    transform: translateY(40vh) translateX(50px) scale(1) rotate(-45deg);
   }
   100% {
-    transform: perspective(400px) rotateX(0deg) rotateY(0deg) scale(1);
+    opacity: 0.8;
+    transform: translateY(100vh) translateX(0) scale(1.2) rotate(180deg);
   }
 }
 
-/* Dark mode text and element colors */
-body.dark {
-  color: #ccc8c0;
+.sunlit-progressive-blur {
+  pointer-events: none;
+  position: fixed;
+  top: calc(50vh - 50vw);
+  left: calc(50vw - 100vh);
+  width: 100vh;
+  height: 100vw;
+  margin: 0;
+  transform: rotate(90deg);
+  z-index: 5;
 }
 
-body.dark a {
-  color: #d4a060;
+.sunlit-progressive-blur::before,
+.sunlit-progressive-blur::after,
+.sunlit-progressive-blur > div {
+  position: fixed;
+  inset: 0;
 }
 
-body.dark .menu .active {
-  border-color: #d4a060;
+.sunlit-progressive-blur::before {
+  content: "";
+  backdrop-filter: blur(0.5px);
+  -webkit-backdrop-filter: blur(0.5px);
+  mask: linear-gradient(180deg, transparent 0%, #000 12.5%, #000 25%, transparent 37.5%);
+  -webkit-mask: linear-gradient(180deg, transparent 0%, #000 12.5%, #000 25%, transparent 37.5%);
+  z-index: 1;
 }
 
-body.dark .single .main h2 {
-  color: #c4b090;
+.sunlit-progressive-blur > div:nth-of-type(1) {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  mask: linear-gradient(180deg, transparent 12.5%, #000 25%, #000 37.5%, transparent 50%);
+  -webkit-mask: linear-gradient(180deg, transparent 12.5%, #000 25%, #000 37.5%, transparent 50%);
+  z-index: 2;
 }
 
-body.dark .single .main h3 {
-  color: #d4a878;
+.sunlit-progressive-blur > div:nth-of-type(2) {
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  mask: linear-gradient(180deg, transparent 25%, #000 37.5%, #000 50%, transparent 62.5%);
+  -webkit-mask: linear-gradient(180deg, transparent 25%, #000 37.5%, #000 50%, transparent 62.5%);
+  z-index: 3;
 }
 
-body.dark h1.title::before {
-  color: #a08060;
+.sunlit-progressive-blur > div:nth-of-type(3) {
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
+  mask: linear-gradient(180deg, transparent 37.5%, #000 50%, #000 62.5%, transparent 75%);
+  -webkit-mask: linear-gradient(180deg, transparent 37.5%, #000 50%, #000 62.5%, transparent 75%);
+  z-index: 4;
+}
+
+.sunlit-progressive-blur > div:nth-of-type(4) {
+  backdrop-filter: blur(100px);
+  -webkit-backdrop-filter: blur(100px);
+  mask: linear-gradient(180deg, transparent 50%, #000 62.5%, #000 75%, transparent 87.5%);
+  -webkit-mask: linear-gradient(180deg, transparent 50%, #000 62.5%, #000 75%, transparent 87.5%);
+  z-index: 5;
+}
+
+.sunlit-progressive-blur > div:nth-of-type(5) {
+  backdrop-filter: blur(100px);
+  -webkit-backdrop-filter: blur(100px);
+  mask: linear-gradient(180deg, transparent 62.5%, #000 75%, #000 87.5%, transparent 100%);
+  -webkit-mask: linear-gradient(180deg, transparent 62.5%, #000 75%, #000 87.5%, transparent 100%);
+  z-index: 6;
+}
+
+.sunlit-progressive-blur > div:nth-of-type(6) {
+  backdrop-filter: blur(100px);
+  -webkit-backdrop-filter: blur(100px);
+  mask: linear-gradient(180deg, transparent 75%, #000 87.5%, #000 100%);
+  -webkit-mask: linear-gradient(180deg, transparent 75%, #000 87.5%, #000 100%);
+  z-index: 7;
+}
+
+.sunlit-progressive-blur::after {
+  content: "";
+  backdrop-filter: blur(100px);
+  -webkit-backdrop-filter: blur(100px);
+  mask: linear-gradient(180deg, transparent 87.5%, #000 100%);
+  -webkit-mask: linear-gradient(180deg, transparent 87.5%, #000 100%);
+  z-index: 8;
+}
+
+.sunlit-blur-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(85deg, var(--sunlit-bg-light-2), var(--sunlit-bg-light-2) 20%, transparent);
+}
+
+.sunlit-sunset-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 101;
+  background-color: var(--sunlit-sunset);
+  filter: brightness(1.02);
+  mix-blend-mode: multiply;
+  opacity: 0;
+  transition: opacity 3s ease-in-out;
+}
+
+#sunlit-scene.is-sunset .sunlit-sunset-overlay {
+  opacity: 1;
+}
+
+.sunlit-grain {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  filter: brightness(120%) sepia(50%);
+}
+
+.sunlit-grain::before {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  top: -10rem;
+  left: -10rem;
+  width: calc(100% + 20rem);
+  height: calc(100% + 20rem);
+  background-image: url("https://upload.wikimedia.org/wikipedia/commons/5/5c/Image_gaussian_noise_example.png");
   opacity: 0.12;
+  animation: sunlit-noise 1s steps(2) infinite;
 }
 
-body.dark .nav-top {
-  border-color: rgba(140, 120, 100, 0.25);
+@keyframes sunlit-noise {
+  0% { transform: translate3d(0, 2rem, 0); }
+  10% { transform: translate3d(-1rem, -2rem, 0); }
+  20% { transform: translate3d(-4rem, 1rem, 0); }
+  30% { transform: translate3d(4.5rem, -4.5rem, 0); }
+  40% { transform: translate3d(-1rem, 3.5rem, 0); }
+  50% { transform: translate3d(-4.5rem, -2rem, 0); }
+  60% { transform: translate3d(1rem, 3rem, 0); }
+  70% { transform: translate3d(3.5rem, -4rem, 0); }
+  80% { transform: translate3d(-4.5rem, 0.5rem, 0); }
+  90% { transform: translate3d(3rem, -2.5rem, 0); }
+  100% { transform: translate3d(-3.5rem, 0, 0); }
 }
 
-body.dark .dots {
-  border-color: rgba(140, 120, 100, 0.25);
+.sunlit-loading-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  opacity: 0;
 }
 
-body.dark .single blockquote {
-  background: rgba(35, 30, 25, 0.5);
-  border-left-color: rgba(100, 80, 60, 0.5);
+.sunlit-loading-overlay.is-visible {
+  background: var(--sunlit-loading);
+  opacity: 1;
 }
 
-body.dark .single .main h2 {
-  border-color: rgba(100, 85, 70, 0.35);
-}
-
-body.dark table thead th {
-  border-color: rgba(100, 85, 70, 0.35);
-}
-
-body.dark hr {
-  color: rgba(100, 85, 70, 0.35);
-}
-
-body.dark #TableOfContents {
-  background-color: rgba(35, 30, 25, 0.5);
-}
-
-body.dark blockquote,
-body.dark .toc-list,
-body.dark .toc-list ul {
-  border-left-color: rgba(100, 80, 60, 0.5);
-}
-
-body.dark .blog:not(.single) .entry-preview {
-  border-left-color: rgba(170, 145, 120, 0.35);
-  opacity: 0.74;
-}
-
-body.dark .single .meta-primary .date {
-  opacity: 0.68;
-}
-
-body.dark .single .meta-group {
-  opacity: 0.8;
-}
-
-body.dark .single .meta-group a {
-  border-bottom-color: rgba(212, 160, 96, 0.34);
-}
-
-body.dark thead,
-body.dark tfoot,
-body.dark tr:nth-child(even),
-body.dark code {
-  background: rgba(35, 30, 25, 0.5);
-}
-
-/* Remove old dark mode filter - we're using sunlit instead */
-@media (prefers-color-scheme: dark) {
-  html, img, video, iframe {
-    filter: none;
-  }
-}
-
-/* Theme toggle button - subtle and quiet */
 #theme-toggle {
   position: fixed;
-  bottom: 1.2em;
-  right: 1.2em;
-  width: 34px;
-  height: 34px;
-  border: 1px solid rgba(90, 80, 66, 0.16);
-  border-radius: 999px;
-  background: rgba(255, 253, 250, 0.14);
-  color: rgba(95, 82, 68, 0.76);
-  cursor: pointer;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  display: block;
+  width: 20px;
+  height: 20px;
   padding: 0;
-  opacity: 0.52;
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
-  transition: opacity 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: #000;
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity 0.05s ease-out;
 }
 
-#theme-toggle:hover {
-  opacity: 0.86;
-  border-color: rgba(90, 80, 66, 0.3);
-  background: rgba(255, 253, 250, 0.22);
-  color: rgba(70, 58, 48, 0.92);
-}
-
+#theme-toggle:hover { opacity: 0.6; }
 #theme-toggle:focus-visible {
-  outline: 1.5px solid #005077;
-  outline-offset: 2px;
+  outline: 0;
+}
+
+#theme-toggle span,
+#theme-toggle svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+
+#theme-toggle .moon svg {
+  width: 20px;
+  height: 20px;
 }
 
 #theme-toggle svg {
-  width: 15px;
-  height: 15px;
-  stroke: currentColor;
-  stroke-width: 1.35;
-  fill: none;
+  fill: currentColor;
+  stroke: none;
 }
 
-/* Hide moon in dark mode, sun in light mode */
-#theme-toggle .sun { display: block; }
-#theme-toggle .moon { display: none; }
-body.dark #theme-toggle .sun { display: none; }
-body.dark #theme-toggle .moon { display: block; }
-body.dark #theme-toggle {
-  border-color: rgba(212, 160, 96, 0.28);
-  background: rgba(27, 22, 18, 0.2);
-  color: rgba(212, 160, 96, 0.78);
-}
+#theme-toggle .sun { opacity: 0.5; transition: opacity 0.15s ease-out 0.03s; }
+#theme-toggle .moon { opacity: 0; transition: opacity 0.05s ease-out; }
+body.sunset #theme-toggle .sun { opacity: 0; transition: opacity 0.05s ease-out; }
+body.sunset #theme-toggle .moon { opacity: 0.5; transition: opacity 0.15s ease-out 0.03s; }
 
-body.dark #theme-toggle:hover {
-  border-color: rgba(212, 160, 96, 0.48);
-  background: rgba(27, 22, 18, 0.35);
-  color: rgba(225, 181, 124, 0.95);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  body.animation-ready,
-  body.animation-ready.dark {
-    animation: none;
-  }
-
-  .perspective,
-  #glow,
-  #glow-bounce,
-  .shutter {
-    transition: none;
-  }
-
-  #leaves,
-  #leaves * {
-    animation: none !important;
-  }
-
-  #leaves {
-    filter: none;
-  }
-
-  #progressive-blur > div {
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-  }
-
-  #progressive-blur > div:nth-child(n+2) {
-    display: none;
-  }
-}
-
-@media (max-width: 768px) {
-  #progressive-blur > div:nth-child(3),
-  #progressive-blur > div:nth-child(4) {
-    display: none;
-  }
-
-  .perspective {
-    opacity: 0.05;
-  }
-}
-
-@media (max-width: 768px) {
-  #theme-toggle {
-    bottom: 0.9em;
-    right: 0.9em;
-    width: 32px;
-    height: 32px;
+@media (max-width: 599px) {
+  .sunlit-blur-overlay {
+    background: linear-gradient(75deg, var(--sunlit-bg-light-2), var(--sunlit-bg-light-2) 45%, transparent);
   }
 }
