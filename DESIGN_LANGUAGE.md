@@ -1,7 +1,9 @@
 # Design language and long-term visual working note
 
 - Last baseline study: 2026-07-15
-- Site commit studied: `7b3b261` (`main`)
+- Baseline checkpoint: `7c9d201` (`main`)
+- Current accepted environmental direction: **Lokta Conservatory**
+- Design worktree: `experiment/lokta-conservatory`
 - Hugo used for the study: `v0.128.0+extended`
 - Reference theme checkout: `/Users/nisch/code/site/hugo-paged`
 - Live site repository: `/Users/nisch/code/site/nisch-hugo-site`
@@ -86,34 +88,53 @@ Treat these as typographic marginalia, not logos. They should feel discovered on
 the page. Do not multiply decorative symbols across every component or turn the
 floral mark into a loud brand stamp.
 
-### 4. The Sunlit Place environmental field
+### 4. The Lokta Conservatory environmental field
 
-The environmental layer is now a close, independent reconstruction of the
-visible behavior of `https://www.sunlit.place/`, made at Nisch's explicit
-request. It uses the reference's cool-white `#fff` to `#fbf9fa` surface, exact
-Gaussian grain source and stepped motion, diagonal shutter construction,
-vertical window-frame shadow, six-stage directional blur, and peach `#ffbd8d`
-sunset multiply overlay.
+The environmental layer began as an independent reconstruction of the visible
+behavior of `https://www.sunlit.place/`. The accepted successor keeps that
+reference's excellent light physics—diagonal shutters, the vertical window-frame
+shadow, six-stage directional blur, moving Gaussian grain, and the long mode
+transition—but gives the surface and silhouettes an identity specific to this
+site.
 
-The scene has two states rather than a conventional light/dark theme. **Shade**
-uses broad 56 px slats on desktop (42 px on mobile), a -20 degree field rotation,
-and hidden foliage. **Sunset** narrows the slats to 20 px, adds 18 px spacing,
-rotates/translates the field, fades in two 150-leaf shadow clusters and 30
-individually randomized falling leaves, and brings in the peach overlay over
-three seconds. The small sun/moon control persists the choice.
+The scene still has two states rather than a conventional light/dark theme.
+**Shade** is a gently graded lokta-paper field moving only slightly from warm
+ivory toward lichen. The tonal distance across the page must stay shallow: it
+should read as one fibrous sheet, not a beige-to-green split. A locally bundled,
+procedural fibre texture sits under the finer moving grain. Broad shutter light
+provides the environmental movement without visible foliage becoming a second
+subject.
 
-Unlike the previous interpretive pass, the composition intentionally has the
-same strength on Home, Docs, and articles. Do not reintroduce page-specific
-attenuation unless Nisch asks to depart from the reference again. The old leaf
-PNG, warm near-black night mode, and progressive-blur interpretation are no
-longer the active design.
+The paper also participates in the mode change. A sparse, non-repeating set of
+paired highlight-and-shadow fibres is effectively absent in shade, then resolves
+slowly behind the sunset color as raking light reveals the sheet's relief. This
+response intentionally lags the main color transition and is quieter on mobile.
+It should be perceived as thickness in the paper, never recognized immediately
+as a drawn pattern. Keep the local tonal difference around three to five percent
+and do not add cursor parallax or continuous movement to this layer.
 
-Future animation should follow the same rule: long, quiet, environmental motion
-is welcome; bouncing UI, scroll spectacle, parallax stacks, and gratuitous hover
-motion are not. At Nisch's latest explicit request, this layer follows the
-reference even when `prefers-reduced-motion` is active: grain, falling leaves,
-and mode transitions continue. Do not silently restore a motion override unless
-Nisch asks to depart from exact reference behavior.
+**Sunset** is green-gold reflected light, not a dark mode and not an orange
+filter. It narrows and separates the shutters, introduces a restrained
+rhododendron blush, and reveals one niuro-like fern composition at the lower
+right. The fern is deliberately feathered and edge-bound so it can be distinctive
+without occupying the reading measure. Eight sparse peepal leaves fall on
+desktop and five on mobile. Their role is an occasional sign of life, not a
+continuous foreground event.
+
+The governing rule is **silhouette identity and surface character, not more
+darkness or more objects**. Preserve the single-frond composition, low object
+count, quiet shadows, local paper fibre, and long motion. New Nepal-evoking
+botanical references should refine the silhouette vocabulary rather than add a
+second decorative layer. In particular, do not restore the generic 300-leaf
+canopy, make the fern darker, or saturate the amber to create more drama.
+
+Home, Docs, and articles share the same environmental grammar, but the accepted
+strength is intentionally gentle enough for navigation and long reading. Check
+all three before increasing any shadow opacity. Future animation should remain
+slow and environmental; bouncing UI, scroll spectacle, parallax stacks, and
+gratuitous hover motion are not part of this language. At Nisch's explicit
+request, grain, falling leaves, and mode transitions continue even when
+`prefers-reduced-motion` is active. Do not silently restore a motion override.
 
 ### 5. An unboxed portrait
 
@@ -135,9 +156,13 @@ underline. Links use a dark teal-blue (`#005077`) and usually a fine dashed or
 dotted underline. Publication links invert to white on teal on hover; most other
 links remain understated.
 
-The theme toggle is the reference's tiny 18 px sun/moon control, fixed 20 px from
-the upper-left viewport edge at half opacity. It should remain a nearly ambient
-utility, not become a prominent call-to-action.
+The theme toggle is the reference's tiny 18 px sun/moon control at half opacity.
+Whenever the crop-mark frame is present, it occupies the open upper-left corner:
+its center sits two pixels inward from the implied intersection of the two crop
+strokes. At wide viewports its fixed coordinates follow the centered 992 px
+sheet, so the alignment does not drift as exterior margins grow. Below the crop
+system it returns to the original 20 px viewport inset. It should remain a nearly
+ambient utility, not become a prominent call-to-action.
 
 Interaction vocabulary should stay small: underline, ink-color shift, subtle
 background fill, and atmospheric theme transition. Avoid pill buttons, glowing
@@ -185,9 +210,13 @@ rail, or surrounding metadata with UI chrome.
 
 The current colors are best understood by role rather than as a large token set:
 
-- shade surface: `#fff` to `#fbf9fa` at 85 degrees;
-- sunset overlay: `#ffbd8d`, slightly brightened and multiply-blended;
-- architectural shadow: `#c7c7c7` fading through `rgba(232, 230, 229, 0.647)`;
+- shade surface: a shallow `#f5f2e8` through `#f1f1e8` to `#eef0e7` field;
+- sunset overlay: muted amber `#d9ad84` at restrained opacity, multiply-blended;
+- reflected accent: rhododendron wine `rgba(143, 58, 65, 0.15)` near the upper right;
+- architectural shadow: moss-gray `#bcc5b5`, made softer and more diffuse at sunset;
+- botanical shadow: `#687866`, used at low opacity for the fern and peepal leaves;
+- paper surface: locally generated lokta-like pulp beneath fine moving grain,
+  plus a sparse paired-stroke relief revealed by sunset's raking light;
 - legacy warm page variable: `#fbf7f0` (not the active environmental surface);
 - daylight ink: near-black;
 - primary link: `#005077`;
@@ -248,8 +277,11 @@ The site is intentionally small:
 - `content/blog/` — documents and draft test pages;
 - `static/css/custom.css` — local page/layout refinements and portrait treatment;
 - `static/css/sunlit.css` — shade/sunset geometry, blur, grain, foliage, and toggle;
-- `static/js/sunlit.js` — viewport-derived slats, randomized foliage, persistence,
-  and state control;
+- `static/textures/lokta-fibres.svg` — the repeating pulp-scale paper field;
+- `static/textures/lokta-raking-relief.svg` — non-repeating paired fibres that
+  become visible only as sunset settles;
+- `static/js/sunlit.js` — viewport-derived slats, deterministic sparse peepal
+  leaves, persistence, and state control;
 - `layouts/partials/sunlit.html` — the fixed environmental layer and theme control;
 - `themes/hugo-paged/` — a vendored and locally modified base theme;
 - `/Users/nisch/code/site/hugo-paged` — a separate current upstream checkout for
@@ -271,16 +303,18 @@ keep the local divergence explicit.
 The `public/` directory is generated output and is intentionally ignored. Treat
 source files as authoritative; do not hand-edit generated HTML or generated CSS.
 
-## Baseline behavior verified in the in-app browser
+## Current behavior verified in the in-app browser
 
-On 2026-07-15 the site was served at `http://127.0.0.1:1315/` using:
+On 2026-07-15 the baseline was served at `http://127.0.0.1:1315/`. The accepted
+Lokta Conservatory worktree was separately verified at `http://localhost:1316/`
+so the checkpoint remained untouched. The baseline server command was:
 
 ```sh
 hugo server --renderToMemory --disableFastRender --bind 127.0.0.1 \
   --port 1315 --baseURL http://127.0.0.1:1315/
 ```
 
-The following baseline was observed:
+The following behavior was observed in the accepted worktree:
 
 - Home, Docs, and the Gaussian-process article load and navigate correctly.
 - Linden Hill and Jost load successfully in the browser.
@@ -293,9 +327,10 @@ The following baseline was observed:
   horizontal overflow.
 - At mobile width the portrait moves into flow and measures about 240 px; the
   title and prose use the available 358 px content width.
-- With reduced motion active, the reference-identical grain, falling leaves, and
-  transitions intentionally continue.
-- Home, Docs, and article pages intentionally use the same environmental strength.
+- With reduced motion active, the grain, sparse falling leaves, and transitions
+  intentionally continue.
+- Home, Docs, and article pages intentionally share the same gently calibrated
+  environmental strength.
 
 ## Known rough edges: observe before fixing
 
@@ -311,8 +346,9 @@ while doing so.
 - Linden Hill and Jost depend on external font hosts. The current browser loaded
   them, but offline behavior and font-display behavior are not yet documented.
 - The atmospheric background uses large fixed layers, progressive backdrop
-  filters, 330 dynamically generated leaf elements, and continuous animation.
-  It has mobile accommodations, but performance on low-power devices has not
+  filters, one inline SVG fern, eight falling leaf elements on desktop (five on
+  mobile), and continuous animation. This is substantially lighter than the
+  earlier 330-leaf reconstruction, but performance on low-power devices has not
   been profiled and it intentionally does not reduce motion. Its Gaussian grain
   image is loaded from Wikimedia, matching the reference but adding another
   external dependency.

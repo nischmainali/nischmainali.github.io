@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="360" viewBox="0 0 360 360">
+  <defs>
+    <filter id="lokta-pulp" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012 0.12" numOctaves="2" seed="19" stitchTiles="stitch"></feTurbulence>
+      <feColorMatrix type="saturate" values="0"></feColorMatrix>
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0.38 0.54"></feFuncR>
+        <feFuncG type="table" tableValues="0.43 0.58"></feFuncG>
+        <feFuncB type="table" tableValues="0.34 0.48"></feFuncB>
+        <feFuncA type="table" tableValues="0 0.13"></feFuncA>
+      </feComponentTransfer>
+    </filter>
+  </defs>
+  <rect width="360" height="360" filter="url(#lokta-pulp)" opacity="0.42"></rect>
+  <g fill="none" stroke="#66705d" stroke-linecap="round" opacity="0.2">
+    <path d="M-18 38 C38 23 83 28 137 12" stroke-width="0.65"></path>
+    <path d="M47 68 C99 75 142 59 205 67" stroke-width="0.5"></path>
+    <path d="M198 28 C247 39 288 23 378 42" stroke-width="0.7"></path>
+    <path d="M-22 116 C50 103 113 123 177 99" stroke-width="0.45"></path>
+    <path d="M121 142 C184 126 251 148 318 119" stroke-width="0.75"></path>
+    <path d="M262 91 C311 84 341 102 380 93" stroke-width="0.45"></path>
+    <path d="M11 192 C65 178 112 189 165 170" stroke-width="0.7"></path>
+    <path d="M184 203 C237 190 297 205 364 177" stroke-width="0.55"></path>
+    <path d="M-13 257 C52 240 101 262 157 239" stroke-width="0.5"></path>
+    <path d="M101 294 C166 279 227 295 296 269" stroke-width="0.7"></path>
+    <path d="M246 327 C290 312 334 326 374 307" stroke-width="0.55"></path>
+    <path d="M21 342 C55 321 83 325 119 308" stroke-width="0.45"></path>
+    <path d="M26 -12 C42 45 32 84 54 137" stroke-width="0.45"></path>
+    <path d="M173 41 C156 91 170 134 153 187" stroke-width="0.5"></path>
+    <path d="M323 148 C301 204 315 248 292 301" stroke-width="0.45"></path>
+  </g>
+  <g fill="#7b6853" opacity="0.18">
+    <ellipse cx="31" cy="83" rx="1.4" ry="0.7" transform="rotate(-18 31 83)"></ellipse>
+    <ellipse cx="149" cy="32" rx="0.9" ry="1.8" transform="rotate(37 149 32)"></ellipse>
+    <ellipse cx="226" cy="104" rx="1.6" ry="0.7" transform="rotate(12 226 104)"></ellipse>
+    <ellipse cx="335" cy="63" rx="1" ry="1.5" transform="rotate(-31 335 63)"></ellipse>
+    <ellipse cx="73" cy="225" rx="1.7" ry="0.8" transform="rotate(28 73 225)"></ellipse>
+    <ellipse cx="203" cy="251" rx="1" ry="1.6" transform="rotate(-9 203 251)"></ellipse>
+    <ellipse cx="319" cy="218" rx="1.5" ry="0.7" transform="rotate(-22 319 218)"></ellipse>
+    <ellipse cx="132" cy="335" rx="1.3" ry="0.7" transform="rotate(16 132 335)"></ellipse>
+  </g>
+</svg>

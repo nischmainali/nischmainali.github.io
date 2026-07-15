@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <defs>
+    <path id="fibre-01" d="M-110 98 C170 128 316 211 548 226 C760 241 940 298 1210 382 C1384 436 1511 438 1700 486"></path>
+    <path id="fibre-02" d="M-140 263 C136 287 339 374 558 392 C806 412 1018 529 1235 554 C1446 578 1570 645 1715 704"></path>
+    <path id="fibre-03" d="M-90 481 C142 496 334 568 554 616 C778 665 1035 704 1270 800 C1448 872 1570 886 1708 929"></path>
+    <path id="fibre-04" d="M118 -52 C210 95 358 180 468 313 C578 448 786 500 930 630 C1069 755 1188 852 1350 1040"></path>
+    <path id="fibre-05" d="M530 -90 C600 60 676 173 821 266 C971 362 1068 493 1191 590 C1320 692 1450 765 1650 824"></path>
+    <path id="fibre-06" d="M-48 714 C238 744 438 829 686 863 C926 896 1122 1000 1400 1031"></path>
+    <path id="fibre-07" d="M160 81 C256 112 338 141 417 212"></path>
+    <path id="fibre-08" d="M288 451 C410 472 494 548 626 566"></path>
+    <path id="fibre-09" d="M848 93 C973 158 1014 226 1148 265"></path>
+    <path id="fibre-10" d="M1082 658 C1234 680 1327 756 1477 788"></path>
+    <path id="fibre-11" d="M55 620 C152 628 225 690 315 718"></path>
+    <path id="fibre-12" d="M692 356 C778 378 849 443 932 453"></path>
+    <path id="fibre-13" d="M1247 82 C1202 174 1237 247 1208 337"></path>
+    <path id="fibre-14" d="M411 725 C453 654 440 598 486 529"></path>
+    <path id="fibre-15" d="M1510 250 C1463 324 1500 379 1456 453"></path>
+    <path id="fibre-16" d="M731 839 C756 780 748 726 788 672"></path>
+    <path id="fibre-17" d="M948 742 C1001 713 1046 729 1090 706 C1120 690 1154 694 1189 671"></path>
+    <path id="fibre-18" d="M92 350 C144 330 196 353 250 333 C303 313 352 333 407 306"></path>
+    <path id="fibre-19" d="M1358 520 C1401 489 1447 500 1492 472"></path>
+
+    <g id="fibres" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <use href="#fibre-01" stroke-width="1.15"></use>
+      <use href="#fibre-02" stroke-width="0.72"></use>
+      <use href="#fibre-03" stroke-width="1.05"></use>
+      <use href="#fibre-04" stroke-width="0.62"></use>
+      <use href="#fibre-05" stroke-width="0.9"></use>
+      <use href="#fibre-06" stroke-width="0.68"></use>
+      <use href="#fibre-07" stroke-width="0.52"></use>
+      <use href="#fibre-08" stroke-width="0.86"></use>
+      <use href="#fibre-09" stroke-width="0.58"></use>
+      <use href="#fibre-10" stroke-width="0.74"></use>
+      <use href="#fibre-11" stroke-width="0.48"></use>
+      <use href="#fibre-12" stroke-width="0.66"></use>
+      <use href="#fibre-13" stroke-width="0.54"></use>
+      <use href="#fibre-14" stroke-width="0.42"></use>
+      <use href="#fibre-15" stroke-width="0.6"></use>
+      <use href="#fibre-16" stroke-width="0.46"></use>
+      <use href="#fibre-17" stroke-width="0.62"></use>
+      <use href="#fibre-18" stroke-width="0.4"></use>
+      <use href="#fibre-19" stroke-width="0.5"></use>
+    </g>
+  </defs>
+
+  <g>
+    <use href="#fibres" transform="translate(1.2 1.4)" stroke="#667063" opacity="0.32"></use>
+    <use href="#fibres" transform="translate(-0.8 -0.9)" stroke="#fff9ec" opacity="0.48"></use>
+  </g>
+</svg>

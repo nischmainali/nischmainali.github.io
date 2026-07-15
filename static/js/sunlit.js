@@ -1,6 +1,7 @@
-// Shade/sunset controller and procedural foliage for the Sunlit scene.
+// Shade/sunset controller with deterministic peepal foliage for Lokta Conservatory.
 (function() {
   var STORAGE_KEY = 'sunlit-theme';
+  var SVG_NS = 'http://www.w3.org/2000/svg';
 
   function normalizeState(value) {
     return value === 'sunset' || value === 'dark' ? 'sunset' : 'shade';
@@ -22,9 +23,38 @@
     }
   }
 
-  function makeLeaf(className) {
-    var leaf = document.createElement('div');
-    leaf.className = className;
+  function seededRandom(seed) {
+    var state = seed >>> 0;
+    return function() {
+      state = (state * 1664525 + 1013904223) >>> 0;
+      return state / 4294967296;
+    };
+  }
+
+  function createSvgElement(name, attributes) {
+    var element = document.createElementNS(SVG_NS, name);
+    Object.keys(attributes).forEach(function(attribute) {
+      element.setAttribute(attribute, attributes[attribute]);
+    });
+    return element;
+  }
+
+  function createPeepalLeaf() {
+    var leaf = createSvgElement('svg', {
+      'class': 'sunlit-peepal-leaf',
+      'viewBox': '0 0 100 132',
+      'aria-hidden': 'true'
+    });
+    var stem = createSvgElement('path', {
+      'class': 'sunlit-peepal-stem',
+      'd': 'M50 30 C49 19 45 10 42 2'
+    });
+    var blade = createSvgElement('path', {
+      'class': 'sunlit-peepal-blade',
+      'd': 'M50 31 C37 9 12 17 11 44 C10 70 34 87 49 126 C62 88 89 71 89 43 C89 17 64 10 50 31 Z'
+    });
+    leaf.appendChild(stem);
+    leaf.appendChild(blade);
     return leaf;
   }
 
@@ -53,77 +83,35 @@
     });
   }
 
-  function renderFoliage() {
+  function renderFallingLeaves() {
     var fallingLayer = document.querySelector('.sunlit-falling-leaves');
-    var treeLayer = document.querySelector('.sunlit-tree-shadows');
-    if (!fallingLayer || !treeLayer) return;
+    if (!fallingLayer) return;
 
     fallingLayer.replaceChildren();
-    treeLayer.replaceChildren();
 
-    var width = window.innerWidth;
-    var height = window.innerHeight;
+    var isMobile = window.innerWidth < 600;
+    var count = isMobile ? 5 : 8;
+    var random = seededRandom(isMobile ? 0x4e495552 : 0x4c4f4b54);
 
-    for (var fallingIndex = 0; fallingIndex < 30; fallingIndex += 1) {
-      var fallingX = Math.random() * width * 0.25 + width * 0.8;
-      var fallingY = Math.random() * height * 0.5;
-      var fallingType = Math.ceil(Math.random() * 4);
-      var fallingDepth = Math.random() + 1;
-      var fallingBlur = 4 + 8 * fallingDepth;
-      var fallingScale = 0.2 + 0.4 * fallingDepth;
-      var fallingOpacity = 0.8 * (2 - fallingDepth);
-      // The reference generates (but does not render) an initial rotation value.
-      Math.random();
+    for (var index = 0; index < count; index += 1) {
+      var wrapper = document.createElement('div');
+      var duration = 11.5 + random() * 7;
+      var direction = random() < 0.5 ? -1 : 1;
+      var drift = 28 + random() * 76;
 
-      var fallingWrapper = document.createElement('div');
-      fallingWrapper.className = 'sunlit-leaf-wrapper';
-      fallingWrapper.style.top = fallingY + 'px';
-      fallingWrapper.style.left = fallingX + 'px';
-      fallingWrapper.style.transform = 'scale(' + fallingScale + ')';
-
-      var fallingLeaf = makeLeaf('sunlit-leaf-' + fallingType);
-      fallingLeaf.style.opacity = fallingOpacity;
-      fallingLeaf.style.filter = 'blur(' + fallingBlur + 'px)';
-      fallingLeaf.style.animationDelay = (Math.random() * 3) + 's';
-      fallingLeaf.style.animationDuration = (3 + Math.random() * 3) + 's';
-      fallingWrapper.appendChild(fallingLeaf);
-      fallingLayer.appendChild(fallingWrapper);
-    }
-
-    var clusterX = [0.95 * width, 0.75 * width];
-    var clusterY = [0.15 * height, 0.4 * height];
-    var offsets = [-100, -70, -40, -10, 20, 50, 80, 110, 140, 170];
-    var xSpread = 0.2 * width;
-    var ySpread = 0.4 * height;
-
-    for (var cluster = 0; cluster < 2; cluster += 1) {
-      var baseX = clusterX[cluster] + 0.2 * offsets[cluster];
-      var baseY = clusterY[cluster] + 5 * offsets[cluster];
-
-      for (var group = 0; group < 10; group += 1) {
-        for (var leafIndex = 0; leafIndex < 15; leafIndex += 1) {
-          var treeX = baseX + Math.random() * xSpread * 2 - xSpread;
-          var treeY = baseY + Math.random() * ySpread * 2 - ySpread + 0.4 * (treeX - baseX);
-          var treeType = Math.ceil(Math.random() * 4);
-          var treeDepth = Math.random() + 1;
-          var treeBlur = 4 + 4 * treeDepth;
-          var treeScale = 0.2 + 0.6 * treeDepth;
-          var treeOpacity = 2 - 1.1 * treeDepth;
-          var treeRotation = 45 + Math.random() * 180;
-
-          var treeWrapper = document.createElement('div');
-          treeWrapper.className = 'sunlit-tree-leaf-wrapper';
-          treeWrapper.style.top = treeY + 'px';
-          treeWrapper.style.left = treeX + 'px';
-          treeWrapper.style.transform = 'scale(' + treeScale + ') rotate(' + treeRotation + 'deg)';
-
-          var treeLeaf = makeLeaf('sunlit-leaf-' + treeType);
-          treeLeaf.style.opacity = treeOpacity;
-          treeLeaf.style.filter = 'blur(' + treeBlur + 'px)';
-          treeWrapper.appendChild(treeLeaf);
-          treeLayer.appendChild(treeWrapper);
-        }
-      }
+      wrapper.className = 'sunlit-peepal-wrapper';
+      wrapper.style.setProperty('--leaf-x', (62 + random() * 40) + 'vw');
+      wrapper.style.setProperty('--leaf-size', ((isMobile ? 26 : 32) + random() * (isMobile ? 25 : 30)) + 'px');
+      wrapper.style.setProperty('--leaf-blur', (1.2 + random() * 3.4) + 'px');
+      wrapper.style.setProperty('--leaf-opacity', (0.4 + random() * 0.3).toFixed(2));
+      wrapper.style.setProperty('--leaf-duration', duration + 's');
+      wrapper.style.setProperty('--leaf-delay', (-random() * duration) + 's');
+      wrapper.style.setProperty('--leaf-drift-a', (direction * drift) + 'px');
+      wrapper.style.setProperty('--leaf-drift-b', (-direction * drift * 0.62) + 'px');
+      wrapper.style.setProperty('--leaf-drift-c', (direction * drift * 0.34) + 'px');
+      wrapper.style.setProperty('--leaf-spin', (direction * (190 + random() * 250)) + 'deg');
+      wrapper.appendChild(createPeepalLeaf());
+      fallingLayer.appendChild(wrapper);
     }
   }
 
@@ -151,10 +139,11 @@
     var loading = document.querySelector('.sunlit-loading-overlay');
     var button = document.getElementById('theme-toggle');
     var state = getStoredState();
+    var resizeTimer = null;
 
     if (!scene) return;
     if (loading) loading.classList.add('is-visible');
-    renderFoliage();
+    renderFallingLeaves();
     applyState(state, false);
 
     window.setTimeout(function() {
@@ -169,12 +158,15 @@
     }
 
     window.addEventListener('resize', function() {
-      if (loading) loading.classList.add('is-visible');
-      renderFoliage();
-      applyState(document.body.classList.contains('sunset') ? 'sunset' : 'shade', false);
-      window.setTimeout(function() {
-        if (loading) loading.classList.remove('is-visible');
-      }, 250);
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(function() {
+        if (loading) loading.classList.add('is-visible');
+        renderFallingLeaves();
+        applyState(document.body.classList.contains('sunset') ? 'sunset' : 'shade', false);
+        window.setTimeout(function() {
+          if (loading) loading.classList.remove('is-visible');
+        }, 250);
+      }, 120);
     });
   }
 
