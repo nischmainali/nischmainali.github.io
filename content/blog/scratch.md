@@ -9,7 +9,7 @@ categories = ["Notes"]
 tags = ["Typography", "Gaussian Process"]
 +++
 
-This specimen checks the {{< smallcaps >}}editorial vocabulary{{< /smallcaps >}} of an opened post: ordinary prose, an `inline expression`, keyboard input such as <kbd>⌘</kbd> + <kbd>K</kbd>, and a footnote.[^fn:1]
+This specimen checks the {{< smallcaps >}}editorial vocabulary{{< /smallcaps >}} of an opened post: ordinary prose, an `inline expression`, keyboard input such as <kbd>⌘</kbd> + <kbd>K</kbd>, and a footnote.[^fn:1] It also carries a margin note for comparison.{{< sidenote >}}This is an explicit sidenote: optional context stays beside the sentence without interrupting the reading line. On narrower screens, its reference number becomes a tap-to-reveal control.{{< /sidenote >}}
 
 ## Heading 1 {#heading-1}
 

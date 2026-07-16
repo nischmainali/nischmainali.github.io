@@ -1,53 +1,5 @@
-{{- $dateFormat := "2 January 2006" -}}
-{{- $showReadingTime := true -}}
-{{- if isset .Params "show_reading_time" -}}
-  {{- $showReadingTime = .Params.show_reading_time -}}
+{{- if not .Date.IsZero -}}
+<p class="article-date" aria-label="Publication date">
+  <time class="dt-published" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 January 2006" }}</time>
+</p>
 {{- end -}}
-{{- $hasPublished := not .Date.IsZero -}}
-{{- $hasRevision := and $hasPublished (gt .Lastmod.Unix (add .Date.Unix 86400)) -}}
-
-<div class="article-meta-line" aria-label="Article details">
-  <div class="article-meta-primary">
-    {{ with .Params.author }}
-    <span class="article-author p-author">By {{ . }}</span>
-    {{ end }}
-
-    {{ if $hasPublished }}
-    <span class="article-published">
-      <span class="article-meta-label">Published</span>
-      <time class="dt-published" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format $dateFormat }}</time>
-    </span>
-    {{ end }}
-
-    {{ if $hasRevision }}
-    <span class="article-revised">
-      <span class="article-meta-label">Revised</span>
-      <time class="dt-updated" datetime="{{ .Lastmod.Format "2006-01-02" }}">{{ .Lastmod.Format $dateFormat }}</time>
-    </span>
-    {{ end }}
-
-    {{ if $showReadingTime }}
-    <span class="article-reading-time">{{ .ReadingTime }} min read</span>
-    {{ end }}
-  </div>
-
-  {{ with .Params.categories }}
-  <div class="article-meta-terms article-categories">
-    <span class="article-meta-label">Filed under</span>
-    {{ $last := sub (len .) 1 }}
-    {{ range $index, $term := . }}
-      <a href="{{ relURL (print "categories/" $term "/" | urlize) }}" class="p-category">{{ $term }}</a>{{ if lt $index $last }}<span class="article-term-separator" aria-hidden="true">,</span>{{ end }}
-    {{ end }}
-  </div>
-  {{ end }}
-
-  {{ with .Params.tags }}
-  <div class="article-meta-terms article-topics">
-    <span class="article-meta-label">Topics</span>
-    {{ $last := sub (len .) 1 }}
-    {{ range $index, $term := . }}
-      <a href="{{ relURL (print "tags/" $term "/" | urlize) }}" class="p-category">{{ $term }}</a>{{ if lt $index $last }}<span class="article-term-separator" aria-hidden="true">,</span>{{ end }}
-    {{ end }}
-  </div>
-  {{ end }}
-</div>

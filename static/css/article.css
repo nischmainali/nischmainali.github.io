@@ -1,7 +1,7 @@
 /*
  * Opened articles: a quiet scholarly field note on the existing Lokta sheet.
  * This file is intentionally scoped to article pages; it must not establish a
- * second page frame, navigation rail, or environmental layer.
+ * second page frame, global navigation system, or environmental layer.
  */
 
 .single.blog {
@@ -93,57 +93,18 @@
   text-wrap: pretty;
 }
 
-.single.blog .article-meta-line {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.48rem 1.1rem;
-  margin-top: 1.05rem;
+.single.blog .article-date {
+  margin: 1.1rem 0 0;
   color: var(--article-muted);
   font-family: Jost, sans-serif;
   font-size: 0.78rem;
   line-height: 1.45;
-  letter-spacing: 0.018em;
-}
-
-.single.blog .article-meta-primary,
-.single.blog .article-meta-terms {
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.18rem 0.38rem;
-}
-
-.single.blog .article-meta-label {
-  color: var(--article-faint);
-  font-size: 0.9em;
-  letter-spacing: 0.075em;
-  text-transform: uppercase;
-}
-
-.single.blog .article-term-separator {
-  color: var(--article-faint);
-}
-
-.single.blog .article-meta-primary > * + *::before {
-  content: "·";
-  margin-right: 0.38rem;
-  color: var(--article-faint);
-}
-
-.single.blog .article-meta-line a {
-  padding-bottom: 0.02em;
-  border-bottom: 1px dotted rgba(39, 63, 57, 0.36);
-  color: inherit;
-}
-
-.single.blog .article-meta-line a:hover,
-.single.blog .article-meta-line a:focus-visible {
-  border-bottom-color: currentColor;
-  color: var(--article-blue);
+  letter-spacing: 0.025em;
+  font-variant-numeric: oldstyle-nums;
 }
 
 .single.blog .article-body {
+  position: relative;
   padding-top: 0;
   font-size: 1rem;
   line-height: 1.62;
@@ -311,6 +272,62 @@
 .single.blog #TableOfContents a:focus-visible {
   border-bottom-color: currentColor;
   color: var(--article-blue);
+}
+
+/* Explicit Tufte-style sidenotes. They occupy the right margin only when the
+ * viewport can carry marginalia without narrowing or covering the prose. */
+
+.single.blog .sidenote-toggle {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.single.blog .sidenote-ref {
+  margin-left: 0.08em;
+  border: 0;
+  color: var(--article-wine);
+  font-family: Jost, sans-serif;
+  font-size: 0.68em;
+  font-style: normal;
+  font-variant-numeric: oldstyle-nums;
+  line-height: 0;
+  vertical-align: super;
+}
+
+.single.blog .sidenote-toggle:focus-visible + .sidenote-ref {
+  outline: 1px solid currentColor;
+  outline-offset: 0.18rem;
+}
+
+.single.blog .sidenote {
+  display: none;
+  margin: 0.65rem 0 0.9rem;
+  padding: 0.62rem 0.75rem 0.65rem 0.9rem;
+  border-left: 1px solid var(--article-rule-strong);
+  background: var(--article-block);
+  color: var(--article-muted);
+  font-family: Jost, sans-serif;
+  font-size: 0.8rem;
+  font-style: normal;
+  line-height: 1.45;
+  letter-spacing: 0.012em;
+  text-wrap: pretty;
+}
+
+.single.blog .sidenote-toggle:checked + .sidenote-ref + .sidenote {
+  display: block;
+}
+
+.single.blog .sidenote-number {
+  margin-right: 0.42em;
+  color: var(--article-wine);
+  font-variant-numeric: oldstyle-nums;
 }
 
 /* Reading vocabulary */
@@ -776,6 +793,87 @@
   }
 }
 
+@media (min-width: 1180px) {
+  .single.blog .article-contents-rail {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -10rem;
+    width: 8.5rem;
+  }
+
+  .single.blog .article-contents {
+    position: sticky;
+    top: 2rem;
+    max-height: calc(100vh - 4rem);
+    margin: 0;
+    padding: 0.52rem 0 0.62rem;
+    border-block: 1px solid var(--article-rule);
+    opacity: 0.76;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    transition: opacity 120ms ease;
+  }
+
+  .single.blog .article-contents:hover,
+  .single.blog .article-contents:focus-within {
+    opacity: 1;
+  }
+
+  .single.blog .article-contents summary {
+    display: block;
+    font-size: 0.68rem;
+    line-height: 1.35;
+  }
+
+  .single.blog .article-contents-count {
+    display: none;
+  }
+
+  .single.blog .article-contents-list {
+    padding: 0.48rem 0 0.1rem;
+  }
+
+  .single.blog #TableOfContents ul ul {
+    margin: 0.25rem 0 0.32rem 0.48rem;
+  }
+
+  .single.blog #TableOfContents li {
+    margin: 0.32rem 0;
+    padding-left: 0.78rem;
+    font-family: Jost, sans-serif;
+    font-size: 0.72rem;
+    line-height: 1.32;
+    hyphens: none;
+  }
+
+  .single.blog #TableOfContents li::before {
+    font-size: 0.64em;
+    line-height: 1.8;
+  }
+
+  .single.blog .sidenote-ref {
+    cursor: default;
+  }
+
+  .single.blog .sidenote-toggle {
+    display: none;
+  }
+
+  .single.blog .sidenote {
+    display: block;
+    float: right;
+    clear: right;
+    width: 10.5rem;
+    margin: 0.2rem -12rem 0.9rem 1.5rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font-size: 0.74rem;
+    line-height: 1.42;
+  }
+}
+
 @media (max-width: 767px) {
   .single.blog .article-header.article-meta {
     margin-top: 2.1rem;
@@ -790,19 +888,6 @@
     top: -0.3em;
     left: -0.08em;
     font-size: 5.8em;
-  }
-
-  .single.blog .article-meta-line {
-    display: grid;
-    gap: 0.42rem;
-  }
-
-  .single.blog .article-meta-primary > * + *::before {
-    content: none;
-  }
-
-  .single.blog .article-meta-primary {
-    gap: 0.18rem 0.72rem;
   }
 
   .single.blog .article-body {
@@ -853,6 +938,10 @@
   .single.blog .article-figure figcaption {
     text-align: left;
   }
+
+  .single.blog .sidenote-ref {
+    cursor: pointer;
+  }
 }
 
 @media print {
@@ -900,5 +989,23 @@
 
   .single.blog .article-body a {
     color: inherit;
+  }
+
+  .single.blog .article-contents-rail {
+    display: none;
+  }
+
+  .single.blog .sidenote-toggle {
+    display: none;
+  }
+
+  .single.blog .sidenote {
+    display: block;
+    float: none;
+    width: auto;
+    margin: 0.6rem 0;
+    padding: 0.5rem 0 0.5rem 0.8rem;
+    border-left: 1px solid #888;
+    background: transparent;
   }
 }

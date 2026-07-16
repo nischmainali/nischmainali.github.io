@@ -21,15 +21,17 @@
   <main class="main article-body e-content" id="article-content">
     {{ if $showToc }}
       {{ .Scratch.Set "has_toc" true }}
-      <details class="article-contents" data-article-contents open>
-        <summary>
-          <span class="article-contents-label">Contents</span>
-          <span class="article-contents-count">{{ $tocItems }} {{ cond (eq $tocItems 1) "section" "sections" }}</span>
-        </summary>
-        <div class="article-contents-list">
-          {{ $toc }}
-        </div>
-      </details>
+      <aside class="article-contents-rail" aria-label="Article contents">
+        <details class="article-contents" data-article-contents open>
+          <summary>
+            <span class="article-contents-label">Contents</span>
+            <span class="article-contents-count">{{ $tocItems }} {{ cond (eq $tocItems 1) "section" "sections" }}</span>
+          </summary>
+          <div class="article-contents-list">
+            {{ $toc }}
+          </div>
+        </details>
+      </aside>
     {{ end }}
 
     {{ if (and (eq (getenv "HUGO_BLOGDOWN_POST_RELREF") "") (and (and .Params.date (lt (now.AddDate 0 0 ($.Site.Params.holdDays | default -90)) .Date)) (in (string .Content) "<!--# ON_HOLD -->"))) }}
