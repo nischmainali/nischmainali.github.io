@@ -236,6 +236,10 @@ Its governing choices are:
 - the title, subtitle, and floral mark remain in the wide editorial field while
   prose uses a calmer 41 rem / 656 px measure. Code and explicitly wide figures
   may make only a modest 45 rem / 720 px breakout; tables stay with the prose;
+- the opening begins one compact optical interval below the navigation rule.
+  Title, subtitle, and date form a close descending stack; the floral mark is a
+  restrained watermark tucked above and left of the title, never an icon, badge,
+  or separate decorative component;
 - the title area carries only the publication date beneath the subtitle. Author,
   revision, reading-time, category, and topic registers were explicitly removed
   after the first specimen proved them to be unnecessary complication;

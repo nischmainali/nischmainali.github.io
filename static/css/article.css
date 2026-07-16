@@ -74,7 +74,7 @@
 }
 
 .single.blog .article-header.article-meta {
-  margin: clamp(2.25rem, 6vw, 4.2rem) 0 2.35rem;
+  margin: clamp(1.8rem, 4vw, 3.2rem) 0 2.2rem;
   padding: 0;
   border: 0;
 }
@@ -90,15 +90,16 @@
 }
 
 .single.blog .article-title.title::before {
-  top: -0.48em;
-  left: -0.12em;
-  font-size: 7.5em;
+  top: -0.43em;
+  left: -0.17em;
+  font-size: 6.6em;
   line-height: 1;
+  opacity: 0.055;
 }
 
 .single.blog .article-subtitle.subtitle {
   max-width: 50ch;
-  margin: 0.8rem 0 0;
+  margin: 0.65rem 0 0;
   color: var(--article-muted);
   font-size: clamp(1.08rem, 2vw, 1.22rem);
   font-style: italic;
@@ -108,7 +109,7 @@
 }
 
 .single.blog .article-date {
-  margin: 1.1rem 0 0;
+  margin: 0.9rem 0 0;
   color: var(--article-muted);
   font-family: Jost, sans-serif;
   font-size: 0.78rem;
@@ -919,7 +920,8 @@
 
 @media (max-width: 767px) {
   .single.blog .article-header.article-meta {
-    margin-top: 2.1rem;
+    margin-top: 1.75rem;
+    margin-bottom: 2rem;
   }
 
   .single.blog .article-title.title {
@@ -928,9 +930,9 @@
   }
 
   .single.blog .article-title.title::before {
-    top: -0.3em;
-    left: -0.08em;
-    font-size: 5.8em;
+    top: -0.34em;
+    left: -0.14em;
+    font-size: 5.15em;
   }
 
   .single.blog .article-body {
