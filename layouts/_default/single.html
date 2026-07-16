@@ -1,0 +1,45 @@
+{{ partial "header.html" . }}
+
+{{- $toc := partial "toc.html" . -}}
+{{- $tocItems := len (findRE `<li>` $toc) -}}
+{{- $tocThreshold := default 3 .Site.Params.toc_threshold -}}
+{{- $showToc := ge $tocItems $tocThreshold -}}
+{{- if isset .Params "show_toc" -}}
+  {{- $showToc = .Params.show_toc -}}
+{{- end -}}
+
+<article class="article-shell h-entry" aria-labelledby="article-title">
+  <header class="article-meta article-header">
+    <h1 class="title article-title p-name" id="article-title">{{ .Title | markdownify }}</h1>
+    {{ with .Params.subtitle }}
+    <p class="subtitle article-subtitle p-summary">{{ . | markdownify }}</p>
+    {{ end }}
+    {{ partial "article-meta.html" . }}
+  </header>
+
+  <main class="main article-body e-content" id="article-content">
+    {{ if $showToc }}
+      {{ .Scratch.Set "has_toc" true }}
+      <details class="article-contents" data-article-contents open>
+        <summary>
+          <span class="article-contents-label">Contents</span>
+          <span class="article-contents-count">{{ $tocItems }} {{ cond (eq $tocItems 1) "section" "sections" }}</span>
+        </summary>
+        <div class="article-contents-list">
+          {{ $toc }}
+        </div>
+      </details>
+    {{ end }}
+
+    {{ if (and (eq (getenv "HUGO_BLOGDOWN_POST_RELREF") "") (and (and .Params.date (lt (now.AddDate 0 0 ($.Site.Params.holdDays | default -90)) .Date)) (in (string .Content) "<!--# ON_HOLD -->"))) }}
+      {{ (index (split .Content "<!--# ON_HOLD -->") 0) | safeHTML }}
+    {{ else }}
+      {{ .Content }}
+    {{ end }}
+
+    {{ partial "post_nav.html" . }}
+    {{ partial "main_extra.html" . }}
+  </main>
+</article>
+
+{{ partial "footer.html" . }}

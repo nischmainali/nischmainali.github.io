@@ -1,0 +1,4 @@
+<link rel="stylesheet" href="https://indestructibletype.com/fonts/Jost.css">
+{{ if and .IsPage (eq .Section "blog") }}
+<link rel="stylesheet" href="{{ printf "%s?v=%d" ("css/article.css" | relURL) now.Unix }}">
+{{ end }}
