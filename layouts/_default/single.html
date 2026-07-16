@@ -22,7 +22,7 @@
     {{ if $showToc }}
       {{ .Scratch.Set "has_toc" true }}
       <aside class="article-contents-rail" aria-label="Article contents">
-        <details class="article-contents" data-article-contents open>
+        <details class="article-contents" data-article-contents>
           <summary>
             <span class="article-contents-label">Contents</span>
             <span class="article-contents-count">{{ $tocItems }} {{ cond (eq $tocItems 1) "section" "sections" }}</span>

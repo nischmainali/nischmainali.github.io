@@ -5,6 +5,12 @@
  */
 
 .single.blog {
+  --article-measure: 41rem;
+  --article-breakout: 45rem;
+  --article-rail-width: 7.25rem;
+  --article-rail-gap: 2.75rem;
+  --article-note-width: 15rem;
+  --article-note-offset: 17rem;
   --article-ink: #202622;
   --article-green: #173d31;
   --article-blue: #173f51;
@@ -30,6 +36,14 @@
   --article-block: rgba(217, 190, 151, 0.25);
   --article-block-strong: rgba(202, 174, 139, 0.34);
   --article-code-ink: #292d26;
+}
+
+/* The light control belongs to the crop corner, not to the reading viewport.
+ * Let it leave with the masthead so it can never cover marginalia or prose. */
+.single.blog #theme-toggle {
+  position: absolute;
+  top: 20px;
+  left: 20px;
 }
 
 .single.blog .article-shell {
@@ -60,9 +74,9 @@
 }
 
 .single.blog .article-header.article-meta {
-  margin: clamp(2.25rem, 6vw, 4.2rem) 0 1.7rem;
-  padding: 0 0 1.35rem;
-  border-bottom: 1px solid var(--article-rule);
+  margin: clamp(2.25rem, 6vw, 4.2rem) 0 2.35rem;
+  padding: 0;
+  border: 0;
 }
 
 .single.blog .article-title.title {
@@ -105,18 +119,21 @@
 
 .single.blog .article-body {
   position: relative;
+  width: min(100%, var(--article-measure));
+  margin-right: auto;
+  margin-left: auto;
   padding-top: 0;
   font-size: 1rem;
-  line-height: 1.62;
+  line-height: 1.64;
 }
 
 .single.blog .article-body > p:first-of-type {
-  font-size: 1.055rem;
-  line-height: 1.62;
+  font-size: 1.035rem;
+  line-height: 1.64;
 }
 
 .single.blog .article-body p {
-  margin: 1.05em 0;
+  margin: 0.92em 0;
   text-wrap: pretty;
 }
 
@@ -131,9 +148,9 @@
 }
 
 .single.blog .article-body h2 {
-  margin: 3.15rem 0 1.05rem;
-  padding-bottom: 0.28rem;
-  border-bottom: 1px solid var(--article-rule);
+  margin: 2.55rem 0 0.82rem;
+  padding: 0;
+  border: 0;
   color: var(--article-green);
   font-size: clamp(1.35rem, 2.4vw, 1.55rem);
   font-weight: normal;
@@ -141,7 +158,7 @@
 }
 
 .single.blog .article-body h3 {
-  margin: 2.55rem 0 1rem;
+  margin: 2.15rem 0 0.82rem;
   color: var(--article-blue);
   font-size: 1.08rem;
   font-variant: small-caps;
@@ -152,7 +169,7 @@
 }
 
 .single.blog .article-body h4 {
-  margin: 2.2rem 0 0.75rem;
+  margin: 1.9rem 0 0.68rem;
   color: var(--article-green);
   font-size: 1rem;
   font-style: italic;
@@ -191,9 +208,9 @@
 }
 
 .single.blog .article-contents {
-  margin: 1.05rem 0 2.5rem;
-  padding: 0.58rem 0 0.72rem;
-  border-block: 1px solid var(--article-rule);
+  margin: 0.35rem 0 2.15rem;
+  padding: 0.35rem 0 0.6rem;
+  border: 0;
   background: transparent;
 }
 
@@ -224,7 +241,7 @@
 }
 
 .single.blog .article-contents-list {
-  padding: 0.55rem 0 0.15rem 1.1rem;
+  padding: 0.5rem 0 0.1rem 0.25rem;
 }
 
 .single.blog #TableOfContents {
@@ -242,36 +259,44 @@
 }
 
 .single.blog #TableOfContents ul ul {
-  margin: 0.28rem 0 0.35rem 1.25rem;
+  margin: 0.24rem 0 0.32rem 0.85rem;
 }
 
 .single.blog #TableOfContents li {
   position: relative;
-  margin: 0.28rem 0;
-  padding-left: 1rem;
+  margin: 0.22rem 0;
+  padding: 0;
   line-height: 1.4;
 }
 
 .single.blog #TableOfContents li::before {
-  content: "§";
-  position: absolute;
-  left: 0;
-  color: var(--article-wine);
-  opacity: 0.48;
-  font-family: Jost, sans-serif;
-  font-size: 0.72em;
-  line-height: 2;
+  content: none;
 }
 
 .single.blog #TableOfContents a {
-  border-bottom: 1px dotted transparent;
+  display: block;
+  padding: 0.08rem 0 0.08rem 0.58rem;
+  border: 0;
+  border-left: 1px solid transparent;
   color: var(--article-muted);
+  transition: color 120ms ease, border-color 120ms ease;
 }
 
 .single.blog #TableOfContents a:hover,
 .single.blog #TableOfContents a:focus-visible {
-  border-bottom-color: currentColor;
   color: var(--article-blue);
+}
+
+.single.blog #TableOfContents a.is-current,
+.single.blog #TableOfContents a[aria-current="location"] {
+  border-left-color: var(--article-wine);
+  color: var(--article-green);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .single.blog #TableOfContents a {
+    transition: none;
+  }
 }
 
 /* Explicit Tufte-style sidenotes. They occupy the right margin only when the
@@ -298,6 +323,7 @@
   font-variant-numeric: oldstyle-nums;
   line-height: 0;
   vertical-align: super;
+  cursor: pointer;
 }
 
 .single.blog .sidenote-toggle:focus-visible + .sidenote-ref {
@@ -306,17 +332,19 @@
 }
 
 .single.blog .sidenote {
+  position: relative;
   display: none;
-  margin: 0.65rem 0 0.9rem;
-  padding: 0.62rem 0.75rem 0.65rem 0.9rem;
+  width: calc(100% - 1.25rem);
+  margin: 0.9rem 0 1.1rem 1.25rem;
+  padding: 0.06rem 0 0.06rem 1rem;
   border-left: 1px solid var(--article-rule-strong);
-  background: var(--article-block);
+  background: transparent;
   color: var(--article-muted);
-  font-family: Jost, sans-serif;
-  font-size: 0.8rem;
+  font-family: inherit;
+  font-size: 0.86rem;
   font-style: normal;
-  line-height: 1.45;
-  letter-spacing: 0.012em;
+  line-height: 1.48;
+  letter-spacing: 0;
   text-wrap: pretty;
 }
 
@@ -325,9 +353,15 @@
 }
 
 .single.blog .sidenote-number {
-  margin-right: 0.42em;
+  position: absolute;
+  top: 0.02rem;
+  right: calc(100% + 0.45rem);
+  margin: 0;
   color: var(--article-wine);
+  font-family: Jost, sans-serif;
+  font-size: 0.78em;
   font-variant-numeric: oldstyle-nums;
+  line-height: 1.2;
 }
 
 /* Reading vocabulary */
@@ -432,8 +466,8 @@
 }
 
 .single.blog .article-body pre {
-  margin-top: 1.8rem;
-  margin-bottom: 1.8rem;
+  margin-top: 1.45rem;
+  margin-bottom: 1.45rem;
   border-block: 1px solid var(--article-rule);
   background: var(--article-block);
   box-shadow: none;
@@ -447,7 +481,7 @@
 .single.blog .article-body pre code:hover {
   display: block;
   min-width: max-content;
-  padding: 1.15rem 1.3rem;
+  padding: 1rem 1.1rem;
   border: 0;
   background: transparent;
   box-shadow: none;
@@ -459,8 +493,8 @@
 
 .single.blog .article-body .highlight {
   position: relative;
-  margin-top: 1.8rem;
-  margin-bottom: 1.8rem;
+  margin-top: 1.45rem;
+  margin-bottom: 1.45rem;
   border-block: 1px solid var(--article-rule);
   background: var(--article-block);
   color: var(--article-code-ink);
@@ -476,14 +510,16 @@
 
 .single.blog .article-body .highlight pre code,
 .single.blog .article-body .highlight pre code:hover {
-  padding: 2.25rem 1.3rem 1.15rem;
+  padding: 1.85rem 1.1rem 1rem;
+  font-size: 0.78rem;
+  line-height: 1.5;
 }
 
 .single.blog .article-code-tools {
   position: absolute;
-  top: 0.48rem;
-  right: 0.78rem;
-  left: 1.3rem;
+  top: 0.43rem;
+  right: 0.68rem;
+  left: 1.1rem;
   z-index: 2;
   display: flex;
   align-items: baseline;
@@ -491,7 +527,7 @@
   gap: 1rem;
   color: var(--article-faint);
   font-family: Jost, sans-serif;
-  font-size: 0.66rem;
+  font-size: 0.62rem;
   letter-spacing: 0.08em;
   line-height: 1;
   text-transform: uppercase;
@@ -613,18 +649,17 @@
 }
 
 .single.blog .article-body table {
-  display: block;
-  margin-top: 1.9rem;
-  margin-bottom: 1.9rem;
+  display: table;
+  width: 100%;
+  margin: 1.45rem 0 1.65rem;
   border-collapse: collapse;
   border-top: 1px solid var(--article-rule-strong);
   border-bottom: 1px solid var(--article-rule-strong);
   background: transparent;
-  font-size: 0.9rem;
+  font-size: 0.86rem;
   font-variant-numeric: tabular-nums;
   line-height: 1.4;
-  overflow-x: auto;
-  overscroll-behavior-inline: contain;
+  table-layout: auto;
 }
 
 .single.blog .article-body thead,
@@ -647,7 +682,7 @@
 
 .single.blog .article-body th,
 .single.blog .article-body td {
-  padding: 0.52rem 0.72rem;
+  padding: 0.46rem 0.55rem;
   border-right: 0;
   border-left: 0;
 }
@@ -657,7 +692,7 @@
 }
 
 .single.blog .article-figure {
-  margin: 2.2rem auto;
+  margin: 1.85rem auto;
 }
 
 .single.blog .article-figure img {
@@ -708,7 +743,7 @@
 }
 
 .single.blog .article-body mjx-container[jax="SVG"][display="true"] {
-  margin: 1.65rem 0;
+  margin: 1.45rem 0;
   padding: 0.3rem 0 0.45rem;
   overflow-x: auto;
   overflow-y: hidden;
@@ -783,13 +818,13 @@
 
 @media (min-width: 768px) {
   .single.blog .article-body .highlight {
-    width: calc(min(100vw, var(--body-width)) - 5rem);
-    margin-left: calc(50% + 2.5rem - min(100vw, var(--body-width)) / 2);
+    width: min(var(--article-breakout), calc(100vw - 5rem));
+    margin-left: calc((100% - min(var(--article-breakout), calc(100vw - 5rem))) / 2);
   }
 
   .single.blog .article-figure--wide {
-    width: calc(min(100vw, var(--body-width)) - 5rem);
-    margin-left: calc(50% + 2.5rem - min(100vw, var(--body-width)) / 2);
+    width: min(var(--article-breakout), calc(100vw - 5rem));
+    margin-left: calc((100% - min(var(--article-breakout), calc(100vw - 5rem))) / 2);
   }
 }
 
@@ -798,8 +833,8 @@
     position: absolute;
     top: 0;
     bottom: 0;
-    left: -10rem;
-    width: 8.5rem;
+    left: calc(0rem - var(--article-rail-width) - var(--article-rail-gap));
+    width: var(--article-rail-width);
   }
 
   .single.blog .article-contents {
@@ -807,9 +842,9 @@
     top: 2rem;
     max-height: calc(100vh - 4rem);
     margin: 0;
-    padding: 0.52rem 0 0.62rem;
-    border-block: 1px solid var(--article-rule);
-    opacity: 0.76;
+    padding: 0;
+    border: 0;
+    opacity: 0.72;
     overflow-y: auto;
     scrollbar-width: thin;
     transition: opacity 120ms ease;
@@ -822,8 +857,14 @@
 
   .single.blog .article-contents summary {
     display: block;
-    font-size: 0.68rem;
+    padding: 0 0 0.42rem 0.58rem;
+    font-size: 0.66rem;
     line-height: 1.35;
+    list-style: none;
+  }
+
+  .single.blog .article-contents summary::-webkit-details-marker {
+    display: none;
   }
 
   .single.blog .article-contents-count {
@@ -831,27 +872,29 @@
   }
 
   .single.blog .article-contents-list {
-    padding: 0.48rem 0 0.1rem;
+    padding: 0;
   }
 
   .single.blog #TableOfContents ul ul {
-    margin: 0.25rem 0 0.32rem 0.48rem;
+    margin: 0.2rem 0 0.28rem 0.58rem;
   }
 
   .single.blog #TableOfContents li {
-    margin: 0.32rem 0;
-    padding-left: 0.78rem;
-    font-family: Jost, sans-serif;
-    font-size: 0.72rem;
-    line-height: 1.32;
+    margin: 0.2rem 0;
+    padding: 0;
+    font-family: "Linden Hill", Palatino, serif;
+    font-size: 0.76rem;
+    line-height: 1.28;
     hyphens: none;
   }
 
-  .single.blog #TableOfContents li::before {
-    font-size: 0.64em;
-    line-height: 1.8;
+  .single.blog #TableOfContents > ul > li > a {
+    font-variant: small-caps;
+    letter-spacing: 0.025em;
   }
+}
 
+@media (min-width: 1280px) {
   .single.blog .sidenote-ref {
     cursor: default;
   }
@@ -864,13 +907,13 @@
     display: block;
     float: right;
     clear: right;
-    width: 10.5rem;
-    margin: 0.2rem -12rem 0.9rem 1.5rem;
+    width: var(--article-note-width);
+    margin: 0.18rem calc(0rem - var(--article-note-offset)) 0.9rem 2rem;
     padding: 0;
     border: 0;
     background: transparent;
-    font-size: 0.74rem;
-    line-height: 1.42;
+    font-size: 0.82rem;
+    line-height: 1.36;
   }
 }
 
@@ -922,7 +965,7 @@
 
   .single.blog .article-body .highlight pre code,
   .single.blog .article-body .highlight pre code:hover {
-    padding: 2.15rem 1rem 1rem;
+    padding: 1.8rem 1rem 0.95rem;
   }
 
   .single.blog .article-code-tools {
@@ -931,17 +974,23 @@
   }
 
   .single.blog .article-body table {
+    display: block;
     width: 100%;
     margin-left: 0;
+    font-size: 0.74rem;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+  }
+
+  .single.blog .article-body th,
+  .single.blog .article-body td {
+    padding: 0.38rem 0.25rem;
   }
 
   .single.blog .article-figure figcaption {
     text-align: left;
   }
 
-  .single.blog .sidenote-ref {
-    cursor: pointer;
-  }
 }
 
 @media print {
