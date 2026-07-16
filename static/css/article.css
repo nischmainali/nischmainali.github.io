@@ -37,6 +37,28 @@
   color: var(--article-ink);
 }
 
+.single.blog .article-skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 50%;
+  z-index: 1000;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--article-rule-strong);
+  background: #f5f2e8;
+  color: var(--article-blue);
+  font-family: Jost, sans-serif;
+  font-size: 0.76rem;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -150%);
+}
+
+.single.blog .article-skip-link:focus {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+
 .single.blog .article-header.article-meta {
   margin: clamp(2.25rem, 6vw, 4.2rem) 0 1.7rem;
   padding: 0 0 1.35rem;
@@ -418,6 +440,161 @@
   overflow: visible;
 }
 
+.single.blog .article-body .highlight {
+  position: relative;
+  margin-top: 1.8rem;
+  margin-bottom: 1.8rem;
+  border-block: 1px solid var(--article-rule);
+  background: var(--article-block);
+  color: var(--article-code-ink);
+  overflow: hidden;
+}
+
+.single.blog .article-body .highlight pre {
+  width: auto;
+  margin: 0;
+  border: 0;
+  background: transparent;
+}
+
+.single.blog .article-body .highlight pre code,
+.single.blog .article-body .highlight pre code:hover {
+  padding: 2.25rem 1.3rem 1.15rem;
+}
+
+.single.blog .article-code-tools {
+  position: absolute;
+  top: 0.48rem;
+  right: 0.78rem;
+  left: 1.3rem;
+  z-index: 2;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--article-faint);
+  font-family: Jost, sans-serif;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.single.blog .article-copy-button {
+  padding: 0 0 0.12rem;
+  border: 0;
+  border-bottom: 1px dotted currentColor;
+  border-radius: 0;
+  background: transparent;
+  color: var(--article-muted);
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.single.blog .article-copy-button:hover,
+.single.blog .article-copy-button:focus-visible,
+.single.blog .article-copy-button[data-state="copied"] {
+  color: var(--article-blue);
+}
+
+.single.blog .article-copy-button:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 0.2rem;
+}
+
+/* Quiet server-rendered Chroma palette: ink, moss, wine, and old paper. */
+.single.blog .chroma {
+  color: var(--article-code-ink);
+  background: transparent;
+}
+
+.single.blog .chroma .err,
+.single.blog .chroma .gr,
+.single.blog .chroma .gt {
+  color: #8a343d;
+}
+
+.single.blog .chroma .c,
+.single.blog .chroma .ch,
+.single.blog .chroma .cm,
+.single.blog .chroma .c1,
+.single.blog .chroma .cs,
+.single.blog .chroma .cp,
+.single.blog .chroma .cpf {
+  color: #657465;
+  font-style: italic;
+}
+
+.single.blog .chroma .k,
+.single.blog .chroma .kc,
+.single.blog .chroma .kd,
+.single.blog .chroma .kn,
+.single.blog .chroma .kp,
+.single.blog .chroma .kr,
+.single.blog .chroma .kt,
+.single.blog .chroma .ow {
+  color: #743f49;
+}
+
+.single.blog .chroma .s,
+.single.blog .chroma .sa,
+.single.blog .chroma .sb,
+.single.blog .chroma .sc,
+.single.blog .chroma .dl,
+.single.blog .chroma .sd,
+.single.blog .chroma .s1,
+.single.blog .chroma .s2,
+.single.blog .chroma .se,
+.single.blog .chroma .sh,
+.single.blog .chroma .si,
+.single.blog .chroma .sx,
+.single.blog .chroma .sr,
+.single.blog .chroma .ss {
+  color: #765a2f;
+}
+
+.single.blog .chroma .m,
+.single.blog .chroma .mb,
+.single.blog .chroma .mf,
+.single.blog .chroma .mh,
+.single.blog .chroma .mi,
+.single.blog .chroma .il,
+.single.blog .chroma .mo {
+  color: #4b5e86;
+}
+
+.single.blog .chroma .na,
+.single.blog .chroma .nb,
+.single.blog .chroma .bp,
+.single.blog .chroma .nc,
+.single.blog .chroma .nd,
+.single.blog .chroma .ne,
+.single.blog .chroma .nf,
+.single.blog .chroma .fm,
+.single.blog .chroma .nn,
+.single.blog .chroma .nt,
+.single.blog .chroma .nv,
+.single.blog .chroma .vc,
+.single.blog .chroma .vg,
+.single.blog .chroma .vi,
+.single.blog .chroma .vm {
+  color: #235969;
+}
+
+.single.blog .chroma .gd {
+  color: #8a343d;
+  background: rgba(138, 52, 61, 0.08);
+}
+
+.single.blog .chroma .gi {
+  color: #2d6549;
+  background: rgba(45, 101, 73, 0.08);
+}
+
 .single.blog .article-body table {
   display: block;
   margin-top: 1.9rem;
@@ -569,6 +746,7 @@
   font-family: Jost, sans-serif;
   font-size: 0.76rem;
   letter-spacing: 0.035em;
+  text-align: left;
 }
 
 .single.blog .article-end-link {
@@ -587,6 +765,11 @@
 }
 
 @media (min-width: 768px) {
+  .single.blog .article-body .highlight {
+    width: calc(min(100vw, var(--body-width)) - 5rem);
+    margin-left: calc(50% + 2.5rem - min(100vw, var(--body-width)) / 2);
+  }
+
   .single.blog .article-figure--wide {
     width: calc(min(100vw, var(--body-width)) - 5rem);
     margin-left: calc(50% + 2.5rem - min(100vw, var(--body-width)) / 2);
@@ -612,6 +795,14 @@
   .single.blog .article-meta-line {
     display: grid;
     gap: 0.42rem;
+  }
+
+  .single.blog .article-meta-primary > * + *::before {
+    content: none;
+  }
+
+  .single.blog .article-meta-primary {
+    gap: 0.18rem 0.72rem;
   }
 
   .single.blog .article-body {
@@ -644,6 +835,16 @@
     padding: 1rem;
   }
 
+  .single.blog .article-body .highlight pre code,
+  .single.blog .article-body .highlight pre code:hover {
+    padding: 2.15rem 1rem 1rem;
+  }
+
+  .single.blog .article-code-tools {
+    right: 0.65rem;
+    left: 1rem;
+  }
+
   .single.blog .article-body table {
     width: 100%;
     margin-left: 0;
@@ -651,5 +852,53 @@
 
   .single.blog .article-figure figcaption {
     text-align: left;
+  }
+}
+
+@media print {
+  .single.blog {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    color: #111;
+  }
+
+  .single.blog .nav-top,
+  .single.blog #sunlit-scene,
+  .single.blog #theme-toggle,
+  .single.blog .crop-h,
+  .single.blog .crop-v,
+  .single.blog .crop-c,
+  .single.blog > footer,
+  .single.blog .article-skip-link,
+  .single.blog .article-code-tools,
+  .single.blog .article-end {
+    display: none !important;
+  }
+
+  .single.blog .article-header.article-meta,
+  .single.blog .article-body {
+    width: auto;
+    max-width: 42rem;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .single.blog .article-contents:not([open]) > :not(summary) {
+    display: block;
+  }
+
+  .single.blog .article-body pre,
+  .single.blog .article-body table,
+  .single.blog .article-body .highlight,
+  .single.blog .article-figure--wide {
+    width: auto;
+    margin-right: 0;
+    margin-left: 0;
+    break-inside: avoid;
+  }
+
+  .single.blog .article-body a {
+    color: inherit;
   }
 }

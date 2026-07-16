@@ -26,7 +26,11 @@ footer = "&copy; [Nischal Mainali](nisch.netlify.app) {Year}"
 
 [markup]
 [markup.highlight]
-codeFences = false
+codeFences = true
+guessSyntax = false
+lineNos = false
+noClasses = false
+tabWidth = 2
 [markup.goldmark]
 [markup.goldmark.renderer]
 unsafe = true

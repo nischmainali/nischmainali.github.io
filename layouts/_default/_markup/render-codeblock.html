@@ -1,0 +1,6 @@
+{{- if and .Page.IsPage (eq .Page.Section "blog") -}}
+  {{- $result := transform.HighlightCodeBlock . -}}
+  {{ $result.Wrapped }}
+{{- else -}}
+<pre><code{{ with .Type }} class="language-{{ . }}"{{ end }}>{{ .Inner }}</code></pre>
+{{- end -}}
