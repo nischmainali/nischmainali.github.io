@@ -1,0 +1,32 @@
+{{- $src := .Get "src" -}}
+{{- $alt := .Get "alt" -}}
+{{- if and (not $alt) (.Get "caption") -}}
+  {{- $alt = .Get "caption" | plainify -}}
+{{- end -}}
+{{- $link := .Get "link" -}}
+{{- $loading := default "lazy" (.Get "loading") -}}
+<figure class="article-figure{{ if .Get "wide" }} article-figure--wide{{ end }}{{ with .Get "class" }} {{ . }}{{ end }}">
+  {{- with $link }}<a class="article-figure-link" href="{{ . | safeURL }}">{{ end -}}
+  <img
+    src="{{ $src | safeURL }}"
+    alt="{{ $alt }}"
+    loading="{{ $loading }}"
+    decoding="async"
+    {{- with .Get "width" }} width="{{ . }}"{{ end -}}
+    {{- with .Get "height" }} height="{{ . }}"{{ end -}}
+  >
+  {{- with $link }}</a>{{ end -}}
+  {{- if or (.Get "title") (.Get "caption") (.Get "attr") }}
+  <figcaption>
+    {{- with .Get "title" }}<span class="article-figure-title">{{ . | markdownify }}</span>{{ end -}}
+    {{- with .Get "caption" }}<span class="article-figure-caption">{{ . | markdownify }}</span>{{ end -}}
+    {{- with .Get "attr" }}
+      <span class="article-figure-attribution">
+      {{- with $.Get "attrlink" }}<a href="{{ . | safeURL }}">{{ end -}}
+      {{ . | markdownify }}
+      {{- with $.Get "attrlink" }}</a>{{ end -}}
+      </span>
+    {{- end }}
+  </figcaption>
+  {{- end }}
+</figure>

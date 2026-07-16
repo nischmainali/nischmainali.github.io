@@ -13,6 +13,9 @@
   --article-faint: rgba(32, 38, 34, 0.42);
   --article-rule: rgba(83, 76, 95, 0.28);
   --article-rule-strong: rgba(78, 71, 88, 0.42);
+  --article-block: rgba(233, 221, 207, 0.34);
+  --article-block-strong: rgba(224, 208, 194, 0.48);
+  --article-code-ink: #23322d;
 }
 
 .single.blog.sunset {
@@ -24,6 +27,9 @@
   --article-faint: rgba(32, 35, 31, 0.44);
   --article-rule: rgba(92, 72, 72, 0.3);
   --article-rule-strong: rgba(92, 72, 72, 0.44);
+  --article-block: rgba(217, 190, 151, 0.25);
+  --article-block-strong: rgba(202, 174, 139, 0.34);
+  --article-code-ink: #292d26;
 }
 
 .single.blog .article-shell {
@@ -285,6 +291,308 @@
   color: var(--article-blue);
 }
 
+/* Reading vocabulary */
+
+.single.blog .article-body ::selection {
+  background: rgba(143, 58, 65, 0.18);
+}
+
+.single.blog .article-body a:focus-visible,
+.single.blog .article-end-link:focus-visible {
+  outline: 1px solid var(--article-blue);
+  outline-offset: 0.2rem;
+}
+
+.single.blog .article-body ul,
+.single.blog .article-body ol {
+  margin: 1.1rem 0;
+  padding-left: 1.55rem;
+}
+
+.single.blog .article-body li {
+  margin: 0.34rem 0;
+  padding-left: 0.12rem;
+}
+
+.single.blog .article-body li::marker {
+  color: var(--article-wine);
+  font-variant-numeric: oldstyle-nums;
+}
+
+.single.blog .article-body dl {
+  margin: 1.45rem 0;
+}
+
+.single.blog .article-body dt {
+  margin-top: 0.85rem;
+  color: var(--article-green);
+  font-style: italic;
+}
+
+.single.blog .article-body dd {
+  margin: 0.2rem 0 0.75rem 1.45rem;
+}
+
+.single.blog .article-body blockquote {
+  margin: 1.8rem 0 1.8rem 0.2rem;
+  padding: 0.18rem 0 0.18rem 1.25rem;
+  border-left: 2px solid var(--article-rule-strong);
+  background: transparent;
+  color: rgba(32, 38, 34, 0.82);
+  font-size: 1.045rem;
+  font-style: italic;
+}
+
+.single.blog.sunset .article-body blockquote {
+  color: rgba(32, 35, 31, 0.84);
+}
+
+.single.blog .article-body blockquote p {
+  margin: 0.6rem 0;
+}
+
+.single.blog .article-body blockquote cite,
+.single.blog .article-body blockquote footer {
+  display: block;
+  margin-top: 0.7rem;
+  color: var(--article-muted);
+  font-family: Jost, sans-serif;
+  font-size: 0.76rem;
+  font-style: normal;
+  letter-spacing: 0.025em;
+  text-align: right;
+}
+
+.single.blog .article-body hr {
+  width: 7rem;
+  margin: 2.8rem auto;
+  border: 0;
+  border-top: 1px solid var(--article-rule);
+}
+
+.single.blog .article-body code,
+.single.blog .article-body kbd,
+.single.blog .article-body samp {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 0.84em;
+}
+
+.single.blog .article-body :not(pre) > code {
+  padding: 0.08em 0.25em;
+  border: 1px solid var(--article-rule);
+  background: var(--article-block);
+  color: var(--article-code-ink);
+  white-space: break-spaces;
+}
+
+.single.blog .article-body kbd {
+  padding: 0.05em 0.28em;
+  border: 1px solid var(--article-rule-strong);
+  border-bottom-width: 2px;
+  background: rgba(251, 247, 240, 0.45);
+}
+
+.single.blog .article-body pre {
+  margin-top: 1.8rem;
+  margin-bottom: 1.8rem;
+  border-block: 1px solid var(--article-rule);
+  background: var(--article-block);
+  box-shadow: none;
+  color: var(--article-code-ink);
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  tab-size: 2;
+}
+
+.single.blog .article-body pre code,
+.single.blog .article-body pre code:hover {
+  display: block;
+  min-width: max-content;
+  padding: 1.15rem 1.3rem;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  line-height: 1.55;
+  white-space: pre;
+  word-break: normal;
+  overflow: visible;
+}
+
+.single.blog .article-body table {
+  display: block;
+  margin-top: 1.9rem;
+  margin-bottom: 1.9rem;
+  border-collapse: collapse;
+  border-top: 1px solid var(--article-rule-strong);
+  border-bottom: 1px solid var(--article-rule-strong);
+  background: transparent;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.4;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+}
+
+.single.blog .article-body thead,
+.single.blog .article-body tfoot,
+.single.blog .article-body tr,
+.single.blog .article-body tr:nth-child(even) {
+  background: transparent;
+}
+
+.single.blog .article-body th {
+  border-bottom: 1px solid var(--article-rule-strong);
+  color: var(--article-green);
+  font-family: Jost, sans-serif;
+  font-size: 0.82em;
+  font-weight: normal;
+  letter-spacing: 0.055em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.single.blog .article-body th,
+.single.blog .article-body td {
+  padding: 0.52rem 0.72rem;
+  border-right: 0;
+  border-left: 0;
+}
+
+.single.blog .article-body tbody tr + tr td {
+  border-top: 1px solid rgba(83, 76, 95, 0.14);
+}
+
+.single.blog .article-figure {
+  margin: 2.2rem auto;
+}
+
+.single.blog .article-figure img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  margin: auto;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.single.blog .article-figure-link {
+  display: block;
+  border: 0;
+}
+
+.single.blog .article-figure figcaption {
+  max-width: 58rem;
+  margin: 0.65rem auto 0;
+  color: var(--article-muted);
+  font-family: Jost, sans-serif;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.single.blog .article-figure-title {
+  color: var(--article-green);
+  letter-spacing: 0.025em;
+}
+
+.single.blog .article-figure-title + .article-figure-caption::before {
+  content: " — ";
+  color: var(--article-faint);
+}
+
+.single.blog .article-figure-attribution {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.9em;
+}
+
+.single.blog .smallcaps {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.055em;
+}
+
+.single.blog .article-body mjx-container[jax="SVG"][display="true"] {
+  margin: 1.65rem 0;
+  padding: 0.3rem 0 0.45rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.single.blog .article-body .footnotes {
+  margin-top: 3.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--article-rule);
+  color: var(--article-muted);
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.single.blog .article-body .footnotes::before {
+  content: "Notes";
+  display: block;
+  margin-bottom: 0.7rem;
+  color: var(--article-green);
+  font-family: Jost, sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.single.blog .article-body .footnotes > hr {
+  display: none;
+}
+
+.single.blog .article-body .footnotes ol {
+  margin: 0;
+  padding-left: 1.35rem;
+}
+
+.single.blog .article-body .footnotes li {
+  padding: 0.12rem 0.25rem;
+}
+
+.single.blog .article-body .footnotes li:target {
+  background: var(--article-block);
+}
+
+.single.blog .article-body .footnote-backref {
+  margin-left: 0.22em;
+  color: var(--article-wine);
+}
+
+.single.blog .article-end {
+  margin-top: 3.6rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--article-rule);
+  font-family: Jost, sans-serif;
+  font-size: 0.76rem;
+  letter-spacing: 0.035em;
+}
+
+.single.blog .article-end-link {
+  border-bottom: 1px dotted rgba(39, 63, 57, 0.34);
+  color: var(--article-muted);
+}
+
+.single.blog .article-end-link:hover,
+.single.blog .article-end-link:focus-visible {
+  border-bottom-color: currentColor;
+  color: var(--article-blue);
+}
+
+.single.blog > footer > hr {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .single.blog .article-figure--wide {
+    width: calc(min(100vw, var(--body-width)) - 5rem);
+    margin-left: calc(50% + 2.5rem - min(100vw, var(--body-width)) / 2);
+  }
+}
+
 @media (max-width: 767px) {
   .single.blog .article-header.article-meta {
     margin-top: 2.1rem;
@@ -329,5 +637,19 @@
 
   .single.blog .article-contents-list {
     padding-left: 0.35rem;
+  }
+
+  .single.blog .article-body pre code,
+  .single.blog .article-body pre code:hover {
+    padding: 1rem;
+  }
+
+  .single.blog .article-body table {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .single.blog .article-figure figcaption {
+    text-align: left;
   }
 }
