@@ -9,7 +9,7 @@
 {{- if or $hasArticleCode $hasArticleToc $hasArticleMath $hasArticleReferences $hasArticleSidenotes }}
 <script src="{{ printf "%s?v=article-reader-2" ("js/article.js" | relURL) }}" defer></script>
 {{- end }}
-{{- else -}}
+{{- else if not .IsHome -}}
   {{- if (in .Content "</dl>") -}}
   <script src="https://cdn.jsdelivr.net/npm/@xiee/utils/js/dl-fieldset.min.js" defer></script>
   {{ end }}

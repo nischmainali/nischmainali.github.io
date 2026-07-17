@@ -1,5 +1,13 @@
 {{- $noop := .WordCount -}}
-{{- $hasMath := or (.Page.Store.Get "hasMath") .IsNode -}}
+{{- $hasMath := .Page.Store.Get "hasMath" -}}
+{{- if and (not $hasMath) (and .IsNode (eq .Section "blog")) -}}
+  {{- range .RegularPages -}}
+    {{- $summary := string .Summary -}}
+    {{- if or (in $summary `class="katex"`) (in $summary `<math`) -}}
+      {{- $hasMath = true -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
 {{- $hasDropcap := .Page.Store.Get "hasDropcap" -}}
 {{- if $hasDropcap }}
 <link rel="preload" href="{{ "vendor/fonts/eb-garamond-initials/EBGaramond-InitialsF1-LatinCaps.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>

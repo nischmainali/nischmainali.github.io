@@ -8,21 +8,9 @@ footnotereturnlinkcontents = "↩"
 [outputs]
 home = ["html", "rss", "json"]
 
-[menu]
-[[menu.main]]
-# name = "Github"
-# url = "https://github.com/yihui/hugo-paged"
-# weight = 10
-[menu.main.params]
-class = ["optional"]
-
 [params]
-description = "Nischal's adress on the web"
-[params.logo]
-[params.logo.en]
-alt = ""
-img = ""                                                # a path to the logo
-footer = "&copy; [Nischal Mainali](nisch.netlify.app) {Year}"
+description = "Nischal's address on the web"
+logo = {}
 
 [markup]
 [markup.highlight]

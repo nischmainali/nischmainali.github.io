@@ -566,17 +566,19 @@ specimen and the Gaussian-process article in shade and sunset at 1440, 1280,
   assets; and
 - the browser console remained clear in the tested article flow.
 
+A final site-wide QA pass on 2026-07-17 also confirmed that production and draft
+builds complete with Hugo 0.164.0; malformed mathematics stops the build with its
+source position; Home, Documents, and non-mathematical articles do not request
+KaTeX or Asana Math; the mathematical specimen still receives its complete local
+math system; and the main routes contain no empty links, broken images, or
+page-level overflow at 1280 px and 390 px.
+
 ## Known rough edges: observe before fixing
 
 These are implementation findings, not permission for a future agent to launch
 a cleanup pass. Fix them only when in scope, and preserve the visual language
 while doing so.
 
-- The logo configuration creates an empty home link, and an empty optional menu
-  item can create another unnamed link at desktop widths. These should eventually
-  be removed or given meaningful content for accessibility.
-- `hugo.toml` describes the site as `Nischal's adress on the web`; `address` is
-  misspelled.
 - The atmospheric background uses large fixed layers, progressive backdrop
   filters, one inline SVG fern, eight falling leaf elements on desktop (five on
   mobile), and continuous animation. This is substantially lighter than the
