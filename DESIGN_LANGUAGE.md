@@ -249,6 +249,16 @@ madder ornament; the color stays fixed, and the glyph has no motion or
 surrounding component. TurnTrout's random accent treatment and first-line
 transformation do not belong here.
 
+The experimental Gwern-intelligence pass borrows editorial behavior from
+Gwern.net while leaving its grayscale appearance and interface chrome behind.
+It adds an authored epigraph, a compact academic-link grammar, reciprocal
+sidenote focus, a running section trace in the contents rail, and a
+full-resolution figure viewer. Each addition uses the existing Linden Hill/Jost
+division, wine hairlines, square paper geometry, and shade/sunset variables.
+The pass adds no remote annotations, recursive popups, backlinks,
+transclusion, or second toolbar. Citation previews remain part of the later
+bibliography phase.
+
 Asana Math 000.962 supplies the mathematical voice. Linden Hill revives
 Goudy's Deepdene, and its page texture calls for a warm old-style companion.
 Times-derived math brought an institutional tone. KaTeX's Computer Modern
@@ -287,11 +297,12 @@ Its governing choices are:
   left margin. The rail is 7.5 rem wide with a 2.3 rem inner interval; its label
   lands on the title's 40 px paper inset, making the TOC and upper-left crop mark
   part of one vertical axis. A single wine hairline and ink change mark the
-  section currently crossing the reading line. Below that breakpoint, the same
+  section currently crossing the reading line. A small running head keeps the
+  article title and current H2/H3 path above a list with its own scroll;
+  screen readers ignore this duplicate trace. Below that breakpoint, the same
   contents return to the reading flow and begin collapsed. A faint upward mark
   at the far edge of the wide rail returns long articles to the composed page
-  opening; it is a navigation courtesy, not another persistent control on
-  narrow screens;
+  opening;
 - the shade/sunset control keeps its crop-corner placement at the page opening
   but scrolls away with the masthead on articles, so it can never cover the TOC,
   code, or prose;
@@ -304,7 +315,12 @@ Its governing choices are:
   the surrounding article. Natural media retain their source color. The `ink`
   treatment lets diagrams multiply into the visible fibres without a white
   card. A marginal “Lokta plate” may cross the right crop mark at wide sizes and
-  returns to the prose measure before the marginal field becomes cramped;
+  returns to the prose measure before the marginal field becomes cramped.
+  Informative figures retain a full-resolution source link without JavaScript.
+  The article reader enhances that link with one native dialog: a square second
+  sheet, two restrained crop corners, the original caption, and a translucent
+  environmental veil. Figures with author-supplied links, decorative figures,
+  and `zoom="false"` figures stay outside this behavior;
 - Hugo renders mathematics at build time as KaTeX HTML and MathML. Pages load
   exact local assets only where needed, with no runtime renderer or math CDN.
   MathML Core browsers use local Asana Math; KaTeX HTML provides the fallback.
@@ -326,7 +342,17 @@ Its governing choices are:
   beyond the prose, and may cross the right crop mark: the crop frames the paper,
   not the annotation. These use the reading face and a number hanging outside
   the note as in the slotThe reference. At smaller widths they become
-  tap-to-reveal inline notes with no filled panel;
+  tap-to-reveal inline notes with no filled panel. Pointer or keyboard focus on
+  either member of a sidenote pair inks both members and reveals one short wine
+  registration stroke beside the marginal note. The interaction changes no
+  geometry;
+- epigraphs form a narrow italic pause before opening prose. One pale quotation
+  mark and right-aligned attribution replace the border and fill used by
+  ordinary blockquotes;
+- Markdown article links receive a small build-time grammar. PDF, DOI, arXiv,
+  and same-page section destinations gain quiet Jost suffixes. Ordinary
+  external links keep the existing baseline treatment. Marks stay out of TOCs,
+  figure links, equation references, footnotes, and print;
 - the ending is only a rule and a text link back to Documents. It introduces no
   call-to-action card or additional ornament.
 - print preserves the article hierarchy rather than imitating the screen
@@ -343,7 +369,11 @@ Experimental authoring controls are intentionally few:
 - the local `figure` shortcode accepts `placement="measure|wide|margin"` and
   `treatment="natural|ink"`. Legacy `wide="true"` maps to the wide placement.
   Hugo supplies responsive variants and intrinsic dimensions for processable
-  resources. Authors mark at most one above-fold image with `priority="true"`;
+  resources. Authors mark at most one above-fold image with `priority="true"`
+  and may opt out of full-resolution focus with `zoom="false"`;
+- the `epigraph` shortcode requires attribution or a source and accepts Markdown
+  within its quotation. It belongs before opening prose and remains distinct
+  from ordinary blockquotes;
 - the `smallcaps` shortcode is available for genuinely editorial inline use;
 - the `sidenote` shortcode is reserved for optional context that should remain
   adjacent to a sentence without becoming part of the endnote apparatus;
@@ -464,8 +494,8 @@ The site is intentionally small:
   `layouts/docs/section.html` — the Hugo 0.164 list-template bridge. It preserves
   the vendored theme's existing Documents and Notes markup while keeping its
   legacy layout files untouched;
-- `layouts/_markup/` — Hugo 0.164 site-owned heading, code, and mathematical
-  passthrough hooks;
+- `layouts/_markup/` — Hugo 0.164 site-owned heading, link, image, code, and
+  mathematical passthrough hooks;
 - `layouts/partials/article-meta.html` and `article-end.html` — experimental
   article opening and quiet return treatment;
 - `layouts/partials/render-math.html` — the one strict build-time KaTeX entry
@@ -473,8 +503,8 @@ The site is intentionally small:
 - `data/math.toml` — the deliberately small central macro table;
 - `layouts/partials/foot_custom.html` — article-specific removal of legacy
   runtime helpers and conditional local article behavior;
-- `layouts/shortcodes/` — figures, sidenotes, small caps, numbered equations,
-  references, statements, proofs, and the explicit opening initial;
+- `layouts/shortcodes/` — figures, epigraphs, sidenotes, small caps, numbered
+  equations, references, statements, proofs, and the explicit opening initial;
 - `layouts/partials/responsive-image.html` and
   `layouts/_markup/render-image.html` — one Hugo-native image path for figure
   shortcodes and ordinary Markdown images;
@@ -487,9 +517,9 @@ The site is intentionally small:
   `static/css/math.css` — pinned KaTeX fallback assets, the local OpenType MATH
   face, native-MathML selection, and transparent overflow behavior;
 - `static/css/article.css` — the scoped Lokta Field Note reading system;
-- `static/js/article.js` — local contents, code-copy, sidenote and reference
-  numbering, overflow focus, and resize behavior; it never typesets
-  mathematics;
+- `static/js/article.js` — local contents and running trace, code copy,
+  sidenote/reference numbering and coupling, figure focus, mathematical
+  overflow focus, and resize behavior; it never typesets mathematics;
 - `scripts/check_content.py`, the compatibility `scripts/check_math.py`, and
   `MATHEMATICS.md` — strict source/build validation and the authoring contract
   shared with future agents;
@@ -572,6 +602,16 @@ source position; Home, Documents, and non-mathematical articles do not request
 KaTeX or Asana Math; the mathematical specimen still receives its complete local
 math system; and the main routes contain no empty links, broken images, or
 page-level overflow at 1280 px and 390 px.
+
+On 2026-07-17 we reviewed the experimental Gwern-intelligence pass at 1440,
+1180, 1179, and 390 px in shade and sunset. We checked the running mathematical
+section trace, paired sidenote hover and focus, mobile note disclosure, academic
+link names, and the figure dialog's focus transfer and return. The dialog kept
+its full-resolution fallback link, caption, square paper geometry, and quiet
+fibre undertone at each size. Home, Documents, and the Gaussian-process article
+kept their previous geometry, and the browser reported no console errors. Both
+strict production and draft builds passed; the old remote-GIF draft warning
+remains unchanged.
 
 ## Known rough edges: observe before fixing
 

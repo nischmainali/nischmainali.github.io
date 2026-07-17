@@ -18,6 +18,7 @@
 {{- $width := default "" .Width -}}
 {{- $height := default "" .Height -}}
 {{- $title := strings.TrimSpace (default "" .Title) -}}
+{{- $focus := default false .Focus -}}
 {{- $position := default "an unknown source position" .Position -}}
 {{- $extraClass := strings.TrimSpace (default "" .Class) -}}
 
@@ -30,6 +31,9 @@
 
 {{- if $page -}}
   {{- $page.Store.Set "articleHasMedia" true -}}
+  {{- if $focus -}}
+    {{- $page.Store.Set "articleHasFocusMedia" true -}}
+  {{- end -}}
   {{- if eq $placement "margin" -}}
     {{- $page.Store.Set "articleHasMarginMedia" true -}}
   {{- end -}}
@@ -111,6 +115,9 @@
   {{- end -}}
 {{- end -}}
 
+{{- if $focus -}}
+<a class="article-figure-focus-link" href="{{ $url | safeURL }}" data-article-figure-focus-link aria-label="View full-size image: {{ $alt }}">
+{{- end -}}
 <img
   class="article-media article-media--{{ $treatment }}{{ with $extraClass }} {{ . }}{{ end }}"
   src="{{ $url | safeURL }}"
@@ -123,3 +130,6 @@
   {{- if gt (len $srcset) 1 }} srcset="{{ delimit $srcset ", " }}" sizes="{{ $sizes }}"{{ end -}}
   {{- with $title }} title="{{ . }}"{{ end -}}
 >
+{{- if $focus -}}
+</a>
+{{- end -}}

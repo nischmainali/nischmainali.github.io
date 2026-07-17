@@ -503,7 +503,7 @@ def first_plain_prose_line(
             continue
 
         block_match = re.match(
-            r"\{\{[<%]\s*(equation|statement|proof)\b", stripped
+            r"\{\{[<%]\s*(equation|statement|proof|epigraph)\b", stripped
         )
         if block_match:
             name = block_match.group(1)
@@ -764,6 +764,7 @@ def scan_figures_and_media(
             named.get("priority"), "priority", shortcode, path, issues
         )
         legacy_wide = parse_bool(named.get("wide"), "wide", shortcode, path, issues)
+        parse_bool(named.get("zoom"), "zoom", shortcode, path, issues)
         if priority:
             priority_figures.append(shortcode)
 

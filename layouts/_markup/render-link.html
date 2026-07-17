@@ -1,0 +1,46 @@
+{{- $destination := strings.TrimSpace .Destination -}}
+{{- $lower := lower $destination -}}
+{{- $isArticle := and .Page.IsPage (eq .Page.Section "blog") -}}
+{{- $isExternal := or
+  (gt (len (findRE `^https?://` $lower)) 0)
+  (strings.HasPrefix $destination "//")
+-}}
+{{- $isSection := strings.HasPrefix $destination "#" -}}
+{{- $withoutFragment := index (split $lower "#") 0 -}}
+{{- $withoutQuery := index (split $withoutFragment "?") 0 -}}
+{{- $kind := "" -}}
+{{- $mark := "" -}}
+{{- $accessibleMark := "" -}}
+{{- if and $isArticle (in $lower "doi.org/") -}}
+  {{- $kind = "doi" -}}
+  {{- $mark = "doi" -}}
+  {{- $accessibleMark = "DOI" -}}
+{{- else if and $isArticle (or (in $lower "arxiv.org/abs/") (in $lower "arxiv.org/pdf/")) -}}
+  {{- $kind = "arxiv" -}}
+  {{- $mark = "arXiv" -}}
+  {{- $accessibleMark = "arXiv" -}}
+{{- else if and $isArticle (strings.HasSuffix $withoutQuery ".pdf") -}}
+  {{- $kind = "pdf" -}}
+  {{- $mark = "pdf" -}}
+  {{- $accessibleMark = "PDF" -}}
+{{- else if and $isArticle $isSection -}}
+  {{- $kind = "section" -}}
+  {{- $mark = "§" -}}
+{{- else if and $isArticle $isExternal -}}
+  {{- $kind = "external" -}}
+{{- end -}}
+{{- $textLower := lower (.Text | plainify) -}}
+{{- if or
+  (and (eq $kind "pdf") (in $textLower "pdf"))
+  (and (eq $kind "doi") (in $textLower "doi"))
+  (and (eq $kind "arxiv") (in $textLower "arxiv"))
+  (and (eq $kind "section") (in $textLower "§"))
+-}}
+  {{- $mark = "" -}}
+  {{- $accessibleMark = "" -}}
+{{- end -}}
+<a href="{{ $destination | safeURL }}"
+  {{- with .Title }} title="{{ . }}"{{ end -}}
+  {{- with $kind }} class="article-link article-link--{{ . }}" data-article-link="{{ . }}"{{ end -}}
+  {{- if $isExternal }} rel="external"{{ end -}}
+>{{ .Text | safeHTML }}{{ with $mark }}<span class="article-link-mark" aria-hidden="true">{{ . }}</span>{{ end }}{{ with $accessibleMark }}<span class="article-link-kind-sr"> ({{ . }})</span>{{ end }}</a>

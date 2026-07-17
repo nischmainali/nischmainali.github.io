@@ -24,6 +24,7 @@
 
   var toc = contents && contents.querySelector("#TableOfContents");
   var tocLinks = toc ? Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]')) : [];
+  var currentSectionTrace = contents && contents.querySelector("[data-article-current-section]");
   var tocSections = tocLinks.map(function (link) {
     var id = link.getAttribute("href").slice(1);
     try {
@@ -37,6 +38,44 @@
   var currentTocLink = null;
   var tocFrame = 0;
 
+  function directTocLink(item) {
+    if (!item) return null;
+    return Array.prototype.find.call(item.children, function (child) {
+      return child.tagName === "A" && child.getAttribute("href").charAt(0) === "#";
+    }) || null;
+  }
+
+  function tocLabel(link) {
+    var clone = link.cloneNode(true);
+    var liveMath = link.querySelectorAll(".math-inline");
+    var clonedMath = clone.querySelectorAll(".math-inline");
+
+    Array.prototype.forEach.call(clonedMath, function (math, index) {
+      var visibleMath = liveMath[index] ? liveMath[index].innerText : math.textContent;
+      math.textContent = " " + visibleMath.replace(/\s+/g, "") + " ";
+    });
+    clone.querySelectorAll(".article-link-mark, .article-link-kind-sr").forEach(function (mark) {
+      mark.remove();
+    });
+    return clone.textContent.replace(/\s+/g, " ").trim();
+  }
+
+  function tocPath(link) {
+    var labels = [];
+    var item = link && link.parentElement;
+
+    while (item && item.tagName === "LI") {
+      var itemLink = directTocLink(item);
+      if (itemLink) labels.unshift(tocLabel(itemLink));
+      var list = item.parentElement;
+      item = list && list.parentElement && list.parentElement.tagName === "LI"
+        ? list.parentElement
+        : null;
+    }
+
+    return labels.slice(-2).join(" / ");
+  }
+
   function setCurrentTocLink(link) {
     if (link === currentTocLink) return;
     tocLinks.forEach(function (candidate) {
@@ -49,6 +88,9 @@
       }
     });
     currentTocLink = link;
+    if (currentSectionTrace) {
+      currentSectionTrace.textContent = link ? tocPath(link) : "Opening";
+    }
   }
 
   function updateCurrentSection() {
@@ -56,7 +98,7 @@
     if (!tocSections.length) return;
 
     var readingLine = Math.min(window.innerHeight * 0.28, 220);
-    var current = tocSections[0];
+    var current = null;
     tocSections.forEach(function (section) {
       if (section.heading.getBoundingClientRect().top <= readingLine) {
         current = section;
@@ -67,7 +109,7 @@
     if (window.scrollY + window.innerHeight >= page.scrollHeight - 4) {
       current = tocSections[tocSections.length - 1];
     }
-    setCurrentTocLink(current.link);
+    setCurrentTocLink(current ? current.link : null);
   }
 
   function scheduleCurrentSection() {
@@ -188,6 +230,22 @@
     }
   }
 
+  var sidenotePairs = [];
+
+  function setSidenoteCorrespondence(pair, active) {
+    pair.reference.classList.toggle("is-corresponding", active);
+    pair.note.classList.toggle("is-corresponding", active);
+  }
+
+  function syncSidenoteToggle(pair) {
+    var wide = railQuery.matches;
+    pair.toggle.setAttribute(
+      "aria-label",
+      wide ? "Sidenote " + pair.number : "Toggle sidenote " + pair.number
+    );
+    pair.toggle.setAttribute("aria-expanded", wide ? "true" : String(pair.toggle.checked));
+  }
+
   document.querySelectorAll(".article-body .sidenote").forEach(function (note, index) {
     var number = index + 1;
     var reference = note.previousElementSibling;
@@ -210,10 +268,53 @@
       noteNumber.dataset.numberReady = "true";
     }
 
-    reference.setAttribute("aria-label", "Toggle sidenote " + number);
+    var pair = { toggle: toggle, reference: reference, note: note, number: number };
+    sidenotePairs.push(pair);
+
     note.setAttribute("aria-label", "Sidenote " + number);
     note.dataset.sidenoteNumber = String(number);
+
+    reference.addEventListener("pointerenter", function () {
+      setSidenoteCorrespondence(pair, true);
+    });
+    reference.addEventListener("pointerleave", function () {
+      setSidenoteCorrespondence(pair, false);
+    });
+    note.addEventListener("pointerenter", function () {
+      setSidenoteCorrespondence(pair, true);
+    });
+    note.addEventListener("pointerleave", function () {
+      if (!note.contains(document.activeElement)) setSidenoteCorrespondence(pair, false);
+    });
+    toggle.addEventListener("focus", function () {
+      setSidenoteCorrespondence(pair, true);
+    });
+    toggle.addEventListener("blur", function () {
+      setSidenoteCorrespondence(pair, false);
+    });
+    toggle.addEventListener("change", function () {
+      syncSidenoteToggle(pair);
+    });
+    note.addEventListener("focusin", function () {
+      setSidenoteCorrespondence(pair, true);
+    });
+    note.addEventListener("focusout", function (event) {
+      if (!note.contains(event.relatedTarget)) setSidenoteCorrespondence(pair, false);
+    });
+
+    syncSidenoteToggle(pair);
   });
+
+  if (sidenotePairs.length) {
+    var syncAllSidenoteToggles = function () {
+      sidenotePairs.forEach(syncSidenoteToggle);
+    };
+    if (railQuery.addEventListener) {
+      railQuery.addEventListener("change", syncAllSidenoteToggles);
+    } else if (railQuery.addListener) {
+      railQuery.addListener(syncAllSidenoteToggles);
+    }
+  }
 
   var equationsById = Object.create(null);
   document.querySelectorAll("[data-equation]").forEach(function (equation, index) {
@@ -394,5 +495,74 @@
         mathScrolls.forEach(updateMathOverflow);
       });
     }
+  }
+
+  var figureDialog = document.querySelector("[data-article-figure-dialog]");
+  var figureFocusLinks = Array.prototype.slice.call(
+    document.querySelectorAll("[data-article-figure-focus-link]")
+  );
+
+  if (figureDialog && figureFocusLinks.length && typeof figureDialog.showModal === "function") {
+    var figureDialogImage = figureDialog.querySelector("[data-article-figure-focus-image]");
+    var figureDialogCaption = figureDialog.querySelector("[data-article-figure-focus-caption]");
+    var figureDialogClose = figureDialog.querySelector(".article-figure-focus-close button");
+    var activeFigureLink = null;
+
+    function openFigureDialog(link) {
+      var figure = link.closest(".article-figure");
+      var sourceImage = link.querySelector("img");
+      if (!figure || !sourceImage || !figureDialogImage) return;
+
+      activeFigureLink = link;
+      figureDialogImage.src = link.href;
+      figureDialogImage.alt = sourceImage.alt || "";
+      if (sourceImage.naturalWidth) figureDialogImage.width = sourceImage.naturalWidth;
+      if (sourceImage.naturalHeight) figureDialogImage.height = sourceImage.naturalHeight;
+
+      var sourceCaption = figure.querySelector("figcaption");
+      if (figureDialogCaption) {
+        figureDialogCaption.innerHTML = sourceCaption ? sourceCaption.innerHTML : "";
+        figureDialogCaption.hidden = !sourceCaption;
+      }
+
+      figureDialog.setAttribute(
+        "aria-label",
+        sourceImage.alt ? "Enlarged figure: " + sourceImage.alt : "Enlarged figure"
+      );
+      link.setAttribute("aria-expanded", "true");
+      document.documentElement.classList.add("article-figure-is-open");
+      figureDialog.showModal();
+      window.requestAnimationFrame(function () {
+        if (figureDialogClose) figureDialogClose.focus();
+      });
+    }
+
+    function releaseFigureDialog() {
+      document.documentElement.classList.remove("article-figure-is-open");
+      if (activeFigureLink) {
+        activeFigureLink.setAttribute("aria-expanded", "false");
+        activeFigureLink.focus();
+      }
+      activeFigureLink = null;
+      if (figureDialogImage) figureDialogImage.removeAttribute("src");
+    }
+
+    figureFocusLinks.forEach(function (link) {
+      link.dataset.figureFocusReady = "true";
+      link.setAttribute("aria-haspopup", "dialog");
+      link.setAttribute("aria-controls", figureDialog.id);
+      link.setAttribute("aria-expanded", "false");
+      link.addEventListener("click", function (event) {
+        if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey ||
+            event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        openFigureDialog(link);
+      });
+    });
+
+    figureDialog.addEventListener("click", function (event) {
+      if (event.target === figureDialog) figureDialog.close();
+    });
+    figureDialog.addEventListener("close", releaseFigureDialog);
   }
 })();

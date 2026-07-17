@@ -28,6 +28,10 @@
             <span class="article-contents-count">{{ $tocItems }} {{ cond (eq $tocItems 1) "section" "sections" }}</span>
           </summary>
           <a class="article-contents-return" href="#" aria-label="Return to article opening"><span aria-hidden="true">↑</span></a>
+          <div class="article-contents-trace" aria-hidden="true">
+            <span class="article-contents-trace-title">{{ .Title }}</span>
+            <span class="article-contents-trace-current" data-article-current-section>Opening</span>
+          </div>
           <div class="article-contents-list">
             {{ $toc }}
           </div>
@@ -46,5 +50,19 @@
     {{ partial "main_extra.html" . }}
   </main>
 </article>
+
+{{ if .Page.Store.Get "articleHasFocusMedia" }}
+<dialog class="article-figure-focus" id="article-figure-focus" data-article-figure-dialog aria-label="Enlarged figure">
+  <div class="article-figure-focus-sheet">
+    <form class="article-figure-focus-close" method="dialog">
+      <button type="submit" value="close">close</button>
+    </form>
+    <figure>
+      <img class="article-figure-focus-image" data-article-figure-focus-image alt="">
+      <figcaption data-article-figure-focus-caption hidden></figcaption>
+    </figure>
+  </div>
+</dialog>
+{{ end }}
 
 {{ partial "footer.html" . }}

@@ -27,6 +27,8 @@
   --article-code-ink: #23322d;
   --article-dropcap-ink: #173d31;
   --article-dropcap-ornament: rgba(111, 59, 63, 0.32);
+  --article-focus-paper: rgba(245, 242, 232, 0.965);
+  --article-focus-backdrop: rgba(24, 31, 27, 0.56);
 }
 
 .single.blog.sunset {
@@ -43,6 +45,8 @@
   --article-code-ink: #292d26;
   --article-dropcap-ink: #263d30;
   --article-dropcap-ornament: rgba(112, 64, 68, 0.22);
+  --article-focus-paper: rgba(231, 211, 178, 0.955);
+  --article-focus-backdrop: rgba(28, 31, 24, 0.58);
 }
 
 /* The light control belongs to the crop corner, not to the reading viewport.
@@ -309,6 +313,10 @@
   display: none;
 }
 
+.single.blog .article-contents-trace {
+  display: none;
+}
+
 .single.blog .article-contents-list {
   padding: 0.5rem 0 0.1rem 0.25rem;
 }
@@ -364,7 +372,11 @@
 
 @media (prefers-reduced-motion: reduce) {
   .single.blog #TableOfContents a,
-  .single.blog .article-contents-return {
+  .single.blog .article-contents-return,
+  .single.blog .sidenote-ref,
+  .single.blog .sidenote,
+  .single.blog .sidenote::before,
+  .single.blog .article-link-mark {
     transition: none;
   }
 }
@@ -384,6 +396,7 @@
 }
 
 .single.blog .sidenote-ref {
+  position: relative;
   counter-increment: sidenote;
   margin-left: 0.08em;
   border: 0;
@@ -395,6 +408,7 @@
   line-height: 0;
   vertical-align: super;
   cursor: pointer;
+  transition: color 120ms ease, opacity 120ms ease;
 }
 
 .single.blog .sidenote-ref-number::before,
@@ -427,6 +441,15 @@
   line-height: 1.48;
   letter-spacing: 0;
   text-wrap: pretty;
+  transition: color 140ms ease, opacity 140ms ease;
+}
+
+.single.blog .sidenote-ref.is-corresponding {
+  color: var(--article-green);
+}
+
+.single.blog .sidenote.is-corresponding {
+  color: var(--article-ink);
 }
 
 .single.blog .sidenote-toggle:checked + .sidenote-ref + .sidenote {
@@ -455,6 +478,60 @@
 .single.blog .article-end-link:focus-visible {
   outline: 1px solid var(--article-blue);
   outline-offset: 0.2rem;
+}
+
+/* A deliberately small link grammar. Marks describe academic formats and
+ * same-page movement; ordinary external links remain ordinary prose links. */
+.single.blog .article-link-mark {
+  display: inline-block;
+  margin-left: 0.28em;
+  border: 0;
+  color: var(--article-faint);
+  font-family: Jost, sans-serif;
+  font-size: 0.56em;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
+  letter-spacing: 0.045em;
+  line-height: 1;
+  text-decoration: none;
+  text-transform: none;
+  vertical-align: 0.38em;
+  white-space: nowrap;
+  opacity: 0.78;
+  transition: color 120ms ease, opacity 120ms ease;
+}
+
+.single.blog .article-link:hover .article-link-mark,
+.single.blog .article-link:focus-visible .article-link-mark {
+  color: var(--article-wine);
+  opacity: 1;
+}
+
+.single.blog .article-link--section .article-link-mark {
+  margin-left: 0.22em;
+  color: var(--article-wine);
+  font-size: 0.64em;
+  letter-spacing: 0;
+  opacity: 0.66;
+}
+
+.single.blog .article-link-kind-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.single.blog #TableOfContents .article-link-mark,
+.single.blog #TableOfContents .article-link-kind-sr {
+  display: none;
 }
 
 .single.blog .article-body ul,
@@ -515,6 +592,74 @@
   font-style: normal;
   letter-spacing: 0.025em;
   text-align: right;
+}
+
+/* Epigraphs are opening pauses, not decorated quotation cards. Their one
+ * ghosted mark belongs to the ink vocabulary already used by the title. */
+.single.blog .article-epigraph {
+  position: relative;
+  width: min(100%, 31.5rem);
+  margin: 0.2rem auto 2.75rem;
+  padding: 0.25rem 0 0 1.85rem;
+}
+
+.single.blog .article-epigraph blockquote {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: rgba(32, 38, 34, 0.84);
+  font-size: 1.07rem;
+  font-style: italic;
+  line-height: 1.52;
+}
+
+.single.blog.sunset .article-epigraph blockquote {
+  color: rgba(32, 35, 31, 0.86);
+}
+
+.single.blog .article-epigraph-mark {
+  position: absolute;
+  top: -1.08rem;
+  left: -0.05rem;
+  color: var(--article-wine);
+  font-family: "Linden Hill", Palatino, serif;
+  font-size: 4.9rem;
+  font-style: normal;
+  line-height: 1;
+  opacity: 0.16;
+  pointer-events: none;
+  user-select: none;
+}
+
+.single.blog.sunset .article-epigraph-mark {
+  opacity: 0.13;
+}
+
+.single.blog .article-epigraph-text > :first-child {
+  margin-top: 0;
+}
+
+.single.blog .article-epigraph-text > :last-child {
+  margin-bottom: 0;
+}
+
+.single.blog .article-epigraph figcaption {
+  margin: 0.72rem 0 0;
+  color: var(--article-muted);
+  font-family: "Linden Hill", Palatino, serif;
+  font-size: 0.84rem;
+  line-height: 1.35;
+  text-align: right;
+}
+
+.single.blog .article-epigraph-dash {
+  margin-right: 0.22em;
+  color: var(--article-wine);
+}
+
+.single.blog .article-epigraph-source {
+  font-style: italic;
 }
 
 .single.blog .article-body hr {
@@ -804,6 +949,18 @@
   border: 0;
 }
 
+.single.blog .article-figure-focus-link {
+  display: block;
+  border: 0;
+  color: inherit;
+  cursor: zoom-in;
+}
+
+.single.blog .article-figure-focus-link:focus-visible {
+  outline: 1px solid var(--article-blue);
+  outline-offset: 0.35rem;
+}
+
 .single.blog .article-figure figcaption {
   max-width: 58rem;
   margin: 0.65rem auto 0;
@@ -828,6 +985,120 @@
   display: block;
   margin-top: 0.15rem;
   font-size: 0.9em;
+}
+
+/* One article-local image viewer. The square secondary sheet echoes the page's
+ * crop grammar while the translucent veil leaves the environmental light
+ * legible behind it. The source image link remains useful without JavaScript. */
+.single.blog .article-figure-focus {
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: clamp(1.25rem, 4vw, 3.5rem);
+  border: 0;
+  background: transparent;
+  color: var(--article-ink);
+  overflow: auto;
+}
+
+.single.blog .article-figure-focus[open] {
+  display: grid;
+  place-items: center;
+}
+
+.single.blog .article-figure-focus::backdrop {
+  background: var(--article-focus-backdrop);
+  -webkit-backdrop-filter: blur(5px) saturate(0.72);
+  backdrop-filter: blur(5px) saturate(0.72);
+}
+
+.single.blog .article-figure-focus-sheet {
+  position: relative;
+  width: min(100%, 78rem);
+  margin: auto;
+  padding: clamp(1.2rem, 3vw, 2.5rem);
+  background-color: var(--article-focus-paper);
+  background-image:
+    linear-gradient(var(--article-rule-strong), var(--article-rule-strong)),
+    linear-gradient(var(--article-rule-strong), var(--article-rule-strong)),
+    linear-gradient(var(--article-rule-strong), var(--article-rule-strong)),
+    linear-gradient(var(--article-rule-strong), var(--article-rule-strong)),
+    linear-gradient(var(--article-focus-paper), var(--article-focus-paper)),
+    url("../textures/lokta-fibres.svg");
+  background-position:
+    left 1rem top,
+    left top 1rem,
+    right 1rem bottom,
+    right bottom 1rem,
+    center,
+    center;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat;
+  background-size: 1rem 1px, 1px 1rem, 1rem 1px, 1px 1rem, cover, 340px auto;
+  box-shadow: 0 1.6rem 5rem rgba(15, 21, 17, 0.3);
+}
+
+.single.blog .article-figure-focus-sheet > figure {
+  margin: 0;
+}
+
+.single.blog .article-figure-focus-close {
+  position: absolute;
+  top: 0.62rem;
+  right: 0.82rem;
+  z-index: 1;
+  margin: 0;
+}
+
+.single.blog .article-figure-focus-close button {
+  padding: 0 0 0.1rem;
+  border: 0;
+  border-bottom: 1px dotted currentColor;
+  border-radius: 0;
+  background: transparent;
+  color: var(--article-muted);
+  font-family: Jost, sans-serif;
+  font-size: 0.64rem;
+  letter-spacing: 0.09em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.single.blog .article-figure-focus-close button:hover,
+.single.blog .article-figure-focus-close button:focus-visible {
+  color: var(--article-blue);
+}
+
+.single.blog .article-figure-focus-close button:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 0.22rem;
+}
+
+.single.blog .article-figure-focus-image {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: calc(100dvh - 10rem);
+  margin: auto;
+  border: 0;
+  object-fit: contain;
+}
+
+.single.blog .article-figure-focus figcaption {
+  max-width: 50rem;
+  margin: 0.75rem auto 0;
+  color: var(--article-muted);
+  font-family: Jost, sans-serif;
+  font-size: 0.74rem;
+  line-height: 1.45;
+  text-align: center;
+}
+
+html.article-figure-is-open {
+  overflow: hidden;
 }
 
 .single.blog .smallcaps {
@@ -1139,9 +1410,13 @@
     padding: 0;
     border: 0;
     opacity: 0.76;
-    overflow-y: auto;
-    scrollbar-width: thin;
+    overflow: hidden;
     transition: opacity 120ms ease;
+  }
+
+  .single.blog .article-contents[open] {
+    display: flex;
+    flex-direction: column;
   }
 
   .single.blog .article-contents:hover,
@@ -1194,7 +1469,47 @@
   }
 
   .single.blog .article-contents-list {
+    min-height: 0;
     padding: 0;
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+
+  .single.blog .article-contents-trace {
+    display: block;
+    flex: 0 0 auto;
+    margin: 0.02rem 0 0.62rem;
+    padding: 0.1rem 0.2rem 0.25rem 0.58rem;
+    text-wrap: pretty;
+  }
+
+  .single.blog .article-contents-trace-title {
+    display: block;
+    color: var(--article-faint);
+    font-family: Jost, sans-serif;
+    font-size: 0.53rem;
+    letter-spacing: 0.075em;
+    line-height: 1.35;
+    text-transform: uppercase;
+  }
+
+  .single.blog .article-contents-trace-current {
+    display: block;
+    margin-top: 0.22rem;
+    color: var(--article-green);
+    font-family: "Linden Hill", Palatino, serif;
+    font-size: 0.74rem;
+    font-style: italic;
+    line-height: 1.24;
+  }
+
+  .single.blog .article-contents-trace-current::before {
+    display: inline-block;
+    width: 0.38rem;
+    margin: 0 0.32rem 0.2rem 0;
+    border-top: 1px solid var(--article-wine);
+    content: "";
+    vertical-align: 0.22em;
   }
 
   .single.blog #TableOfContents ul ul {
@@ -1221,10 +1536,6 @@
     cursor: default;
   }
 
-  .single.blog .sidenote-toggle {
-    display: none;
-  }
-
   .single.blog .sidenote {
     display: block;
     float: right;
@@ -1236,6 +1547,24 @@
     background: transparent;
     font-size: 0.84rem;
     line-height: 1.42;
+  }
+
+  .single.blog .sidenote::before {
+    position: absolute;
+    top: 0.58em;
+    left: -1.12rem;
+    width: 0.72rem;
+    border-top: 1px solid var(--article-wine);
+    content: "";
+    opacity: 0;
+    transform: scaleX(0.28);
+    transform-origin: right center;
+    transition: opacity 140ms ease, transform 140ms ease;
+  }
+
+  .single.blog .sidenote.is-corresponding::before {
+    opacity: 0.48;
+    transform: scaleX(1);
   }
 
   .single.blog .article-figure--margin {
@@ -1340,6 +1669,34 @@
     text-align: left;
   }
 
+  .single.blog .article-epigraph {
+    width: calc(100% - 0.5rem);
+    margin-bottom: 2.35rem;
+    padding-left: 1.35rem;
+  }
+
+  .single.blog .article-epigraph-mark {
+    top: -0.9rem;
+    left: -0.15rem;
+    font-size: 4.2rem;
+  }
+
+  .single.blog .article-figure-focus {
+    padding: 0.72rem;
+  }
+
+  .single.blog .article-figure-focus-sheet {
+    padding: 2rem 0.85rem 1rem;
+  }
+
+  .single.blog .article-figure-focus-image {
+    max-height: calc(100dvh - 8rem);
+  }
+
+  .single.blog .article-figure-focus figcaption {
+    text-align: left;
+  }
+
 }
 
 @page {
@@ -1364,6 +1721,7 @@
   .single.blog .article-skip-link,
   .single.blog .article-contents-return,
   .single.blog .article-code-tools,
+  .single.blog .article-figure-focus,
   .single.blog .article-end {
     display: none !important;
   }
@@ -1473,11 +1831,24 @@
     color: inherit;
   }
 
-  .single.blog .article-body a[href^="http"]:not(.article-figure-link):not(.section-anchor)::after {
+  .single.blog .article-body a[href^="http"]:not(.article-figure-link):not(.article-figure-focus-link):not(.section-anchor)::after {
     content: " (" attr(href) ")";
     font-family: Jost, sans-serif;
     font-size: 0.72em;
     overflow-wrap: anywhere;
+  }
+
+  .single.blog .article-link-mark,
+  .single.blog .article-link-kind-sr {
+    display: none;
+  }
+
+  .single.blog .article-epigraph {
+    break-inside: avoid;
+  }
+
+  .single.blog .article-epigraph-mark {
+    color: #777;
   }
 
   .single.blog .article-contents-rail {

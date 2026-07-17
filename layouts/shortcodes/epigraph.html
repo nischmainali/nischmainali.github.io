@@ -1,0 +1,38 @@
+{{- $quote := strings.TrimSpace .Inner -}}
+{{- $attribution := strings.TrimSpace (default "" (.Get "attribution")) -}}
+{{- $source := strings.TrimSpace (default "" (.Get "source")) -}}
+{{- $link := strings.TrimSpace (default "" (.Get "link")) -}}
+{{- if not $quote -}}
+  {{- errorf "epigraph at %s requires a quotation" .Position -}}
+{{- end -}}
+{{- if and (not $attribution) (not $source) -}}
+  {{- errorf "epigraph at %s requires attribution or source" .Position -}}
+{{- end -}}
+{{- if and $link (not (or $attribution $source)) -}}
+  {{- errorf "epigraph at %s cannot use link without attribution or source" .Position -}}
+{{- end -}}
+
+<figure class="article-epigraph">
+  <blockquote{{ with $link }} cite="{{ . | safeURL }}"{{ end }}>
+    <span class="article-epigraph-mark" aria-hidden="true">“</span>
+    <div class="article-epigraph-text">
+      {{- .Page.RenderString (dict "display" "block") $quote -}}
+    </div>
+  </blockquote>
+  <figcaption>
+    <span class="article-epigraph-dash" aria-hidden="true">—</span>
+    {{- with $attribution }}<span class="article-epigraph-attribution">{{ . | markdownify }}</span>{{ end -}}
+    {{- if and $attribution $source }}<span class="article-epigraph-separator">, </span>{{ end -}}
+    {{- with $source -}}
+      <cite class="article-epigraph-source">
+        {{- with $link }}<a href="{{ . | safeURL }}">{{ end -}}
+        {{- . | markdownify -}}
+        {{- with $link }}</a>{{ end -}}
+      </cite>
+    {{- else -}}
+      {{- with $link -}}
+        <a class="article-epigraph-source-link" href="{{ . | safeURL }}">source</a>
+      {{- end -}}
+    {{- end -}}
+  </figcaption>
+</figure>

@@ -9,7 +9,13 @@ categories = ["Notes"]
 tags = ["Typography", "Gaussian Process"]
 +++
 
+{{< epigraph attribution="Rabindranath Tagore" source="Stray Birds" >}}
+The butterfly counts not months but moments, and has time enough.
+{{< /epigraph >}}
+
 {{< dropcap "T" >}}his specimen checks the {{< smallcaps >}}editorial vocabulary{{< /smallcaps >}} of an opened post: ordinary prose, an `inline expression`, keyboard input such as <kbd>⌘</kbd> + <kbd>K</kbd>, and a footnote.[^fn:1] It also carries a margin note for comparison.{{< sidenote >}}This is an explicit sidenote: optional context stays beside the sentence without interrupting the reading line. On narrower screens, its reference number becomes a tap-to-reveal control.{{< /sidenote >}}
+
+Its small link grammar distinguishes the [talk notes](/pdfs/chalk_talk.pdf), a [published record](https://doi.org/10.1101/2024.06.11.597569), and a [preprint](https://arxiv.org/abs/1807.02582). A [same-page direction](#mathematics) receives only the quiet section mark.
 
 ## Heading 1 {#heading-1}
 
@@ -81,7 +87,7 @@ plt.show()
 
 ## Marginal plate {#image}
 
-The right field can carry a compact scientific plate without turning it into a second sidebar. Below the wide breakpoint, the same figure returns to the reading measure.
+The right field can carry a compact scientific plate without turning it into a second sidebar. Below the wide breakpoint, the same figure returns to the reading measure. Its image remains an ordinary full-resolution link without JavaScript and opens as a second Lokta sheet when the article reader is available.
 
 {{< figure src="images/article-specimens/gp-threshold-crossings.svg" alt="Gaussian-process posterior sample paths crossing a threshold" title="Plate 1" caption="Posterior sample paths crossing a reference threshold." placement="margin" treatment="ink" width="960" height="560" >}}
 

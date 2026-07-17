@@ -33,7 +33,7 @@ The former `scripts/check_math.py` command remains as a compatibility entry
 point. See `MATHEMATICS.md` for delimiters, numbered equations, statements,
 shared macros, and ox-hugo guidance.
 
-## Article initials and figures
+## Article initials, epigraphs, and figures
 
 An article may open with one explicit two-ink initial:
 
@@ -46,6 +46,19 @@ explicit letter lets headings, quotations, links, emphasis, and mathematics
 remain ordinary Markdown instead of relying on fragile first-letter rewriting.
 In ox-hugo source, an inline macro can emit the same shortcode; `org/content.org`
 contains the local example.
+
+An epigraph is an opening quotation with authored attribution rather than a
+decorated blockquote panel:
+
+```markdown
+{{< epigraph attribution="Rabindranath Tagore" source="Stray Birds" >}}
+The butterfly counts not months but moments, and has time enough.
+{{< /epigraph >}}
+```
+
+`attribution` or `source` is required. An optional `link` associates the source
+with its canonical page. Epigraph contents are Markdown and may include the
+same build-time mathematics as article prose.
 
 The figure shortcode accepts three placements and two surface treatments:
 
@@ -68,6 +81,10 @@ The figure shortcode accepts three placements and two surface treatments:
   under `assets/`. Static and remote paths remain compatibility fallbacks.
 - `priority="true"` is reserved for one image that appears above the fold. All
   other figures use lazy loading.
+- Informative figures link to their full-resolution source and use the local
+  paper viewer when JavaScript is available. Set `zoom="false"` for a figure
+  that should remain static; decorative figures and figures with author-supplied
+  links do not acquire the viewer.
 - Supply useful `alt` text. Use `decorative="true"` only when the image adds no
   information. Marginal figures require a caption.
 

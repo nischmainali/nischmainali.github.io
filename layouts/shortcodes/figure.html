@@ -15,6 +15,11 @@
 {{- $decorative := eq (lower (default "false" (.Get "decorative"))) "true" -}}
 {{- $priority := eq (lower (default "false" (.Get "priority"))) "true" -}}
 {{- $legacyWide := eq (lower (default "false" (.Get "wide"))) "true" -}}
+{{- $zoomValue := lower (default "true" (.Get "zoom")) -}}
+{{- if not (in (slice "true" "false") $zoomValue) -}}
+  {{- errorf "figure at %s has invalid zoom value %q; use true or false" .Position $zoomValue -}}
+{{- end -}}
+{{- $zoom := eq $zoomValue "true" -}}
 
 {{- $placement := lower (default "measure" (.Get "placement")) -}}
 {{- if and $legacyWide (not (.Get "placement")) -}}
@@ -63,6 +68,7 @@
     "Sizes" (.Get "sizes")
     "Width" (.Get "width")
     "Height" (.Get "height")
+    "Focus" (and $zoom (not $link) (not $decorative))
     "Position" .Position
   ) -}}
   {{- with $link }}</a>{{ end -}}

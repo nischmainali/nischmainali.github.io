@@ -1,4 +1,5 @@
 {{- $id := printf "sidenote-%d" .Ordinal -}}
-<input class="sidenote-toggle" type="checkbox" id="{{ $id }}">
-<label class="sidenote-ref" for="{{ $id }}" aria-label="Toggle sidenote"><span class="sidenote-ref-number" aria-hidden="true"></span></label>
-<span class="sidenote" role="note" aria-label="Sidenote"><span class="sidenote-number" aria-hidden="true"></span>{{ .Inner | markdownify }}</span>
+{{- $noteID := printf "%s-note" $id -}}
+<input class="sidenote-toggle" type="checkbox" id="{{ $id }}" aria-controls="{{ $noteID }}" aria-label="Toggle sidenote">
+<label class="sidenote-ref" for="{{ $id }}" data-sidenote-reference><span class="sidenote-ref-number" aria-hidden="true"></span></label>
+<span class="sidenote" id="{{ $noteID }}" role="note" aria-label="Sidenote" data-sidenote-note><span class="sidenote-number" aria-hidden="true"></span>{{ .Inner | markdownify }}</span>
