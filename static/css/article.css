@@ -26,7 +26,7 @@
   --article-block-strong: rgba(224, 208, 194, 0.48);
   --article-code-ink: #23322d;
   --article-dropcap-ink: #173d31;
-  --article-dropcap-ornament: rgba(111, 59, 63, 0.38);
+  --article-dropcap-ornament: rgba(111, 59, 63, 0.32);
 }
 
 .single.blog.sunset {
@@ -42,7 +42,7 @@
   --article-block-strong: rgba(202, 174, 139, 0.34);
   --article-code-ink: #292d26;
   --article-dropcap-ink: #263d30;
-  --article-dropcap-ornament: rgba(112, 64, 68, 0.28);
+  --article-dropcap-ornament: rgba(112, 64, 68, 0.22);
 }
 
 /* The light control belongs to the crop corner, not to the reading viewport.
@@ -142,17 +142,23 @@
 }
 
 /* A two-ink opening initial. The foreground letter remains real text; the
- * aria-hidden ornamental layer sits behind it and stays out of copy or speech. */
+ * aria-hidden ornamental layer sits behind it and stays out of copy or speech.
+ * The F1 ornament fills its entire em square, so the float and face must share
+ * one width; the small negative left margin is the only optical hang. */
+.single.blog .article-body > p:first-of-type:has(> .article-dropcap:first-child) {
+  margin-top: 0;
+}
+
 .single.blog .article-dropcap {
   position: relative;
   float: left;
   display: grid;
   place-items: center;
-  width: 3.72rem;
-  height: 4.62rem;
-  margin: 0.11rem 0.48rem -0.18rem -0.24rem;
+  width: 4.65rem;
+  height: 4.72rem;
+  margin: 0.02rem 0.2rem -0.2rem -0.55rem;
   color: var(--article-dropcap-ink);
-  font-size: 4.25rem;
+  font-size: 4.65rem;
   line-height: 1;
   text-align: center;
   user-select: text;
@@ -823,6 +829,7 @@
 
 .single.blog .smallcaps {
   font-variant-caps: all-small-caps;
+  hyphens: none;
   letter-spacing: 0.055em;
 }
 
@@ -1270,10 +1277,10 @@
   }
 
   .single.blog .article-dropcap {
-    width: 3.2rem;
-    height: 4.08rem;
-    margin: 0.1rem 0.4rem -0.12rem -0.08rem;
-    font-size: 3.72rem;
+    width: 4.2rem;
+    height: 4.45rem;
+    margin: 0.03rem 0.2rem -0.12rem -0.55rem;
+    font-size: 4.2rem;
   }
 
   .single.blog .section-anchor {
