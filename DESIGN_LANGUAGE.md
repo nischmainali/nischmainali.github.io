@@ -460,6 +460,10 @@ The site is intentionally small:
   leaves, responsive scene setup, persistence, and state control;
 - `layouts/_default/single.html` — experimental site-owned opened-article
   structure, leaving the vendored theme template untouched;
+- `layouts/baseof.html`, `layouts/blog/section.html`, and
+  `layouts/docs/section.html` — the Hugo 0.164 list-template bridge. It preserves
+  the vendored theme's existing Documents and Notes markup while keeping its
+  legacy layout files untouched;
 - `layouts/_markup/` — Hugo 0.164 site-owned heading, code, and mathematical
   passthrough hooks;
 - `layouts/partials/article-meta.html` and `article-end.html` — experimental
@@ -582,7 +586,8 @@ while doing so.
   remain in `content/`. They are useful test fixtures but should not be mistaken
   for authored public content.
 - The vendored theme keeps its older layout structure even though deployment now
-  uses Hugo 0.164.0. Syncing the theme remains a separate migration task.
+  uses Hugo 0.164.0. Site-owned templates bridge the current section lists;
+  syncing or fully migrating the theme remains a separate task.
 
 ## Change protocol for future visual work
 
