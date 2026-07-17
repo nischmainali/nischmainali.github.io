@@ -1,0 +1,35 @@
+{{- if and .IsPage (eq .Section "blog") -}}
+  {{- $page := . -}}
+  {{- with .Fragments -}}
+    {{- $headings := .Headings -}}
+    {{- if and (eq (len $headings) 1) (not (index $headings 0).Title) -}}
+      {{- $headings = (index $headings 0).Headings -}}
+    {{- end -}}
+    {{- with $headings }}
+<nav id="TableOfContents">
+  {{- template "article-toc-tree" (dict "headings" . "page" $page) -}}
+</nav>
+    {{- end -}}
+  {{- end -}}
+{{- else -}}
+  {{- replaceRE `(?s)(<nav [^>]+>)\s*<ul>\s*<li>(\s*<ul>.+?</ul>)\s*</li>\s*</ul>(\s*</nav>)` `$1$2$3` .TableOfContents | safeHTML -}}
+{{- end -}}
+
+{{- define "article-toc-tree" -}}
+<ul>
+  {{- range .headings -}}
+    {{- if .Title -}}
+  <li>
+    <a href="#{{ .ID | safeURL }}">{{ $.page.RenderString (dict "display" "inline") .Title }}</a>
+    {{- with .Headings -}}
+      {{- template "article-toc-tree" (dict "headings" . "page" $.page) -}}
+    {{- end -}}
+  </li>
+    {{- else -}}
+      {{- with .Headings -}}
+        {{- template "article-toc-tree" (dict "headings" . "page" $.page) -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+</ul>
+{{- end -}}

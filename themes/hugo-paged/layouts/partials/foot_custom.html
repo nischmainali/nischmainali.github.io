@@ -18,11 +18,6 @@
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js" defer></script>
 {{ end }}
-<!-- {{- if not (default (not (in .Content "<code>$")) .Params.disable_math) -}} -->
-<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css"> -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/@xiee/utils/js/math-code.min.js" defer></script> -->
-<!-- <script src="https://cdn.jsdelivr.net/combine/npm/katex/dist/katex.min.js,npm/katex/dist/contrib/auto-render.min.js,npm/@xiee/utils/js/render-katex.js" defer></script> -->
-<!-- {{ end }} -->
 {{- if $has_code -}}
 <script src="https://cdn.jsdelivr.net/npm/@xiee/utils/js/copy-button.min.js" defer></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xiee/utils/css/copy-button.min.css">

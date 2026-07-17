@@ -1,0 +1,10 @@
+{{- $isBlock := eq .Type "block" -}}
+{{- if $isBlock -}}
+<div class="math-display" data-math-display>
+  <div class="math-scroll" data-math-scroll>
+    {{- partial "render-math.html" (dict "tex" .Inner "display" true "page" .Page "position" .Position) -}}
+  </div>
+</div>
+{{- else -}}
+<span class="math-inline">{{- partial "render-math.html" (dict "tex" .Inner "display" false "page" .Page "position" .Position) -}}</span>
+{{- end -}}

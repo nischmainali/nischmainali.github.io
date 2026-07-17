@@ -1,7 +1,7 @@
 # Nisch's homepage
 
 Source for Nischal Mainali's Hugo website. The deployed site is built by Netlify
-with Hugo 0.128.0; generated output is not stored in Git.
+with Hugo 0.164.0; generated output is not stored in Git.
 
 ## Local development
 
@@ -22,6 +22,15 @@ This writes the generated site to `public/`. That directory is intentionally
 ignored: source files are authoritative, and Netlify builds `public/` during
 deployment.
 
+For mathematical drafts, run the strict source and build check:
+
+~~~sh
+./scripts/check_math.py
+~~~
+
+See `MATHEMATICS.md` for delimiters, numbered equations, statements, shared
+macros, and ox-hugo guidance.
+
 ## Repository map
 
 - `content/` — authored pages and posts. Some theme examples remain as drafts or
@@ -38,6 +47,7 @@ deployment.
 - `netlify.toml` — deployment build configuration.
 - `DESIGN_LANGUAGE.md` — the site's design principles, provenance, and visual QA
   baseline.
+- `MATHEMATICS.md` — the mathematical authoring and validation interface.
 - `AGENTS.md` — working rules for future coding agents.
 
 ## Editing boundaries

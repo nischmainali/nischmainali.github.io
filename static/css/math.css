@@ -1,0 +1,125 @@
+/* KaTeX is rendered by Hugo. Modern browsers use its semantic MathML layer
+ * with a local OpenType MATH font; KaTeX's HTML remains in the document as a
+ * layout fallback. Article-specific typography remains in article.css. */
+
+@font-face {
+  font-family: "Asana Math Web";
+  src: url("../vendor/asana-math/000.962/Asana-Math.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+/* `math-style` arrived with native MathML Core. Browsers without it retain
+ * KaTeX's HTML instead of being left with an unrendered MathML tree. */
+@supports (math-style: normal) {
+  /* KaTeX visually hides MathML by default. Reversing those two layers lets
+   * the browser use Asana's MATH table for spacing, stretching, and script
+   * sizes while preserving the complete HTML+MathML build output. */
+  .katex > .katex-mathml {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+    -webkit-clip-path: none;
+    clip-path: none;
+    white-space: normal;
+  }
+
+  .katex > .katex-html,
+  .katex-display > .katex > .katex-html {
+    display: none;
+  }
+
+  .katex math {
+    font-family: "Asana Math Web", math;
+    font-size: 1em;
+  }
+
+  .math-inline .katex {
+    display: inline-block;
+    line-height: 1;
+    vertical-align: -0.08em;
+  }
+
+  .katex-display > .katex,
+  .katex-display > .katex > .katex-mathml {
+    display: block;
+    text-align: center;
+  }
+
+  .katex-display math[display="block"] {
+    display: block;
+    width: max-content;
+    min-width: 100%;
+    margin-inline: auto;
+  }
+}
+
+.math-inline {
+  color: inherit;
+  white-space: nowrap;
+}
+
+.math-inline .katex {
+  color: inherit;
+  font-size: 1em;
+}
+
+.math-display,
+.math-equation {
+  position: relative;
+  max-width: 100%;
+}
+
+.math-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+
+.math-scroll .katex-display {
+  width: max-content;
+  min-width: 100%;
+}
+
+.math-scroll.can-scroll-right:not(.can-scroll-left) {
+  -webkit-mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 1.35rem), transparent 100%);
+  mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 1.35rem), transparent 100%);
+}
+
+.math-scroll.can-scroll-left:not(.can-scroll-right) {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 1.35rem, #000 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 1.35rem, #000 100%);
+}
+
+.math-scroll.can-scroll-left.can-scroll-right {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 1.35rem, #000 calc(100% - 1.35rem), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 1.35rem, #000 calc(100% - 1.35rem), transparent 100%);
+}
+
+.math-scroll:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 0.16rem;
+}
+
+@media print {
+  .math-scroll,
+  .math-scroll.can-scroll-left,
+  .math-scroll.can-scroll-right {
+    max-width: none;
+    overflow: visible;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .math-scroll .katex-display {
+    width: auto;
+    min-width: 0;
+    white-space: normal;
+  }
+}

@@ -1,0 +1,20 @@
+{{- $tex := .tex -}}
+{{- $display := default false .display -}}
+{{- $page := .page -}}
+{{- $position := default "unknown source" .position -}}
+{{- $options := dict
+  "displayMode" $display
+  "macros" hugo.Data.math.macros
+  "minRuleThickness" 0.05
+  "output" "htmlAndMathml"
+  "strict" "error"
+  "throwOnError" true
+-}}
+{{- with try (transform.ToMath $tex $options) -}}
+  {{- with .Err -}}
+    {{- errorf "Unable to render mathematical markup: %s: see %s" . $position -}}
+  {{- else -}}
+    {{- $page.Store.Set "hasMath" true -}}
+    {{- .Value -}}
+  {{- end -}}
+{{- end -}}

@@ -1,0 +1,16 @@
+{{- $id := default "" (.Get "id") -}}
+{{- if eq (len (findRE `^[a-z][a-z0-9-]*$` $id)) 0 -}}
+  {{- errorf "The equation shortcode requires a unique slug-like id: see %s" .Position -}}
+{{- end -}}
+{{- $tex := strings.TrimSpace .Inner -}}
+{{- if not $tex -}}
+  {{- errorf "Equation %q has no TeX content: see %s" $id .Position -}}
+{{- end -}}
+<div class="math-equation" id="equation-{{ $id }}" data-equation="{{ $id }}">
+  <div class="math-scroll" data-math-scroll>
+    {{- partial "render-math.html" (dict "tex" $tex "display" true "page" .Page "position" .Position) -}}
+  </div>
+  <a class="equation-number" href="#equation-{{ $id }}" aria-label="Equation">
+    <span class="equation-number-value" aria-hidden="true"></span>
+  </a>
+</div>

@@ -76,18 +76,22 @@ plt.show()
 
 [[https://i.pinimg.com/564x/fd/01/75/fd0175ef780e2feefb30055be9f2e022.jpg]]
 
-*** Latex
+*** Mathematics
 
-Consider a \(\mathcal{GP}\) code of space of size \(L\) , with \(N\) neurons and correlation length \(\sigma\) and variance \(r\), when corrupted by noise with variance, we get anexponentialsuppression of ML decoding error:
+Use the same concise delimiters as the deployed Markdown: inline
+$\GP(L,\sigma)$ and unnumbered display mathematics with =$$ ... $$=.
 
-\begin{equation}
-\label{eq:1}
-P= \frac{L}{2 \pi \sigma} \left( 1 +  \frac{r}{\eta}\right)^{\frac{N}{2}}
-\end{equation}
+#+begin_export hugo
+{{< equation id="decoding-error" >}}
+P = \frac{L}{2\pi\sigma}
+    \left(1 + \frac{r}{\eta}\right)^{N/2}
+{{< /equation >}}
+
+Equation {{< eqref "decoding-error" >}} gives the decoding-error scale.
+#+end_export
 
 
 * Docs
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: docs
 :END:
-

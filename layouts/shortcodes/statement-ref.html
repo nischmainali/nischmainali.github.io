@@ -1,0 +1,5 @@
+{{- $id := default "" (.Get 0) -}}
+{{- if eq (len (findRE `^[a-z][a-z0-9-]*$` $id)) 0 -}}
+  {{- errorf "The statement-ref shortcode requires a slug-like statement id: see %s" .Position -}}
+{{- end -}}
+<a class="statement-ref" href="#statement-{{ $id }}" data-statement-ref="{{ $id }}" aria-label="Unresolved statement reference"><span class="statement-ref-kind">Statement</span> <span class="statement-ref-number">?</span></a>

@@ -84,13 +84,89 @@ plt.show()
 {{< figure src="https://i.pinimg.com/564x/fd/01/75/fd0175ef780e2feefb30055be9f2e022.jpg" alt="A still image reading You've been Rick Rolled" title="Figure 1" caption="A deliberately wide image with an editorial caption." wide="true" >}}
 
 
-## Latex {#latex}
+## Mathematics: $\GP$ fields {#mathematics}
 
-Consider a \\(\mathcal{GP}\\) code of space of size \\(L\\) , with \\(N\\) neurons and correlation length \\(\sigma\\) and variance \\(r\\), when corrupted by noise with variance, we get anexponentialsuppression of ML decoding error:
+The posterior is $p(\theta \mid x)$, and the longer delimiter remains available for compatibility: \(L = 200\). A literal price is written as \$2 in the source so that it remains currency rather than mathematics. The same ink should survive a footnote with $\sigma^2$[^fn:2] and a margin note.{{< sidenote >}}A mathematical sidenote keeps $\Cov(X,Y)$ compact and aligned with the smaller marginal type.{{< /sidenote >}}
 
-\begin{equation}
-\label{eq:1}
-P= \frac{L}{2 \pi \sigma} \left( 1 +  \frac{r}{\eta}\right)^{\frac{N}{2}}
-\end{equation}
+Equation {{< eqref "posterior" >}} is a forward reference to the first numbered display. Its unnumbered form remains plain Markdown:
+
+$$
+p(\theta \mid x)
+\propto p(x \mid \theta)\,p(\theta).
+$$
+
+{{< equation id="posterior" >}}
+p(\theta \mid x)
+= \frac{p(x \mid \theta)\,p(\theta)}
+       {\int_{\Theta} p(x \mid \vartheta)\,p(\vartheta)\,\dd \vartheta}
+{{< /equation >}}
+
+The backward reference to {{< eqref "posterior" >}} should resolve to the same number. Alignment, cases, and matrices remain ordinary unnumbered displays:
+
+$$
+\begin{aligned}
+m(x_*) &= k_*^{\mathsf T}(K + \sigma^2 I)^{-1}y, \\
+v(x_*) &= k(x_*,x_*) - k_*^{\mathsf T}(K + \sigma^2 I)^{-1}k_*.
+\end{aligned}
+$$
+
+$$
+\ell(u) =
+\begin{cases}
+\frac{1}{2}u^2, & \abs{u} \leq 1, \\
+\abs{u} - \frac{1}{2}, & \abs{u} > 1,
+\end{cases}
+\qquad
+K = \begin{pmatrix} 1 & \rho \\ \rho & 1 \end{pmatrix}.
+$$
+
+The deliberately wide Equation {{< eqref "wide-posterior" >}} checks the transparent edge cues and keyboard scrolling without shrinking the type.
+
+{{< equation id="wide-posterior" >}}
+\log p(y \mid X,\theta)
+= -\frac{1}{2}y^{\mathsf T}(K_\theta + \sigma_n^2 I)^{-1}y
+  -\frac{1}{2}\log\det(K_\theta + \sigma_n^2 I)
+  -\frac{n}{2}\log(2\pi)
+  +\underbrace{\sum_{j=1}^{m}\log p(\theta_j)}_{\text{prior contribution}}
+  -\underbrace{\KL\!\left(q(f)\,\middle\|\,p(f \mid X,\theta)\right)}_{\text{variational correction}}
+{{< /equation >}}
+
+### Mathematical table: $K_\theta$ {#mathematical-table}
+
+| Quantity | Reading |
+|----------|---------|
+| $K_\theta$ | covariance matrix |
+| $\EE[f(x)]$ | prior mean |
+| $\Var[f(x)]$ | marginal variance |
+| $\argmax_\theta p(\theta \mid x)$ | MAP estimate |
+
+Chemistry uses the same build-time renderer:
+
+$$
+C_p[\ce{H2O(l)}] = \pu{75.3 J // mol K}.
+$$
+
+The promised {{< statement-ref "consistency" >}} is also a forward reference. The first five statement families share one local sequence.
+
+{{< statement kind="definition" id="posterior-concentration" title="Posterior concentration" >}}
+A posterior sequence $\{\Pi_n\}$ concentrates at $\theta_0$ when
+$\Pi_n\!\left(\norm{\theta-\theta_0} > \varepsilon \mid X_{1:n}\right) \to 0$
+for every $\varepsilon > 0$.
+{{< /statement >}}
+
+{{< statement kind="theorem" id="consistency" title="Consistency" >}}
+If the model is identifiable and the prior assigns positive mass to every neighbourhood of $\theta_0$, then the posterior concentrates at $\theta_0$.
+{{< /statement >}}
+
+{{< proof >}}
+Fix $\varepsilon>0$. Identifiability separates the complement of the $\varepsilon$-ball from $\theta_0$, while the prior supplies positive local mass. The likelihood ratio then vanishes on that complement, which gives the claim.
+{{< /proof >}}
+
+The sequence is visible in {{< statement-ref "posterior-concentration" >}} and {{< statement-ref "consistency" >}}.
+
+{{< statement kind="remark" id="same-page-references" title="Scope" >}}
+References are intentionally article-local in this iteration; they do not create a second site-wide citation system.
+{{< /statement >}}
 
 [^fn:1]: The said footnote.
+[^fn:2]: Mathematical notation such as $\norm{x}_2$ remains available inside notes.

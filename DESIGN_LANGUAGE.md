@@ -1,12 +1,12 @@
 # Design language and long-term visual working note
 
-- Last baseline study: 2026-07-15
+- Last baseline study: 2026-07-16
 - Baseline checkpoint: `7c9d201` (`main`)
 - Current accepted environmental direction: **Lokta Conservatory**
 - Design worktree: `experiment/lokta-conservatory`
 - Current opened-article experiment: **Lokta Field Note**
 - Article branch: `experiment/article-reading-system` (**not yet accepted**)
-- Hugo used for the study: `v0.128.0+extended`
+- Hugo pinned for the article experiment: `v0.164.0+extended`
 - Reference theme checkout: `/Users/nisch/code/site/hugo-paged`
 - Live site repository: `/Users/nisch/code/site/nisch-hugo-site`
 
@@ -231,11 +231,32 @@ palette, or mobile composition. Its local contents rail and sidenotes instead
 translate the reference's useful proportions and reading behavior into a
 scholarly field note typeset directly onto the existing lokta sheet.
 
+Its mathematical system combines slotThe's build-time and strict-source
+discipline with TurnTrout's accessible HTML+MathML delivery, responsive
+overflow cues, keyboard focus, and print care. Those ideas are re-authored for
+this page: formulas remain bare ink on the Lokta surface, numbers use the quiet
+Jost marginal voice, and statements read as book passages rather than panels.
+This provenance and the entire mathematics layer remain experimental with the
+rest of the branch.
+
+Asana Math 000.962 supplies the mathematical voice. Linden Hill revives
+Goudy's Deepdene, and its page texture calls for a warm old-style companion.
+Times-derived math brought an institutional tone. KaTeX's Computer Modern
+looked like default TeX. Asana's Palatino lineage brings open counters, soft
+curves, and a calligraphic italic without the upright system that Euler would
+impose. TeX discussions pair Asana and Pagella with Palatino-like book faces;
+Asana's softer drawing suits the live specimen.
+Modern browsers render the native MathML with Asana's OpenType MATH table.
+KaTeX's metric-matched HTML stays in the document as a legacy fallback.
+
 Its governing choices are:
 
 - the title, subtitle, and floral mark remain in the wide editorial field while
-  prose uses a calmer 41 rem / 656 px measure. Code and explicitly wide figures
-  may make only a modest 45 rem / 720 px breakout; tables stay with the prose;
+  prose uses a calmer 38.5 rem / 616 px measure. Its 1.04 rem Linden Hill body
+  and 1.07 rem opening paragraph are slightly more generous than the surrounding
+  site type; mathematics keeps its previous optical size rather than scaling up
+  with the prose. Code and explicitly wide figures may make only a modest
+  44 rem / 704 px breakout; tables stay with the prose;
 - the opening begins one compact optical interval below the navigation rule.
   Title, subtitle, and date form a close descending stack; the floral mark is a
   restrained watermark tucked above and left of the title, never an icon, badge,
@@ -245,10 +266,15 @@ Its governing choices are:
   after the first specimen proved them to be unnecessary complication;
 - the title field ends in whitespace rather than a full-width divider. Section
   headings likewise rely on type and rhythm, not repeated horizontal rules;
-- contents become a slim, article-local sticky rail in the left margin on truly
-  wide screens. A single wine hairline and ink change mark the section currently
-  crossing the reading line. Below the rail breakpoint, the same contents return
-  to the reading flow and begin collapsed;
+- at 1180 px and above, contents become a slim, article-local sticky rail in the
+  left margin. The rail is 7.5 rem wide with a 2.3 rem inner interval; its label
+  lands on the title's 40 px paper inset, making the TOC and upper-left crop mark
+  part of one vertical axis. A single wine hairline and ink change mark the
+  section currently crossing the reading line. Below that breakpoint, the same
+  contents return to the reading flow and begin collapsed. A faint upward mark
+  at the far edge of the wide rail returns long articles to the composed page
+  opening; it is a navigation courtesy, not another persistent control on
+  narrow screens;
 - the shade/sunset control keeps its crop-corner placement at the page opening
   but scrolls away with the masthead on articles, so it can never cover the TOC,
   code, or prose;
@@ -257,12 +283,26 @@ Its governing choices are:
 - quotations, definition lists, code, tables, figures, mathematics, and endnotes
   use hairlines, paper-toned fields, and the site's ink colors rather than boxed
   components;
+- Hugo renders mathematics at build time as KaTeX HTML and MathML. Pages load
+  exact local assets only where needed, with no runtime renderer or math CDN.
+  MathML Core browsers use local Asana Math; KaTeX HTML provides the fallback.
+  Unnumbered displays have no border, fill, or label; numbered equations borrow
+  a narrow optical gutter without entering the sidenote field;
+- genuinely wide formulas scroll without shrinking. Directional edge masks are
+  transparent, appear only while overflow exists, and preserve the visible
+  fibres and changing light beneath them. Only scrollable formulas enter the
+  keyboard order;
+- theorem, definition, remark, and proof helpers remain unboxed typographic
+  passages. Small-cap labels, shared local numbering, italic theorem bodies,
+  upright definitions, and a quiet proof square extend the old-book grammar;
 - fenced code is highlighted at build time with Chroma and receives a very small
   local copy control. Its shallow breakout is for long lines, not spectacle;
   article pages no longer depend on Prism or the theme's DOM mutation helpers;
 - ordinary Markdown footnotes remain endnotes, while the explicit `sidenote`
   shortcode supplies optional Tufte-style right-margin notes on wide screens.
-  These use the reading face, a generous measure, and a number hanging outside
+  Their field grows fluidly from 13.25 to 16.5 rem, begins one quiet 2 rem interval
+  beyond the prose, and may cross the right crop mark: the crop frames the paper,
+  not the annotation. These use the reading face and a number hanging outside
   the note as in the slotThe reference. At smaller widths they become
   tap-to-reveal inline notes with no filled panel;
 - the ending is only a rule and a text link back to Documents. It introduces no
@@ -270,14 +310,37 @@ Its governing choices are:
 
 Experimental authoring controls are intentionally few:
 
-- `subtitle`, `show_toc`, and `math` are optional front-matter controls;
+- `subtitle` and `show_toc` are optional front-matter controls. Mathematics is
+  detected during rendering and requires no page flag;
 - the local `figure` shortcode supports the usual image/caption fields plus
   `wide="true"` when an image should enter the wide editorial field;
 - the `smallcaps` shortcode is available for genuinely editorial inline use;
 - the `sidenote` shortcode is reserved for optional context that should remain
   adjacent to a sentence without becoming part of the endnote apparatus;
-- headings, fenced code, tables, definition lists, blockquotes, mathematics, and
-  footnotes otherwise remain ordinary Markdown.
+- ordinary mathematics uses `$...$` and `$$...$$`, with the longer slash
+  delimiters retained for compatibility. Numbered equations and restrained
+  statements use the `equation`, `eqref`, `statement`, `statement-ref`, and
+  `proof` helpers documented in `MATHEMATICS.md`;
+- headings, fenced code, tables, definition lists, blockquotes, unnumbered
+  mathematics, and footnotes otherwise remain ordinary Markdown.
+
+### Deferred article capabilities
+
+Citation and bibliography support is the next substantive article-system phase,
+not part of the present mathematics implementation. It should remain entirely
+build-time and preserve readable HTML, print output, and source text without a
+client citation runtime. Choose the bibliography source and authoring syntax
+only when a real article supplies representative citations; do not grow an
+ad-hoc shortcode vocabulary in advance.
+
+The intended visual treatment adapts slotThe's useful bibliographic discipline
+to this paper rather than copying its table. Inline citations should be concise
+and link to stable entries. On wide articles, a short citation label may hang
+into the left optical gutter while the entry remains unboxed in the reading
+measure; on narrow screens, both return to ordinary document flow. DOI, arXiv,
+and external links should be quiet, every entry should offer citation backlinks,
+and the result should use semantic bibliography and biblioref roles. References
+must feel like the final pages of the same field note, not a new component.
 
 The branch's private draft `content/blog/scratch.md` is the visual specimen for
 this system. Keep it as a broad regression fixture rather than turning a public
@@ -365,16 +428,25 @@ The site is intentionally small:
   leaves, responsive scene setup, persistence, and state control;
 - `layouts/_default/single.html` — experimental site-owned opened-article
   structure, leaving the vendored theme template untouched;
-- `layouts/_default/_markup/render-heading.html` and `render-codeblock.html` —
-  build-time article section permalinks and article-scoped Chroma output;
+- `layouts/_markup/` — Hugo 0.164 site-owned heading, code, and mathematical
+  passthrough hooks;
 - `layouts/partials/article-meta.html` and `article-end.html` — experimental
   article opening and quiet return treatment;
-- `layouts/partials/foot_custom.html` and `math.html` — article-specific removal
-  of legacy runtime helpers and conditional mathematical rendering;
-- `layouts/shortcodes/figure.html` and `smallcaps.html` — the small experimental
-  authoring vocabulary;
+- `layouts/partials/render-math.html` — the one strict build-time KaTeX entry
+  point shared by Markdown and numbered equations;
+- `data/math.toml` — the deliberately small central macro table;
+- `layouts/partials/foot_custom.html` — article-specific removal of legacy
+  runtime helpers and conditional local article behavior;
+- `layouts/shortcodes/` — figures, sidenotes, small caps, numbered equations,
+  references, statements, and proofs;
+- `static/vendor/katex/0.17.0/`, `static/vendor/asana-math/000.962/`, and
+  `static/css/math.css` — pinned KaTeX fallback assets, the local OpenType MATH
+  face, native-MathML selection, and transparent overflow behavior;
 - `static/css/article.css` — the scoped Lokta Field Note reading system;
-- `static/js/article.js` — local narrow-screen contents and code-copy behavior;
+- `static/js/article.js` — local contents, code-copy, reference numbering,
+  overflow focus, and resize behavior; it never typesets mathematics;
+- `scripts/check_math.py` and `MATHEMATICS.md` — strict draft validation and the
+  authoring contract shared with future agents;
 - `layouts/partials/sunlit.html` — the fixed environmental layer and theme control;
 - `themes/hugo-paged/layouts/partials/header.html` — pre-paint theme state and the
   session-wide environmental motion epoch;
@@ -382,10 +454,10 @@ The site is intentionally small:
 - `/Users/nisch/code/site/hugo-paged` — a separate current upstream checkout for
   reference only.
 
-The vendored theme is not identical to the current upstream checkout. Its layout
-tree uses the older `_default/` and `partials/` structure appropriate to the
-site's current Hugo version, while the upstream checkout has since moved to the
-newer layout structure for Hugo 0.146+ and contains changes aimed at Hugo 0.163.
+The vendored theme is not identical to the current upstream checkout and must
+not be synchronized wholesale. Hugo is now pinned at 0.164.0, while only the
+site-owned render hooks were moved to the current `_markup/` lookup structure;
+the locally modified theme otherwise remains the visual foundation.
 The vendored CSS also changes the reading width, warm palette, link colors,
 heading colors, crop-mark construction, metadata spacing, and dark-mode
 strategy. Never replace the vendored directory wholesale during routine work.
@@ -441,8 +513,9 @@ while doing so.
   be removed or given meaningful content for accessibility.
 - `hugo.toml` describes the site as `Nischal's adress on the web`; `address` is
   misspelled.
-- Linden Hill and Jost depend on external font hosts. The current browser loaded
-  them, but offline behavior and font-display behavior are not yet documented.
+- Linden Hill and Jost depend on external font hosts. Asana Math is local. The
+  current browser loaded the two text families, but offline behavior and their
+  font-display behavior are not yet documented.
 - The atmospheric background uses large fixed layers, progressive backdrop
   filters, one inline SVG fern, eight falling leaf elements on desktop (five on
   mobile), and continuous animation. This is substantially lighter than the

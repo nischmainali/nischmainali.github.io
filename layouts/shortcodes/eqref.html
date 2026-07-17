@@ -1,0 +1,5 @@
+{{- $id := default "" (.Get 0) -}}
+{{- if eq (len (findRE `^[a-z][a-z0-9-]*$` $id)) 0 -}}
+  {{- errorf "The eqref shortcode requires a slug-like equation id: see %s" .Position -}}
+{{- end -}}
+<a class="equation-ref" href="#equation-{{ $id }}" data-equation-ref="{{ $id }}" aria-label="Unresolved equation reference"><span class="equation-ref-value" aria-hidden="true">(?)</span></a>

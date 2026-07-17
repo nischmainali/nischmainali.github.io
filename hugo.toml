@@ -1,5 +1,5 @@
 baseurl = "/"
-languageCode = "en-US"
+locale = "en-US"
 title = "Nisch's homepage"
 theme = "hugo-paged"
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_cache$"]
@@ -32,5 +32,11 @@ lineNos = false
 noClasses = false
 tabWidth = 2
 [markup.goldmark]
+[markup.goldmark.extensions]
+[markup.goldmark.extensions.passthrough]
+enable = true
+[markup.goldmark.extensions.passthrough.delimiters]
+block = [['\[', '\]'], ['$$', '$$']]
+inline = [['\(', '\)'], ['$', '$']]
 [markup.goldmark.renderer]
 unsafe = true

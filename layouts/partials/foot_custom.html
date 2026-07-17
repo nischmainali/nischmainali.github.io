@@ -3,8 +3,10 @@
 {{- if $isArticle -}}
 {{- $hasArticleCode := in .Content `class="highlight"` -}}
 {{- $hasArticleToc := .Scratch.Get "has_toc" -}}
-{{- if or $hasArticleCode $hasArticleToc }}
-<script src="{{ printf "%s?v=%d" ("js/article.js" | relURL) now.Unix }}" defer></script>
+{{- $hasArticleMath := .Page.Store.Get "hasMath" -}}
+{{- $hasArticleReferences := or (in .Content `data-statement=`) (in .Content `data-equation-ref=`) -}}
+{{- if or $hasArticleCode $hasArticleToc $hasArticleMath $hasArticleReferences }}
+<script src="{{ printf "%s?v=article-reader-1" ("js/article.js" | relURL) }}" defer></script>
 {{- end }}
 {{- else -}}
   {{- if (in .Content "</dl>") -}}

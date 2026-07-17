@@ -5,12 +5,15 @@
  */
 
 .single.blog {
-  --article-measure: 41rem;
-  --article-breakout: 45rem;
-  --article-rail-width: 7.25rem;
-  --article-rail-gap: 2.75rem;
-  --article-note-width: 15rem;
-  --article-note-offset: 17rem;
+  /* The centered measure and left rail resolve against the theme's 992 px
+   * paper. At wide sizes the TOC text lands on the same 40 px inset as the
+   * title, while marginalia is free to pass beyond the right crop mark. */
+  --article-measure: 38.5rem;
+  --article-breakout: 44rem;
+  --article-rail-width: 7.5rem;
+  --article-rail-gap: 2.3rem;
+  --article-note-width: clamp(13.25rem, calc(50vw - 23.25rem), 16.5rem);
+  --article-note-offset: calc(var(--article-note-width) + 2rem);
   --article-ink: #202622;
   --article-green: #173d31;
   --article-blue: #173f51;
@@ -124,13 +127,14 @@
   margin-right: auto;
   margin-left: auto;
   padding-top: 0;
-  font-size: 1rem;
-  line-height: 1.64;
+  counter-reset: equation statement;
+  font-size: 1.04rem;
+  line-height: 1.62;
 }
 
 .single.blog .article-body > p:first-of-type {
-  font-size: 1.035rem;
-  line-height: 1.64;
+  font-size: 1.07rem;
+  line-height: 1.6;
 }
 
 .single.blog .article-body p {
@@ -241,6 +245,10 @@
   text-transform: lowercase;
 }
 
+.single.blog .article-contents-return {
+  display: none;
+}
+
 .single.blog .article-contents-list {
   padding: 0.5rem 0 0.1rem 0.25rem;
 }
@@ -295,7 +303,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .single.blog #TableOfContents a {
+  .single.blog #TableOfContents a,
+  .single.blog .article-contents-return {
     transition: none;
   }
 }
@@ -743,11 +752,195 @@
   letter-spacing: 0.055em;
 }
 
-.single.blog .article-body mjx-container[jax="SVG"][display="true"] {
+/* Mathematics is typeset into the sheet at build time. It has no panel,
+ * border, or paper-coloured veil: only ink, measure, and a quiet gutter. */
+
+.single.blog .article-body .math-inline {
+  color: inherit;
+  /* Hold ordinary mathematics at its previous optical size while the Linden
+   * Hill prose grows slightly. Contexts with their own type size opt back in
+   * below so headings and marginalia retain their existing proportions. */
+  font-size: 0.952em;
+}
+
+.single.blog .article-body :is(h2, h3, h4, h5, h6) .math-inline,
+.single.blog .article-body #TableOfContents .math-inline,
+.single.blog .article-body table .math-inline,
+.single.blog .article-body figcaption .math-inline,
+.single.blog .article-body .sidenote .math-inline,
+.single.blog .article-body .footnotes .math-inline {
+  font-size: 0.99em;
+}
+
+.single.blog .article-body .math-display,
+.single.blog .article-body .math-equation {
   margin: 1.45rem 0;
-  padding: 0.3rem 0 0.45rem;
-  overflow-x: auto;
-  overflow-y: hidden;
+  padding: 0.18rem 0 0.3rem;
+  color: var(--article-ink);
+  break-inside: avoid;
+}
+
+.single.blog .article-body .math-display .katex,
+.single.blog .article-body .math-equation .katex {
+  font-size: 1.005em;
+}
+
+.single.blog .article-body .math-scroll {
+  padding: 0.12rem 0.08rem 0.26rem;
+  scroll-padding-inline: 1.35rem;
+}
+
+.single.blog .article-body .katex-display {
+  margin: 0;
+}
+
+.single.blog .article-body .math-equation {
+  min-height: 2.05rem;
+  padding-bottom: 1.45rem;
+  counter-increment: equation;
+}
+
+.single.blog .equation-number {
+  position: absolute;
+  right: 0.08rem;
+  bottom: 0.08rem;
+  min-width: 2.4ch;
+  border: 0;
+  color: var(--article-muted);
+  font-family: Jost, sans-serif;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.015em;
+  line-height: 1;
+  text-align: right;
+}
+
+.single.blog .equation-number-value::before {
+  content: "(" counter(equation) ")";
+}
+
+.single.blog .equation-number-value[data-number-ready="true"]::before {
+  content: none;
+}
+
+.single.blog .equation-ref,
+.single.blog .statement-ref {
+  border-bottom: 1px dotted rgba(23, 63, 81, 0.36);
+  color: var(--article-blue);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.single.blog .equation-ref:hover,
+.single.blog .equation-ref:focus-visible,
+.single.blog .statement-ref:hover,
+.single.blog .statement-ref:focus-visible {
+  border-bottom-color: currentColor;
+}
+
+.single.blog .equation-ref-value {
+  display: inline-block;
+  min-width: 2.2ch;
+  text-align: center;
+}
+
+.single.blog .math-equation,
+.single.blog .math-statement {
+  scroll-margin-top: 1.5rem;
+}
+
+.single.blog .math-statement {
+  margin: 1.65rem 0;
+  padding: 0;
+  break-inside: avoid;
+}
+
+.single.blog .math-statement[data-statement-numbered="true"] {
+  counter-increment: statement;
+}
+
+.single.blog .article-body .statement-heading {
+  margin: 0 0 0.26rem;
+  color: var(--article-green);
+  font-family: Jost, sans-serif;
+  font-size: 0.74rem;
+  font-style: normal;
+  font-variant-caps: all-small-caps;
+  font-weight: normal;
+  letter-spacing: 0.075em;
+  line-height: 1.35;
+}
+
+.single.blog .statement-permalink {
+  border: 0;
+  color: inherit;
+}
+
+.single.blog .statement-number::before {
+  content: counter(statement);
+}
+
+.single.blog .statement-number[data-number-ready="true"]::before {
+  content: none;
+}
+
+.single.blog .statement-title {
+  font-family: "Linden Hill", Palatino, serif;
+  font-size: 1.08em;
+  font-style: italic;
+  font-variant-caps: normal;
+  letter-spacing: 0;
+}
+
+.single.blog .statement-body > :first-child,
+.single.blog .proof-body > :first-child {
+  margin-top: 0;
+}
+
+.single.blog .statement-body > :last-child,
+.single.blog .proof-body > :last-child {
+  margin-bottom: 0;
+}
+
+.single.blog .math-statement--theorem .statement-body,
+.single.blog .math-statement--lemma .statement-body,
+.single.blog .math-statement--proposition .statement-body,
+.single.blog .math-statement--corollary .statement-body {
+  font-style: italic;
+}
+
+.single.blog .math-statement--definition .statement-body,
+.single.blog .math-statement--remark .statement-body {
+  font-style: normal;
+}
+
+.single.blog .math-proof {
+  position: relative;
+  margin: 1.55rem 0;
+  padding: 0 0 0.2rem;
+  break-inside: avoid;
+}
+
+.single.blog .article-body .proof-heading {
+  float: left;
+  margin: 0 0.38em 0 0;
+  color: var(--article-green);
+  font-style: italic;
+}
+
+.single.blog .math-proof::after {
+  display: block;
+  clear: both;
+  content: "";
+}
+
+.single.blog .proof-end {
+  float: right;
+  margin-top: -1.28rem;
+  margin-left: 0.6em;
+  color: var(--article-muted);
+  font-size: 0.88em;
+  line-height: 1;
 }
 
 .single.blog .article-body .footnotes {
@@ -829,6 +1022,22 @@
   }
 }
 
+@media (min-width: 860px) {
+  .single.blog .article-body .math-equation {
+    padding-bottom: 0.3rem;
+  }
+
+  .single.blog .equation-number {
+    top: 50%;
+    right: auto;
+    bottom: auto;
+    left: calc(100% + 0.45rem);
+    width: 1.45rem;
+    transform: translateY(-50%);
+    text-align: left;
+  }
+}
+
 @media (min-width: 1180px) {
   .single.blog .article-contents-rail {
     position: absolute;
@@ -845,7 +1054,7 @@
     margin: 0;
     padding: 0;
     border: 0;
-    opacity: 0.72;
+    opacity: 0.76;
     overflow-y: auto;
     scrollbar-width: thin;
     transition: opacity 120ms ease;
@@ -858,8 +1067,8 @@
 
   .single.blog .article-contents summary {
     display: block;
-    padding: 0 0 0.42rem 0.58rem;
-    font-size: 0.66rem;
+    padding: 0 1.7rem 0.42rem 0.58rem;
+    font-size: 0.68rem;
     line-height: 1.35;
     list-style: none;
   }
@@ -870,6 +1079,34 @@
 
   .single.blog .article-contents-count {
     display: none;
+  }
+
+  .single.blog .article-contents-return {
+    position: absolute;
+    top: -0.07rem;
+    right: 0.48rem;
+    display: block;
+    width: 1.15rem;
+    border: 0;
+    color: var(--article-faint);
+    font-family: Jost, sans-serif;
+    font-size: 0.72rem;
+    line-height: 1.35;
+    text-align: center;
+    text-decoration: none;
+    opacity: 0.58;
+    transition: color 120ms ease, opacity 120ms ease;
+  }
+
+  .single.blog .article-contents-return:hover,
+  .single.blog .article-contents-return:focus-visible {
+    color: var(--article-blue);
+    opacity: 1;
+  }
+
+  .single.blog .article-contents-return:focus-visible {
+    outline: 1px solid currentColor;
+    outline-offset: 0.14rem;
   }
 
   .single.blog .article-contents-list {
@@ -884,8 +1121,8 @@
     margin: 0.2rem 0;
     padding: 0;
     font-family: "Linden Hill", Palatino, serif;
-    font-size: 0.76rem;
-    line-height: 1.28;
+    font-size: 0.77rem;
+    line-height: 1.32;
     hyphens: none;
   }
 
@@ -895,7 +1132,7 @@
   }
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1180px) {
   .single.blog .sidenote-ref {
     cursor: default;
   }
@@ -913,8 +1150,8 @@
     padding: 0;
     border: 0;
     background: transparent;
-    font-size: 0.82rem;
-    line-height: 1.36;
+    font-size: 0.84rem;
+    line-height: 1.42;
   }
 }
 
@@ -1011,6 +1248,7 @@
   .single.blog .crop-c,
   .single.blog > footer,
   .single.blog .article-skip-link,
+  .single.blog .article-contents-return,
   .single.blog .article-code-tools,
   .single.blog .article-end {
     display: none !important;
@@ -1031,11 +1269,44 @@
   .single.blog .article-body pre,
   .single.blog .article-body table,
   .single.blog .article-body .highlight,
-  .single.blog .article-figure--wide {
+  .single.blog .article-figure--wide,
+  .single.blog .math-display,
+  .single.blog .math-equation,
+  .single.blog .math-statement,
+  .single.blog .math-proof {
     width: auto;
     margin-right: 0;
     margin-left: 0;
     break-inside: avoid;
+  }
+
+  .single.blog .article-body .math-equation {
+    padding-right: 2.2rem;
+    padding-bottom: 0.3rem;
+  }
+
+  .single.blog .equation-number {
+    top: 50%;
+    right: 0;
+    bottom: auto;
+    left: auto;
+    width: 2rem;
+    transform: translateY(-50%);
+    color: #444;
+    text-align: right;
+  }
+
+  .single.blog .article-body .math-display .katex,
+  .single.blog .article-body .math-equation .katex {
+    font-size: 0.923em;
+  }
+
+  .single.blog .article-body .math-scroll.is-scrollable .katex {
+    font-size: 0.75em;
+  }
+
+  .single.blog .article-body .katex-display > .katex {
+    white-space: normal;
   }
 
   .single.blog .article-body a {

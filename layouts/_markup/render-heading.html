@@ -1,6 +1,6 @@
 <h{{ .Level }} id="{{ .Anchor | safeURL }}"{{ with .Attributes.class }} class="{{ delimit . " " }}"{{ end }}>
   {{- if and .Page.IsPage (eq .Page.Section "blog") (ge .Level 2) -}}
-  <a class="section-anchor" href="#{{ .Anchor | safeURL }}" aria-label="Link to this section: {{ .Text | plainify }}"><span aria-hidden="true">§</span></a>
+  <a class="section-anchor" href="#{{ .Anchor | safeURL }}" aria-label="Link to this section: {{ .PlainText }}"><span aria-hidden="true">§</span></a>
   {{- end -}}
   {{ .Text | safeHTML }}
 </h{{ .Level }}>
