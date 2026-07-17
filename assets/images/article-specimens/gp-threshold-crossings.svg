@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-labelledby="title desc">
+  <title id="title">Gaussian-process threshold crossings</title>
+  <desc id="desc">Several smooth posterior sample paths cross a quiet horizontal threshold between six observed points.</desc>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M74 474H900M74 474V58" stroke="#184034" stroke-opacity=".38" stroke-width="1.5"/>
+    <path d="M74 270H900" stroke="#5d3026" stroke-opacity=".42" stroke-width="1.5" stroke-dasharray="3 9"/>
+    <path d="M74 334C129 292 172 198 227 190C284 182 326 292 382 300C441 309 482 184 541 172C596 160 639 241 695 249C754 258 798 157 900 118L900 294C816 327 766 373 703 365C640 357 594 276 538 289C480 301 442 415 381 408C318 400 287 308 226 316C165 324 125 394 74 422Z" fill="#184034" fill-opacity=".065" stroke="none"/>
+    <path d="M74 374C130 349 166 245 224 250C279 255 322 369 381 357C440 345 477 227 538 231C597 234 635 321 696 314C758 306 803 210 900 184" stroke="#184034" stroke-width="4"/>
+    <path d="M74 406C126 375 172 276 229 281C286 286 322 335 378 326C438 316 479 193 542 205C602 216 642 286 698 280C760 274 813 188 900 155" stroke="#093060" stroke-opacity=".52" stroke-width="2"/>
+    <path d="M74 342C135 321 165 216 225 218C284 220 329 401 384 386C439 371 478 254 537 258C596 262 637 355 698 347C759 339 809 230 900 215" stroke="#5d3026" stroke-opacity=".47" stroke-width="2"/>
+    <g stroke="#184034" stroke-opacity=".26" stroke-width="1">
+      <path d="M209 474V483M345 474V483M481 474V483M617 474V483M753 474V483"/>
+      <path d="M65 390H74M65 306H74M65 222H74M65 138H74"/>
+    </g>
+  </g>
+  <g fill="#f3f1e8" stroke="#184034" stroke-width="3">
+    <circle cx="128" cy="350" r="7"/><circle cx="259" cy="294" r="7"/><circle cx="389" cy="349" r="7"/>
+    <circle cx="523" cy="235" r="7"/><circle cx="658" cy="301" r="7"/><circle cx="801" cy="221" r="7"/>
+  </g>
+  <g fill="#5d3026">
+    <circle cx="300" cy="270" r="4"/><circle cx="497" cy="270" r="4"/><circle cx="730" cy="270" r="4"/>
+  </g>
+</svg>

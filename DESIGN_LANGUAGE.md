@@ -239,6 +239,16 @@ Jost marginal voice, and statements read as book passages rather than panels.
 This provenance and the entire mathematics layer remain experimental with the
 rest of the branch.
 
+The TurnTrout-derived successor pass adds editorial mechanics that strengthen
+the existing paper without importing that site's visible identity. The site
+now serves its text faces and grain texture itself, gives article images
+intrinsic geometry, and lets selected scientific plates enter the right
+marginal field. Its opening initial uses the complementary EB Garamond Initials
+F1 and F2 faces from the official OFL source. Forest ink sits over a muted
+madder ornament; the color stays fixed, and the glyph has no motion or
+surrounding component. TurnTrout's random accent treatment and first-line
+transformation do not belong here.
+
 Asana Math 000.962 supplies the mathematical voice. Linden Hill revives
 Goudy's Deepdene, and its page texture calls for a warm old-style companion.
 Times-derived math brought an institutional tone. KaTeX's Computer Modern
@@ -261,6 +271,12 @@ Its governing choices are:
   Title, subtitle, and date form a close descending stack; the floral mark is a
   restrained watermark tucked above and left of the title, never an icon, badge,
   or separate decorative component;
+- an authored opening may begin with one three-line Lokta initial. It hangs a
+  fraction into the left optical gutter and keeps the following Linden Hill
+  prose unchanged. The foreground letter remains selectable and readable. A
+  separate empty, accessibility-hidden span carries the ornamental layer.
+  Shade and sunset use fixed two-ink calibrations, with a quieter ornament at
+  sunset;
 - the title area carries only the publication date beneath the subtitle. Author,
   revision, reading-time, category, and topic registers were explicitly removed
   after the first specimen proved them to be unnecessary complication;
@@ -283,6 +299,11 @@ Its governing choices are:
 - quotations, definition lists, code, tables, figures, mathematics, and endnotes
   use hairlines, paper-toned fields, and the site's ink colors rather than boxed
   components;
+- figures use the same measure, shallow breakout, and right marginal field as
+  the surrounding article. Natural media retain their source color. The `ink`
+  treatment lets diagrams multiply into the visible fibres without a white
+  card. A marginal “Lokta plate” may cross the right crop mark at wide sizes and
+  returns to the prose measure before the marginal field becomes cramped;
 - Hugo renders mathematics at build time as KaTeX HTML and MathML. Pages load
   exact local assets only where needed, with no runtime renderer or math CDN.
   MathML Core browsers use local Asana Math; KaTeX HTML provides the fallback.
@@ -307,13 +328,21 @@ Its governing choices are:
   tap-to-reveal inline notes with no filled panel;
 - the ending is only a rule and a text link back to Documents. It introduces no
   call-to-action card or additional ornament.
+- print preserves the article hierarchy rather than imitating the screen
+  environment. It removes blending, fades, controls, and marginal positioning;
+  keeps equations, statements, and figures together where possible; and adds
+  the destination of external links in plain text.
 
 Experimental authoring controls are intentionally few:
 
 - `subtitle` and `show_toc` are optional front-matter controls. Mathematics is
   detected during rendering and requires no page flag;
-- the local `figure` shortcode supports the usual image/caption fields plus
-  `wide="true"` when an image should enter the wide editorial field;
+- the inline `dropcap` shortcode takes one Latin letter and appears only at the
+  opening of a prose paragraph. The source checker permits one per article;
+- the local `figure` shortcode accepts `placement="measure|wide|margin"` and
+  `treatment="natural|ink"`. Legacy `wide="true"` maps to the wide placement.
+  Hugo supplies responsive variants and intrinsic dimensions for processable
+  resources. Authors mark at most one above-fold image with `priority="true"`;
 - the `smallcaps` shortcode is available for genuinely editorial inline use;
 - the `sidenote` shortcode is reserved for optional context that should remain
   adjacent to a sentence without becoming part of the endnote apparatus;
@@ -424,6 +453,8 @@ The site is intentionally small:
 - `static/textures/lokta-fibres.svg` — the repeating pulp-scale paper field;
 - `static/textures/lokta-raking-relief.svg` — non-repeating paired fibres that
   become visible only as sunset settles;
+- `static/textures/gaussian-noise.png` — the licensed local copy of the grain
+  source used by the environmental field;
 - `static/js/sunlit.js` — viewport-derived slats, deterministic sparse peepal
   leaves, responsive scene setup, persistence, and state control;
 - `layouts/_default/single.html` — experimental site-owned opened-article
@@ -438,15 +469,25 @@ The site is intentionally small:
 - `layouts/partials/foot_custom.html` — article-specific removal of legacy
   runtime helpers and conditional local article behavior;
 - `layouts/shortcodes/` — figures, sidenotes, small caps, numbered equations,
-  references, statements, and proofs;
+  references, statements, proofs, and the explicit opening initial;
+- `layouts/partials/responsive-image.html` and
+  `layouts/_markup/render-image.html` — one Hugo-native image path for figure
+  shortcodes and ordinary Markdown images;
+- `assets/images/` — processable article media and the private technical
+  specimens used for layout review;
+- `static/css/fonts.css` and `static/vendor/fonts/` — local Linden Hill, Jost,
+  and EB Garamond Initials faces with pinned source revisions, checksums, and
+  license records beside each family;
 - `static/vendor/katex/0.17.0/`, `static/vendor/asana-math/000.962/`, and
   `static/css/math.css` — pinned KaTeX fallback assets, the local OpenType MATH
   face, native-MathML selection, and transparent overflow behavior;
 - `static/css/article.css` — the scoped Lokta Field Note reading system;
-- `static/js/article.js` — local contents, code-copy, reference numbering,
-  overflow focus, and resize behavior; it never typesets mathematics;
-- `scripts/check_math.py` and `MATHEMATICS.md` — strict draft validation and the
-  authoring contract shared with future agents;
+- `static/js/article.js` — local contents, code-copy, sidenote and reference
+  numbering, overflow focus, and resize behavior; it never typesets
+  mathematics;
+- `scripts/check_content.py`, the compatibility `scripts/check_math.py`, and
+  `MATHEMATICS.md` — strict source/build validation and the authoring contract
+  shared with future agents;
 - `layouts/partials/sunlit.html` — the fixed environmental layer and theme control;
 - `themes/hugo-paged/layouts/partials/header.html` — pre-paint theme state and the
   session-wide environmental motion epoch;
@@ -502,6 +543,24 @@ The following behavior was observed in the accepted worktree:
 - Home, Docs, and article pages intentionally share the same gently calibrated
   environmental strength.
 
+On 2026-07-17 the TurnTrout-derived successor was built with Hugo 0.164.0 and
+reviewed at `http://127.0.0.1:1318/`. The review covered the private scratch
+specimen and the Gaussian-process article in shade and sunset at 1440, 1280,
+1180, 1024, and 390 px widths. It established that:
+
+- the initial keeps one readable, selectable letter while its second ink remains
+  hidden from accessibility text. Its two local font layers load only on pages
+  that use the shortcode;
+- the marginal scientific plate occupies the right field at wide widths and
+  returns to the prose measure at narrower widths without page-level overflow;
+- the `ink` treatment preserves the visible fibres in both environmental states;
+- sidenote identifiers remain stable across Hugo's repeated content renders,
+  while visible numbering restarts at one and mobile tap-to-reveal behavior
+  continues to work;
+- Home retains its accepted geometry and does not request remote type or grain
+  assets; and
+- the browser console remained clear in the tested article flow.
+
 ## Known rough edges: observe before fixing
 
 These are implementation findings, not permission for a future agent to launch
@@ -513,21 +572,16 @@ while doing so.
   be removed or given meaningful content for accessibility.
 - `hugo.toml` describes the site as `Nischal's adress on the web`; `address` is
   misspelled.
-- Linden Hill and Jost depend on external font hosts. Asana Math is local. The
-  current browser loaded the two text families, but offline behavior and their
-  font-display behavior are not yet documented.
 - The atmospheric background uses large fixed layers, progressive backdrop
   filters, one inline SVG fern, eight falling leaf elements on desktop (five on
   mobile), and continuous animation. This is substantially lighter than the
   earlier 330-leaf reconstruction, but performance on low-power devices has not
-  been profiled and it intentionally does not reduce motion. Its Gaussian grain
-  image is loaded from Wikimedia, matching the reference but adding another
-  external dependency.
+  been profiled and it intentionally does not reduce motion.
 - Several hidden draft/example pages and the old theme `about`/`docs` material
   remain in `content/`. They are useful test fixtures but should not be mistaken
   for authored public content.
-- The site uses an older vendored layout structure and Hugo 0.128. Upgrading Hugo
-  or syncing the theme is a migration task, not incidental maintenance.
+- The vendored theme keeps its older layout structure even though deployment now
+  uses Hugo 0.164.0. Syncing the theme remains a separate migration task.
 
 ## Change protocol for future visual work
 

@@ -5,8 +5,9 @@
 {{- $hasArticleToc := .Scratch.Get "has_toc" -}}
 {{- $hasArticleMath := .Page.Store.Get "hasMath" -}}
 {{- $hasArticleReferences := or (in .Content `data-statement=`) (in .Content `data-equation-ref=`) -}}
-{{- if or $hasArticleCode $hasArticleToc $hasArticleMath $hasArticleReferences }}
-<script src="{{ printf "%s?v=article-reader-1" ("js/article.js" | relURL) }}" defer></script>
+{{- $hasArticleSidenotes := in .Content `class="sidenote"` -}}
+{{- if or $hasArticleCode $hasArticleToc $hasArticleMath $hasArticleReferences $hasArticleSidenotes }}
+<script src="{{ printf "%s?v=article-reader-2" ("js/article.js" | relURL) }}" defer></script>
 {{- end }}
 {{- else -}}
   {{- if (in .Content "</dl>") -}}

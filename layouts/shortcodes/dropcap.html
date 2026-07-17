@@ -1,0 +1,12 @@
+{{- $letter := "" -}}
+{{- if .IsNamedParams -}}
+  {{- $letter = default "" (.Get "letter") -}}
+{{- else -}}
+  {{- $letter = default "" (.Get 0) -}}
+{{- end -}}
+{{- $letter = upper (strings.TrimSpace $letter) -}}
+{{- if eq (len (findRE `^[A-Z]$` $letter)) 0 -}}
+  {{- errorf "The dropcap shortcode requires one Latin letter: see %s" .Position -}}
+{{- end -}}
+{{- .Page.Store.Set "hasDropcap" true -}}
+<span class="article-dropcap"><span class="article-dropcap-ornament" data-letter="{{ $letter }}" aria-hidden="true"></span><span class="article-dropcap-letter">{{ $letter }}</span></span>{{- "" -}}

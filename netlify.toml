@@ -1,5 +1,5 @@
 [build]
-  command = "hugo"
+  command = "python3 scripts/check_content.py --source-only && hugo"
   publish = "public"
 
 [build.environment]

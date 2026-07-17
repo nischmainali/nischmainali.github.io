@@ -25,6 +25,8 @@
   --article-block: rgba(233, 221, 207, 0.34);
   --article-block-strong: rgba(224, 208, 194, 0.48);
   --article-code-ink: #23322d;
+  --article-dropcap-ink: #173d31;
+  --article-dropcap-ornament: rgba(111, 59, 63, 0.38);
 }
 
 .single.blog.sunset {
@@ -39,6 +41,8 @@
   --article-block: rgba(217, 190, 151, 0.25);
   --article-block-strong: rgba(202, 174, 139, 0.34);
   --article-code-ink: #292d26;
+  --article-dropcap-ink: #263d30;
+  --article-dropcap-ornament: rgba(112, 64, 68, 0.28);
 }
 
 /* The light control belongs to the crop corner, not to the reading viewport.
@@ -127,7 +131,7 @@
   margin-right: auto;
   margin-left: auto;
   padding-top: 0;
-  counter-reset: equation statement;
+  counter-reset: equation statement sidenote;
   font-size: 1.04rem;
   line-height: 1.62;
 }
@@ -135,6 +139,53 @@
 .single.blog .article-body > p:first-of-type {
   font-size: 1.07rem;
   line-height: 1.6;
+}
+
+/* A two-ink opening initial. The foreground letter remains real text; the
+ * aria-hidden ornamental layer sits behind it and stays out of copy or speech. */
+.single.blog .article-dropcap {
+  position: relative;
+  float: left;
+  display: grid;
+  place-items: center;
+  width: 3.72rem;
+  height: 4.62rem;
+  margin: 0.11rem 0.48rem -0.18rem -0.24rem;
+  color: var(--article-dropcap-ink);
+  font-size: 4.25rem;
+  line-height: 1;
+  text-align: center;
+  user-select: text;
+}
+
+.single.blog .article-dropcap-ornament,
+.single.blog .article-dropcap-letter {
+  grid-area: 1 / 1;
+  font-size: inherit;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.single.blog .article-dropcap-ornament {
+  display: grid;
+  place-items: center;
+  color: var(--article-dropcap-ornament);
+  font-family: "EB Garamond Initials F1", serif;
+  pointer-events: none;
+  user-select: none;
+}
+
+.single.blog .article-dropcap-ornament::before {
+  content: attr(data-letter);
+}
+
+.single.blog .article-dropcap-letter {
+  position: relative;
+  color: inherit;
+  font-family: "EB Garamond Initials F2", "Linden Hill", Palatino, serif;
 }
 
 .single.blog .article-body p {
@@ -324,6 +375,7 @@
 }
 
 .single.blog .sidenote-ref {
+  counter-increment: sidenote;
   margin-left: 0.08em;
   border: 0;
   color: var(--article-wine);
@@ -334,6 +386,16 @@
   line-height: 0;
   vertical-align: super;
   cursor: pointer;
+}
+
+.single.blog .sidenote-ref-number::before,
+.single.blog .sidenote-number::before {
+  content: counter(sidenote);
+}
+
+.single.blog .sidenote-ref-number[data-number-ready="true"]::before,
+.single.blog .sidenote-number[data-number-ready="true"]::before {
+  content: none;
 }
 
 .single.blog .sidenote-toggle:focus-visible + .sidenote-ref {
@@ -705,7 +767,8 @@
   margin: 1.85rem auto;
 }
 
-.single.blog .article-figure img {
+.single.blog .article-figure img,
+.single.blog .article-media {
   display: block;
   width: auto;
   max-width: 100%;
@@ -714,6 +777,17 @@
   border: 0;
   border-radius: 0;
   box-shadow: none;
+}
+
+.single.blog .article-figure--ink .article-media {
+  opacity: 0.93;
+  filter: saturate(0.72) contrast(1.06);
+  mix-blend-mode: multiply;
+}
+
+.single.blog.sunset .article-figure--ink .article-media {
+  opacity: 0.88;
+  filter: saturate(0.62) contrast(1.04);
 }
 
 .single.blog .article-figure-link {
@@ -1153,6 +1227,25 @@
     font-size: 0.84rem;
     line-height: 1.42;
   }
+
+  .single.blog .article-figure--margin {
+    float: right;
+    clear: right;
+    width: var(--article-note-width);
+    margin: 0.28rem calc(0rem - var(--article-note-offset)) 1.15rem 2rem;
+  }
+
+  .single.blog .article-figure--margin .article-media {
+    width: 100%;
+    margin: 0;
+  }
+
+  .single.blog .article-figure--margin figcaption {
+    margin-top: 0.48rem;
+    font-size: 0.7rem;
+    line-height: 1.4;
+    text-align: left;
+  }
 }
 
 @media (max-width: 767px) {
@@ -1174,6 +1267,13 @@
 
   .single.blog .article-body {
     line-height: 1.58;
+  }
+
+  .single.blog .article-dropcap {
+    width: 3.2rem;
+    height: 4.08rem;
+    margin: 0.1rem 0.4rem -0.12rem -0.08rem;
+    font-size: 3.72rem;
   }
 
   .single.blog .section-anchor {
@@ -1232,6 +1332,10 @@
 
 }
 
+@page {
+  margin: 18mm 20mm 20mm;
+}
+
 @media print {
   .single.blog {
     max-width: none;
@@ -1262,6 +1366,30 @@
     margin-left: auto;
   }
 
+  .single.blog .article-body p,
+  .single.blog .article-body li {
+    orphans: 3;
+    widows: 3;
+  }
+
+  .single.blog .article-body > p:first-of-type {
+    break-inside: avoid;
+  }
+
+  .single.blog .article-body :is(h2, h3, h4, h5, h6) {
+    break-after: avoid;
+  }
+
+  .single.blog .article-dropcap {
+    color: #111;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .single.blog .article-dropcap-ornament {
+    color: #777;
+  }
+
   .single.blog .article-contents:not([open]) > :not(summary) {
     display: block;
   }
@@ -1269,7 +1397,9 @@
   .single.blog .article-body pre,
   .single.blog .article-body table,
   .single.blog .article-body .highlight,
+  .single.blog .article-figure,
   .single.blog .article-figure--wide,
+  .single.blog .article-figure--margin,
   .single.blog .math-display,
   .single.blog .math-equation,
   .single.blog .math-statement,
@@ -1278,6 +1408,26 @@
     margin-right: 0;
     margin-left: 0;
     break-inside: avoid;
+  }
+
+  .single.blog .article-figure,
+  .single.blog .article-figure--margin {
+    float: none;
+    clear: both;
+    max-width: 100%;
+  }
+
+  .single.blog .article-figure .article-media {
+    max-width: 100%;
+    opacity: 1;
+    filter: none;
+    mix-blend-mode: normal;
+  }
+
+  .single.blog .article-figure figcaption {
+    break-before: avoid;
+    color: #333;
+    text-align: left;
   }
 
   .single.blog .article-body .math-equation {
@@ -1311,6 +1461,13 @@
 
   .single.blog .article-body a {
     color: inherit;
+  }
+
+  .single.blog .article-body a[href^="http"]:not(.article-figure-link):not(.section-anchor)::after {
+    content: " (" attr(href) ")";
+    font-family: Jost, sans-serif;
+    font-size: 0.72em;
+    overflow-wrap: anywhere;
   }
 
   .single.blog .article-contents-rail {

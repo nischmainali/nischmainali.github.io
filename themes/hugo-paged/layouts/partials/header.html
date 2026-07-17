@@ -23,7 +23,7 @@
     <meta property="og:description" content="{{- . -}}">
     {{ end }}
     <link rel="canonical" href="{{ .Permalink }}">
-    <link rel="preload" href="https://upload.wikimedia.org/wikipedia/commons/5/5c/Image_gaussian_noise_example.png" as="image">
+    <link rel="preload" href="{{ "textures/gaussian-noise.png" | relURL }}" as="image" type="image/png">
 
     {{ $autoImage := false }}
     {{ range (findRE "<img src=\"https?://[^\"]+" .Content 1) }}

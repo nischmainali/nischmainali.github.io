@@ -1,6 +1,4 @@
-{{- $count := add 1 (default 0 (.Page.Scratch.Get "sidenote-count")) -}}
-{{- .Page.Scratch.Set "sidenote-count" $count -}}
-{{- $id := printf "sidenote-%d" $count -}}
+{{- $id := printf "sidenote-%d" .Ordinal -}}
 <input class="sidenote-toggle" type="checkbox" id="{{ $id }}">
-<label class="sidenote-ref" for="{{ $id }}" aria-label="Toggle sidenote {{ $count }}">{{ $count }}</label>
-<span class="sidenote" role="note" aria-label="Sidenote {{ $count }}"><span class="sidenote-number" aria-hidden="true">{{ $count }}</span>{{ .Inner | markdownify }}</span>
+<label class="sidenote-ref" for="{{ $id }}" aria-label="Toggle sidenote"><span class="sidenote-ref-number" aria-hidden="true"></span></label>
+<span class="sidenote" role="note" aria-label="Sidenote"><span class="sidenote-number" aria-hidden="true"></span>{{ .Inner | markdownify }}</span>

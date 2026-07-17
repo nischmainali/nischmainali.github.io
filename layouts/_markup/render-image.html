@@ -1,0 +1,21 @@
+{{- /* Markdown images stay inline-compatible: Goldmark supplies the paragraph. */ -}}
+{{- $alt := .Text | plainify | strings.TrimSpace -}}
+{{- $class := "" -}}
+{{- with .Attributes -}}
+  {{- with index . "class" -}}
+    {{- $class = . -}}
+  {{- end -}}
+{{- end -}}
+{{- partial "responsive-image.html" (dict
+  "Page" .Page
+  "Src" .Destination
+  "Alt" $alt
+  "Decorative" (not $alt)
+  "Priority" false
+  "Loading" "lazy"
+  "Placement" "measure"
+  "Treatment" "natural"
+  "Title" .Title
+  "Class" $class
+  "Position" .Position
+) -}}

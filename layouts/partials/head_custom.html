@@ -1,11 +1,15 @@
-<link rel="stylesheet" href="https://indestructibletype.com/fonts/Jost.css">
 {{- $noop := .WordCount -}}
 {{- $hasMath := or (.Page.Store.Get "hasMath") .IsNode -}}
+{{- $hasDropcap := .Page.Store.Get "hasDropcap" -}}
+{{- if $hasDropcap }}
+<link rel="preload" href="{{ "vendor/fonts/eb-garamond-initials/EBGaramond-InitialsF1-LatinCaps.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ "vendor/fonts/eb-garamond-initials/EBGaramond-InitialsF2-LatinCaps.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+{{- end }}
 {{- if $hasMath }}
 <link rel="stylesheet" href="{{ "vendor/katex/0.17.0/katex.min.css" | relURL }}">
 <link rel="preload" href="{{ "vendor/asana-math/000.962/Asana-Math.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{{ printf "%s?v=asana-000962-5" ("css/math.css" | relURL) }}">
 {{- end }}
 {{ if and .IsPage (eq .Section "blog") }}
-<link rel="stylesheet" href="{{ printf "%s?v=lokta-field-note-3" ("css/article.css" | relURL) }}">
+<link rel="stylesheet" href="{{ printf "%s?v=lokta-field-note-4" ("css/article.css" | relURL) }}">
 {{ end }}

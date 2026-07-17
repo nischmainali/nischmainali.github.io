@@ -1,32 +1,82 @@
-{{- $src := .Get "src" -}}
-{{- $alt := .Get "alt" -}}
-{{- if and (not $alt) (.Get "caption") -}}
-  {{- $alt = .Get "caption" | plainify -}}
+{{- /*
+  Editorial figure interface.
+
+  Required:
+    src, and alt unless decorative="true"
+
+  Optional:
+    placement="measure|wide|margin" (wide="true" remains supported)
+    treatment="natural|ink"
+    priority="true", sizes, link, width, height, loading, class,
+    title, caption, attr, and attrlink
+*/ -}}
+{{- $src := strings.TrimSpace (default "" (.Get "src")) -}}
+{{- $alt := strings.TrimSpace (default "" (.Get "alt")) -}}
+{{- $decorative := eq (lower (default "false" (.Get "decorative"))) "true" -}}
+{{- $priority := eq (lower (default "false" (.Get "priority"))) "true" -}}
+{{- $legacyWide := eq (lower (default "false" (.Get "wide"))) "true" -}}
+
+{{- $placement := lower (default "measure" (.Get "placement")) -}}
+{{- if and $legacyWide (not (.Get "placement")) -}}
+  {{- $placement = "wide" -}}
 {{- end -}}
-{{- $link := .Get "link" -}}
-{{- $loading := default "lazy" (.Get "loading") -}}
-<figure class="article-figure{{ if .Get "wide" }} article-figure--wide{{ end }}{{ with .Get "class" }} {{ . }}{{ end }}">
+{{- if not (in (slice "measure" "wide" "margin") $placement) -}}
+  {{- errorf "figure at %s has invalid placement %q; use measure, wide, or margin" .Position $placement -}}
+{{- end -}}
+{{- if and (eq $placement "margin") (not (strings.TrimSpace (default "" (.Get "caption")))) -}}
+  {{- errorf "margin figure at %s requires a caption" .Position -}}
+{{- end -}}
+
+{{- $treatment := lower (default "natural" (.Get "treatment")) -}}
+{{- if not (in (slice "natural" "ink") $treatment) -}}
+  {{- errorf "figure at %s has invalid treatment %q; use natural or ink" .Position $treatment -}}
+{{- end -}}
+
+{{- $link := strings.TrimSpace (default "" (.Get "link")) -}}
+{{- if and $decorative $link -}}
+  {{- errorf "figure at %s cannot be both decorative and a link; linked images need meaningful alt text" .Position -}}
+{{- end -}}
+
+{{- $loading := lower (default "lazy" (.Get "loading")) -}}
+{{- if $priority -}}
+  {{- $loading = "eager" -}}
+{{- end -}}
+{{- if not (in (slice "lazy" "eager") $loading) -}}
+  {{- errorf "figure at %s has invalid loading value %q; use lazy or eager" .Position $loading -}}
+{{- end -}}
+
+<figure
+  class="article-figure article-figure--{{ $placement }} article-figure--{{ $treatment }}{{ with .Get "class" }} {{ . }}{{ end }}"
+  data-article-placement="{{ $placement }}"
+  data-article-treatment="{{ $treatment }}"
+>
   {{- with $link }}<a class="article-figure-link" href="{{ . | safeURL }}">{{ end -}}
-  <img
-    src="{{ $src | safeURL }}"
-    alt="{{ $alt }}"
-    loading="{{ $loading }}"
-    decoding="async"
-    {{- with .Get "width" }} width="{{ . }}"{{ end -}}
-    {{- with .Get "height" }} height="{{ . }}"{{ end -}}
-  >
+  {{- partial "responsive-image.html" (dict
+    "Page" .Page
+    "Src" $src
+    "Alt" $alt
+    "Decorative" $decorative
+    "Priority" $priority
+    "Loading" $loading
+    "Placement" $placement
+    "Treatment" $treatment
+    "Sizes" (.Get "sizes")
+    "Width" (.Get "width")
+    "Height" (.Get "height")
+    "Position" .Position
+  ) -}}
   {{- with $link }}</a>{{ end -}}
   {{- if or (.Get "title") (.Get "caption") (.Get "attr") }}
-  <figcaption>
-    {{- with .Get "title" }}<span class="article-figure-title">{{ . | markdownify }}</span>{{ end -}}
-    {{- with .Get "caption" }}<span class="article-figure-caption">{{ . | markdownify }}</span>{{ end -}}
-    {{- with .Get "attr" }}
-      <span class="article-figure-attribution">
-      {{- with $.Get "attrlink" }}<a href="{{ . | safeURL }}">{{ end -}}
-      {{ . | markdownify }}
-      {{- with $.Get "attrlink" }}</a>{{ end -}}
-      </span>
-    {{- end }}
-  </figcaption>
+    <figcaption>
+      {{- with .Get "title" }}<span class="article-figure-title">{{ . | markdownify }}</span>{{ end -}}
+      {{- with .Get "caption" }}<span class="article-figure-caption">{{ . | markdownify }}</span>{{ end -}}
+      {{- with .Get "attr" }}
+        <span class="article-figure-attribution">
+          {{- with $.Get "attrlink" }}<a href="{{ . | safeURL }}">{{ end -}}
+          {{- . | markdownify -}}
+          {{- with $.Get "attrlink" }}</a>{{ end -}}
+        </span>
+      {{- end }}
+    </figcaption>
   {{- end }}
 </figure>

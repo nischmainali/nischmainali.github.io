@@ -1,0 +1,125 @@
+{{- /*
+  Render one responsive <img>. Figure shortcodes and Markdown render hooks share
+  this primitive so images never acquire a figure wrapper inside a paragraph.
+
+  Resolution order: page resource, global assets resource, untouched URL/static
+  path. Hugo-processable raster resources receive intrinsic dimensions and a
+  conservative srcset; SVG, GIF, remote, and static images remain unprocessed.
+*/ -}}
+{{- $page := .Page -}}
+{{- $src := strings.TrimSpace (default "" .Src) -}}
+{{- $alt := strings.TrimSpace (default "" .Alt) -}}
+{{- $decorative := default false .Decorative -}}
+{{- $priority := default false .Priority -}}
+{{- $placement := lower (default "measure" .Placement) -}}
+{{- $treatment := lower (default "natural" .Treatment) -}}
+{{- $loading := lower (default "lazy" .Loading) -}}
+{{- $sizes := strings.TrimSpace (default "" .Sizes) -}}
+{{- $width := default "" .Width -}}
+{{- $height := default "" .Height -}}
+{{- $title := strings.TrimSpace (default "" .Title) -}}
+{{- $position := default "an unknown source position" .Position -}}
+{{- $extraClass := strings.TrimSpace (default "" .Class) -}}
+
+{{- if not $src -}}
+  {{- errorf "image at %s is missing src" $position -}}
+{{- end -}}
+{{- if and (not $decorative) (not $alt) -}}
+  {{- errorf "image at %s is missing alt text; provide alt or mark it decorative" $position -}}
+{{- end -}}
+
+{{- if $page -}}
+  {{- $page.Store.Set "articleHasMedia" true -}}
+  {{- if eq $placement "margin" -}}
+    {{- $page.Store.Set "articleHasMarginMedia" true -}}
+  {{- end -}}
+  {{- if $priority -}}
+    {{- $priorityID := printf "%v::%s" $position $src -}}
+    {{- $priorityImages := default (dict) ($page.Store.Get "articlePriorityImages") -}}
+    {{- if not (isset $priorityImages $priorityID) -}}
+      {{- if ge (len $priorityImages) 1 -}}
+        {{- errorf "image at %s requests priority loading, but this page already has a priority image" $position -}}
+      {{- end -}}
+      {{- $priorityImages = merge $priorityImages (dict $priorityID true) -}}
+      {{- $page.Store.Set "articlePriorityImages" $priorityImages -}}
+      {{- $page.Store.Set "articlePriorityImageCount" (len $priorityImages) -}}
+      {{- $page.Store.Set "articleHasPriorityImage" true -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $isExternal := or
+  (gt (len (findRE `^[A-Za-z][A-Za-z0-9+.-]*:` $src)) 0)
+  (strings.HasPrefix $src "//")
+-}}
+{{- $lookup := strings.TrimPrefix "/" $src -}}
+{{- $resource := false -}}
+
+{{- if and $page (not $isExternal) -}}
+  {{- with $page.Resources.GetMatch $lookup -}}
+    {{- $resource = . -}}
+  {{- end -}}
+  {{- if not $resource -}}
+    {{- with $page.Resources.GetMatch (printf "**/%s" (path.Base $lookup)) -}}
+      {{- $resource = . -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- if and (not $resource) (not $isExternal) -}}
+  {{- with resources.Get $lookup -}}
+    {{- $resource = . -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $url := $src -}}
+{{- if $resource -}}
+  {{- $url = $resource.RelPermalink -}}
+{{- else if not $isExternal -}}
+  {{- $url = $lookup | relURL -}}
+{{- end -}}
+
+{{- $processable := false -}}
+{{- if $resource -}}
+  {{- $processable = and
+    (eq $resource.ResourceType "image")
+    (in (slice "jpeg" "png" "webp" "tiff" "bmp") (lower $resource.MediaType.SubType))
+  -}}
+{{- end -}}
+
+{{- $srcset := slice -}}
+{{- if $processable -}}
+  {{- /* Processed assets always publish their true geometry. Presentation
+        belongs to the placement CSS, not to mismatched HTML dimensions. */ -}}
+  {{- $width = $resource.Width -}}
+  {{- $height = $resource.Height -}}
+  {{- range slice 480 768 1200 1600 -}}
+    {{- if lt . $resource.Width -}}
+      {{- $resized := $resource.Resize (printf "%dx" .) -}}
+      {{- $srcset = $srcset | append (printf "%s %dw" $resized.RelPermalink $resized.Width) -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $srcset = $srcset | append (printf "%s %dw" $resource.RelPermalink $resource.Width) -}}
+{{- end -}}
+
+{{- if not $sizes -}}
+  {{- if eq $placement "wide" -}}
+    {{- $sizes = "(min-width: 1180px) 704px, (min-width: 768px) min(704px, calc(100vw - 4rem)), calc(100vw - 2rem)" -}}
+  {{- else if eq $placement "margin" -}}
+    {{- $sizes = "(min-width: 1180px) 264px, (min-width: 768px) min(616px, calc(100vw - 4rem)), calc(100vw - 2rem)" -}}
+  {{- else -}}
+    {{- $sizes = "(min-width: 1180px) 616px, (min-width: 768px) min(616px, calc(100vw - 4rem)), calc(100vw - 2rem)" -}}
+  {{- end -}}
+{{- end -}}
+
+<img
+  class="article-media article-media--{{ $treatment }}{{ with $extraClass }} {{ . }}{{ end }}"
+  src="{{ $url | safeURL }}"
+  alt="{{ $alt }}"
+  loading="{{ if $priority }}eager{{ else }}{{ $loading }}{{ end }}"
+  decoding="async"
+  {{- if $priority }} fetchpriority="high"{{ end -}}
+  {{- with $width }} width="{{ . }}"{{ end -}}
+  {{- with $height }} height="{{ . }}"{{ end -}}
+  {{- if gt (len $srcset) 1 }} srcset="{{ delimit $srcset ", " }}" sizes="{{ $sizes }}"{{ end -}}
+  {{- with $title }} title="{{ . }}"{{ end -}}
+>

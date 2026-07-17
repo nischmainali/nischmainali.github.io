@@ -9,7 +9,7 @@ categories = ["Notes"]
 tags = ["Typography", "Gaussian Process"]
 +++
 
-This specimen checks the {{< smallcaps >}}editorial vocabulary{{< /smallcaps >}} of an opened post: ordinary prose, an `inline expression`, keyboard input such as <kbd>⌘</kbd> + <kbd>K</kbd>, and a footnote.[^fn:1] It also carries a margin note for comparison.{{< sidenote >}}This is an explicit sidenote: optional context stays beside the sentence without interrupting the reading line. On narrower screens, its reference number becomes a tap-to-reveal control.{{< /sidenote >}}
+{{< dropcap "T" >}}his specimen checks the {{< smallcaps >}}editorial vocabulary{{< /smallcaps >}} of an opened post: ordinary prose, an `inline expression`, keyboard input such as <kbd>⌘</kbd> + <kbd>K</kbd>, and a footnote.[^fn:1] It also carries a margin note for comparison.{{< sidenote >}}This is an explicit sidenote: optional context stays beside the sentence without interrupting the reading line. On narrower screens, its reference number becomes a tap-to-reveal control.{{< /sidenote >}}
 
 ## Heading 1 {#heading-1}
 
@@ -79,9 +79,11 @@ plt.show()
 | 5.4          | 3.9         | 1.7          | 0.4         | setosa  |
 
 
-## Image {#image}
+## Marginal plate {#image}
 
-{{< figure src="https://i.pinimg.com/564x/fd/01/75/fd0175ef780e2feefb30055be9f2e022.jpg" alt="A still image reading You've been Rick Rolled" title="Figure 1" caption="A deliberately wide image with an editorial caption." wide="true" >}}
+The right field can carry a compact scientific plate without turning it into a second sidebar. Below the wide breakpoint, the same figure returns to the reading measure.
+
+{{< figure src="images/article-specimens/gp-threshold-crossings.svg" alt="Gaussian-process posterior sample paths crossing a threshold" title="Plate 1" caption="Posterior sample paths crossing a reference threshold." placement="margin" treatment="ink" width="960" height="560" >}}
 
 
 ## Mathematics: $\GP$ fields {#mathematics}

@@ -188,6 +188,33 @@
     }
   }
 
+  document.querySelectorAll(".article-body .sidenote").forEach(function (note, index) {
+    var number = index + 1;
+    var reference = note.previousElementSibling;
+    var toggle = reference && reference.previousElementSibling;
+
+    if (!reference || !reference.classList.contains("sidenote-ref") ||
+        !toggle || !toggle.classList.contains("sidenote-toggle")) {
+      articleWarning("A sidenote is missing its reference or toggle.");
+      return;
+    }
+
+    var referenceNumber = reference.querySelector(".sidenote-ref-number");
+    var noteNumber = note.querySelector(".sidenote-number");
+    if (referenceNumber) {
+      referenceNumber.textContent = String(number);
+      referenceNumber.dataset.numberReady = "true";
+    }
+    if (noteNumber) {
+      noteNumber.textContent = String(number);
+      noteNumber.dataset.numberReady = "true";
+    }
+
+    reference.setAttribute("aria-label", "Toggle sidenote " + number);
+    note.setAttribute("aria-label", "Sidenote " + number);
+    note.dataset.sidenoteNumber = String(number);
+  });
+
   var equationsById = Object.create(null);
   document.querySelectorAll("[data-equation]").forEach(function (equation, index) {
     var id = equation.dataset.equation;

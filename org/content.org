@@ -4,12 +4,15 @@
 #+author:
 #+hugo_custom_front_matter: :author "Nisch"
 #+OPTIONS: tex:t
+#+macro: dropcap @@hugo:{{< dropcap "$1" >}}@@
 
 * Blogs
 ** trying things out
 :PROPERTIES:
 :EXPORT_FILE_NAME: scratch
 :END:
+
+{{{dropcap(T)}}}his specimen checks the editorial vocabulary of an opened post. The deployed Markdown remains the visual regression source; this Org fragment records the drop-cap authoring form without running an export over later hand edits.
 
 *** Heading 1 
 
@@ -72,9 +75,11 @@ plt.show()
 |          5.0 |         3.6 |          1.4 |         0.2 | setosa  |
 |          5.4 |         3.9 |          1.7 |         0.4 | setosa  |
 
-*** Image
+*** Marginal plate
 
-[[https://i.pinimg.com/564x/fd/01/75/fd0175ef780e2feefb30055be9f2e022.jpg]]
+#+begin_export hugo
+{{< figure src="images/article-specimens/gp-threshold-crossings.svg" alt="Gaussian-process posterior sample paths crossing a threshold" title="Plate 1" caption="Posterior sample paths crossing a reference threshold." placement="margin" treatment="ink" width="960" height="560" >}}
+#+end_export
 
 *** Mathematics
 
