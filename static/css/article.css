@@ -161,6 +161,9 @@
   font-size: 4.65rem;
   line-height: 1;
   text-align: center;
+  /* These display faces paint well above their reported CSS line box. Move the
+   * visible initial, but leave its three-line float exclusion in place. */
+  transform: translateY(0.85rem);
   user-select: text;
 }
 
