@@ -26,13 +26,16 @@
           <summary>
             <span class="article-contents-label">Contents</span>
             <span class="article-contents-count">{{ $tocItems }} {{ cond (eq $tocItems 1) "section" "sections" }}</span>
+            <span class="article-contents-disclosure" aria-hidden="true"></span>
           </summary>
-          <a class="article-contents-return" href="#" aria-label="Return to article opening"><span aria-hidden="true">↑</span></a>
+          <a class="article-contents-return" href="#article-title" aria-label="Return to article opening"><span aria-hidden="true">top</span></a>
+          <div class="article-contents-progress" aria-hidden="true">
+            <span data-article-reading-progress></span>
+          </div>
           <div class="article-contents-trace" aria-hidden="true">
-            <span class="article-contents-trace-title">{{ .Title }}</span>
             <span class="article-contents-trace-current" data-article-current-section>Opening</span>
           </div>
-          <div class="article-contents-list">
+          <div class="article-contents-list" data-article-contents-list>
             {{ $toc }}
           </div>
         </details>

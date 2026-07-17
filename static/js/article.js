@@ -3,18 +3,59 @@
 
   var contents = document.querySelector("[data-article-contents]");
   var railQuery = window.matchMedia("(min-width: 1180px)");
+  var reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var contentsSummary = contents && contents.querySelector("summary");
+  var contentsList = contents && contents.querySelector("[data-article-contents-list]");
+  var readingProgress = contents && contents.querySelector("[data-article-reading-progress]");
+  var contentsPreferenceKey = "nisch.articleContentsOpen";
+  var contentsSyncing = false;
 
-  function syncContents(event) {
-    if (!contents) return;
-    if (event.matches) {
-      contents.setAttribute("open", "");
-    } else {
-      contents.removeAttribute("open");
+  function storedContentsPreference() {
+    try {
+      return window.localStorage.getItem(contentsPreferenceKey);
+    } catch (error) {
+      return null;
     }
   }
 
+  function storeContentsPreference(value) {
+    try {
+      window.localStorage.setItem(contentsPreferenceKey, value);
+    } catch (error) {
+      // The disclosure remains fully usable when storage is unavailable.
+    }
+  }
+
+  function syncContents(event) {
+    if (!contents) return;
+    contentsSyncing = true;
+    if (event.matches) {
+      contents.setAttribute("open", "");
+      if (contentsSummary) contentsSummary.setAttribute("tabindex", "-1");
+    } else {
+      if (contentsSummary) contentsSummary.removeAttribute("tabindex");
+      if (storedContentsPreference() === "open") {
+        contents.setAttribute("open", "");
+      } else {
+        contents.removeAttribute("open");
+      }
+    }
+    window.requestAnimationFrame(function () {
+      contentsSyncing = false;
+    });
+  }
+
   if (contents) {
+    contents.classList.add("is-managed");
     syncContents(railQuery);
+    contents.addEventListener("toggle", function () {
+      if (contentsSyncing) return;
+      if (railQuery.matches) {
+        if (!contents.open) contents.setAttribute("open", "");
+        return;
+      }
+      storeContentsPreference(contents.open ? "open" : "closed");
+    });
     if (railQuery.addEventListener) {
       railQuery.addEventListener("change", syncContents);
     } else if (railQuery.addListener) {
@@ -37,6 +78,27 @@
   }).filter(Boolean);
   var currentTocLink = null;
   var tocFrame = 0;
+
+  function keepCurrentTocLinkVisible(link) {
+    if (!link || !contentsList || !railQuery.matches) return;
+    var listRect = contentsList.getBoundingClientRect();
+    var linkRect = link.getBoundingClientRect();
+    var breathingRoom = 14;
+    var target = null;
+
+    if (linkRect.top < listRect.top + breathingRoom) {
+      target = contentsList.scrollTop + linkRect.top - listRect.top - breathingRoom;
+    } else if (linkRect.bottom > listRect.bottom - breathingRoom) {
+      target = contentsList.scrollTop + linkRect.bottom - listRect.bottom + breathingRoom;
+    }
+
+    if (target !== null) {
+      contentsList.scrollTo({
+        top: Math.max(0, target),
+        behavior: reducedMotionQuery.matches ? "auto" : "smooth"
+      });
+    }
+  }
 
   function directTocLink(item) {
     if (!item) return null;
@@ -78,6 +140,11 @@
 
   function setCurrentTocLink(link) {
     if (link === currentTocLink) return;
+    if (toc) {
+      toc.querySelectorAll("li.is-current-branch").forEach(function (item) {
+        item.classList.remove("is-current-branch");
+      });
+    }
     tocLinks.forEach(function (candidate) {
       var active = candidate === link;
       candidate.classList.toggle("is-current", active);
@@ -87,10 +154,31 @@
         candidate.removeAttribute("aria-current");
       }
     });
+    var item = link && link.parentElement;
+    while (item && item.tagName === "LI") {
+      item.classList.add("is-current-branch");
+      var list = item.parentElement;
+      item = list && list.parentElement && list.parentElement.tagName === "LI"
+        ? list.parentElement
+        : null;
+    }
     currentTocLink = link;
     if (currentSectionTrace) {
       currentSectionTrace.textContent = link ? tocPath(link) : "Opening";
     }
+    keepCurrentTocLinkVisible(link);
+  }
+
+  function updateReadingProgress(readingLine) {
+    if (!readingProgress) return;
+    var article = document.querySelector(".article-body");
+    if (!article) return;
+    var articleTop = article.getBoundingClientRect().top + window.scrollY;
+    var articleEnd = articleTop + article.offsetHeight;
+    var distance = Math.max(1, articleEnd - articleTop - window.innerHeight * 0.38);
+    var value = (window.scrollY + readingLine - articleTop) / distance;
+    value = Math.max(0, Math.min(1, value));
+    readingProgress.style.transform = "scaleX(" + value.toFixed(4) + ")";
   }
 
   function updateCurrentSection() {
@@ -98,6 +186,7 @@
     if (!tocSections.length) return;
 
     var readingLine = Math.min(window.innerHeight * 0.28, 220);
+    updateReadingProgress(readingLine);
     var current = null;
     tocSections.forEach(function (section) {
       if (section.heading.getBoundingClientRect().top <= readingLine) {

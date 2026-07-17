@@ -8,7 +8,7 @@
 {{- $hasArticleSidenotes := in .Content `class="sidenote"` -}}
 {{- $hasArticleFocusMedia := .Page.Store.Get "articleHasFocusMedia" -}}
 {{- if or $hasArticleCode $hasArticleToc $hasArticleMath $hasArticleReferences $hasArticleSidenotes $hasArticleFocusMedia }}
-<script src="{{ printf "%s?v=article-reader-3" ("js/article.js" | relURL) }}" defer></script>
+<script src="{{ printf "%s?v=article-reader-4" ("js/article.js" | relURL) }}" defer></script>
 {{- end }}
 {{- else if not .IsHome -}}
   {{- if (in .Content "</dl>") -}}

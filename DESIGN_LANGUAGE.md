@@ -250,11 +250,12 @@ surrounding component. TurnTrout's random accent treatment and first-line
 transformation do not belong here.
 
 The experimental Gwern-intelligence pass borrows editorial behavior from
-Gwern.net while leaving its grayscale appearance and interface chrome behind.
-It adds an authored epigraph, a compact academic-link grammar, reciprocal
-sidenote focus, a running section trace in the contents rail, and a
-full-resolution figure viewer. Each addition uses the existing Linden Hill/Jost
-division, wine hairlines, square paper geometry, and shade/sunset variables.
+[Gwern.net's design system](https://gwern.net/design) while leaving its
+grayscale appearance and interface chrome behind. It adds an authored
+epigraph, a compact academic-link grammar, reciprocal sidenote focus, a running
+section trace and progress rule in the contents rail, and a full-resolution
+figure viewer. Each addition uses the existing Linden Hill/Jost division, wine
+hairlines, square paper geometry, and shade/sunset variables.
 The pass adds no remote annotations, recursive popups, backlinks,
 transclusion, or second toolbar. Citation previews remain part of the later
 bibliography phase.
@@ -294,15 +295,19 @@ Its governing choices are:
 - the title field ends in whitespace rather than a full-width divider. Section
   headings likewise rely on type and rhythm, not repeated horizontal rules;
 - at 1180 px and above, contents become a slim, article-local sticky rail in the
-  left margin. The rail is 7.5 rem wide with a 2.3 rem inner interval; its label
-  lands on the title's 40 px paper inset, making the TOC and upper-left crop mark
-  part of one vertical axis. A single wine hairline and ink change mark the
-  section currently crossing the reading line. A small running head keeps the
-  article title and current H2/H3 path above a list with its own scroll;
-  screen readers ignore this duplicate trace. Below that breakpoint, the same
-  contents return to the reading flow and begin collapsed. A faint upward mark
-  at the far edge of the wide rail returns long articles to the composed page
-  opening;
+  left margin. The rail is 8.15 rem wide with a 1.05 rem inner interval; its
+  label lands on the title's paper inset while the wider outline reaches toward
+  the prose instead of floating in dead space. Reserved old-style section
+  numbers, typographic indentation, and an active ancestor trail make hierarchy
+  legible at a glance. A wine reading-progress rule and the current H2/H3 path
+  remain fixed above the independently scrolling outline, which quietly keeps
+  the active entry in view. The managed wide rail stays open and its summary
+  leaves the tab order; without JavaScript the native disclosure remains usable.
+  Below that breakpoint, contents return to the reading flow and remember the
+  reader's disclosure choice. From 768 to 1179 px, an expanded outline becomes
+  two balanced columns; on phones it returns to one. A small `top` link at the
+  far edge of the wide rail targets the article title rather than an empty URL
+  fragment;
 - the shade/sunset control keeps its crop-corner placement at the page opening
   but scrolls away with the masthead on articles, so it can never cover the TOC,
   code, or prose;
@@ -346,9 +351,10 @@ Its governing choices are:
   either member of a sidenote pair inks both members and reveals one short wine
   registration stroke beside the marginal note. The interaction changes no
   geometry;
-- epigraphs form a narrow italic pause before opening prose. One pale quotation
-  mark and right-aligned attribution replace the border and fill used by
-  ordinary blockquotes;
+- epigraphs form a narrow italic pause before opening prose. Unequal pale
+  opening and closing marks make the quotation complete without forming a
+  symmetrical frame; a right-aligned attribution replaces the border and fill
+  used by ordinary blockquotes;
 - Markdown article links receive a small build-time grammar. PDF, DOI, arXiv,
   and same-page section destinations gain quiet Jost suffixes. Ordinary
   external links keep the existing baseline treatment. Marks stay out of TOCs,
@@ -612,6 +618,16 @@ fibre undertone at each size. Home, Documents, and the Gaussian-process article
 kept their previous geometry, and the browser reported no console errors. Both
 strict production and draft builds passed; the old remote-GIF draft warning
 remains unchanged.
+
+A second 2026-07-17 review refined the contents apparatus and epigraph. The
+numbered outline, active ancestor trail, progress rule, nested breadcrumb,
+internal scrolling, exact 1180/1179 transition, two-column compact outline,
+remembered phone disclosure, and focus treatment were checked in shade and
+sunset; the no-JavaScript disclosure fallback was source-verified. A long
+legacy article confirmed that
+the rail keeps deep active entries visible. The epigraph now carries unequal
+paired marks at wide and phone measures. Browser consoles remained clean, and
+strict production, draft, syntax, and content checks passed.
 
 ## Known rough edges: observe before fixing
 

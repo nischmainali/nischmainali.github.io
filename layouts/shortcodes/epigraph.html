@@ -8,15 +8,13 @@
 {{- if and (not $attribution) (not $source) -}}
   {{- errorf "epigraph at %s requires attribution or source" .Position -}}
 {{- end -}}
-{{- if and $link (not (or $attribution $source)) -}}
-  {{- errorf "epigraph at %s cannot use link without attribution or source" .Position -}}
-{{- end -}}
 
 <figure class="article-epigraph">
   <blockquote{{ with $link }} cite="{{ . | safeURL }}"{{ end }}>
-    <span class="article-epigraph-mark" aria-hidden="true">“</span>
+    <span class="article-epigraph-mark article-epigraph-mark--open" aria-hidden="true">“</span>
     <div class="article-epigraph-text">
       {{- .Page.RenderString (dict "display" "block") $quote -}}
+      <span class="article-epigraph-mark article-epigraph-mark--close" aria-hidden="true">”</span>
     </div>
   </blockquote>
   <figcaption>
