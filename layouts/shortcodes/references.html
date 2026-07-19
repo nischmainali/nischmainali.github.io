@@ -1,0 +1,53 @@
+{{- /*
+  Render only the works cited earlier on this page. Author-year citations use
+  an alphabetical bibliography even though Page.Store records first use.
+  This is semantic static HTML: citation occurrence backlinks remain complete
+  when scripts, styles, or the environmental renderer are unavailable.
+*/ -}}
+{{- $page := .Page -}}
+{{- $registry := hugo.Data.citations -}}
+{{- $position := .Position -}}
+{{- if gt (len .Params) 0 -}}
+  {{- errorf "references at %s does not accept arguments" $position -}}
+{{- end -}}
+{{- $order := default (slice) ($page.Store.Get "citationOrder") -}}
+{{- $occurrences := default (slice) ($page.Store.Get "citationOccurrences") -}}
+{{- if eq (len $order) 0 -}}
+  {{- errorf "references at %s requires at least one earlier cite shortcode" $position -}}
+{{- end -}}
+
+{{- $entries := slice -}}
+{{- range $order -}}
+  {{- $key := . -}}
+  {{- $entry := index $registry $key -}}
+  {{- $entries = $entries | append (dict "key" $key "sort" (lower (printf "%s %s %s" $entry.authors $entry.year $entry.title))) -}}
+{{- end -}}
+
+<section class="article-references" role="doc-bibliography" aria-labelledby="references">
+  <ol class="article-reference-list">
+    {{- range sort $entries "sort" -}}
+      {{- $key := .key -}}
+      {{- $entry := index $registry $key -}}
+      {{- $entryOccurrences := slice -}}
+      {{- range $occurrences -}}
+        {{- if eq .key $key -}}
+          {{- $entryOccurrences = $entryOccurrences | append . -}}
+        {{- end -}}
+      {{- end -}}
+      {{- $occurrenceCount := len $entryOccurrences -}}
+    <li id="ref-{{ $key }}" role="doc-biblioentry" data-citation-entry="{{ $key }}">
+      <span class="article-reference-authors">{{ $entry.authors }}</span>
+      (<time datetime="{{ $entry.year }}">{{ $entry.year }}</time>).
+      <span class="article-reference-title">{{ $entry.title }}</span>.
+      <cite class="article-reference-publication">{{ $entry.publication }}</cite>.
+      <a class="article-reference-identifier" href="{{ $entry.url | safeURL }}" rel="external">{{ $entry.identifier }}</a>.
+      <span class="article-reference-backlinks" aria-label="Citation backlinks">
+        {{- range $index, $occurrence := $entryOccurrences -}}
+          {{- if gt $index 0 }} {{ end -}}
+          <a href="#{{ $occurrence.id }}" role="doc-backlink" aria-label="Back to citation {{ add $index 1 }} of {{ $occurrenceCount }} for {{ $entry.label }}">↩{{ if gt $occurrenceCount 1 }}{{ add $index 1 }}{{ end }}</a>
+        {{- end -}}
+      </span>
+    </li>
+    {{- end -}}
+  </ol>
+</section>

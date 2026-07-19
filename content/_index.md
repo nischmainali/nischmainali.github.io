@@ -18,7 +18,21 @@ Here is my <a href="/pdfs/cv.pdf">cv</a>.
 </h3>
 
 <figure class="profile-burn">
-  <img src="nisch.jpg" alt="Nischal Mainali" class="profile-image">
+  <picture>
+    <source
+      type="image/webp"
+      srcset="/nisch-480.webp 480w, /nisch-800.webp 800w"
+      sizes="(max-width: 767px) 240px, 290px">
+    <img
+      src="/nisch.jpg"
+      alt="Nischal Mainali"
+      class="profile-image"
+      width="1600"
+      height="1200"
+      loading="eager"
+      fetchpriority="high"
+      decoding="async">
+  </picture>
 </figure>
 <div class="publications">
   <h2>Selected works</h2>

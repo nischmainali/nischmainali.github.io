@@ -1,0 +1,7 @@
+{{- $path := strings.TrimPrefix "/" . -}}
+{{- $source := resources.Get $path -}}
+{{- if not $source -}}
+  {{- errorf "JavaScript asset %q does not exist under assets/" $path -}}
+{{- end -}}
+{{- $built := $source | minify | fingerprint "md5" -}}
+{{- $built.RelPermalink -}}

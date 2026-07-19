@@ -6,11 +6,13 @@
 {{- if not $tex -}}
   {{- errorf "Equation %q has no TeX content: see %s" $id .Position -}}
 {{- end -}}
-<div class="math-equation" id="equation-{{ $id }}" data-equation="{{ $id }}">
+{{- $wide := eq (default "false" (.Get "wide")) "true" -}}
+{{- $number := partial "equation-number.html" (dict "page" .Page "id" $id) -}}
+<div class="math-equation{{ if $wide }} math-equation--wide{{ end }}" id="equation-{{ $id }}" data-equation="{{ $id }}" data-equation-number="{{ $number }}">
   <div class="math-scroll" data-math-scroll>
     {{- partial "render-math.html" (dict "tex" $tex "display" true "page" .Page "position" .Position) -}}
   </div>
-  <a class="equation-number" href="#equation-{{ $id }}" aria-label="Equation">
-    <span class="equation-number-value" aria-hidden="true"></span>
+  <a class="equation-number" href="#equation-{{ $id }}" aria-label="Equation {{ $number }}">
+    <span class="equation-number-value" aria-hidden="true">({{ $number }})</span>
   </a>
 </div>

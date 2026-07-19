@@ -10,6 +10,7 @@ home = ["html", "rss", "json"]
 
 [params]
 description = "Nischal's address on the web"
+mathOutput = "htmlAndMathml"
 logo = {}
 
 [markup]

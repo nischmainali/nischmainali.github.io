@@ -6,6 +6,9 @@
 - Design worktree: `experiment/lokta-conservatory`
 - Current opened-article experiment: **Lokta Field Note**
 - Article branch: `experiment/article-reading-system` (**not yet accepted**)
+- Current environmental successor experiment: **Lokta Sunlight reader**
+- Successor branch: `experiment/lokta-sunlight-reader` (**not yet accepted**)
+- Archived predecessor checkpoint: `c26729b`
 - Hugo pinned for the article experiment: `v0.164.0+extended`
 - Reference theme checkout: `/Users/nisch/code/site/hugo-paged`
 - Live site repository: `/Users/nisch/code/site/nisch-hugo-site`
@@ -153,6 +156,67 @@ construct sunset-only falling leaves until they are needed; shutter and article
 geometry are batched and reused rather than repeatedly measured. Do not trade
 away the grain, progressive blur, motion continuity, or mathematical fidelity
 for a synthetic loading state.
+
+#### Experimental successor: Lokta Sunlight reader
+
+The `experiment/lokta-sunlight-reader` branch tests a closer reconstruction of
+Sunlit's optics on the Lokta Field Note. The checkpoint at `c26729b` preserves
+the preceding article and environmental implementation. Promotion requires
+Nisch's visual approval.
+
+The live Sunlit production bundle supplied the control measurements. The
+successor matches these parts of the reference:
+
+- the 85-degree desktop field and 75-degree phone field, including the 20 and
+  45 percent clearing points;
+- the 64/58 px shade periods, 74/67 px sunset periods, and 56/42/20 px shutter
+  depths;
+- the shutter plane's change from -20 to -16 degrees and its 10vw sunset travel;
+- the independent 24 px vertical mullion with its right edge at 70 percent of
+  the viewport, with shutter diffusion strongest on the left and sharpest on
+  the right;
+- a generated 512 px Gaussian grain field with the reference mean, deviation,
+  eleven offsets, and twenty stepped positions per second;
+- two cropped canopy envelopes, 300 instanced peepal silhouettes, and thirty
+  edge-bound falling leaves with 3 to 6 second travel;
+- the reference clocks: 0.5 seconds for slats, 1.2 seconds for the plane, one
+  second to reveal foliage, 0.5 seconds to hide it, and three seconds for the
+  sunset field.
+
+Four choices remain specific to this site. The paper keeps a low-chroma lichen
+cast at the reference luminance. Peepal and niuro forms replace the generic
+rounded leaves. A broad attenuation field reduces shadow contrast beneath
+Documents and article measures. The controls keep names, state, keyboard focus,
+persistence, reduced-motion handling, and a remembered atmosphere pause.
+
+The browser receives one opaque WebGL2 canvas. A worker owns it when
+`OffscreenCanvas` is available; the same renderer runs on the main thread as the
+first fallback, and a complete CSS poster remains beneath both. The renderer
+caches paper, shutters, and the mullion in an RGBA8 texture. Steady frames copy
+that texture, draw the instanced plants, add grain, then apply the sunset
+multiplier. It redraws the paper texture during a mode or route change and after
+resize. Scroll never enters the environmental controller.
+
+The controller stores the mode, seed, scene epoch, ambient offset, and an active
+transition. A destination page resumes the same phase. The poster remains until
+the first canvas frame reaches full opacity. The renderer caps backing-store
+area at 2,304,000 pixels, so a large display cannot create an unbounded canvas.
+
+The branch also strengthens the static document plane. Hugo resolves equation
+and statement references during the build. Citations use stable occurrence IDs
+and an alphabetical author-year bibliography. The References heading enters the
+ordinary Markdown outline. Wide code and figures clear marginal notes, while a
+shared 2.6rem gutter separates notes from equation numbers. The dense specimen
+keeps dual KaTeX HTML and MathML by default; a MathML-only build flag remains
+available for browser and assistive-technology testing.
+
+Visual QA on 19 July 2026 covered 1440, 1180, 1024, and 390 px in shade, settled
+sunset, and during the mode change. A 3200 px immediate fling kept prose and
+mathematics painted in the worker tier. The page reported no horizontal
+overflow. The open contents fold cleared the theme control at phone width, and
+the 1180 px layout retained 2.1rem between rail and prose plus 2.6rem between
+prose and marginal notes. A fresh source and browser matrix still needs Safari,
+Firefox, VoiceOver, and a midrange phone before promotion.
 
 ### 5. An unboxed portrait
 
@@ -501,10 +565,12 @@ The site is intentionally small:
 - `static/textures/lokta-fibres.svg` — the repeating pulp-scale paper field;
 - `static/textures/lokta-raking-relief.svg` — non-repeating paired fibres that
   become visible only as sunset settles;
-- `static/textures/gaussian-noise.png` — the licensed local copy of the grain
-  source used by the environmental field;
-- `static/js/sunlit.js` — viewport-derived slats, deterministic sparse peepal
-  leaves, responsive scene setup, persistence, and state control;
+- `static/textures/gaussian-noise.png` — the licensed local reference for the
+  source grain; production synthesizes the same 512-pixel Gaussian statistics
+  once in the worker and does not request this 231 KB file;
+- `assets/js/sunlit.js`, `sunlit-worker.js`, and `sunlit-renderer.js` — state and
+  route continuity, worker lifecycle, the cached light plane, procedural grain,
+  and the instanced Nepalese botanical silhouettes;
 - `layouts/_default/single.html` — experimental site-owned opened-article
   structure, leaving the vendored theme template untouched;
 - `layouts/baseof.html`, `layouts/blog/section.html`, and
@@ -534,7 +600,7 @@ The site is intentionally small:
   `static/css/math.css` — pinned KaTeX fallback assets, the local OpenType MATH
   face, native-MathML selection, and transparent overflow behavior;
 - `static/css/article.css` — the scoped Lokta Field Note reading system;
-- `static/js/article.js` — local contents and running trace, code copy,
+- `assets/js/article.js` — local contents and running trace, code copy,
   sidenote/reference numbering and coupling, figure focus, mathematical
   overflow focus, and resize behavior; it never typesets mathematics;
 - `scripts/check_content.py`, the compatibility `scripts/check_math.py`, and
@@ -542,8 +608,9 @@ The site is intentionally small:
   shared with future agents;
 - `layouts/partials/sunlit.html` — the fixed environmental layer and theme control;
 - `layouts/partials/static-asset-url.html` — deterministic source-byte versions
-  for locally served CSS and JavaScript, paired with production browser-cache
-  headers rather than rebuild-time timestamps;
+  for stable static CSS and texture paths;
+- `layouts/partials/js-asset-url.html` — Hugo-minified, content-fingerprinted
+  JavaScript URLs, paired with immutable production browser-cache headers;
 - `themes/hugo-paged/layouts/partials/header.html` — pre-paint theme state and the
   session-wide environmental motion epoch;
 - `themes/hugo-paged/` — a vendored and locally modified base theme;
@@ -655,19 +722,12 @@ contents and code while registering the rail exactly with the title. The exact
 phone contents, and widths from 1440 through 390 px were checked without
 horizontal overflow or console warnings.
 
-On 2026-07-19 the environmental renderer was given a strict paint-budget pass
-after fast scrolling exposed compositor checkerboarding on the dense maths
-specimen. The appearance remains a Lokta sheet under shutter light and Nepali
-foliage, but the implementation now has one fixed scene rather than a tree of
-fixed descendants; one masked shutter plane rather than roughly twenty blurred
-slats; and a static directional veil rather than eight full-viewport live
-backdrop filters. Grain is fixed to the paper while fern and peepal motion stay
-alive, pausing briefly during an active fling without restarting. Opened posts
-place the environmental and reading sheets on explicit sibling paint planes,
-and the first article image begins fetching eagerly at normal priority. Treat
-this as a design invariant: depth must be suggested by silhouette, light, and
-surface character before adding a live full-viewport filter or another fixed
-compositor layer.
+On 2026-07-19 the first paint-budget pass replaced the old fixed-element tree
+with one scene. The successor experiment above removes that pass's scroll pause,
+restores stepped grain and full foliage motion, and keeps the expensive paper
+work in a cached texture. Opened posts place the environmental and reading
+sheets on explicit sibling paint planes. The first article image fetches at
+normal priority. Future work must preserve this separation.
 
 ## Known rough edges: observe before fixing
 
@@ -675,11 +735,13 @@ These are implementation findings, not permission for a future agent to launch
 a cleanup pass. Fix them only when in scope, and preserve the visual language
 while doing so.
 
-- The atmospheric background retains one inline SVG fern and, in sunset, eight
-  falling leaves on desktop (five on mobile). Leaves are not constructed in
-  shade and are removed after the sunset-to-shade fade. Low-power devices have
-  not been profiled; do not restore per-slat filters, moving grain, or live
-  viewport backdrop-filter stacks without fresh evidence and scroll QA.
+- The experimental renderer draws 300 canopy instances, thirty falling leaves,
+  and a procedural fern in one instanced pass. A midrange phone still needs GPU,
+  memory, power, and scroll traces before promotion. Do not translate these
+  counts back into DOM nodes or viewport filter stacks.
+- MathML-only output cuts the dense specimen's HTML and element count by more
+  than half. Dual HTML and MathML remains the default until Safari, Chromium,
+  Firefox, VoiceOver, NVDA, overflow, and print checks pass.
 - Several hidden draft/example pages and the old theme `about`/`docs` material
   remain in `content/`. They are useful test fixtures but should not be mistaken
   for authored public content.

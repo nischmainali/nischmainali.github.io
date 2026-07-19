@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import re
 import shlex
@@ -19,6 +20,7 @@ from urllib.parse import unquote, urlsplit
 PINNED_HUGO = "0.164.0"
 ROOT = Path(__file__).resolve().parents[1]
 CONTENT = ROOT / "content"
+CITATION_DATA = ROOT / "data" / "citations.toml"
 
 SLUG_RE = re.compile(r"^[a-z][a-z0-9-]*$")
 LATIN_INITIAL_RE = re.compile(r"^[A-Za-z]$")
@@ -58,6 +60,19 @@ HTML_MEDIA_ATTRIBUTE_RE = re.compile(
 
 VALID_PLACEMENTS = {"measure", "wide", "margin"}
 VALID_TREATMENTS = {"natural", "ink"}
+CITATION_TABLE_RE = re.compile(r"^\[(?P<key>[^\[\]]+)\]$")
+CITATION_FIELD_RE = re.compile(
+    r"^(?P<field>[A-Za-z][A-Za-z0-9_-]*)\s*=\s*(?P<value>.+?)\s*$"
+)
+CITATION_FIELDS = {
+    "label",
+    "authors",
+    "year",
+    "title",
+    "publication",
+    "identifier",
+    "url",
+}
 
 
 @dataclass(order=True)
@@ -85,6 +100,175 @@ class Shortcode:
 class SourceScan:
     issues: list[Diagnostic]
     warnings: list[Diagnostic]
+
+
+def load_citation_registry() -> tuple[set[str], list[Diagnostic]]:
+    """Read the deliberately simple TOML citation registry without dependencies.
+
+    Python 3.9 is still used in the local authoring environment, so this checker
+    validates the registry's intentionally narrow table-and-scalar schema rather
+    than requiring tomllib/tomli. Hugo remains the authoritative TOML parser in
+    the build that follows this source check.
+    """
+
+    issues: list[Diagnostic] = []
+    if not CITATION_DATA.is_file():
+        return set(), [
+            Diagnostic(CITATION_DATA, 1, 1, "citation registry is missing")
+        ]
+
+    entries: dict[str, dict[str, object]] = {}
+    entry_lines: dict[str, int] = {}
+    field_lines: dict[str, dict[str, int]] = {}
+    current: str | None = None
+
+    for line_number, raw_line in enumerate(
+        CITATION_DATA.read_text(encoding="utf-8").splitlines(), start=1
+    ):
+        stripped = raw_line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+
+        table = CITATION_TABLE_RE.fullmatch(stripped)
+        if table:
+            key = table.group("key").strip()
+            if not SLUG_RE.fullmatch(key):
+                issues.append(
+                    Diagnostic(
+                        CITATION_DATA,
+                        line_number,
+                        1,
+                        f'citation registry key "{key}" is not slug-like',
+                    )
+                )
+            if key in entries:
+                issues.append(
+                    Diagnostic(
+                        CITATION_DATA,
+                        line_number,
+                        1,
+                        f'duplicate citation registry key "{key}" '
+                        f"(first declared on line {entry_lines[key]})",
+                    )
+                )
+                current = None
+                continue
+            current = key
+            entries[key] = {}
+            entry_lines[key] = line_number
+            field_lines[key] = {}
+            continue
+
+        field_match = CITATION_FIELD_RE.fullmatch(stripped)
+        if current is None or field_match is None:
+            issues.append(
+                Diagnostic(
+                    CITATION_DATA,
+                    line_number,
+                    1,
+                    "citation registry entries must use [slug] tables and scalar fields",
+                )
+            )
+            continue
+
+        field = field_match.group("field")
+        raw_value = field_match.group("value")
+        if field not in CITATION_FIELDS:
+            issues.append(
+                Diagnostic(
+                    CITATION_DATA,
+                    line_number,
+                    1,
+                    f'unsupported citation field "{field}"',
+                )
+            )
+            continue
+        if field in entries[current]:
+            issues.append(
+                Diagnostic(
+                    CITATION_DATA,
+                    line_number,
+                    1,
+                    f'citation "{current}" repeats field "{field}" '
+                    f"(first used on line {field_lines[current][field]})",
+                )
+            )
+            continue
+
+        value: object
+        if field == "year" and re.fullmatch(r"[0-9]{4}", raw_value):
+            value = int(raw_value)
+        else:
+            try:
+                value = json.loads(raw_value)
+            except json.JSONDecodeError:
+                issues.append(
+                    Diagnostic(
+                        CITATION_DATA,
+                        line_number,
+                        raw_line.find(raw_value) + 1,
+                        f'citation field "{field}" must be a double-quoted string'
+                        + (" or a four-digit year" if field == "year" else ""),
+                    )
+                )
+                continue
+            if not isinstance(value, str) or not value.strip():
+                issues.append(
+                    Diagnostic(
+                        CITATION_DATA,
+                        line_number,
+                        raw_line.find(raw_value) + 1,
+                        f'citation field "{field}" must be a nonempty string',
+                    )
+                )
+                continue
+
+        entries[current][field] = value
+        field_lines[current][field] = line_number
+
+    for key, entry in entries.items():
+        missing = sorted(CITATION_FIELDS.difference(entry))
+        if missing:
+            issues.append(
+                Diagnostic(
+                    CITATION_DATA,
+                    entry_lines[key],
+                    1,
+                    f'citation "{key}" is missing: {", ".join(missing)}',
+                )
+            )
+        url = entry.get("url")
+        if isinstance(url, str):
+            parsed = urlsplit(url)
+            if parsed.scheme != "https" or not parsed.netloc:
+                issues.append(
+                    Diagnostic(
+                        CITATION_DATA,
+                        field_lines[key]["url"],
+                        1,
+                        f'citation "{key}" must use a complete HTTPS URL',
+                    )
+                )
+
+    for field in ("label", "identifier", "url"):
+        seen: dict[object, str] = {}
+        for key, entry in entries.items():
+            value = entry.get(field)
+            if value is None:
+                continue
+            if value in seen:
+                issues.append(
+                    Diagnostic(
+                        CITATION_DATA,
+                        field_lines[key][field],
+                        1,
+                        f'citation "{key}" duplicates {field} from "{seen[value]}"',
+                    )
+                )
+            else:
+                seen[value] = key
+
+    return set(entries), issues
 
 
 def frontmatter_end(lines: list[str]) -> int:
@@ -377,7 +561,7 @@ def scan_mathematics(
     equation_refs: list[tuple[str, int, int]] = []
     statement_refs: list[tuple[str, int, int]] = []
     delimiter_state: tuple[str, int, int] | None = None
-    in_equation = False
+    in_equation: tuple[int, int] | None = None
 
     for index in range(body_start, len(lines)):
         clean = clean_lines[index]
@@ -430,12 +614,14 @@ def scan_mathematics(
         for match in STATEMENT_REF_RE.finditer(clean):
             statement_refs.append((match.group("id"), line_number, match.start() + 1))
 
-        if in_equation:
+        if in_equation is not None:
             if EQUATION_CLOSE in clean:
-                in_equation = False
+                in_equation = None
             continue
-        if EQUATION_RE.search(clean):
-            in_equation = True
+        equation_open = EQUATION_RE.search(clean)
+        if equation_open:
+            if clean.find(EQUATION_CLOSE, equation_open.end()) < 0:
+                in_equation = (line_number, equation_open.start() + 1)
             continue
 
         delimiter_state = scan_delimiters(
@@ -452,6 +638,12 @@ def scan_mathematics(
         kind, line, column = delimiter_state
         issues.append(
             Diagnostic(path, line, column, f"unclosed mathematics delimiter {names[kind]}")
+        )
+
+    if in_equation is not None:
+        line, column = in_equation
+        issues.append(
+            Diagnostic(path, line, column, "unclosed equation shortcode")
         )
 
     for identifier, line, column in equation_refs:
@@ -635,6 +827,138 @@ def scan_dropcaps(
                     f"dropcap follows earlier prose on line {preceding}; place it in the opening prose paragraph",
                 )
             )
+
+    return issues
+
+
+def scan_citations(
+    path: Path,
+    shortcodes: list[Shortcode],
+    citation_keys: set[str],
+) -> list[Diagnostic]:
+    """Validate the static citation interface and bibliography placement."""
+
+    issues: list[Diagnostic] = []
+    citations = [shortcode for shortcode in shortcodes if shortcode.name == "cite"]
+    references = [
+        shortcode for shortcode in shortcodes if shortcode.name == "references"
+    ]
+
+    for shortcode in citations:
+        parsed = parse_shortcode_arguments(shortcode, path, issues)
+        if parsed is None:
+            continue
+        positional, named = parsed
+        if named:
+            issues.append(
+                Diagnostic(
+                    path,
+                    shortcode.line,
+                    shortcode.column,
+                    "cite accepts positional registry keys only",
+                )
+            )
+        if not positional:
+            issues.append(
+                Diagnostic(
+                    path,
+                    shortcode.line,
+                    shortcode.column,
+                    'cite requires at least one key, for example {{< cite "mainali2024" >}}',
+                )
+            )
+            continue
+
+        seen: set[str] = set()
+        for key in positional:
+            if not SLUG_RE.fullmatch(key):
+                issues.append(
+                    Diagnostic(
+                        path,
+                        shortcode.line,
+                        shortcode.column,
+                        f'citation key "{key}" is not slug-like',
+                    )
+                )
+                continue
+            if key in seen:
+                issues.append(
+                    Diagnostic(
+                        path,
+                        shortcode.line,
+                        shortcode.column,
+                        f'citation group repeats key "{key}"',
+                    )
+                )
+                continue
+            seen.add(key)
+            if key not in citation_keys:
+                issues.append(
+                    Diagnostic(
+                        path,
+                        shortcode.line,
+                        shortcode.column,
+                        f'missing citation registry key "{key}"',
+                    )
+                )
+
+    for shortcode in references:
+        parsed = parse_shortcode_arguments(shortcode, path, issues)
+        if parsed is None:
+            continue
+        positional, named = parsed
+        if positional or named:
+            issues.append(
+                Diagnostic(
+                    path,
+                    shortcode.line,
+                    shortcode.column,
+                    "references does not accept arguments",
+                )
+            )
+
+    if citations and not references:
+        last = citations[-1]
+        issues.append(
+            Diagnostic(
+                path,
+                last.line,
+                last.column,
+                "page cites registry entries but has no references shortcode",
+            )
+        )
+    if references and not citations:
+        first = references[0]
+        issues.append(
+            Diagnostic(
+                path,
+                first.line,
+                first.column,
+                "references requires at least one earlier cite shortcode",
+            )
+        )
+    if len(references) > 1:
+        first = references[0]
+        for shortcode in references[1:]:
+            issues.append(
+                Diagnostic(
+                    path,
+                    shortcode.line,
+                    shortcode.column,
+                    f"only one references section is allowed per page "
+                    f"(first used on line {first.line})",
+                )
+            )
+    if citations and references and references[0].start < citations[-1].end:
+        first = references[0]
+        issues.append(
+            Diagnostic(
+                path,
+                first.line,
+                first.column,
+                "references must follow every citation on the page",
+            )
+        )
 
     return issues
 
@@ -886,7 +1210,7 @@ def scan_figures_and_media(
     return SourceScan(issues, warnings)
 
 
-def scan_file(path: Path) -> SourceScan:
+def scan_file(path: Path, citation_keys: set[str]) -> SourceScan:
     lines = path.read_text(encoding="utf-8").splitlines()
     body_start = frontmatter_end(lines)
     clean_lines = masked_lines(lines, body_start)
@@ -898,6 +1222,7 @@ def scan_file(path: Path) -> SourceScan:
     issues.extend(
         scan_dropcaps(path, clean_lines, body_start, text, shortcodes)
     )
+    issues.extend(scan_citations(path, shortcodes, citation_keys))
     media = scan_figures_and_media(path, draft, text, shortcodes)
     issues.extend(media.issues)
     return SourceScan(issues, media.warnings)
@@ -959,7 +1284,9 @@ def content_files() -> list[Path]:
 
 def parse_arguments(argv: list[str] | None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Validate mathematics, drop caps, figures, and remote media."
+        description=(
+            "Validate mathematics, citations, drop caps, figures, and remote media."
+        )
     )
     parser.add_argument(
         "--source-only",
@@ -971,8 +1298,9 @@ def parse_arguments(argv: list[str] | None) -> argparse.Namespace:
 
 def main(argv: list[str] | None = None) -> int:
     arguments = parse_arguments(argv)
-    scans = [scan_file(path) for path in content_files()]
-    issues = sorted(issue for scan in scans for issue in scan.issues)
+    citation_keys, citation_issues = load_citation_registry()
+    scans = [scan_file(path, citation_keys) for path in content_files()]
+    issues = sorted(citation_issues + [issue for scan in scans for issue in scan.issues])
     warnings = sorted(warning for scan in scans for warning in scan.warnings)
 
     for warning in warnings:

@@ -17,6 +17,8 @@ The butterfly counts not months but moments, and has time enough.
 
 Its small link grammar distinguishes the [talk notes](/pdfs/chalk_talk.pdf), a [published record](https://doi.org/10.1101/2024.06.11.597569), and a [preprint](https://arxiv.org/abs/1807.02582). A [same-page direction](#mathematics) receives only the quiet section mark.
 
+The same records can enter the article's build-time citation register. The cross-species place-field study is cited here {{< cite "mainali2024" >}} and repeated later without creating a second bibliography entry {{< cite "mainali2024" >}}. Two adjacent sources share one restrained citation group {{< cite "mainali2024" "kanagawa2018" >}}.
+
 ## Heading 1 {#heading-1}
 
 The reading column should remain calm even when the material around it becomes more technical. It is deliberately narrower than the title field and should never become a second card resting on top of the paper.
@@ -130,7 +132,7 @@ $$
 
 The deliberately wide Equation {{< eqref "wide-posterior" >}} checks the transparent edge cues and keyboard scrolling without shrinking the type.
 
-{{< equation id="wide-posterior" >}}
+{{< equation id="wide-posterior" wide="true" >}}
 \log p(y \mid X,\theta)
 = -\frac{1}{2}y^{\mathsf T}(K_\theta + \sigma_n^2 I)^{-1}y
   -\frac{1}{2}\log\det(K_\theta + \sigma_n^2 I)
@@ -173,8 +175,12 @@ Fix $\varepsilon>0$. Identifiability separates the complement of the $\varepsilo
 The sequence is visible in {{< statement-ref "posterior-concentration" >}} and {{< statement-ref "consistency" >}}.
 
 {{< statement kind="remark" id="same-page-references" title="Scope" >}}
-References are intentionally article-local in this iteration; they do not create a second site-wide citation system.
+Equation and statement references remain article-local. Scholarly citations use the central build-time registry and resolve into the bibliography below.
 {{< /statement >}}
+
+## References {#references}
+
+{{< references >}}
 
 [^fn:1]: The said footnote.
 [^fn:2]: Mathematical notation such as $\norm{x}_2$ remains available inside notes.

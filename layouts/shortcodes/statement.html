@@ -9,10 +9,12 @@
 {{- end -}}
 {{- $numbered := ne $kind "remark" -}}
 {{- $title := default "" (.Get "title") -}}
-<section class="math-statement math-statement--{{ $kind }}" id="statement-{{ $id }}" data-statement="{{ $id }}" data-statement-kind="{{ $kind }}" data-statement-numbered="{{ $numbered }}">
+{{- $meta := partial "statement-meta.html" (dict "page" .Page "id" $id) -}}
+{{- $number := index $meta "number" -}}
+<section class="math-statement math-statement--{{ $kind }}" id="statement-{{ $id }}" data-statement="{{ $id }}" data-statement-kind="{{ $kind }}" data-statement-numbered="{{ $numbered }}"{{ if $numbered }} data-statement-number="{{ $number }}"{{ end }}>
   <p class="statement-heading">
     <a class="statement-permalink" href="#statement-{{ $id }}" aria-label="Link to this {{ $kind }}">
-      <span class="statement-kind">{{ $kind | title }}</span>{{ if $numbered }} <span class="statement-number" aria-hidden="true"></span>{{ end }}{{ with $title }} <span class="statement-title">({{ . | plainify }})</span>{{ end }}<span aria-hidden="true">.</span>
+      <span class="statement-kind">{{ $kind | title }}</span>{{ if $numbered }} <span class="statement-number" aria-hidden="true">{{ $number }}</span>{{ end }}{{ with $title }} <span class="statement-title">({{ . | plainify }})</span>{{ end }}<span aria-hidden="true">.</span>
     </a>
   </p>
   <div class="statement-body">{{ .Page.RenderString (dict "display" "block") .Inner }}</div>

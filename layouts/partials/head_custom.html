@@ -1,4 +1,15 @@
 {{- $noop := .WordCount -}}
+<link id="sunlit-favicon" rel="icon" href="{{ partial "static-asset-url.html" "favicon-shade.svg" }}" type="image/svg+xml" data-shade-href="{{ partial "static-asset-url.html" "favicon-shade.svg" }}" data-sunset-href="{{ partial "static-asset-url.html" "favicon-sunset.svg" }}">
+<script src="{{ partialCached "js-asset-url.html" "js/sunlit.js" "js/sunlit.js" }}" defer></script>
+{{- $mathOutputSetting := lower (string (default "htmlAndMathml" .Site.Params.mathOutput)) -}}
+{{- $mathOutput := "" -}}
+{{- if eq $mathOutputSetting "htmlandmathml" -}}
+  {{- $mathOutput = "htmlAndMathml" -}}
+{{- else if eq $mathOutputSetting "mathml" -}}
+  {{- $mathOutput = "mathml" -}}
+{{- else -}}
+  {{- errorf "Unsupported math output %q; use htmlAndMathml or mathml" .Site.Params.mathOutput -}}
+{{- end -}}
 {{- $hasMath := .Page.Store.Get "hasMath" -}}
 {{- if and (not $hasMath) (and .IsNode (eq .Section "blog")) -}}
   {{- range .RegularPages -}}
@@ -8,13 +19,10 @@
     {{- end -}}
   {{- end -}}
 {{- end -}}
-{{- $hasDropcap := .Page.Store.Get "hasDropcap" -}}
-{{- if $hasDropcap }}
-<link rel="preload" href="{{ "vendor/fonts/eb-garamond-initials/EBGaramond-InitialsF1-LatinCaps.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="{{ "vendor/fonts/eb-garamond-initials/EBGaramond-InitialsF2-LatinCaps.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
-{{- end }}
 {{- if $hasMath }}
+{{- if eq $mathOutput "htmlAndMathml" }}
 <link rel="stylesheet" href="{{ partial "static-asset-url.html" "vendor/katex/0.17.0/katex.min.css" }}">
+{{- end }}
 <link rel="preload" href="{{ "vendor/asana-math/000.962/Asana-Math.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{{ partial "static-asset-url.html" "css/math.css" }}">
 {{- end }}

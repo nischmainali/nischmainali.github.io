@@ -1,0 +1,11 @@
+{{- $page := .page -}}
+{{- $target := .id -}}
+{{- $number := 0 -}}
+{{- $openings := findRESubmatch `\{\{<\s*equation\b[^>]*>\}\}` $page.RawContent -}}
+{{- range $index, $opening := $openings -}}
+  {{- $idMatch := findRESubmatch `\bid\s*=\s*"([a-z][a-z0-9-]*)"` (index $opening 0) -}}
+  {{- if and $idMatch (eq (index (index $idMatch 0) 1) $target) -}}
+    {{- $number = add $index 1 -}}
+  {{- end -}}
+{{- end -}}
+{{- return $number -}}

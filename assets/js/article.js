@@ -568,7 +568,6 @@
   function mathOverflowState(scroller) {
     if (!scroller._articleMathOverflow) {
       scroller._articleMathOverflow = {
-        frame: 0,
         label: null,
         scrollable: null,
         canScrollLeft: null,
@@ -582,12 +581,23 @@
     if (scroller.classList.contains(name) !== active) scroller.classList.toggle(name, active);
   }
 
-  function updateMathOverflow(scroller) {
-    var state = mathOverflowState(scroller);
+  function measureMathOverflow(scroller) {
     var maxScroll = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
     var scrollable = maxScroll > 1;
-    var canScrollLeft = scrollable && scroller.scrollLeft > 1;
-    var canScrollRight = scrollable && scroller.scrollLeft < maxScroll - 1;
+    return {
+      scroller: scroller,
+      scrollable: scrollable,
+      canScrollLeft: scrollable && scroller.scrollLeft > 1,
+      canScrollRight: scrollable && scroller.scrollLeft < maxScroll - 1
+    };
+  }
+
+  function applyMathOverflow(measurement) {
+    var scroller = measurement.scroller;
+    var state = mathOverflowState(scroller);
+    var scrollable = measurement.scrollable;
+    var canScrollLeft = measurement.canScrollLeft;
+    var canScrollRight = measurement.canScrollRight;
 
     if (state.scrollable !== scrollable) {
       toggleMathClass(scroller, "is-scrollable", scrollable);
@@ -623,13 +633,24 @@
     }
   }
 
+  var pendingMathScrolls = [];
+  var mathOverflowFrame = 0;
+
+  function flushMathOverflow() {
+    mathOverflowFrame = 0;
+    var scrollers = pendingMathScrolls.slice();
+    pendingMathScrolls.length = 0;
+
+    /* Finish every geometry read before the first class or ARIA write. This
+     * avoids repeatedly invalidating layout when several formulas resize at
+     * once, especially while the math font is settling. */
+    var measurements = scrollers.map(measureMathOverflow);
+    measurements.forEach(applyMathOverflow);
+  }
+
   function scheduleMathOverflow(scroller) {
-    var state = mathOverflowState(scroller);
-    if (state.frame) return;
-    state.frame = window.requestAnimationFrame(function () {
-      state.frame = 0;
-      updateMathOverflow(scroller);
-    });
+    if (pendingMathScrolls.indexOf(scroller) === -1) pendingMathScrolls.push(scroller);
+    if (!mathOverflowFrame) mathOverflowFrame = window.requestAnimationFrame(flushMathOverflow);
   }
 
   function scheduleAllMathOverflow() {
@@ -638,7 +659,7 @@
 
   if (mathScrolls.length) {
     mathScrolls.forEach(function (scroller) {
-      updateMathOverflow(scroller);
+      scheduleMathOverflow(scroller);
       scroller.addEventListener("scroll", function () {
         scheduleMathOverflow(scroller);
       }, { passive: true });

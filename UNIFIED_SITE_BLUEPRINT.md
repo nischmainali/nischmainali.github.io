@@ -1,10 +1,57 @@
 # Unified site blueprint: the Lokta Sunlight reader
 
-Status: architectural and design plan, not an implementation record
+Status: experimental implementation in progress on `experiment/lokta-sunlight-reader`
 
 Prepared: 19 July 2026
 
-Working branch at the time of study: `experiment/article-reading-system`
+Predecessor checkpoint: `c26729b` on `experiment/article-reading-system`
+
+## Experimental implementation record
+
+Phases 1 through 4 now exist on the successor branch. Hugo remains the compiler.
+The environment uses one opaque WebGL2 canvas with worker, main-thread, and CSS
+poster tiers. The article remains static HTML with build-time mathematics,
+references, citations, highlighting, and responsive media.
+
+The renderer follows the measured Sunlit geometry, blur direction, grain
+statistics, cluster envelopes, and transition clocks. It keeps four authored
+departures: lichen-white Lokta color, peepal and niuro silhouettes, route-aware
+reading attenuation, and accessible motion controls. The implementation omits
+Sunlit's React bundle, loading veil, remote noise file, 715-node scene, and live
+backdrop-filter stack.
+
+The worker caches the procedural paper and shutter pass in an RGBA8 framebuffer.
+It redraws that texture for theme, route, or geometry changes. Ambient frames
+copy the cached texture through a shader, draw one instanced botanical pass, add
+the generated Gaussian grain, and finish with the sunset multiply field. The
+shader copy replaces `blitFramebuffer`, which produced an unpainted default
+buffer in Chromium during browser QA. The controller has no scroll listener.
+
+The visual control now uses these source measurements:
+
+| Channel | Implemented control |
+|---|---|
+| shade plane | -20 degrees; periods 64 px desktop and 58 px phone |
+| sunset plane | -16 degrees plus 10vw; periods 74 px and 67 px |
+| shutter depth | 56 px desktop, 42 px phone, 20 px sunset |
+| veil | 85 degrees/20 percent; 75 degrees/45 percent on phone |
+| diffusion | broadest at left, six-pixel edge at right |
+| mullion | fixed vertical 24 px shadow with right edge at 70% (`right: 30vw`) |
+| grain | generated 512 x 512 R8 Gaussian field; 20 stepped states per second |
+| canopy/travel | 300 cropped peepal instances; 30 falling instances |
+| clocks | 0.5/1.2/1.0 or 0.5/3.0 seconds, plus 4.8-second Lokta relief |
+
+The document pass resolves equation and statement references at build time. It
+adds stable citation occurrence IDs, an alphabetical bibliography, References
+in the TOC, named endnotes, a prose-targeting skip link, and shared rail/prose/
+note geometry. The default math output remains `htmlAndMathml`; an environment
+override supports the MathML-only compatibility matrix.
+
+Browser QA on 19 July 2026 covered 1440, 1180, 1024, and 390 px. The worker tier
+retained painted mathematics during an immediate 3200 px fling. The tested pages
+had no horizontal overflow, and the open TOC cleared both prose and controls.
+Production, draft, source, syntax, network, print, and cross-browser checks below
+remain the promotion gate.
 
 ## Decision
 
@@ -90,7 +137,9 @@ Y rotation.
 Sunset changes the plane to -16 degrees and translates it 10vw to the right. The
 slats narrow to 20 px and their vertical step expands by 15 percent. Their
 individual geometry changes over 0.5 seconds; the larger shutter and perspective
-movement settles over 1.2 to 1.8 seconds.
+movement settles over 1.2 seconds. The bundle declares a 1.8-second transition
+on an unchanged wrapper transform; that inert rule is not reproduced as a
+second visible movement.
 
 The reference blur is not one ordinary blur. It rotates an eight-band mask over
 the viewport and progresses through approximately 0.5, 8, 25, 50, and 100 px of
@@ -355,8 +404,8 @@ with that behavior before it exists.
 The environmental renderer must have no scroll listener. It does not read scroll
 position, change quality during a fling, or toggle `animation-play-state`.
 
-This is a direct correction to the current implementation. The present
-`static/js/sunlit.js` sets `scrollActive` on every scroll, adds
+This is a direct correction to the archived implementation. Its
+`static/js/sunlit.js` set `scrollActive` on every scroll, added
 `.is-motion-paused`, and resumes only 800 ms after scrolling stops. The reported
 pause is therefore deliberate current behavior, not a mysterious browser defect.
 
@@ -929,10 +978,12 @@ Before accepting a change, answer all of these:
 
 - `DESIGN_LANGUAGE.md`: accepted visual language and article provenance
 - `MATHEMATICS.md`: authoring contract
-- `static/css/sunlit.css`: current DOM scene and its performance compromises
-- `static/js/sunlit.js`: current state, leaves, and scroll pause
+- `static/css/sunlit.css`: complete poster, canvas handoff, and quiet controls
+- `assets/js/sunlit.js`: state, continuity, capability selection, and fallbacks
+- `assets/js/sunlit-worker.js`: worker lifecycle and renderer command bridge
+- `assets/js/sunlit-renderer.js`: cached paper, instanced plants, grain, and clocks
 - `static/css/article.css`: article geometry and visual grammar
-- `static/js/article.js`: progressive article enhancements
+- `assets/js/article.js`: progressive article enhancements
 - `layouts/partials/render-math.html`: strict Hugo/KaTeX entry point
 - `static/css/math.css`: native MathML and hidden HTML selection
 

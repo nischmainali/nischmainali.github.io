@@ -41,6 +41,21 @@ loads only on pages that can contain mathematics. Do not replace KaTeX's HTML
 font files or mix isolated glyphs from another family: KaTeX calculates that
 layer with its own font metrics.
 
+The default build emits KaTeX HTML plus MathML. A compatibility build can emit
+MathML alone:
+
+~~~sh
+HUGO_PARAMS_MATHOUTPUT=mathml hugo --buildDrafts \
+  --cacheDir /tmp/hugo-mathml-cache \
+  --destination /tmp/hugo-mathml-public
+~~~
+
+MathML-only output cuts the dense specimen's HTML and live element count by more
+than half and removes the KaTeX stylesheet request. Keep the dual output as the
+deployment default until Chromium, Safari, Firefox, VoiceOver, NVDA, overflow,
+and print checks pass. This switch changes emitted markup only; both modes use
+the same strict build-time renderer and Asana Math face.
+
 ## Numbered equations
 
 Numbering restarts in every article. Contents are raw TeX without delimiters:
@@ -56,6 +71,13 @@ Equation {{< eqref "posterior" >}} gives the posterior.
 
 Identifiers are lowercase slug-like values and must be unique on the page.
 Forward and backward references are both valid. References are same-page only.
+Hugo writes the equation and reference numbers into static HTML; article
+JavaScript verifies them and adds overflow behavior without repairing
+placeholders after load.
+If a deliberately unbreakable display is wider than the printed reading
+measure, add `wide="true"` to its `equation` shortcode. The screen version keeps
+the normal optical size and transparent overflow cues; print scales that one
+display enough to preserve the complete expression and its number.
 Do not use \tag, \label, \ref, \eqref, or a bare equation environment; those
 interfaces are deliberately excluded because their layout and portability are
 fragile here.

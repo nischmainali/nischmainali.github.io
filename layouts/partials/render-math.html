@@ -2,11 +2,20 @@
 {{- $display := default false .display -}}
 {{- $page := .page -}}
 {{- $position := default "unknown source" .position -}}
+{{- $mathOutputSetting := lower (string (default "htmlAndMathml" $page.Site.Params.mathOutput)) -}}
+{{- $mathOutput := "" -}}
+{{- if eq $mathOutputSetting "htmlandmathml" -}}
+  {{- $mathOutput = "htmlAndMathml" -}}
+{{- else if eq $mathOutputSetting "mathml" -}}
+  {{- $mathOutput = "mathml" -}}
+{{- else -}}
+  {{- errorf "Unsupported math output %q; use htmlAndMathml or mathml" $page.Site.Params.mathOutput -}}
+{{- end -}}
 {{- $options := dict
   "displayMode" $display
   "macros" hugo.Data.math.macros
   "minRuleThickness" 0.05
-  "output" "htmlAndMathml"
+  "output" $mathOutput
   "strict" "error"
   "throwOnError" true
 -}}
@@ -15,6 +24,13 @@
     {{- errorf "Unable to render mathematical markup: %s: see %s" . $position -}}
   {{- else -}}
     {{- $page.Store.Set "hasMath" true -}}
-    {{- .Value -}}
+    {{- $rendered := .Value -}}
+    {{- /* MathML-only output has a different root shape from KaTeX's dual
+          output. Mark that root so the shared stylesheet can size it without
+          runtime detection or a second rendering tree. */ -}}
+    {{- if eq $mathOutput "mathml" -}}
+      {{- $rendered = replaceRE `class="katex"` `class="katex math-output-mathml"` (string $rendered) 1 | safeHTML -}}
+    {{- end -}}
+    {{- $rendered -}}
   {{- end -}}
 {{- end -}}

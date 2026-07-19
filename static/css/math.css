@@ -1,6 +1,6 @@
-/* KaTeX is rendered by Hugo. Modern browsers use its semantic MathML layer
- * with a local OpenType MATH font; KaTeX's HTML remains in the document as a
- * layout fallback. Article-specific typography remains in article.css. */
+/* KaTeX is rendered by Hugo. The default output carries semantic MathML and a
+ * metric-matched HTML fallback; the experimental MathML-only build carries one
+ * native tree. Both remain static HTML. Article typography stays in article.css. */
 
 @font-face {
   font-family: "Asana Math Web";
@@ -8,6 +8,30 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
+}
+
+/* `transform.ToMath` omits the `.katex-mathml` and `.katex-display` wrappers
+ * when asked for MathML alone. The renderer marks its direct root so the one-
+ * tree experiment has the same baseline, centering, and overflow contract as
+ * the default dual output without relying on runtime feature detection. */
+.katex.math-output-mathml > math {
+  font-family: "Asana Math Web", math;
+  font-size: 1em;
+}
+
+.math-inline .katex.math-output-mathml {
+  display: inline-block;
+  line-height: 1;
+  vertical-align: -0.08em;
+}
+
+.math-scroll > .katex.math-output-mathml,
+.math-scroll > .katex.math-output-mathml > math[display="block"] {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+  margin-inline: auto;
+  text-align: center;
 }
 
 /* `math-style` arrived with native MathML Core. Browsers without it retain
@@ -118,6 +142,13 @@
   }
 
   .math-scroll .katex-display {
+    width: auto;
+    min-width: 0;
+    white-space: normal;
+  }
+
+  .math-scroll > .katex.math-output-mathml,
+  .math-scroll > .katex.math-output-mathml > math[display="block"] {
     width: auto;
     min-width: 0;
     white-space: normal;

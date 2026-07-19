@@ -1,0 +1,52 @@
+{{- /*
+  Build-time, article-local citation links. Each positional argument is one key
+  from data/citations.toml. The shortcode records its deterministic occurrence
+  IDs in Page.Store so the later references shortcode can link back to every
+  use without client-side numbering or mutation.
+*/ -}}
+{{- $page := .Page -}}
+{{- $registry := hugo.Data.citations -}}
+{{- $position := .Position -}}
+{{- $keys := .Params -}}
+{{- if eq (len $keys) 0 -}}
+  {{- errorf "cite at %s requires at least one citation key" $position -}}
+{{- end -}}
+
+{{- $seen := slice -}}
+<span class="article-citation" data-citation>(
+  {{- range $index, $rawKey := $keys -}}
+    {{- $key := strings.TrimSpace (printf "%v" $rawKey) -}}
+    {{- if eq (len (findRE `^[a-z][a-z0-9-]*$` $key)) 0 -}}
+      {{- errorf "Citation key %q is not slug-like: see %s" $key $position -}}
+    {{- end -}}
+    {{- if in $seen $key -}}
+      {{- errorf "Citation key %q is repeated in one cite shortcode: see %s" $key $position -}}
+    {{- end -}}
+    {{- $seen = $seen | append $key -}}
+    {{- if not (isset $registry $key) -}}
+      {{- errorf "Unknown citation key %q: see %s" $key $position -}}
+    {{- end -}}
+
+    {{- $entry := index $registry $key -}}
+    {{- $countKey := printf "citationCount-%s" $key -}}
+    {{- $occurrenceNumber := add (default 0 ($page.Store.Get $countKey)) 1 -}}
+    {{- $page.Store.Set $countKey $occurrenceNumber -}}
+    {{- $occurrenceID := printf "cite-%s-%d" $key $occurrenceNumber -}}
+    {{- $occurrences := default (slice) ($page.Store.Get "citationOccurrences") -}}
+    {{- $knownOccurrence := false -}}
+    {{- range $occurrences -}}
+      {{- if eq .id $occurrenceID -}}{{- $knownOccurrence = true -}}{{- end -}}
+    {{- end -}}
+    {{- if not $knownOccurrence -}}
+      {{- $page.Store.Set "citationOccurrences" ($occurrences | append (dict "id" $occurrenceID "key" $key)) -}}
+    {{- end -}}
+
+    {{- $order := default (slice) ($page.Store.Get "citationOrder") -}}
+    {{- if not (in $order $key) -}}
+      {{- $page.Store.Set "citationOrder" ($order | append $key) -}}
+    {{- end -}}
+
+    {{- if gt $index 0 }}; {{ end -}}
+    <a id="{{ $occurrenceID }}" href="#ref-{{ $key }}" role="doc-biblioref" data-citation-key="{{ $key }}">{{ $entry.label }}</a>
+  {{- end -}}
+)</span>

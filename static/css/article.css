@@ -18,7 +18,8 @@
    * interval between the outline and right-growing technical matter. */
   --article-rail-gap: 2.1rem;
   --article-note-width: clamp(13.25rem, calc(50vw - 23.25rem), 16.5rem);
-  --article-note-offset: calc(var(--article-note-width) + 2rem);
+  --article-marginal-gap: 2.6rem;
+  --article-note-offset: calc(var(--article-note-width) + var(--article-marginal-gap));
   --article-ink: #202622;
   --article-green: #173d31;
   --article-blue: #173f51;
@@ -56,11 +57,14 @@
 
 /* The light control belongs to the crop corner, not to the reading viewport.
  * Let it leave with the masthead so it can never cover marginalia or prose. */
-.single.blog #theme-toggle {
+.single.blog #theme-toggle,
+.single.blog #atmosphere-toggle {
   position: absolute;
-  top: 20px;
   left: 20px;
 }
+
+.single.blog #theme-toggle { top: 20px; }
+.single.blog #atmosphere-toggle { top: 48px; }
 
 /* The environmental sheet and the reading matter must be sibling paint
  * planes. With the scene at a negative z-index behind a transparent root,
@@ -108,6 +112,18 @@
   opacity: 1;
   pointer-events: auto;
   transform: translate(-50%, 0);
+}
+
+.single.blog .article-prose-start {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  scroll-margin-top: 1rem;
+}
+
+.single.blog .article-prose-start:focus {
+  outline: none;
 }
 
 .single.blog .article-header.article-meta {
@@ -1097,7 +1113,9 @@
 .single.blog .article-figure--ink .article-media {
   opacity: 0.93;
   filter: saturate(0.72) contrast(1.06);
-  mix-blend-mode: multiply;
+  /* Transparent diagrams already expose the paper. A live multiply blend
+   * forces the browser to sample the environmental plane while scrolling. */
+  mix-blend-mode: normal;
 }
 
 .single.blog.sunset .article-figure--ink .article-media {
@@ -1306,7 +1324,8 @@ html.article-figure-is-open {
   scroll-padding-inline: 1.35rem;
 }
 
-.single.blog .article-body .katex-display {
+.single.blog .article-body .katex-display,
+.single.blog .article-body .math-scroll > .katex {
   margin: 0;
 }
 
@@ -1459,6 +1478,88 @@ html.article-figure-is-open {
   line-height: 1;
 }
 
+/* Citations are compiled into the sheet, not layered on as a widget. Their
+ * author-year voice stays slightly quieter than prose; the bibliography uses
+ * a hanging printer's rule instead of cards, badges, or numbered chrome. */
+.single.blog .article-citation {
+  color: var(--article-muted);
+  font-size: 0.88em;
+  font-variant-numeric: oldstyle-nums;
+  white-space: normal;
+}
+
+.single.blog .article-citation a {
+  border-bottom: 1px dotted rgba(111, 59, 63, 0.42);
+  color: var(--article-green);
+}
+
+.single.blog .article-citation a:hover,
+.single.blog .article-citation a:focus-visible {
+  border-bottom-color: currentColor;
+  color: var(--article-wine);
+}
+
+.single.blog .article-references {
+  margin: 0.8rem 0 0;
+  padding: 0;
+}
+
+.single.blog .article-reference-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.single.blog .article-reference-list > li {
+  position: relative;
+  margin: 0 0 0.9rem;
+  padding-left: 1.2rem;
+  color: var(--article-muted);
+  font-size: 0.88rem;
+  line-height: 1.48;
+}
+
+.single.blog .article-reference-list > li::before {
+  content: "";
+  position: absolute;
+  top: 0.72em;
+  left: 0;
+  width: 0.72rem;
+  border-top: 1px solid var(--article-wine);
+  opacity: 0.54;
+}
+
+.single.blog .article-reference-authors {
+  color: var(--article-ink);
+}
+
+.single.blog .article-reference-title {
+  color: var(--article-ink);
+}
+
+.single.blog .article-reference-identifier {
+  font-family: Jost, sans-serif;
+  font-size: 0.76rem;
+  letter-spacing: 0.015em;
+  white-space: nowrap;
+}
+
+.single.blog .article-reference-backlinks {
+  margin-left: 0.35em;
+  font-family: Jost, sans-serif;
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+
+.single.blog .article-reference-backlinks a {
+  border: 0;
+  color: var(--article-wine);
+}
+
+.single.blog [role="doc-biblioentry"]:target {
+  background: linear-gradient(90deg, var(--article-block), transparent 92%);
+}
+
 .single.blog .article-body .footnotes {
   margin-top: 3.5rem;
   padding-top: 1rem;
@@ -1578,6 +1679,7 @@ html.article-figure-is-open {
    * 992 px paper, while prose retains a clear registration gap to the outline. */
   .single.blog .article-body .highlight,
   .single.blog .article-figure--wide {
+    clear: right;
     width: min(var(--article-breakout), calc(100% + 6rem));
     margin-left: 0;
   }
@@ -1629,10 +1731,12 @@ html.article-figure-is-open {
 
   .single.blog .article-contents-return {
     position: absolute;
-    top: -0.03rem;
+    top: -0.28rem;
     right: 0;
     display: block;
     width: 1.75rem;
+    min-height: 1.4rem;
+    padding: 0.25rem 0 0.35rem;
     border: 0;
     color: var(--article-faint);
     font-family: Jost, sans-serif;
@@ -1738,7 +1842,7 @@ html.article-figure-is-open {
     float: right;
     clear: right;
     width: var(--article-note-width);
-    margin: 0.18rem calc(0rem - var(--article-note-offset)) 0.9rem 2rem;
+    margin: 0.18rem calc(0rem - var(--article-note-offset)) 0.9rem var(--article-marginal-gap);
     padding: 0;
     border: 0;
     background: transparent;
@@ -1768,7 +1872,7 @@ html.article-figure-is-open {
     float: right;
     clear: right;
     width: var(--article-note-width);
-    margin: 0.28rem calc(0rem - var(--article-note-offset)) 1.15rem 2rem;
+    margin: 0.28rem calc(0rem - var(--article-note-offset)) 1.15rem var(--article-marginal-gap);
   }
 
   .single.blog .article-figure--margin .article-media {
@@ -1929,6 +2033,7 @@ html.article-figure-is-open {
   .single.blog .nav-top,
   .single.blog #sunlit-scene,
   .single.blog #theme-toggle,
+  .single.blog #atmosphere-toggle,
   .single.blog .crop-h,
   .single.blog .crop-v,
   .single.blog .crop-c,
@@ -1993,6 +2098,19 @@ html.article-figure-is-open {
     break-inside: avoid;
   }
 
+  .single.blog .article-body .highlight,
+  .single.blog .article-body .highlight pre {
+    break-inside: auto;
+  }
+
+  .single.blog .article-body .highlight pre,
+  .single.blog .article-body .highlight code {
+    min-width: 0;
+    overflow: visible;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
   .single.blog .article-figure,
   .single.blog .article-figure--margin {
     float: none;
@@ -2034,19 +2152,26 @@ html.article-figure-is-open {
     font-size: 0.923em;
   }
 
-  .single.blog .article-body .math-scroll.is-scrollable .katex {
-    font-size: 0.75em;
+  .single.blog .article-body .math-scroll.is-scrollable .katex,
+  .single.blog .article-body .math-equation--wide .math-scroll .katex {
+    font-size: 0.68em;
   }
 
-  .single.blog .article-body .katex-display > .katex {
+  .single.blog .article-body .katex-display > .katex,
+  .single.blog .article-body .math-scroll > .katex,
+  .single.blog .article-body .math-scroll math[display="block"] {
     white-space: normal;
+  }
+
+  .single.blog .article-reference-backlinks {
+    display: none;
   }
 
   .single.blog .article-body a {
     color: inherit;
   }
 
-  .single.blog .article-body a[href^="http"]:not(.article-figure-link):not(.article-figure-focus-link):not(.section-anchor)::after {
+  .single.blog .article-body a[href^="http"]:not(.article-figure-link):not(.article-figure-focus-link):not(.article-reference-identifier):not(.section-anchor)::after {
     content: " (" attr(href) ")";
     font-family: Jost, sans-serif;
     font-size: 0.72em;

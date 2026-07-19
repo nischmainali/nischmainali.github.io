@@ -24,7 +24,6 @@
     {{ end }}
     <link rel="canonical" href="{{ .Permalink }}">
     <link rel="preload" href="{{ "vendor/fonts/linden-hill/LindenHill-Regular.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="{{ "textures/gaussian-noise.png" | relURL }}" as="image" type="image/png" fetchpriority="low">
 
     {{ $autoImage := false }}
     {{ range (findRE "<img src=\"https?://[^\"]+" .Content 1) }}
@@ -82,8 +81,20 @@
           stored = null;
         }
         var theme = stored === 'sunset' || stored === 'dark' ? 'sunset' : 'shade';
-        document.body.setAttribute('data-theme', theme);
-        if (theme === 'sunset') {
+        var posterTheme = theme;
+        try {
+          var transition = JSON.parse(sessionStorage.getItem('sunlit-transition') || 'null');
+          var transitionTarget = transition && (transition.to === 'sunset' || transition.to === 'dark') ? 'sunset' : 'shade';
+          var transitionSource = transition && (transition.from === 'sunset' || transition.from === 'dark') ? 'sunset' : 'shade';
+          var transitionAge = now - Number(transition && transition.startTimeMs);
+          if (transition && transitionTarget === theme && transitionAge >= 0 && transitionAge <= 5200) {
+            posterTheme = transitionSource;
+          }
+        } catch (e) {
+          posterTheme = theme;
+        }
+        document.body.setAttribute('data-theme', posterTheme);
+        if (posterTheme === 'sunset') {
           document.body.classList.add('sunset');
         }
       })();

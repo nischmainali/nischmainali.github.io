@@ -2,4 +2,6 @@
 {{- if eq (len (findRE `^[a-z][a-z0-9-]*$` $id)) 0 -}}
   {{- errorf "The eqref shortcode requires a slug-like equation id: see %s" .Position -}}
 {{- end -}}
-<a class="equation-ref" href="#equation-{{ $id }}" data-equation-ref="{{ $id }}" aria-label="Unresolved equation reference"><span class="equation-ref-value" aria-hidden="true">(?)</span></a>
+{{- $number := partial "equation-number.html" (dict "page" .Page "id" $id) -}}
+{{- if eq $number 0 -}}{{- errorf "Unknown equation reference %q: see %s" $id .Position -}}{{- end -}}
+<a class="equation-ref" href="#equation-{{ $id }}" data-equation-ref="{{ $id }}" aria-label="Equation {{ $number }}"><span class="equation-ref-value" aria-hidden="true">({{ $number }})</span></a>

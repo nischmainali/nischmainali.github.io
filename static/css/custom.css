@@ -221,6 +221,79 @@ body.dark .profile-burn::before {
   margin-top: 1.5em;
 }
 
+.site-search {
+  margin-top: 1.8rem;
+}
+
+.site-search label {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: #173d31;
+  font-family: Jost, sans-serif;
+  font-size: 0.76rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.site-search input {
+  width: 100%;
+  padding: 0.42rem 0 0.34rem;
+  border: 0;
+  border-bottom: 1px solid rgba(83, 76, 95, 0.42);
+  border-radius: 0;
+  outline: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 1.08rem;
+}
+
+.site-search input:focus {
+  border-bottom-color: #173f51;
+  box-shadow: 0 1px 0 rgba(23, 63, 81, 0.22);
+}
+
+.site-search-status {
+  min-height: 1.4em;
+  margin: 0.42rem 0 1.1rem;
+  color: rgba(32, 38, 34, 0.58);
+  font-family: Jost, sans-serif;
+}
+
+.site-search-results {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-search-results > li {
+  position: relative;
+  margin: 0 0 1.15rem;
+  padding-left: 1rem;
+}
+
+.site-search-results > li::before {
+  position: absolute;
+  top: 0.78rem;
+  left: 0;
+  width: 0.58rem;
+  border-top: 1px solid rgba(111, 59, 63, 0.58);
+  content: "";
+}
+
+.site-search-results h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: normal;
+}
+
+.site-search-preview {
+  margin: 0.18rem 0 0;
+  color: rgba(32, 38, 34, 0.66);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
 .publications h2 {
   margin-bottom: 0.5em;
 }

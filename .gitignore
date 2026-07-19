@@ -5,3 +5,7 @@
 /.hugo_build.lock
 /public/
 /resources/
+
+# Local validation caches
+__pycache__/
+*.py[cod]

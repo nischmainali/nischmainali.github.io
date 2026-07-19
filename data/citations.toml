@@ -1,0 +1,22 @@
+# A deliberately small, hand-verified citation registry for the experimental
+# article reader. Inline labels are authored rather than generated so the Hugo
+# build remains dependency-free; full metadata is kept here as the single source
+# used by the citation and references shortcodes.
+
+[mainali2024]
+label = "Mainali, da Silveira & Burak, 2024"
+authors = "Nischal Mainali, Rava Azeredo da Silveira, and Yoram Burak"
+year = 2024
+title = "Universal statistics of hippocampal place fields across species and dimensionalities"
+publication = "bioRxiv"
+identifier = "doi:10.1101/2024.06.11.597569"
+url = "https://doi.org/10.1101/2024.06.11.597569"
+
+[kanagawa2018]
+label = "Kanagawa et al., 2018"
+authors = "Motonobu Kanagawa, Philipp Hennig, Dino Sejdinovic, and Bharath K. Sriperumbudur"
+year = 2018
+title = "Gaussian Processes and Kernel Methods: A Review on Connections and Equivalences"
+publication = "arXiv"
+identifier = "arXiv:1807.02582"
+url = "https://arxiv.org/abs/1807.02582"
