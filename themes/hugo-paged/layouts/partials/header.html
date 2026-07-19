@@ -24,6 +24,7 @@
     {{ end }}
     <link rel="canonical" href="{{ .Permalink }}">
     <link rel="preload" href="{{ "vendor/fonts/linden-hill/LindenHill-Regular.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ "vendor/fonts/linden-hill/LindenHill-Italic.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
 
     {{ $autoImage := false }}
     {{ range (findRE "<img src=\"https?://[^\"]+" .Content 1) }}

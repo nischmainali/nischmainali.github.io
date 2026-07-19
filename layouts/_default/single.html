@@ -9,7 +9,8 @@
 {{- end -}}
 
 <a class="article-skip-link" href="#article-prose-start">Skip to article text</a>
-<article class="article-shell h-entry" aria-labelledby="article-title">
+<main class="article-shell" aria-labelledby="article-title">
+<article class="h-entry">
   <header class="article-meta article-header">
     <h1 class="title article-title p-name" id="article-title">{{ .Title | markdownify }}</h1>
     {{ with .Params.subtitle }}
@@ -18,7 +19,7 @@
     {{ partial "article-meta.html" . }}
   </header>
 
-  <main class="main article-body e-content" id="article-content">
+  <div class="main article-body e-content" id="article-content">
     {{ if $showToc }}
       {{ .Scratch.Set "has_toc" true }}
       <aside class="article-contents-rail" aria-label="Article contents">
@@ -56,8 +57,9 @@
     {{ partial "post_nav.html" . }}
     {{ partial "article-end.html" . }}
     {{ partial "main_extra.html" . }}
-  </main>
+  </div>
 </article>
+</main>
 
 {{ if .Page.Store.Get "articleHasFocusMedia" }}
 <dialog class="article-figure-focus" id="article-figure-focus" data-article-figure-dialog aria-label="Enlarged figure">

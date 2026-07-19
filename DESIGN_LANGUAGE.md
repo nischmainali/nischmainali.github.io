@@ -1,6 +1,6 @@
 # Design language and long-term visual working note
 
-- Last baseline study: 2026-07-16
+- Last baseline study: 2026-07-20
 - Baseline checkpoint: `7c9d201` (`main`)
 - Current accepted environmental direction: **Lokta Conservatory**
 - Design worktree: `experiment/lokta-conservatory`
@@ -214,9 +214,65 @@ Visual QA on 19 July 2026 covered 1440, 1180, 1024, and 390 px in shade, settled
 sunset, and during the mode change. A 3200 px immediate fling kept prose and
 mathematics painted in the worker tier. The page reported no horizontal
 overflow. The open contents fold cleared the theme control at phone width, and
-the 1180 px layout retained 2.1rem between rail and prose plus 2.6rem between
+the 1180 px layout retained 2.25rem between rail and prose plus 2.6rem between
 prose and marginal notes. A fresh source and browser matrix still needs Safari,
 Firefox, VoiceOver, and a midrange phone before promotion.
+
+#### Reference-calibrated finishing pass (20 July 2026)
+
+The finishing pass compared live Sunlit captures with the local renderer at the
+same desktop and phone sizes. Keep these values together. Small independent
+changes can return the sunset field to brown or make the shade field look split
+in two.
+
+- The live paper runs from `vec3(0.992, 0.976, 0.962)` near the window to
+  `vec3(0.962, 0.970, 0.948)` at the far edge. The CSS poster uses `#fdf9f5`
+  and `#f5f7f2` so its first frame meets the canvas without a cool flash.
+- Sunset uses the full `vec3(1.015, 0.758, 0.571)` multiplier. The extra red
+  restores Sunlit's apricot luminance. The paper and shadows carry the site's
+  green cast.
+- A linear veil replaces the delayed smooth ramp. One broad field shadow models
+  the overlap between Sunlit's blur bands, while a second periodic shadow keeps
+  the shutter rhythm legible near the right edge. The shadow colors sit near
+  neutral moss: `vec3(0.655, 0.660, 0.645)` in shade, with a small move toward
+  `vec3(0.425, 0.435, 0.395)` at sunset.
+- The canopy follows Sunlit's radial opacity envelope, correlated vertical
+  displacement, and 45 to 225 degree rotation range. Blur grows toward the left
+  from 8 to 38 px. Peepal outlines remain the local leaf vocabulary.
+- The niuro frond ends at roughly `(0.76, 0.47)`. Its pinnae use 6 to 10 px blur
+  and low gains, so the frond reads as a shadow signature near the edge. Falling
+  leaves retain Sunlit's count and timing with less opacity on phones.
+- Article route attenuation is `[0.74, 0.95]`; Documents uses `[0.84, 0.95]`;
+  Home remains `[1, 1]`. Do not brighten an article's reading measure by
+  weakening the whole environment.
+- The CSS poster hands off in 140 ms. The controls keep their 20 px visible
+  geometry and gain seven horizontal and three vertical pixels of invisible hit
+  area. The two crop-corner controls do not overlap.
+- A page with an opening initial preloads the 10 KB readable F2 face. Its fixed
+  square can show the letter at once; the 169 KB F1 ornament may arrive later
+  without moving the prose.
+- Reduced-motion preference leaves the clock running at 30 frames per second. It
+  lowers lateral leaf travel and fern sway to 32 percent. The pause control alone
+  freezes the scene.
+
+The local sunset keeps a small Nepal-specific green-gold bias. At 1440 px its
+clean right field measured about `rgb(218,174,133)`, compared with Sunlit near
+`rgb(217,169,129)`. The local shutter variation also remains softer. Nisch had
+already asked for warmer light with less depth and weaker dark shadows, so treat
+both differences as accepted constraints rather than missed calibration.
+
+The article finishing values are a 36rem prose measure, a 42rem breakout, an
+8.25rem contents rail, and a 2.25rem rail gap. Prose uses 1.055rem at 1.61 line
+height. At 1180 px the rail and title share the 134 px inset and prose begins at
+302 px. At 1179 px the rail becomes the in-flow disclosure without overlap.
+
+Final browser checks covered the opened and closed outline at 1180 and 1179 px,
+the mathematical section at 1024 px, and the complete opening at 390 px. Home,
+Documents, code, tables, equations, sidenotes, citations, shade, and sunset
+showed no page-level overflow or console errors. A 5030 px phone fling painted
+the destination content and fixed canvas in the first captured frame. Two
+captures 700 ms apart under reduced motion differed across the live surface,
+confirming that the environmental clock continued.
 
 ### 5. An unboxed portrait
 
@@ -346,11 +402,11 @@ KaTeX's metric-matched HTML stays in the document as a legacy fallback.
 Its governing choices are:
 
 - the title, subtitle, and floral mark remain in the wide editorial field while
-  prose uses a calmer 36.5 rem / 584 px measure. Its 1.04 rem Linden Hill body
-  and 1.07 rem opening paragraph are slightly more generous than the surrounding
+  prose uses a calmer 36rem / 576 px measure. Its 1.055rem Linden Hill body
+  and 1.08rem opening paragraph are slightly more generous than the surrounding
   site type; mathematics keeps its previous optical size rather than scaling up
   with the prose. Code and explicitly wide figures may make only a modest
-  42.5 rem / 680 px breakout; at rail widths these technical objects grow into
+  42rem / 672 px breakout; at rail widths these technical objects grow into
   the right gutter rather than centering back across the contents rail. Tables
   stay with the prose;
 - the opening begins one compact optical interval below the navigation rule.
@@ -370,7 +426,7 @@ Its governing choices are:
 - the title field ends in whitespace rather than a full-width divider. Section
   headings likewise rely on type and rhythm, not repeated horizontal rules;
 - at 1180 px and above, contents become a slim, article-local sticky rail in the
-  left margin. The rail is 8.15 rem wide with a 2.1 rem inner interval; its left
+  left margin. The rail is 8.25rem wide with a 2.25rem inner interval; its left
   edge lands exactly on the title's paper inset while the interval remains open
   beside wide code and figures. Reserved old-style section
   numbers, typographic indentation, and an active ancestor trail make hierarchy
@@ -715,8 +771,8 @@ collision. Timestamp cache-busters became deterministic source hashes; the
 primary reading face now precedes low-priority grain; shade defers sunset-only
 leaf construction; and the environmental, outline, and formula scripts batch
 or cache repeated work. Warm local reloads of the complete scratch specimen
-settled at 47–48 ms in the inspected browser. The narrower 36.5 rem prose measure
-and right-growing 42.5 rem technical measure leave a 2.1 rem interval between
+settled at 47–48 ms in the inspected browser. The narrower 36rem prose measure
+and right-growing 42rem technical measure leave a 2.25rem interval between
 contents and code while registering the rail exactly with the title. The exact
 1180/1179 transition, active section trace, shade and sunset, closed and open
 phone contents, and widths from 1440 through 390 px were checked without

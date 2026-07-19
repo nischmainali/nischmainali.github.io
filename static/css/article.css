@@ -10,13 +10,13 @@
    * breakpoint, leaving a real gutter rather than borrowing from prose. At
    * wide sizes the TOC text lands on the title inset while marginalia remains
    * free to pass beyond the right crop mark. */
-  --article-measure: 36.5rem;
-  --article-breakout: 42.5rem;
-  --article-rail-width: 8.15rem;
-  /* With the narrower prose measure, a 2.1 rem interval registers the rail's
+  --article-measure: 36rem;
+  --article-breakout: 42rem;
+  --article-rail-width: 8.25rem;
+  /* With the narrower prose measure, a 2.25 rem interval registers the rail's
    * left edge exactly with the title/crop inset and leaves the same quiet
    * interval between the outline and right-growing technical matter. */
-  --article-rail-gap: 2.1rem;
+  --article-rail-gap: 2.25rem;
   --article-note-width: clamp(13.25rem, calc(50vw - 23.25rem), 16.5rem);
   --article-marginal-gap: 2.6rem;
   --article-note-offset: calc(var(--article-note-width) + var(--article-marginal-gap));
@@ -178,13 +178,13 @@
   margin-left: auto;
   padding-top: 0;
   counter-reset: equation statement sidenote;
-  font-size: 1.04rem;
-  line-height: 1.62;
+  font-size: 1.055rem;
+  line-height: 1.61;
 }
 
 .single.blog .article-body > p:first-of-type {
-  font-size: 1.07rem;
-  line-height: 1.6;
+  font-size: 1.08rem;
+  line-height: 1.59;
 }
 
 /* A two-ink opening initial. The foreground letter remains real text; the
@@ -244,7 +244,7 @@
 }
 
 .single.blog .article-body p {
-  margin: 0.92em 0;
+  margin: 0.9em 0;
   text-wrap: pretty;
 }
 
@@ -1675,7 +1675,7 @@ html.article-figure-is-open {
 @media (min-width: 1180px) {
   /* The contents rail occupies the left gutter. Let the few deliberately wide
    * article objects spend the available right gutter instead of expanding back
-   * through that rail. Their full 42.5 rem measure still fits inside the
+   * through that rail. Their full 42rem measure still fits inside the
    * 992 px paper, while prose retains a clear registration gap to the outline. */
   .single.blog .article-body .highlight,
   .single.blog .article-figure--wide {
@@ -1711,7 +1711,7 @@ html.article-figure-is-open {
     display: block;
     padding: 0 2rem 0.38rem 0;
     cursor: default;
-    font-size: 0.71rem;
+    font-size: 0.72rem;
     line-height: 1.35;
     list-style: none;
   }
@@ -1789,7 +1789,7 @@ html.article-figure-is-open {
     display: block;
     color: var(--article-green);
     font-family: "Linden Hill", Palatino, serif;
-    font-size: 0.76rem;
+    font-size: 0.77rem;
     font-style: italic;
     line-height: 1.28;
   }
@@ -1811,7 +1811,7 @@ html.article-figure-is-open {
     margin: 0.16rem 0;
     padding: 0;
     font-family: "Linden Hill", Palatino, serif;
-    font-size: 0.79rem;
+    font-size: 0.8rem;
     line-height: 1.3;
     hyphens: none;
   }
@@ -1824,7 +1824,7 @@ html.article-figure-is-open {
   }
 
   .single.blog #TableOfContents ul ul li {
-    font-size: 0.73rem;
+    font-size: 0.74rem;
   }
 
   .single.blog #TableOfContents ul ul a {

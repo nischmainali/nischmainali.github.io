@@ -104,7 +104,11 @@
     if (target !== null) {
       contentsList.scrollTo({
         top: Math.max(0, target),
-        behavior: reducedMotionQuery.matches ? "auto" : "smooth"
+        // This is automatic tracking, not a user-requested journey. Immediate
+        // placement keeps the rail from starting a second animation during a
+        // fast article fling; deliberate TOC link clicks still use the page's
+        // ordinary anchor behavior.
+        behavior: "auto"
       });
     }
   }

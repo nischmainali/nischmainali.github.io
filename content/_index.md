@@ -8,14 +8,16 @@ title = 'Home'
 
 <h1 class="title">Nischal Mainali</h1>
 
-<h3>
-
+<div class="home-intro">
+<p>
 Hi, I'm Nisch, a PhD candidate in Neuroscience at the Burak lab in the Hebrew University of Jerusalem.
 I am interested in mathematical theories of cognition and understanding the representational properties of biological and artificial minds.
+</p>
 
+<p>
 Here is my <a href="/pdfs/cv.pdf">cv</a>.
-
-</h3>
+</p>
+</div>
 
 <figure class="profile-burn">
   <picture>

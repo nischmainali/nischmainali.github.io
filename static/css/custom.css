@@ -157,9 +157,14 @@
   font-weight: normal;
 }
 
-.home h3 {
+.home h3,
+.home .home-intro {
   font-weight: normal;
   max-width: calc(100% - 22rem);
+}
+
+.home .home-intro p {
+  margin: 1em 0;
 }
 
 .profile-burn {
@@ -203,13 +208,13 @@
   mask-image: radial-gradient(140% 118% at 50% 50%, #000 82%, rgba(0, 0, 0, 0.9) 88%, rgba(0, 0, 0, 0.35) 96%, transparent 100%);
 }
 
-body.dark .profile-image {
+body.sunset .profile-image {
   mix-blend-mode: normal;
   opacity: 0.93;
   filter: saturate(1.03) contrast(1.06) brightness(0.98) sepia(0.04);
 }
 
-body.dark .profile-burn::before {
+body.sunset .profile-burn::before {
   background:
     radial-gradient(90% 70% at 18% 12%, rgba(222, 174, 106, 0.15), rgba(222, 174, 106, 0) 68%),
     linear-gradient(142deg, rgba(164, 111, 60, 0.14) 0%, rgba(112, 78, 46, 0.08) 48%, rgba(17, 12, 8, 0.28) 100%);
@@ -318,8 +323,9 @@ body.dark .profile-burn::before {
   inset: auto;
 }
 
-@media screen and (max-width: 768px) {
-  .home h3 {
+@media screen and (max-width: 767px) {
+  .home h3,
+  .home .home-intro {
     max-width: 100%;
     margin-bottom: 1em;
   }
@@ -353,7 +359,8 @@ body.dark .profile-burn::before {
     font-size: 1.2em;
   }
 
-  .home h3 {
+  .home h3,
+  .home .home-intro {
     font-size: 1em;
     margin-bottom: 1em;
   }

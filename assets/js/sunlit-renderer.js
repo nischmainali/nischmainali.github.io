@@ -123,8 +123,11 @@
     '  float sunsetMix = u_mixes.w;',
     '  float reliefMix = u_extra.y;',
     '',
-    '  vec3 nearPaper = vec3(0.985, 0.982, 0.950);',
-    '  vec3 farPaper = vec3(0.959, 0.973, 0.938);',
+    '  // A warm window-side white turning almost imperceptibly toward lichen.',
+    '  // Keep the chroma below the threshold where the sheet reads as a green',
+    '  // gradient; the environmental identity should arrive through light.',
+    '  vec3 nearPaper = vec3(0.992, 0.976, 0.962);',
+    '  vec3 farPaper = vec3(0.962, 0.970, 0.948);',
     '  float paperGradient = smoothstep(-0.08, 1.08, uv.x * 0.82 + uv.y * 0.10);',
     '  vec3 paper = mix(nearPaper, farPaper, paperGradient);',
     '  float windowBloom = 1.0 - smoothstep(0.0, 0.95, length((uv - vec2(0.18, 0.90)) * vec2(0.72, 1.0)));',
@@ -158,7 +161,7 @@
     '  float phase = mod(shutter.y, period);',
     '  float signedStripe = abs(phase - stripeHeight * 0.5) - stripeHeight * 0.5;',
     '  float clarityRamp = smoothstep(0.10, 0.92, uv.x);',
-    '  float softness = mix(period * 1.58, 6.0, pow(clarityRamp, 0.88));',
+    '  float softness = mix(period * 1.58, 10.0, pow(clarityRamp, 0.88));',
     '  float stripe = 1.0 - smoothstep(-softness, softness, signedStripe);',
     '  float duty = stripeHeight / period;',
     '  stripe = mix(stripe, duty, smoothstep(period * 0.28, period * 0.92, softness));',
@@ -166,9 +169,16 @@
     '  float desktopVeil = (0.996 * uv.x + 0.087 * uv.y) / 1.083;',
     '  float mobileVeil = (0.966 * uv.x + 0.259 * uv.y) / 1.225;',
     '  float veilCoordinate = mix(desktopVeil, mobileVeil, mobile);',
-    '  float architectureReveal = smoothstep(mix(0.20, 0.45, mobile), 1.0, veilCoordinate);',
-    '  float shadowAlpha = mix(0.45, 0.34, slatMix) * architectureReveal * attenuation(uv);',
-    '  vec3 shadowShade = mix(vec3(0.725, 0.765, 0.706), vec3(0.408, 0.471, 0.400), sunsetMix * 0.18);',
+    '  float veilStart = mix(0.20, 0.45, mobile);',
+    '  float architectureReveal = clamp((veilCoordinate - veilStart) / (1.0 - veilStart), 0.0, 1.0);',
+    '  float mobileStrength = mix(1.0, mix(0.85, 0.68, slatMix), mobile);',
+    '  vec3 shadowShade = mix(vec3(0.655, 0.660, 0.645), vec3(0.425, 0.435, 0.395), sunsetMix * 0.22);',
+    '  // The broad directional blur in the reference overlaps into a quiet',
+    '  // field shadow. Model that wash separately so the right edge can deepen',
+    '  // without turning each shutter edge into a high-contrast stripe.',
+    '  float fieldShadowAlpha = mix(0.29, 0.08, slatMix) * architectureReveal * attenuation(uv) * mobileStrength;',
+    '  paper = mix(paper, shadowShade, fieldShadowAlpha);',
+    '  float shadowAlpha = mix(0.42, 0.50, slatMix) * architectureReveal * attenuation(uv) * mobileStrength;',
     '  paper = mix(paper, shadowShade, clamp(stripe * shadowAlpha, 0.0, 0.52));',
     '',
     '  // Sunlit keeps the 24px mullion outside the transformed shutter plane:',
@@ -212,7 +222,10 @@
     '    return;',
     '  }',
     '',
-    '  vec3 multiplier = mix(vec3(1.0), vec3(0.880, 0.730, 0.590), u_sunset * 0.86);',
+    '  // Sunlit\'s peach window light, biased only slightly toward green-gold.',
+    '  // Applying the endpoint directly preserves the reference luminance and',
+    '  // avoids the muddy mid-brown produced by a partially mixed multiplier.',
+    '  vec3 multiplier = mix(vec3(1.0), vec3(1.015, 0.758, 0.571), u_sunset);',
     '  float coral = 1.0 - smoothstep(0.0, 0.45, distance(v_uv, vec2(0.86, 0.85)));',
     '  multiplier *= mix(vec3(1.0), vec3(0.925, 0.835, 0.840), coral * u_sunset * 0.12);',
     '  out_color = vec4(multiplier, 1.0);',
@@ -229,6 +242,7 @@
     'uniform vec2 u_resolution;',
     'uniform float u_time;',
     'uniform float u_botanical;',
+    'uniform float u_motion;',
     'uniform vec2 u_route;',
     'out vec2 v_local;',
     'out float v_opacity;',
@@ -251,6 +265,11 @@
     '  float kind = a_instance1.z;',
     '  float phase = a_instance1.w;',
     '  float mobile = 1.0 - step(600.0, u_resolution.x);',
+    '  float desktopVeil = (0.996 * x + 0.087 * (1.0 - y)) / 1.083;',
+    '  float mobileVeil = (0.966 * x + 0.259 * (1.0 - y)) / 1.225;',
+    '  float veilCoordinate = mix(desktopVeil, mobileVeil, mobile);',
+    '  float veilStart = mix(0.20, 0.45, mobile);',
+    '  float botanicalReveal = clamp((veilCoordinate - veilStart) / (1.0 - veilStart), 0.0, 1.0);',
     '',
     '  if (kind > 0.5 && kind < 1.5) {',
     '    float duration = max(a_instance2.x, 0.25);',
@@ -271,23 +290,23 @@
     '      lateralPx = mix(50.0, 0.0, segment);',
     '      travelRotation = mix(-0.7853982, 3.1415927, segment);',
     '    }',
-    '    x += lateralPx / u_resolution.x;',
+    '    x += (lateralPx * u_motion) / u_resolution.x;',
     '    y += progress;',
-    '    rotation += travelRotation;',
+    '    rotation += travelRotation * u_motion;',
     '    size *= mix(1.0, 1.20, smoothstep(0.40, 1.0, progress));',
     '    float fadeIn = step(0.0, activeTime) * smoothstep(0.0, 0.20, progress);',
     '    float fadeOut = 1.0 - smoothstep(0.96, 1.0, progress);',
-    '    float travelShade = mix(0.20, 0.10, mobile);',
-    '    float travelSunset = mix(0.58, 0.30, mobile);',
+    '    float travelShade = mix(0.18, 0.08, mobile);',
+    '    float travelSunset = mix(0.50, 0.22, mobile);',
     '    opacity *= fadeIn * fadeOut * mix(travelShade, travelSunset, u_botanical);',
     '  } else if (kind > 1.5 && kind < 2.5) {',
-    '    rotation += sin(u_time * 0.29 + phase) * 0.018;',
-    '    opacity *= mix(mix(0.040, 0.025, mobile), mix(0.18, 0.09, mobile), u_botanical);',
+    '    rotation += sin(u_time * 0.29 + phase) * 0.018 * u_motion;',
+    '    opacity *= mix(mix(0.024, 0.014, mobile), mix(0.105, 0.040, mobile), u_botanical);',
     '  } else if (kind > 2.5) {',
-    '    rotation += sin(u_time * 0.22 + phase) * 0.007;',
-    '    opacity *= mix(mix(0.030, 0.018, mobile), mix(0.14, 0.07, mobile), u_botanical);',
+    '    rotation += sin(u_time * 0.22 + phase) * 0.007 * u_motion;',
+    '    opacity *= mix(mix(0.018, 0.010, mobile), mix(0.075, 0.032, mobile), u_botanical);',
     '  } else {',
-    '    opacity *= mix(0.0, mix(0.20, 0.075, mobile), u_botanical);',
+    '    opacity *= mix(0.0, mix(0.16, 0.040, mobile), u_botanical);',
     '  }',
     '',
     '  vec2 scale = vec2(size * 0.72, size);',
@@ -301,7 +320,7 @@
     '  vec2 clipOffset = vec2(localPx.x * 2.0 / u_resolution.x, -localPx.y * 2.0 / u_resolution.y);',
     '',
     '  v_local = a_corner;',
-    '  v_opacity = opacity * attenuation(x);',
+    '  v_opacity = opacity * botanicalReveal * attenuation(x);',
     '  v_blur = blurPx / max(size, 1.0);',
     '  v_kind = kind;',
     '  gl_Position = vec4(center + clipOffset, 0.0, 1.0);',
@@ -369,8 +388,8 @@
   }
 
   function routeValues(route) {
-    if (route === 'article') return [0.78, 0.96];
-    if (route === 'documents') return [0.86, 0.96];
+    if (route === 'article') return [0.74, 0.95];
+    if (route === 'documents') return [0.84, 0.95];
     return [1.0, 1.0];
   }
 
@@ -715,7 +734,7 @@
         'u_noise', 'u_paper', 'u_resolution', 'u_noise_offset', 'u_sunset', 'u_pass'
       ]);
     resources.botanicalUniforms = uniformMap(gl, botanicalProgram, [
-        'u_resolution', 'u_time', 'u_botanical', 'u_route'
+        'u_resolution', 'u_time', 'u_botanical', 'u_motion', 'u_route'
       ]);
 
     gl.disable(gl.DEPTH_TEST);
@@ -811,7 +830,7 @@
   };
 
   Renderer.prototype._synchronizeAmbientFreeze = function(nowMs, initializing) {
-    var shouldFreeze = this.paused || this.reducedMotion;
+    var shouldFreeze = this.paused;
     if (shouldFreeze && !this.ambientFrozen) {
       this.ambientFrozenMs = initializing && isFinite(Number(this.options.ambientTimeMs)) ?
         Math.max(0, Number(this.options.ambientTimeMs)) :
@@ -850,10 +869,16 @@
         0.40 - 350 / this.height;
       var x = centerX + (random() - 0.5) * 0.40;
       var y = centerY + (random() - 0.5) * 0.80;
+      var envelopeX = (x - centerX) / 0.20;
+      var envelopeY = (y - centerY) / 0.40;
+      var envelopeRadius = Math.sqrt(envelopeX * envelopeX + envelopeY * envelopeY) / Math.SQRT2;
+      var canopyOpacity = Math.max(0, 0.90 - 1.10 * envelopeRadius);
+      y += 0.40 * (x - centerX) * this.width / this.height;
       var canopySize = 40 + random() * 30;
+      var canopyBlur = 8 + Math.pow(1 - clamp(x, 0, 1), 1.2) * 30;
       push(
-        x, y, canopySize, (random() - 0.5) * 1.4,
-        0.48 + random() * 0.42, 8.0 + random() * 4.0,
+        x, y, canopySize, 0.7853982 + random() * Math.PI,
+        canopyOpacity, canopyBlur,
         0, random() * Math.PI * 2
       );
     }
@@ -891,13 +916,13 @@
           push(
             point.x + normalX * offset, point.y + normalY * offset,
             pinnaLength, tangentAngle + Math.PI * 0.54,
-            opacity, 2.2 + (1 - envelope) * 2.0,
+            opacity, 6.0 + (1 - envelope) * 4.0,
             2, phaseOffset + t * 3.0
           );
           push(
             point.x - normalX * offset, point.y - normalY * offset,
             pinnaLength * 0.92, tangentAngle - Math.PI * 0.54,
-            opacity * 0.94, 2.4 + (1 - envelope) * 2.2,
+            opacity * 0.94, 6.4 + (1 - envelope) * 4.2,
             2, phaseOffset + 1.4 + t * 3.0
           );
         }
@@ -911,7 +936,7 @@
             (point.y + previous.y) * 0.5,
             segmentLength,
             Math.atan2(dy, dx),
-            opacity * 0.88, 1.4,
+            opacity * 0.88, 4.0,
             3, phaseOffset + t * 2.0
           );
         }
@@ -922,16 +947,16 @@
     addFrond([
       { x: 1.16, y: -0.18 },
       { x: 1.07, y: 0.01 },
-      { x: 0.91, y: 0.31 },
-      { x: 0.70, y: 0.53 }
+      { x: 0.94, y: 0.28 },
+      { x: 0.76, y: 0.47 }
     ], mobile ? 18 : 23, mobile ? 0.066 : 0.074, 0.58, 0.3);
 
     if (!mobile) {
       addFrond([
         { x: 1.20, y: -0.04 },
         { x: 1.09, y: 0.10 },
-        { x: 0.99, y: 0.28 },
-        { x: 0.86, y: 0.45 }
+        { x: 1.00, y: 0.26 },
+        { x: 0.89, y: 0.40 }
       ], 16, 0.052, 0.32, 2.2);
     }
 
@@ -1142,6 +1167,7 @@
     gl.uniform2f(uniforms.u_resolution, this.width, this.height);
     gl.uniform1f(uniforms.u_time, ambientSeconds);
     gl.uniform1f(uniforms.u_botanical, channels[4]);
+    gl.uniform1f(uniforms.u_motion, this.reducedMotion ? 0.32 : 1.0);
     gl.uniform2f(uniforms.u_route, route[0], route[1]);
     gl.drawArraysInstanced(gl.TRIANGLES, 0, 6, this.botanicalCount);
     gl.disable(gl.BLEND);
@@ -1214,7 +1240,7 @@
   };
 
   Renderer.prototype._needsContinuousFrames = function() {
-    return Boolean(this.transition || this.routeTransition || (!this.paused && !this.reducedMotion));
+    return Boolean(this.transition || this.routeTransition || !this.paused);
   };
 
   Renderer.prototype._requestFrame = function() {
@@ -1249,7 +1275,10 @@
     if (!this.active || !this.visible || this.disposed || this.contextLost) return;
     var nowMs = this._now();
     var changingMode = Boolean(this.transition || this.routeTransition);
-    var interval = changingMode ? this.transitionFrameIntervalMs : this.ambientFrameIntervalMs;
+    var ambientInterval = this.reducedMotion ?
+      Math.max(this.ambientFrameIntervalMs, 1000 / 30) :
+      this.ambientFrameIntervalMs;
+    var interval = changingMode ? this.transitionFrameIntervalMs : ambientInterval;
     if (!this.lastRenderedAtMs || nowMs - this.lastRenderedAtMs >= interval - 2) {
       this.renderFrame(nowMs);
     }

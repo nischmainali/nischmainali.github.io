@@ -15,7 +15,6 @@
   var PAUSED_KEY = 'sunlit-atmosphere-paused';
   var AMBIENT_OFFSET_KEY = 'sunlit-ambient-offset';
   var AMBIENT_TIME_KEY = 'sunlit-ambient-time';
-  var REDUCED_TIME_KEY = 'sunlit-reduced-time';
 
   var scene = document.getElementById('sunlit-scene');
   var canvas = document.getElementById('sunlit-canvas');
@@ -132,12 +131,6 @@
   if (manualPaused && !isFinite(ambientTimeMs)) {
     ambientTimeMs = Math.max(0, now - epochMs - ambientOffsetMs);
     storageSet(sessionStorage, AMBIENT_TIME_KEY, ambientTimeMs);
-  } else if (reducedMotion && !manualPaused) {
-    ambientTimeMs = finiteNumber(storageGet(sessionStorage, REDUCED_TIME_KEY), NaN);
-    if (!isFinite(ambientTimeMs)) {
-      ambientTimeMs = Math.max(0, now - epochMs - ambientOffsetMs);
-      storageSet(sessionStorage, REDUCED_TIME_KEY, ambientTimeMs);
-    }
   }
 
   function activeTransition() {
@@ -170,14 +163,12 @@
 
   function updateAtmosphereControl() {
     if (!atmosphereButton) return;
-    var effectivelyPaused = manualPaused || reducedMotion;
-    atmosphereButton.setAttribute('aria-pressed', String(effectivelyPaused));
-    atmosphereButton.disabled = reducedMotion;
-    if (reducedMotion) {
-      atmosphereButton.setAttribute('aria-label', 'Atmosphere is still because reduced motion is active');
-    } else {
-      atmosphereButton.setAttribute('aria-label', manualPaused ? 'Resume atmosphere' : 'Pause atmosphere');
-    }
+    atmosphereButton.setAttribute('aria-pressed', String(manualPaused));
+    atmosphereButton.disabled = false;
+    atmosphereButton.setAttribute(
+      'aria-label',
+      manualPaused ? 'Resume atmosphere' : (reducedMotion ? 'Pause gentle atmosphere' : 'Pause atmosphere')
+    );
   }
 
   function reveal(detail) {
@@ -510,10 +501,6 @@
 
   function motionPreferenceChanged(event) {
     reducedMotion = Boolean(event.matches);
-    if (reducedMotion && !manualPaused) {
-      ambientTimeMs = Math.max(0, Date.now() - epochMs - ambientOffsetMs);
-      storageSet(sessionStorage, REDUCED_TIME_KEY, ambientTimeMs);
-    }
     updateAtmosphereControl();
     sendReduced(reducedMotion, Date.now());
     queryState().then(persistClock);

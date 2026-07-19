@@ -36,7 +36,7 @@
   src: url("../vendor/fonts/eb-garamond-initials/EBGaramond-InitialsF2-LatinCaps.woff2") format("woff2");
   font-style: normal;
   font-weight: 400;
-  font-display: block;
+  font-display: swap;
   unicode-range: U+0041-005A;
 }
 
