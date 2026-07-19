@@ -77,7 +77,16 @@
     return heading ? { link: link, heading: heading } : null;
   }).filter(Boolean);
   var currentTocLink = null;
+  var currentTocBranches = [];
+  var tocPathCache = typeof WeakMap === "function" ? new WeakMap() : null;
   var tocFrame = 0;
+  var tocGeometryDirty = true;
+  var tocArticle = document.querySelector(".article-body");
+  var tocArticleTop = 0;
+  var tocArticleEnd = 0;
+  var tocPageHeight = 0;
+  var tocHeadingPositions = [];
+  var readingProgressValue = null;
 
   function keepCurrentTocLinkVisible(link) {
     if (!link || !contentsList || !railQuery.matches) return;
@@ -123,6 +132,7 @@
   }
 
   function tocPath(link) {
+    if (tocPathCache && tocPathCache.has(link)) return tocPathCache.get(link);
     var labels = [];
     var item = link && link.parentElement;
 
@@ -135,32 +145,33 @@
         : null;
     }
 
-    return labels.slice(-2).join(" / ");
+    var path = labels.slice(-2).join(" / ");
+    if (tocPathCache) tocPathCache.set(link, path);
+    return path;
   }
 
   function setCurrentTocLink(link) {
     if (link === currentTocLink) return;
-    if (toc) {
-      toc.querySelectorAll("li.is-current-branch").forEach(function (item) {
-        item.classList.remove("is-current-branch");
-      });
-    }
-    tocLinks.forEach(function (candidate) {
-      var active = candidate === link;
-      candidate.classList.toggle("is-current", active);
-      if (active) {
-        candidate.setAttribute("aria-current", "location");
-      } else {
-        candidate.removeAttribute("aria-current");
-      }
+    currentTocBranches.forEach(function (branch) {
+      branch.classList.remove("is-current-branch");
     });
+    currentTocBranches = [];
+    if (currentTocLink) {
+      currentTocLink.classList.remove("is-current");
+      currentTocLink.removeAttribute("aria-current");
+    }
     var item = link && link.parentElement;
     while (item && item.tagName === "LI") {
       item.classList.add("is-current-branch");
+      currentTocBranches.push(item);
       var list = item.parentElement;
       item = list && list.parentElement && list.parentElement.tagName === "LI"
         ? list.parentElement
         : null;
+    }
+    if (link) {
+      link.classList.add("is-current");
+      link.setAttribute("aria-current", "location");
     }
     currentTocLink = link;
     if (currentSectionTrace) {
@@ -170,32 +181,62 @@
   }
 
   function updateReadingProgress(readingLine) {
-    if (!readingProgress) return;
-    var article = document.querySelector(".article-body");
-    if (!article) return;
-    var articleTop = article.getBoundingClientRect().top + window.scrollY;
-    var articleEnd = articleTop + article.offsetHeight;
-    var distance = Math.max(1, articleEnd - articleTop - window.innerHeight * 0.38);
-    var value = (window.scrollY + readingLine - articleTop) / distance;
+    if (!readingProgress || !tocArticle) return;
+    var distance = Math.max(1, tocArticleEnd - tocArticleTop - window.innerHeight * 0.38);
+    var value = (window.scrollY + readingLine - tocArticleTop) / distance;
     value = Math.max(0, Math.min(1, value));
-    readingProgress.style.transform = "scaleX(" + value.toFixed(4) + ")";
+    value = value.toFixed(4);
+    if (value === readingProgressValue) return;
+    readingProgressValue = value;
+    readingProgress.style.transform = "scaleX(" + value + ")";
+  }
+
+  function refreshTocGeometry() {
+    tocGeometryDirty = false;
+    if (!tocArticle) return;
+
+    var scrollY = window.scrollY;
+    tocArticleTop = tocArticle.getBoundingClientRect().top + scrollY;
+    tocArticleEnd = tocArticleTop + tocArticle.offsetHeight;
+    tocPageHeight = document.documentElement.scrollHeight;
+    tocHeadingPositions = tocSections.map(function (section) {
+      return section.heading.getBoundingClientRect().top + scrollY;
+    });
+  }
+
+  function invalidateTocGeometry() {
+    tocGeometryDirty = true;
+    scheduleCurrentSection();
+  }
+
+  function currentTocSection(readingPosition) {
+    var lower = 0;
+    var upper = tocHeadingPositions.length - 1;
+    var current = -1;
+
+    while (lower <= upper) {
+      var middle = Math.floor((lower + upper) / 2);
+      if (tocHeadingPositions[middle] <= readingPosition) {
+        current = middle;
+        lower = middle + 1;
+      } else {
+        upper = middle - 1;
+      }
+    }
+
+    return current === -1 ? null : tocSections[current];
   }
 
   function updateCurrentSection() {
     tocFrame = 0;
     if (!tocSections.length) return;
+    if (tocGeometryDirty) refreshTocGeometry();
 
     var readingLine = Math.min(window.innerHeight * 0.28, 220);
     updateReadingProgress(readingLine);
-    var current = null;
-    tocSections.forEach(function (section) {
-      if (section.heading.getBoundingClientRect().top <= readingLine) {
-        current = section;
-      }
-    });
+    var current = currentTocSection(window.scrollY + readingLine);
 
-    var page = document.documentElement;
-    if (window.scrollY + window.innerHeight >= page.scrollHeight - 4) {
+    if (window.scrollY + window.innerHeight >= tocPageHeight - 4) {
       current = tocSections[tocSections.length - 1];
     }
     setCurrentTocLink(current ? current.link : null);
@@ -209,8 +250,22 @@
   if (tocSections.length) {
     updateCurrentSection();
     window.addEventListener("scroll", scheduleCurrentSection, { passive: true });
-    window.addEventListener("resize", scheduleCurrentSection);
+    window.addEventListener("resize", invalidateTocGeometry);
     window.addEventListener("hashchange", scheduleCurrentSection);
+    window.addEventListener("load", invalidateTocGeometry);
+    document.addEventListener("load", function (event) {
+      if (event.target.tagName === "IMG" && tocArticle && tocArticle.contains(event.target)) {
+        invalidateTocGeometry();
+      }
+    }, true);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(invalidateTocGeometry);
+    }
+    if (typeof window.ResizeObserver === "function" && tocArticle) {
+      var tocObserver = new ResizeObserver(invalidateTocGeometry);
+      tocObserver.observe(tocArticle);
+    }
+    invalidateTocGeometry();
   }
 
   function fallbackCopy(text) {
@@ -510,39 +565,82 @@
     return tex ? "Scrollable mathematical formula: " + tex : "Scrollable mathematical formula";
   }
 
+  function mathOverflowState(scroller) {
+    if (!scroller._articleMathOverflow) {
+      scroller._articleMathOverflow = {
+        frame: 0,
+        label: null,
+        scrollable: null,
+        canScrollLeft: null,
+        canScrollRight: null
+      };
+    }
+    return scroller._articleMathOverflow;
+  }
+
+  function toggleMathClass(scroller, name, active) {
+    if (scroller.classList.contains(name) !== active) scroller.classList.toggle(name, active);
+  }
+
   function updateMathOverflow(scroller) {
+    var state = mathOverflowState(scroller);
     var maxScroll = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
     var scrollable = maxScroll > 1;
     var canScrollLeft = scrollable && scroller.scrollLeft > 1;
     var canScrollRight = scrollable && scroller.scrollLeft < maxScroll - 1;
 
-    scroller.classList.toggle("is-scrollable", scrollable);
-    scroller.classList.toggle("can-scroll-left", canScrollLeft);
-    scroller.classList.toggle("can-scroll-right", canScrollRight);
+    if (state.scrollable !== scrollable) {
+      toggleMathClass(scroller, "is-scrollable", scrollable);
+      state.scrollable = scrollable;
+    }
+    if (state.canScrollLeft !== canScrollLeft) {
+      toggleMathClass(scroller, "can-scroll-left", canScrollLeft);
+      state.canScrollLeft = canScrollLeft;
+    }
+    if (state.canScrollRight !== canScrollRight) {
+      toggleMathClass(scroller, "can-scroll-right", canScrollRight);
+      state.canScrollRight = canScrollRight;
+    }
 
     if (scrollable) {
       if (!scroller.hasAttribute("tabindex")) {
         scroller.setAttribute("tabindex", "0");
         scroller.dataset.mathTabManaged = "true";
       }
-      scroller.setAttribute("role", "region");
-      scroller.setAttribute("aria-label", formulaLabel(scroller));
+      if (scroller.getAttribute("role") !== "region") scroller.setAttribute("role", "region");
+      if (!state.label) state.label = formulaLabel(scroller);
+      if (scroller.getAttribute("aria-label") !== state.label) {
+        scroller.setAttribute("aria-label", state.label);
+      }
     } else {
       if (scroller.dataset.mathTabManaged === "true") {
         scroller.removeAttribute("tabindex");
         delete scroller.dataset.mathTabManaged;
       }
-      scroller.removeAttribute("role");
-      scroller.removeAttribute("aria-label");
+      if (scroller.hasAttribute("role")) scroller.removeAttribute("role");
+      if (scroller.hasAttribute("aria-label")) scroller.removeAttribute("aria-label");
       if (scroller.scrollLeft !== 0) scroller.scrollLeft = 0;
     }
+  }
+
+  function scheduleMathOverflow(scroller) {
+    var state = mathOverflowState(scroller);
+    if (state.frame) return;
+    state.frame = window.requestAnimationFrame(function () {
+      state.frame = 0;
+      updateMathOverflow(scroller);
+    });
+  }
+
+  function scheduleAllMathOverflow() {
+    mathScrolls.forEach(scheduleMathOverflow);
   }
 
   if (mathScrolls.length) {
     mathScrolls.forEach(function (scroller) {
       updateMathOverflow(scroller);
       scroller.addEventListener("scroll", function () {
-        updateMathOverflow(scroller);
+        scheduleMathOverflow(scroller);
       }, { passive: true });
       scroller.addEventListener("keydown", function (event) {
         var maxScroll = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
@@ -564,24 +662,20 @@
     if (typeof window.ResizeObserver === "function") {
       var mathObserver = new ResizeObserver(function (entries) {
         entries.forEach(function (entry) {
-          updateMathOverflow(entry.target);
+          scheduleMathOverflow(entry.target);
         });
       });
       mathScrolls.forEach(function (scroller) {
         mathObserver.observe(scroller);
       });
     } else {
-      window.addEventListener("resize", function () {
-        mathScrolls.forEach(updateMathOverflow);
-      });
+      window.addEventListener("resize", scheduleAllMathOverflow);
     }
 
-    window.addEventListener("load", function () {
-      mathScrolls.forEach(updateMathOverflow);
-    });
+    window.addEventListener("load", scheduleAllMathOverflow);
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(function () {
-        mathScrolls.forEach(updateMathOverflow);
+        scheduleAllMathOverflow();
       });
     }
   }

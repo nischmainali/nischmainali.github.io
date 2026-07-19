@@ -145,6 +145,15 @@ scene. Do not add a page-loading veil over the background. A deliberate press of
 the sun/moon control should still produce the full atmospheric transition:
 content pages change; the light does not.
 
+Performance work follows the same rule: make the living page arrive sooner,
+not visually poorer. Local CSS and JavaScript use deterministic content versions
+so repeat visits can retain them safely. Linden Hill prose receives first-font
+priority while the decorative grain is fetched at low priority. Shade does not
+construct sunset-only falling leaves until they are needed; shutter and article
+geometry are batched and reused rather than repeatedly measured. Do not trade
+away the grain, progressive blur, motion continuity, or mathematical fidelity
+for a synthetic loading state.
+
 ### 5. An unboxed portrait
 
 On the home page the portrait occupies the right side of the introductory area.
@@ -273,11 +282,13 @@ KaTeX's metric-matched HTML stays in the document as a legacy fallback.
 Its governing choices are:
 
 - the title, subtitle, and floral mark remain in the wide editorial field while
-  prose uses a calmer 38.5 rem / 616 px measure. Its 1.04 rem Linden Hill body
+  prose uses a calmer 36.5 rem / 584 px measure. Its 1.04 rem Linden Hill body
   and 1.07 rem opening paragraph are slightly more generous than the surrounding
   site type; mathematics keeps its previous optical size rather than scaling up
   with the prose. Code and explicitly wide figures may make only a modest
-  44 rem / 704 px breakout; tables stay with the prose;
+  42.5 rem / 680 px breakout; at rail widths these technical objects grow into
+  the right gutter rather than centering back across the contents rail. Tables
+  stay with the prose;
 - the opening begins one compact optical interval below the navigation rule.
   Title, subtitle, and date form a close descending stack; the floral mark is a
   restrained watermark tucked above and left of the title, never an icon, badge,
@@ -295,9 +306,9 @@ Its governing choices are:
 - the title field ends in whitespace rather than a full-width divider. Section
   headings likewise rely on type and rhythm, not repeated horizontal rules;
 - at 1180 px and above, contents become a slim, article-local sticky rail in the
-  left margin. The rail is 8.15 rem wide with a 1.05 rem inner interval; its
-  label lands on the title's paper inset while the wider outline reaches toward
-  the prose instead of floating in dead space. Reserved old-style section
+  left margin. The rail is 8.15 rem wide with a 2.1 rem inner interval; its left
+  edge lands exactly on the title's paper inset while the interval remains open
+  beside wide code and figures. Reserved old-style section
   numbers, typographic indentation, and an active ancestor trail make hierarchy
   legible at a glance. A wine reading-progress rule and the current H2/H3 path
   remain fixed above the independently scrolling outline, which quietly keeps
@@ -530,6 +541,9 @@ The site is intentionally small:
   `MATHEMATICS.md` — strict source/build validation and the authoring contract
   shared with future agents;
 - `layouts/partials/sunlit.html` — the fixed environmental layer and theme control;
+- `layouts/partials/static-asset-url.html` — deterministic source-byte versions
+  for locally served CSS and JavaScript, paired with production browser-cache
+  headers rather than rebuild-time timestamps;
 - `themes/hugo-paged/layouts/partials/header.html` — pre-paint theme state and the
   session-wide environmental motion epoch;
 - `themes/hugo-paged/` — a vendored and locally modified base theme;
@@ -629,17 +643,43 @@ the rail keeps deep active entries visible. The epigraph now carries unequal
 paired marks at wide and phone measures. Browser consoles remained clean, and
 strict production, draft, syntax, and content checks passed.
 
+A third 2026-07-17 pass addressed mathematical-page arrival and the last rail
+collision. Timestamp cache-busters became deterministic source hashes; the
+primary reading face now precedes low-priority grain; shade defers sunset-only
+leaf construction; and the environmental, outline, and formula scripts batch
+or cache repeated work. Warm local reloads of the complete scratch specimen
+settled at 47–48 ms in the inspected browser. The narrower 36.5 rem prose measure
+and right-growing 42.5 rem technical measure leave a 2.1 rem interval between
+contents and code while registering the rail exactly with the title. The exact
+1180/1179 transition, active section trace, shade and sunset, closed and open
+phone contents, and widths from 1440 through 390 px were checked without
+horizontal overflow or console warnings.
+
+On 2026-07-19 the environmental renderer was given a strict paint-budget pass
+after fast scrolling exposed compositor checkerboarding on the dense maths
+specimen. The appearance remains a Lokta sheet under shutter light and Nepali
+foliage, but the implementation now has one fixed scene rather than a tree of
+fixed descendants; one masked shutter plane rather than roughly twenty blurred
+slats; and a static directional veil rather than eight full-viewport live
+backdrop filters. Grain is fixed to the paper while fern and peepal motion stay
+alive, pausing briefly during an active fling without restarting. Opened posts
+place the environmental and reading sheets on explicit sibling paint planes,
+and the first article image begins fetching eagerly at normal priority. Treat
+this as a design invariant: depth must be suggested by silhouette, light, and
+surface character before adding a live full-viewport filter or another fixed
+compositor layer.
+
 ## Known rough edges: observe before fixing
 
 These are implementation findings, not permission for a future agent to launch
 a cleanup pass. Fix them only when in scope, and preserve the visual language
 while doing so.
 
-- The atmospheric background uses large fixed layers, progressive backdrop
-  filters, one inline SVG fern, eight falling leaf elements on desktop (five on
-  mobile), and continuous animation. This is substantially lighter than the
-  earlier 330-leaf reconstruction, but performance on low-power devices has not
-  been profiled and it intentionally does not reduce motion.
+- The atmospheric background retains one inline SVG fern and, in sunset, eight
+  falling leaves on desktop (five on mobile). Leaves are not constructed in
+  shade and are removed after the sunset-to-shade fade. Low-power devices have
+  not been profiled; do not restore per-slat filters, moving grain, or live
+  viewport backdrop-filter stacks without fresh evidence and scroll QA.
 - Several hidden draft/example pages and the old theme `about`/`docs` material
   remain in `content/`. They are useful test fixtures but should not be mistaken
   for authored public content.

@@ -2,6 +2,11 @@
 (function() {
   var STORAGE_KEY = 'sunlit-theme';
   var SVG_NS = 'http://www.w3.org/2000/svg';
+  var renderedLeafLayout = null;
+  var appliedState = null;
+  var scrollActive = false;
+  var scrollResumeTimer = 0;
+  var leafCleanupTimer = 0;
 
   function normalizeState(value) {
     return value === 'sunset' || value === 'dark' ? 'sunset' : 'shade';
@@ -58,40 +63,14 @@
     return leaf;
   }
 
-  function layoutShutters(isSunset) {
-    var shutters = document.querySelector('.sunlit-shutters');
-    if (!shutters) return;
-
-    var count = Math.ceil(window.innerHeight / 36);
-    var height = window.innerWidth < 600 ? 42 : 56;
-    var gap = window.innerWidth < 600 ? 16 : 8;
-    var spacing = height + gap;
-
-    if (shutters.children.length !== count) {
-      shutters.replaceChildren();
-      for (var index = 0; index < count; index += 1) {
-        var shutter = document.createElement('div');
-        shutter.className = 'sunlit-shutter';
-        shutters.appendChild(shutter);
-      }
-    }
-
-    Array.prototype.forEach.call(shutters.children, function(shutter, index) {
-      shutter.style.top = (index * spacing * (isSunset ? 1.15 : 1) - 300) + 'px';
-      shutter.style.left = '-' + (window.innerWidth * 0.01 * index) + 'px';
-      shutter.style.height = (isSunset ? 20 : height) + 'px';
-    });
-  }
-
   function renderFallingLeaves() {
     var fallingLayer = document.querySelector('.sunlit-falling-leaves');
     if (!fallingLayer) return;
 
-    fallingLayer.replaceChildren();
-
     var isMobile = window.innerWidth < 600;
     var count = isMobile ? 5 : 8;
     var random = seededRandom(isMobile ? 0x4e495552 : 0x4c4f4b54);
+    var fragment = document.createDocumentFragment();
 
     for (var index = 0; index < count; index += 1) {
       var wrapper = document.createElement('div');
@@ -111,27 +90,69 @@
       wrapper.style.setProperty('--leaf-drift-c', (direction * drift * 0.34) + 'px');
       wrapper.style.setProperty('--leaf-spin', (direction * (190 + random() * 250)) + 'deg');
       wrapper.appendChild(createPeepalLeaf());
-      fallingLayer.appendChild(wrapper);
+      fragment.appendChild(wrapper);
     }
+
+    fallingLayer.replaceChildren(fragment);
+    renderedLeafLayout = isMobile ? 'mobile' : 'desktop';
+  }
+
+  function ensureFallingLeaves(layout) {
+    if (renderedLeafLayout !== layout) renderFallingLeaves();
+  }
+
+  function clearFallingLeavesAfterFade() {
+    var fallingLayer = document.querySelector('.sunlit-falling-leaves');
+    window.clearTimeout(leafCleanupTimer);
+    leafCleanupTimer = 0;
+    if (!fallingLayer || !fallingLayer.children.length) return;
+    leafCleanupTimer = window.setTimeout(function() {
+      if (document.body.classList.contains('sunset')) return;
+      fallingLayer.replaceChildren();
+      renderedLeafLayout = null;
+      leafCleanupTimer = 0;
+    }, 2200);
   }
 
   function updateToggle(state) {
     var button = document.getElementById('theme-toggle');
     if (!button) return;
     var isSunset = state === 'sunset';
-    button.setAttribute('aria-label', isSunset ? 'Switch to daylight' : 'Switch to sunset');
-    button.setAttribute('aria-pressed', String(isSunset));
+    var label = isSunset ? 'Switch to daylight' : 'Switch to sunset';
+    var pressed = String(isSunset);
+    if (button.getAttribute('aria-label') !== label) button.setAttribute('aria-label', label);
+    if (button.getAttribute('aria-pressed') !== pressed) button.setAttribute('aria-pressed', pressed);
   }
 
-  function applyState(state, persist) {
+  function applyState(state, persist, leafLayout) {
     var isSunset = state === 'sunset';
     var scene = document.getElementById('sunlit-scene');
-    document.body.classList.toggle('sunset', isSunset);
-    document.body.setAttribute('data-theme', state);
-    if (scene) scene.classList.toggle('is-sunset', isSunset);
-    layoutShutters(isSunset);
-    updateToggle(state);
+    var stateChanged = appliedState !== state;
+
+    if (stateChanged) {
+      document.body.classList.toggle('sunset', isSunset);
+      if (document.body.getAttribute('data-theme') !== state) {
+        document.body.setAttribute('data-theme', state);
+      }
+      if (scene) scene.classList.toggle('is-sunset', isSunset);
+      updateToggle(state);
+      appliedState = state;
+    }
+    window.clearTimeout(leafCleanupTimer);
+    leafCleanupTimer = 0;
+    if (isSunset) {
+      ensureFallingLeaves(leafLayout);
+    } else {
+      clearFallingLeavesAfterFade();
+    }
     if (persist) storeState(state);
+  }
+
+  function syncAnimationPlayback(scene) {
+    if (!scene) return;
+    // CSS animation-play-state preserves phase and leaves the shade/sunset
+    // transitions alone. This also works in browsers without Element#getAnimations.
+    scene.classList.toggle('is-motion-paused', document.hidden || scrollActive);
   }
 
   function init() {
@@ -141,14 +162,22 @@
     var resizeTimer = null;
     var leafLayout = window.innerWidth < 600 ? 'mobile' : 'desktop';
 
+    function finishScroll() {
+      window.clearTimeout(scrollResumeTimer);
+      scrollResumeTimer = 0;
+      if (!scrollActive) return;
+      scrollActive = false;
+      syncAnimationPlayback(scene);
+    }
+
     if (!scene) return;
-    renderFallingLeaves();
-    applyState(state, false);
+    applyState(state, false, leafLayout);
+    syncAnimationPlayback(scene);
 
     if (button) {
       button.addEventListener('click', function() {
         state = document.body.classList.contains('sunset') ? 'shade' : 'sunset';
-        applyState(state, true);
+        applyState(state, true, leafLayout);
       });
     }
 
@@ -158,10 +187,26 @@
         var nextLeafLayout = window.innerWidth < 600 ? 'mobile' : 'desktop';
         if (nextLeafLayout !== leafLayout) {
           leafLayout = nextLeafLayout;
-          renderFallingLeaves();
         }
-        applyState(document.body.classList.contains('sunset') ? 'sunset' : 'shade', false);
+        applyState(document.body.classList.contains('sunset') ? 'sunset' : 'shade', false, leafLayout);
       }, 120);
+    });
+
+    window.addEventListener('scroll', function() {
+      if (!scrollActive) {
+        scrollActive = true;
+        syncAnimationPlayback(scene);
+      }
+      window.clearTimeout(scrollResumeTimer);
+      /* Keep the slow atmosphere still long enough for dense article tiles to
+       * finish rastering after a fling. Against 19–24 s botanical cycles this
+       * pause is imperceptible, while a 220 ms resume could steal the very next
+       * paint slot on mathematical pages. */
+      scrollResumeTimer = window.setTimeout(finishScroll, 800);
+    }, { passive: true });
+
+    document.addEventListener('visibilitychange', function() {
+      syncAnimationPlayback(scene);
     });
   }
 

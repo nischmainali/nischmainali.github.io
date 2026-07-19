@@ -23,7 +23,8 @@
     <meta property="og:description" content="{{- . -}}">
     {{ end }}
     <link rel="canonical" href="{{ .Permalink }}">
-    <link rel="preload" href="{{ "textures/gaussian-noise.png" | relURL }}" as="image" type="image/png">
+    <link rel="preload" href="{{ "vendor/fonts/linden-hill/LindenHill-Regular.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ "textures/gaussian-noise.png" | relURL }}" as="image" type="image/png" fetchpriority="low">
 
     {{ $autoImage := false }}
     {{ range (findRE "<img src=\"https?://[^\"]+" .Content 1) }}
@@ -44,9 +45,8 @@
     <link href="{{ .RelPermalink }}" rel="alternate" type="application/rss+xml" title="{{ $.Site.Title }}">
     {{ end }}
 
-    {{ $assetVersion := now.Unix }}
     {{ range (slice "style" "fonts" "custom" "sunlit") }}
-    <link rel="stylesheet" href="{{ printf "%s?v=%d" (printf "css/%s.css" . | relURL) $assetVersion }}">
+    <link rel="stylesheet" href="{{ partial "static-asset-url.html" (printf "css/%s.css" .) }}">
     {{ end }}
     {{ partial "head_custom.html" . }}
   </head>

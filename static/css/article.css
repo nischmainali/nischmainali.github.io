@@ -6,12 +6,17 @@
 
 .single.blog {
   /* The centered measure and left rail resolve against the theme's 992 px
-   * paper. At wide sizes the TOC text lands on the same 40 px inset as the
-   * title, while marginalia is free to pass beyond the right crop mark. */
-  --article-measure: 38.5rem;
-  --article-breakout: 44rem;
+   * paper. Their combined geometry remains inside the paper at the rail
+   * breakpoint, leaving a real gutter rather than borrowing from prose. At
+   * wide sizes the TOC text lands on the title inset while marginalia remains
+   * free to pass beyond the right crop mark. */
+  --article-measure: 36.5rem;
+  --article-breakout: 42.5rem;
   --article-rail-width: 8.15rem;
-  --article-rail-gap: 1.05rem;
+  /* With the narrower prose measure, a 2.1 rem interval registers the rail's
+   * left edge exactly with the title/crop inset and leaves the same quiet
+   * interval between the outline and right-growing technical matter. */
+  --article-rail-gap: 2.1rem;
   --article-note-width: clamp(13.25rem, calc(50vw - 23.25rem), 16.5rem);
   --article-note-offset: calc(var(--article-note-width) + 2rem);
   --article-ink: #202622;
@@ -55,6 +60,27 @@
   position: absolute;
   top: 20px;
   left: 20px;
+}
+
+/* The environmental sheet and the reading matter must be sibling paint
+ * planes. With the scene at a negative z-index behind a transparent root,
+ * Chromium can fold both into one large raster surface and checkerboard the
+ * type during a fast fling. These explicit planes change no visible stacking. */
+.single.blog #sunlit-scene {
+  z-index: 0;
+}
+
+.single.blog .nav-top,
+.single.blog .article-shell,
+.single.blog footer {
+  position: relative;
+  z-index: 1;
+}
+
+.single.blog .crop-h,
+.single.blog .crop-v,
+.single.blog .crop-c {
+  z-index: 2;
 }
 
 .single.blog .article-shell {
@@ -1546,6 +1572,16 @@ html.article-figure-is-open {
 }
 
 @media (min-width: 1180px) {
+  /* The contents rail occupies the left gutter. Let the few deliberately wide
+   * article objects spend the available right gutter instead of expanding back
+   * through that rail. Their full 42.5 rem measure still fits inside the
+   * 992 px paper, while prose retains a clear registration gap to the outline. */
+  .single.blog .article-body .highlight,
+  .single.blog .article-figure--wide {
+    width: min(var(--article-breakout), calc(100% + 6rem));
+    margin-left: 0;
+  }
+
   .single.blog .article-contents-rail {
     position: absolute;
     top: 0;

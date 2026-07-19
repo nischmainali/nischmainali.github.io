@@ -29,13 +29,14 @@ body {
   height: 100vh;
   overflow: hidden;
   z-index: -1;
+  isolation: isolate;
   background:
     radial-gradient(ellipse at 18% 10%, rgba(251, 248, 238, 0.42) 0%, rgba(251, 248, 238, 0.2) 46%, transparent 84%),
     linear-gradient(108deg, var(--sunlit-paper-warm) 0%, #f1f1e8 55%, var(--sunlit-paper-lichen) 100%);
 }
 
 .sunlit-paper-surface {
-  position: fixed;
+  position: absolute;
   inset: -24px;
   z-index: 0;
   background-image: url("/textures/lokta-fibres.svg");
@@ -48,7 +49,7 @@ body {
 /* Paired vector strokes keep the relief physical without an SVG filter layer,
  * which can conflict with the portrait mask in browser compositors. */
 .sunlit-paper-relief {
-  position: fixed;
+  position: absolute;
   inset: -3vmax;
   z-index: 0;
   background-image: url("/textures/lokta-raking-relief.svg?v=2");
@@ -69,9 +70,11 @@ body.sunset #sunlit-scene .sunlit-paper-relief {
 }
 
 .sunlit-container {
-  position: fixed;
+  position: absolute;
+  inset: 0;
   z-index: 1;
   width: 100vw;
+  height: 100vh;
   perspective: 50vw;
   transform: rotate(-20deg);
   transition: transform 1.2s ease-out;
@@ -82,59 +85,69 @@ body.sunset #sunlit-scene .sunlit-container {
 }
 
 .sunlit-shutters {
-  display: flex;
-  flex-direction: column;
+  position: absolute;
+  inset: -48vh -72vw -48vh -72vw;
   transform-style: preserve-3d;
-  transition: transform 1.8s ease-in-out;
-}
-
-.sunlit-shutter {
-  position: fixed;
-  right: 0;
-  width: 80vw;
-  box-sizing: content-box;
-  border-top: 10px solid transparent;
-  border-bottom: 10px solid transparent;
-  border-left: 100vw solid var(--sunlit-shadow);
-  background: linear-gradient(200deg, var(--sunlit-shadow), var(--sunlit-shadow-transition) 30%, transparent);
   filter: blur(6px);
-  opacity: 0.88;
-  transform: translateX(12vw) rotateY(4deg);
-  transition:
-    top 0.5s ease-in-out,
-    left 0.5s ease-in-out,
-    height 0.5s ease-in-out,
-    filter 1.8s ease-in-out,
-    opacity 1.8s ease-in-out;
+  transform: translateX(12vw) skewX(-18deg) rotateY(4deg);
+  transition: transform 1.8s ease-in-out, filter 1.8s ease-in-out;
 }
 
-body.sunset #sunlit-scene .sunlit-shutter {
-  height: 20px !important;
-  margin-top: 18px;
+.sunlit-shutters::before,
+.sunlit-shutters::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transition: opacity 1.8s ease-in-out;
+}
+
+.sunlit-shutters::before {
+  opacity: 0.68;
+  background: repeating-linear-gradient(to bottom,
+    var(--sunlit-shadow) 0 56px,
+    transparent 56px 64px);
+}
+
+.sunlit-shutters::after {
+  opacity: 0;
+  background: repeating-linear-gradient(to bottom,
+    var(--sunlit-shadow) 0 20px,
+    transparent 20px 74px);
+}
+
+body.sunset #sunlit-scene .sunlit-shutters {
   filter: blur(7.5px);
-  opacity: 0.74;
+  transform: translateX(12vw) skewX(-15deg) rotateY(4deg);
+}
+
+body.sunset #sunlit-scene .sunlit-shutters::before {
+  opacity: 0;
+}
+
+body.sunset #sunlit-scene .sunlit-shutters::after {
+  opacity: 0.48;
 }
 
 .sunlit-vertical-shutter {
-  position: fixed;
+  position: absolute;
   top: 0;
   right: 30vw;
   z-index: 1;
-  width: 24px;
+  width: 18px;
   height: 100vh;
   background: var(--sunlit-shadow);
-  filter: blur(6px);
-  opacity: 0.86;
+  filter: blur(14px);
+  opacity: 0.18;
   transition: filter 1.8s ease-in-out, opacity 1.8s ease-in-out;
 }
 
 body.sunset #sunlit-scene .sunlit-vertical-shutter {
-  filter: blur(7.5px);
-  opacity: 0.72;
+  filter: blur(16px);
+  opacity: 0.15;
 }
 
 .sunlit-tree-shadows {
-  position: fixed;
+  position: absolute;
   inset: -6vmax;
   z-index: 2;
   color: var(--sunlit-botanical);
@@ -192,7 +205,7 @@ body.sunset #sunlit-scene .sunlit-tree-shadows {
 }
 
 .sunlit-falling-leaves {
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: 3;
   opacity: 0;
@@ -207,7 +220,7 @@ body.sunset #sunlit-scene .sunlit-falling-leaves {
 }
 
 .sunlit-peepal-wrapper {
-  position: fixed;
+  position: absolute;
   top: -18vh;
   left: var(--leaf-x);
   width: var(--leaf-size);
@@ -260,91 +273,20 @@ body.sunset #sunlit-scene .sunlit-falling-leaves {
 
 .sunlit-progressive-blur {
   pointer-events: none;
-  position: fixed;
-  top: calc(50vh - 50vw);
-  left: calc(50vw - 100vh);
-  z-index: 5;
-  width: 100vh;
-  height: 100vw;
-  margin: 0;
-  transform: rotate(90deg);
-}
-
-.sunlit-progressive-blur::before,
-.sunlit-progressive-blur::after,
-.sunlit-progressive-blur > div {
-  position: fixed;
+  position: absolute;
   inset: 0;
-}
-
-.sunlit-progressive-blur::before {
-  content: "";
-  z-index: 1;
-  backdrop-filter: blur(0.5px);
-  -webkit-backdrop-filter: blur(0.5px);
-  mask: linear-gradient(180deg, transparent 0%, #000 12.5%, #000 25%, transparent 37.5%);
-  -webkit-mask: linear-gradient(180deg, transparent 0%, #000 12.5%, #000 25%, transparent 37.5%);
-}
-
-.sunlit-progressive-blur > div:nth-of-type(1) {
-  z-index: 2;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  mask: linear-gradient(180deg, transparent 12.5%, #000 25%, #000 37.5%, transparent 50%);
-  -webkit-mask: linear-gradient(180deg, transparent 12.5%, #000 25%, #000 37.5%, transparent 50%);
-}
-
-.sunlit-progressive-blur > div:nth-of-type(2) {
-  z-index: 3;
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-  mask: linear-gradient(180deg, transparent 25%, #000 37.5%, #000 50%, transparent 62.5%);
-  -webkit-mask: linear-gradient(180deg, transparent 25%, #000 37.5%, #000 50%, transparent 62.5%);
-}
-
-.sunlit-progressive-blur > div:nth-of-type(3) {
-  z-index: 4;
-  backdrop-filter: blur(50px);
-  -webkit-backdrop-filter: blur(50px);
-  mask: linear-gradient(180deg, transparent 37.5%, #000 50%, #000 62.5%, transparent 75%);
-  -webkit-mask: linear-gradient(180deg, transparent 37.5%, #000 50%, #000 62.5%, transparent 75%);
-}
-
-.sunlit-progressive-blur > div:nth-of-type(4) {
   z-index: 5;
-  backdrop-filter: blur(100px);
-  -webkit-backdrop-filter: blur(100px);
-  mask: linear-gradient(180deg, transparent 50%, #000 62.5%, #000 75%, transparent 87.5%);
-  -webkit-mask: linear-gradient(180deg, transparent 50%, #000 62.5%, #000 75%, transparent 87.5%);
-}
-
-.sunlit-progressive-blur > div:nth-of-type(5) {
-  z-index: 6;
-  backdrop-filter: blur(100px);
-  -webkit-backdrop-filter: blur(100px);
-  mask: linear-gradient(180deg, transparent 62.5%, #000 75%, #000 87.5%, transparent 100%);
-  -webkit-mask: linear-gradient(180deg, transparent 62.5%, #000 75%, #000 87.5%, transparent 100%);
-}
-
-.sunlit-progressive-blur > div:nth-of-type(6) {
-  z-index: 7;
-  backdrop-filter: blur(100px);
-  -webkit-backdrop-filter: blur(100px);
-  mask: linear-gradient(180deg, transparent 75%, #000 87.5%, #000 100%);
-  -webkit-mask: linear-gradient(180deg, transparent 75%, #000 87.5%, #000 100%);
-}
-
-.sunlit-progressive-blur::after {
-  content: "";
-  z-index: 8;
-  backdrop-filter: blur(100px);
-  -webkit-backdrop-filter: blur(100px);
-  mask: linear-gradient(180deg, transparent 87.5%, #000 100%);
-  -webkit-mask: linear-gradient(180deg, transparent 87.5%, #000 100%);
+  /* Retain the old left-to-right depth impression without sampling and
+   * re-blurring the full animated scene on every compositor frame. */
+  background: linear-gradient(90deg,
+    rgba(248, 245, 236, 0.11) 0%,
+    rgba(244, 244, 235, 0.055) 44%,
+    rgba(240, 242, 232, 0.018) 68%,
+    transparent 82%);
 }
 
 .sunlit-blur-overlay {
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: 6;
   width: 100vw;
@@ -353,7 +295,7 @@ body.sunset #sunlit-scene .sunlit-falling-leaves {
 }
 
 .sunlit-sunset-overlay {
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: 8;
   width: 100%;
@@ -372,7 +314,7 @@ body.sunset #sunlit-scene .sunlit-sunset-overlay {
 }
 
 .sunlit-grain {
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: 10;
   width: 100%;
@@ -383,29 +325,24 @@ body.sunset #sunlit-scene .sunlit-sunset-overlay {
 .sunlit-grain::before {
   content: "";
   pointer-events: none;
-  position: fixed;
+  position: absolute;
   top: -10rem;
   left: -10rem;
   width: calc(100% + 20rem);
   height: calc(100% + 20rem);
   background-image: url("../textures/gaussian-noise.png");
   opacity: 0.075;
-  animation: sunlit-noise 1s steps(2) infinite;
-  animation-delay: var(--sunlit-clock);
+  /* Lokta fibre is part of the sheet, not a film floating over it. Keeping
+   * this plate still also lets the browser reuse the transparent type layer. */
+  transform: translate3d(-1.25rem, 1rem, 0);
 }
 
-@keyframes sunlit-noise {
-  0% { transform: translate3d(0, 2rem, 0); }
-  10% { transform: translate3d(-1rem, -2rem, 0); }
-  20% { transform: translate3d(-4rem, 1rem, 0); }
-  30% { transform: translate3d(4.5rem, -4.5rem, 0); }
-  40% { transform: translate3d(-1rem, 3.5rem, 0); }
-  50% { transform: translate3d(-4.5rem, -2rem, 0); }
-  60% { transform: translate3d(1rem, 3rem, 0); }
-  70% { transform: translate3d(3.5rem, -4rem, 0); }
-  80% { transform: translate3d(-4.5rem, 0.5rem, 0); }
-  90% { transform: translate3d(3rem, -2.5rem, 0); }
-  100% { transform: translate3d(-3.5rem, 0, 0); }
+/* Preserve every layer during a scroll fling, but briefly stop changing the
+ * filtered source underneath it. animation-play-state resumes at the same
+ * phase; shade/sunset transitions are deliberately unaffected. */
+#sunlit-scene.is-motion-paused .sunlit-fern,
+#sunlit-scene.is-motion-paused .sunlit-peepal-leaf {
+  animation-play-state: paused;
 }
 
 #theme-toggle {
@@ -468,6 +405,18 @@ body.sunset #theme-toggle .moon { opacity: 0.5; transition: opacity 0.15s ease-o
 }
 
 @media (max-width: 599px) {
+  .sunlit-shutters::before {
+    background: repeating-linear-gradient(to bottom,
+      var(--sunlit-shadow) 0 42px,
+      transparent 42px 58px);
+  }
+
+  .sunlit-shutters::after {
+    background: repeating-linear-gradient(to bottom,
+      var(--sunlit-shadow) 0 20px,
+      transparent 20px 67px);
+  }
+
   .sunlit-paper-surface {
     background-size: 290px 290px;
     opacity: 0.4;

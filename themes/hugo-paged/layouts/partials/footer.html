@@ -10,6 +10,6 @@
   </p>
   {{ end }}
   </footer>
-  <script src="{{ printf "%s?v=%d" ("js/sunlit.js" | relURL) now.Unix }}"></script>
+  <script src="{{ partial "static-asset-url.html" "js/sunlit.js" }}"></script>
   </body>
 </html>

@@ -29,6 +29,26 @@
   {{- errorf "image at %s is missing alt text; provide alt or mark it decorative" $position -}}
 {{- end -}}
 
+{{- /* Begin fetching the first image in an opened article during parsing. It
+      remains normal priority; explicit Priority is still reserved for an
+      author-selected hero/LCP image. Source-position deduplication keeps the
+      result stable when Hugo evaluates .Content more than once. */ -}}
+{{- $isFirstArticleImage := false -}}
+{{- if and $page $page.IsPage (eq $page.Section "blog") -}}
+  {{- $imageID := printf "%v::%s" $position $src -}}
+  {{- $imageOrder := default (dict) ($page.Store.Get "articleImageOrder") -}}
+  {{- if not (isset $imageOrder $imageID) -}}
+    {{- $ordinal := add (len $imageOrder) 1 -}}
+    {{- $imageOrder = merge $imageOrder (dict $imageID $ordinal) -}}
+    {{- $page.Store.Set "articleImageOrder" $imageOrder -}}
+  {{- end -}}
+  {{- $isFirstArticleImage = eq (index $imageOrder $imageID) 1 -}}
+{{- end -}}
+{{- $effectiveLoading := $loading -}}
+{{- if or $priority $isFirstArticleImage -}}
+  {{- $effectiveLoading = "eager" -}}
+{{- end -}}
+
 {{- if $page -}}
   {{- $page.Store.Set "articleHasMedia" true -}}
   {{- if $focus -}}
@@ -122,7 +142,7 @@
   class="article-media article-media--{{ $treatment }}{{ with $extraClass }} {{ . }}{{ end }}"
   src="{{ $url | safeURL }}"
   alt="{{ $alt }}"
-  loading="{{ if $priority }}eager{{ else }}{{ $loading }}{{ end }}"
+  loading="{{ $effectiveLoading }}"
   decoding="async"
   {{- if $priority }} fetchpriority="high"{{ end -}}
   {{- with $width }} width="{{ . }}"{{ end -}}

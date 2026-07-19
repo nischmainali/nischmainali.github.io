@@ -1,0 +1,9 @@
+{{- /*
+  Static files bypass Hugo's resource pipeline. Derive a deterministic URL
+  version from their source bytes so long-lived cache headers remain safe while
+  retaining the current static directory layout.
+*/ -}}
+{{- $path := strings.TrimPrefix "/" . -}}
+{{- $source := printf "static/%s" $path -}}
+{{- $version := crypto.MD5 (readFile $source) -}}
+{{- printf "%s?v=%s" ($path | relURL) $version -}}
