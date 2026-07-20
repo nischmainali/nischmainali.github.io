@@ -3,6 +3,20 @@
 Source for Nischal Mainali's Hugo website. The deployed site is built by Netlify
 with Hugo 0.164.0; generated output is not stored in Git.
 
+## Canonical state
+
+The canonical checkout is `/Users/nisch/code/site/nisch-hugo-site`. Temporary
+preview checkouts may exist elsewhere as Git worktrees; they share this
+repository rather than forming separate copies. The accepted visual
+implementation entered the history at `861a22d` through
+`experiment/toc-outside-sheet`. The pre-reader mainline remains available at
+`archive/pre-field-note-main-2026-07-20` (`d37a896`). Do not delete named
+checkpoints merely because their physical worktrees have been removed.
+
+Local `main` and the preview branch may advance through documentation or
+maintenance commits after that accepted visual checkpoint. Nothing in the local
+workflow pushes or deploys automatically.
+
 ## Local development
 
 ```sh
@@ -97,17 +111,35 @@ The figure shortcode accepts three placements and two surface treatments:
 - `static/` — files copied to stable public URLs, including images, PDFs, CSS,
   local fonts, and licensed surface textures.
 - `layouts/` — site-level Hugo template overrides.
+- `data/` — build-time registries for shared mathematics and citations.
+- `scripts/` — source validation. `check_content.py` is the maintained entry
+  point; `check_math.py` is its compatibility wrapper.
 - `themes/hugo-paged/` — vendored and locally modified base theme. Do not replace
   it wholesale from the separate upstream checkout.
 - `archetypes/` — defaults for new Hugo content.
-- `org/` — Emacs Org authoring source and its generated LaTeX image support
-  files; Hugo does not read this directory directly.
+- `org/` — optional Emacs Org authoring source. Hugo does not read it directly;
+  read `org/README.md` before exporting over Markdown.
+- `docs/history/` — completed plans retained as implementation provenance, not
+  current instructions.
 - `hugo.toml` — site configuration and navigation.
 - `netlify.toml` — deployment build configuration.
 - `DESIGN_LANGUAGE.md` — the site's design principles, provenance, and visual QA
   baseline.
 - `MATHEMATICS.md` — the mathematical authoring and validation interface.
 - `AGENTS.md` — working rules for future coding agents.
+
+## Where new files belong
+
+Put authored Markdown and page bundles in `content/`. Put images that Hugo should
+resize or fingerprint in a page bundle or `assets/`; put files that require a
+stable public URL in `static/`. Site JavaScript belongs in `assets/js/`. Keep
+build-time records in `data/`, validation in `scripts/`, and durable design
+decisions in `DESIGN_LANGUAGE.md`.
+
+`public/`, `resources/`, `.hugo_build.lock`, Python bytecode, browser-test output,
+and visual-audit screenshots are generated material. Do not commit them. Keep a
+small review record outside the repository when visual comparison still has
+value.
 
 ## Editing boundaries
 

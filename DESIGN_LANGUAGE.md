@@ -226,8 +226,8 @@ sunset, and during the mode change. A 3200 px immediate fling kept prose and
 mathematics painted in the worker tier. The page reported no horizontal
 overflow. The open contents fold cleared the theme control at phone width, and
 the 1180 px layout retained 2.25rem between rail and prose plus 2.6rem between
-prose and marginal notes. A fresh source and browser matrix still needs Safari,
-Firefox, VoiceOver, and a midrange phone before promotion.
+prose and marginal notes. Safari, Firefox, VoiceOver, and a midrange phone remain
+useful checks before future renderer changes.
 
 #### Reference-calibrated finishing pass (20 July 2026)
 
@@ -417,7 +417,7 @@ space before feathering both ends. This extends the broad left penumbra without
 softening the accurately matched window-side edges. The redundant 0.96 shadow
 ceiling is also gone; the reference veil now sets the final limit by itself.
 
-Sunset currently carries one explicitly experimental botanical shadow. It is a
+Sunset carries one restrained botanical shadow. It is a
 partly opened niuro / pani-niuro frond, informed by the long pinnate form of the
 Nepali wild food ferns documented in the [review of Nepalese food
 ferns](https://pmc.ncbi.nlm.nih.gov/articles/PMC9699988/). This is not a return
@@ -430,7 +430,7 @@ tall narrow screens; it does not alter the shutter's exact 600 px breakpoint.
 
 The niuro is deliberately static. It lives inside the cached paper shader,
 beneath grain and sunset multiplication, so scrolling adds no draw call,
-texture, filter surface, or DOM animation. Its entire experiment is controlled
+texture, filter surface, or DOM animation. Its strength is controlled
 by `data-fern-strength` on `#sunlit-scene`; removing that attribute or setting it
 to zero restores the foliage-free endpoint. The shader rejects the niuro path
 before evaluating its morphology whenever the frond is invisible, including
@@ -548,7 +548,7 @@ madder ornament; the color stays fixed, and the glyph has no motion or
 surrounding component. TurnTrout's random accent treatment and first-line
 transformation do not belong here.
 
-The experimental Gwern-intelligence pass borrows editorial behavior from
+The accepted Gwern-intelligence pass borrows editorial behavior from
 [Gwern.net's design system](https://gwern.net/design) while leaving its
 grayscale appearance and interface chrome behind. It adds an authored
 epigraph, a compact academic-link grammar, reciprocal sidenote focus, a running
@@ -556,10 +556,11 @@ section trace and progress rule in the contents rail, and a full-resolution
 figure viewer. Each addition uses the existing Linden Hill/Jost division, wine
 hairlines, square paper geometry, and shade/sunset variables.
 The pass adds no remote annotations, recursive popups, backlinks,
-transclusion, or second toolbar. Citation previews remain part of the later
-bibliography phase.
+transclusion, or second toolbar. Citation previews remain deferred even though
+the build-time bibliography is now present.
 
-The `experiment/toc-outside-sheet` branch tests one further spatial idea. On a
+The accepted `experiment/toc-outside-sheet` lineage adds one further spatial
+idea. On a
 genuinely wide viewport, the crop marks become the edge of a real reading
 sheet: the contents rail leaves that sheet completely and hangs in the quiet
 left desk field. It keeps a 1.5rem interval from the crop boundary. At the
@@ -731,28 +732,27 @@ Article authoring controls are intentionally few:
 - headings, fenced code, tables, definition lists, blockquotes, unnumbered
   mathematics, and footnotes otherwise remain ordinary Markdown.
 
-### Deferred article capabilities
+### Accepted citations and deferred intelligence
 
-Citation and bibliography support is the next substantive article-system phase,
-not part of the present mathematics implementation. It should remain entirely
-build-time and preserve readable HTML, print output, and source text without a
-client citation runtime. Choose the bibliography source and authoring syntax
-only when a real article supplies representative citations; do not grow an
-ad-hoc shortcode vocabulary in advance.
+Citation and bibliography support now runs entirely at build time. A small,
+hand-verified registry in `data/citations.toml` supplies the `cite` and
+`references` shortcodes. Hugo emits stable occurrence IDs, linked author-year
+labels, an alphabetical list of works cited on the page, reciprocal backlinks,
+and semantic bibliography and biblioref roles. The source checker rejects
+unknown keys, duplicate keys within one citation, a missing or prematurely
+placed `references` shortcode, and multiple bibliographies.
 
-The intended visual treatment adapts slotThe's useful bibliographic discipline
-to this paper rather than copying its table. Inline citations should be concise
-and link to stable entries. On wide articles, a short citation label may hang
-into the left optical gutter while the entry remains unboxed in the reading
-measure; on narrow screens, both return to ordinary document flow. DOI, arXiv,
-and external links should be quiet, every entry should offer citation backlinks,
-and the result should use semantic bibliography and biblioref roles. References
-must feel like the final pages of the same field note, not a new component.
+The visual treatment adapts slotThe's bibliographic discipline without copying
+its table. Citations remain concise; entries stay unboxed in the reading measure;
+DOI, arXiv, and external links use the quiet link grammar. References should
+read as the final pages of the same field note. Remote citation previews,
+automatic metadata fetching, CSL processing, and cross-page citation graphs
+remain deferred until real articles justify their cost.
 
-The branch's private draft `content/blog/scratch.md` is the visual specimen for
-this system. Keep it as a broad regression fixture rather than turning a public
-post into a component catalogue. Before promoting the experiment, verify the
-real Gaussian-process article as well as this specimen in shade and sunset, at
+The private draft `content/blog/scratch.md` is the visual specimen for this
+system. Keep it as a broad regression fixture rather than turning a public post
+into a component catalogue. For future changes, verify the real Gaussian-process
+article as well as this specimen in shade and sunset, at
 1440, 1280, 1180, 1024, and approximately 390 px, including sticky/active TOC
 behavior, keyboard focus, code/table overflow, copy feedback, mathematical
 rendering, and the absence of article console errors.
@@ -956,8 +956,9 @@ KaTeX or Asana Math; the mathematical specimen still receives its complete local
 math system; and the main routes contain no empty links, broken images, or
 page-level overflow at 1280 px and 390 px.
 
-On 2026-07-17 we reviewed the experimental Gwern-intelligence pass at 1440,
-1180, 1179, and 390 px in shade and sunset. We checked the running mathematical
+On 2026-07-17 we reviewed the Gwern-intelligence pass, later accepted into the
+reader, at 1440, 1180, 1179, and 390 px in shade and sunset. We checked the
+running mathematical
 section trace, paired sidenote hover and focus, mobile note disclosure, academic
 link names, and the figure dialog's focus transfer and return. The dialog kept
 its full-resolution fallback link, caption, square paper geometry, and quiet
@@ -1001,10 +1002,10 @@ These are implementation findings, not permission for a future agent to launch
 a cleanup pass. Fix them only when in scope, and preserve the visual language
 while doing so.
 
-- A midrange phone still needs GPU, memory, power, and scroll traces before
-  promotion. Preserve the single cached paper pass; do not expand the optional
-  niuro into animated/DOM foliage, restore DOM shutters, or add viewport filter
-  stacks as part of that test.
+- A midrange phone still needs GPU, memory, power, and scroll traces before any
+  renderer expansion. Preserve the single cached paper pass; do not expand the
+  optional niuro into animated/DOM foliage, restore DOM shutters, or add viewport
+  filter stacks as part of that test.
 - MathML-only output cuts the dense specimen's HTML and element count by more
   than half. Dual HTML and MathML remains the default until Safari, Chromium,
   Firefox, VoiceOver, NVDA, overflow, and print checks pass.

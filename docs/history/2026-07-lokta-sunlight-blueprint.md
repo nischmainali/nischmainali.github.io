@@ -1,14 +1,21 @@
 # Unified site blueprint: the Lokta Sunlight reader
 
-Status: accepted for `main` on 20 July 2026
+Status: historical implementation blueprint; accepted through `861a22d` on
+20 July 2026
 
 Prepared: 19 July 2026
 
 Predecessor checkpoint: `c26729b` on `experiment/article-reading-system`
 
+Current authority: [`DESIGN_LANGUAGE.md`](../../DESIGN_LANGUAGE.md). This file
+retains the original plan, measurements, rejected options, and QA gates. Read its
+future-tense sections as a record of the implementation process.
+
 > **Superseded environmental details, 20 July 2026:** Nisch removed the vertical
-> mullion, canopy, ferns, and falling leaves after visual review. The current
-> branch uses one five-channel ray field with no foliage. It morphs one indexed
+> mullion, canopy, moving ferns, and falling leaves after visual review. The
+> foliage-free endpoint used one five-channel ray field. The accepted successor
+> later restored one static, sunset-only niuro silhouette as a local optical
+> accent. It morphs one indexed
 > slat projection over 500 ms, moves the plane over 1.2 seconds, and preserves
 > fixed six-pixel diffusion and a three-second color clock. Treat the vegetation,
 > mullion, and two-field shutter specifications below as historical research.
@@ -25,9 +32,10 @@ references, citations, highlighting, and responsive media.
 The renderer follows the measured Sunlit geometry, blur direction, grain
 statistics, and transition clocks. It keeps three authored departures:
 lichen-white Lokta color, route-aware reading attenuation, and accessible motion
-controls. The implementation omits Sunlit's foliage and vertical mullion as well
-as its React bundle, loading veil, remote noise file, 715-node scene, and live
-backdrop-filter stack.
+controls. The implementation omits Sunlit's moving foliage and vertical mullion
+as well as its React bundle, loading veil, remote noise file, 715-node scene, and
+live backdrop-filter stack. One static sunset niuro remains an authored local
+departure.
 
 The worker caches the procedural paper and shutter pass in an RGBA8 framebuffer.
 It redraws that texture for theme, route, or geometry changes. Ambient frames
@@ -46,7 +54,7 @@ The visual control now uses these source measurements:
 | veil | 85 degrees/20 percent; 75 degrees/45 percent on phone |
 | diffusion | broadest at left, six-pixel edge at right; fixed in both modes |
 | grain | generated 512 x 512 R8 Gaussian field; 20 stepped states per second |
-| foliage / mullion | deliberately absent |
+| foliage / mullion | no mullion or moving foliage; one static sunset niuro |
 | clocks | 0.5/1.2/3.0 seconds, plus 4.8-second Lokta relief |
 
 The document pass resolves equation and statement references at build time. It
@@ -59,9 +67,9 @@ Browser QA on 19 July 2026 covered 1440, 1180, 1024, and 390 px. The worker tier
 retained painted mathematics during an immediate 3200 px fling. The tested pages
 had no horizontal overflow, and the open TOC cleared both prose and controls.
 Production, draft, source, syntax, network, print, and cross-browser checks below
-remain the promotion gate.
+formed the promotion gate.
 
-## Decision
+## Original decision
 
 Keep Hugo as the static content compiler for the next implementation pass. Replace
 the layered DOM background with one isolated environmental rendering surface,

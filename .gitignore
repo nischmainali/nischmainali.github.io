@@ -9,3 +9,9 @@
 # Local validation caches
 __pycache__/
 *.py[cod]
+/.playwright-mcp/
+/playwright-report/
+/test-results/
+
+# Org export scratch files; move referenced media into Hugo source deliberately
+/org/ltximg/
