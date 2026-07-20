@@ -576,12 +576,15 @@ the crop marks. At the default type size, the exterior arrangement begins only
 at 1360px, where the full 8.25rem rail retains a 28px viewport margin. Enlarged
 reader type delays that change until the rail can still fit honestly. From
 1180–1359px the accepted inset rail returns unchanged, and below 1180px the
-existing in-flow treatments remain in force. Do not mechanically equalize the
-TOC-to-prose and prose-to-sidenote distances: prose remains centered between
-the crop edges,
-while a sidenote's smaller 2.6rem interval preserves its semantic attachment to
-the sentence. The crop boundary makes those two kinds of whitespace
-intentionally different.
+existing in-flow treatments remain in force. A full-screen review exposed one
+exception to the otherwise useful asymmetry: when both the exterior TOC and a
+real right marginal field are present, the old 220px/41.6px channels read as an
+accidentally missing column. Those pages now declare their marginalia at build
+time and form a calibrated triad. The TOC and marginalia retain their approved
+outer positions while prose moves into the optical midpoint between them. The
+paired channels contract from 8.55rem to 8.175rem as prose grows. If either the
+TOC or marginalia is absent, prose remains centered on the sheet; never reserve
+an empty column merely for template symmetry.
 
 Asana Math 000.962 supplies the mathematical voice. Linden Hill revives
 Goudy's Deepdene, and its page texture calls for a warm old-style companion.
@@ -627,7 +630,9 @@ Its governing choices are:
   preserves a 1.5rem exterior interval, enters beside the date/epigraph, then
   settles between 2.5rem and 4.5rem from the viewport top while scrolling. Its
   prose measure interpolates from 36rem to the restrained 37.5rem maximum
-  described above. Reserved old-style section
+  described above. On an article with real marginalia, the prose axis shifts
+  left just enough to create equal optical channels to the rail and note field;
+  the two outer fields themselves do not move. Reserved old-style section
   numbers, typographic indentation, and an active ancestor trail make hierarchy
   legible at a glance. A wine reading-progress rule and the current H2/H3 path
   remain fixed above the independently scrolling outline, which quietly keeps

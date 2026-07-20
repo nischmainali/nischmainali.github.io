@@ -28,6 +28,9 @@
 {{- if not (in (slice "measure" "wide" "margin") $placement) -}}
   {{- errorf "figure at %s has invalid placement %q; use measure, wide, or margin" .Position $placement -}}
 {{- end -}}
+{{- if eq $placement "margin" -}}
+  {{- .Page.Store.Set "articleHasMarginalia" true -}}
+{{- end -}}
 {{- if and (eq $placement "margin") (not (strings.TrimSpace (default "" (.Get "caption")))) -}}
   {{- errorf "margin figure at %s requires a caption" .Position -}}
 {{- end -}}

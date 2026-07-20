@@ -1,3 +1,4 @@
+{{- .Page.Store.Set "articleHasMarginalia" true -}}
 {{- $id := printf "sidenote-%d" .Ordinal -}}
 {{- $noteID := printf "%s-note" $id -}}
 <input class="sidenote-toggle" type="checkbox" id="{{ $id }}" aria-controls="{{ $noteID }}" aria-label="Toggle sidenote">

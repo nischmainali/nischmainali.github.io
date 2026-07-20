@@ -1851,6 +1851,22 @@ html.article-figure-is-open {
     --article-toc-sticky-inset: clamp(2.5rem, 7dvh, 4.5rem);
   }
 
+  /* A real right marginal field changes the optical center of the article.
+   * Preserve the already approved outer positions of the TOC and marginalia,
+   * then place prose halfway between them. The gap contracts gently as prose
+   * grows, keeping both outer fields fixed. Never create the triad when either
+   * the exterior TOC or the right marginal field is absent. */
+  .single.blog.has-article-marginalia:has(.article-contents-rail) {
+    --article-balanced-column-gap: calc(17.55rem - var(--article-measure) / 4);
+    --article-balanced-prose-inset: calc(var(--article-balanced-column-gap) - 4rem);
+    --article-marginal-gap: var(--article-balanced-column-gap);
+  }
+
+  .single.blog.has-article-marginalia:has(.article-contents-rail) .article-body {
+    margin-right: auto;
+    margin-left: var(--article-balanced-prose-inset);
+  }
+
   .single.blog .article-contents-rail {
     /* Begin in the same subtitle/date–epigraph hinge as the approved centered
      * composition. Once the article moves, the contents can travel upward and
@@ -1863,6 +1879,14 @@ html.article-figure-is-open {
       - (var(--body-width) / 2)
       - var(--article-rail-exterior-gap)
       - var(--article-rail-width)
+    );
+  }
+
+  .single.blog.has-article-marginalia:has(.article-contents-rail) .article-contents-rail {
+    left: calc(
+      0rem
+      - var(--article-rail-width)
+      - var(--article-balanced-column-gap)
     );
   }
 
