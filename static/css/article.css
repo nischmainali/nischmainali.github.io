@@ -1838,33 +1838,50 @@ html.article-figure-is-open {
 
 /* On a genuinely wide screen the crop marks become the edge of a real sheet:
  * the contents rail moves wholly into the outer desk space while prose receives
- * one small extension. The 1360px threshold is geometric, not device-based:
- * below it, a full 8.25rem rail plus a 1.5rem crop gap would lose its safe
- * viewport margin, so the accepted inset composition remains in force. */
-@media (min-width: 1360px) {
+ * one small, continuous extension. The paired query is geometric rather than
+ * device-based: it delays the exterior composition when a reader's enlarged
+ * default type would leave too little physical room for the full rail. */
+@media (min-width: 1360px) and (min-width: 85rem) {
   .single.blog {
-    --article-measure: 37.5rem;
-    --article-measure-to-sheet-edge: 12.25rem;
+    /* At the default type size this grows from 36rem at 1360px to 37.5rem at
+     * 1440px, removing the old one-pixel reflow at the mode change. */
+    --article-measure: clamp(36rem, calc(30vw + 10.5rem), 37.5rem);
     --article-rail-exterior-gap: 1.5rem;
+    --article-toc-sticky-inset: clamp(2.5rem, 7vh, 4.5rem);
+    --article-toc-sticky-inset: clamp(2.5rem, 7dvh, 4.5rem);
   }
 
   .single.blog .article-contents-rail {
+    /* Begin in the same subtitle/date–epigraph hinge as the approved centered
+     * composition. Once the article moves, the contents can travel upward and
+     * settle into the more useful upper reading band below. The horizontal
+     * expression resolves from the rail's actual containing-block width, so the
+     * crop interval survives both the fluid measure and enlarged reader type. */
+    top: -4.25rem;
     left: calc(
-      0rem
-      - var(--article-measure-to-sheet-edge)
+      50%
+      - (var(--body-width) / 2)
       - var(--article-rail-exterior-gap)
       - var(--article-rail-width)
     );
   }
 
-  /* Center the reader's instrument in the viewport while its article-local
-   * wrapper still governs arrival and departure at the document boundaries. */
+  /* A reader's instrument belongs in an upper working band, not permanently at
+   * decorative dead center. Removing the visual transform also keeps its true
+   * box inside the article-local wrapper at both article boundaries. */
   .single.blog .article-contents {
-    top: 50vh;
-    top: 50dvh;
-    max-height: calc(100vh - 3rem);
-    max-height: calc(100dvh - 3rem);
-    transform: translateY(-50%);
+    top: var(--article-toc-sticky-inset);
+    max-height: calc(
+      100vh
+      - var(--article-toc-sticky-inset)
+      - var(--article-toc-sticky-inset)
+    );
+    max-height: calc(
+      100dvh
+      - var(--article-toc-sticky-inset)
+      - var(--article-toc-sticky-inset)
+    );
+    transform: none;
   }
 }
 

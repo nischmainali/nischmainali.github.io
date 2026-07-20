@@ -564,15 +564,24 @@ bibliography phase.
 The `experiment/toc-outside-sheet` branch tests one further spatial idea. On a
 genuinely wide viewport, the crop marks become the edge of a real reading
 sheet: the contents rail leaves that sheet completely and hangs in the quiet
-left desk field. It keeps a 1.5rem interval from the crop boundary and centers
-itself vertically while remaining bounded by the article, so it still arrives
-and departs with the text. The prose grows only from 36rem to 37.5rem. This is
-not a generic fixed sidebar and must never acquire its own card, veil, or page
-chrome; its character comes from the asymmetry and its dialogue with the crop
-marks. The exterior arrangement begins only at 1360px, where the full 8.25rem
-rail retains a 28px viewport margin. From 1180–1359px the accepted inset rail
-returns unchanged, and below 1180px the existing in-flow treatments remain in
-force.
+left desk field. It keeps a 1.5rem interval from the crop boundary. At the
+opening it occupies the approved subtitle/date–epigraph hinge; as the article
+moves, it travels into a quiet upper reading band rather than remaining at
+decorative dead center. Its real box stays bounded by the article, so it still
+arrives and departs with the text. The prose grows continuously from 36rem at
+1360px to 37.5rem at 1440px instead of changing measure at the breakpoint.
+This is not a generic fixed sidebar and must never acquire its own card, veil,
+or page chrome; its character comes from the asymmetry and its dialogue with
+the crop marks. At the default type size, the exterior arrangement begins only
+at 1360px, where the full 8.25rem rail retains a 28px viewport margin. Enlarged
+reader type delays that change until the rail can still fit honestly. From
+1180–1359px the accepted inset rail returns unchanged, and below 1180px the
+existing in-flow treatments remain in force. Do not mechanically equalize the
+TOC-to-prose and prose-to-sidenote distances: prose remains centered between
+the crop edges,
+while a sidenote's smaller 2.6rem interval preserves its semantic attachment to
+the sentence. The crop boundary makes those two kinds of whitespace
+intentionally different.
 
 Asana Math 000.962 supplies the mathematical voice. Linden Hill revives
 Goudy's Deepdene, and its page texture calls for a warm old-style companion.
@@ -615,9 +624,10 @@ Its governing choices are:
   interval; its left edge lands exactly on the title's paper inset while the
   interval remains open beside wide code and figures. At 1360px and above, the
   outside-sheet experiment moves that same rail wholly past the left crop mark,
-  preserves a 1.5rem exterior interval, centers it vertically in the viewport,
-  and gives prose the restrained 37.5rem measure described above. Reserved
-  old-style section
+  preserves a 1.5rem exterior interval, enters beside the date/epigraph, then
+  settles between 2.5rem and 4.5rem from the viewport top while scrolling. Its
+  prose measure interpolates from 36rem to the restrained 37.5rem maximum
+  described above. Reserved old-style section
   numbers, typographic indentation, and an active ancestor trail make hierarchy
   legible at a glance. A wine reading-progress rule and the current H2/H3 path
   remain fixed above the independently scrolling outline, which quietly keeps
