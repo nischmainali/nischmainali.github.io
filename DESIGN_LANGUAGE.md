@@ -287,7 +287,7 @@ This pass also removes the broad dark field wash. A small paper-colored veil
 keeps the window side luminous, while the periodic shutter field carries the
 architectural shadow. Preserve the current worker, cached texture, route
 attenuation, session clock, and active-transition handoff. Reduced-motion mode
-keeps the full environmental timing and 30 fps ambient surface; it must not
+keeps the full environmental timing and 20 fps ambient surface; it must not
 collapse the mode transition.
 
 The same pass restored the home portrait's crop-sheet registration. `.home`
@@ -395,11 +395,40 @@ match the reference's apparent 20 percent stop; phone remains at 45 percent.
 Endpoint audits at 1280 × 720 found matching projective slopes, periods, shadow
 depths, and 10–90 edge widths. Shade and sunset retain a deliberately small
 Nepal-specific difference in paper fibre and green cast. No vertical mullion,
-canopy, fern, or falling leaf returned. A 13-neighbour analytic lattice lookup
+canopy, fern, or falling leaf returned in that checkpoint. A 13-neighbour analytic lattice lookup
 replaced the fixed 20-slat loop, preserving broad-blur tails while supporting
 tall viewports and reducing transition work. Home, the mobile article, and a
 long mathematical fling remained painted; the CSS poster still exists only as
 the short pre-WebGL and failure fallback.
+
+#### Optical edge and niuro experiment (20 July 2026)
+
+The final ray pass leaves the already matched band width, ten-pixel mitre,
+period, Gaussian edge, and progressive-blur field alone. Instead it corrects
+the finite shutter boundary: the source blurs the ends of each projected slat,
+whereas the first projective shader clipped them with a binary step. The new
+finite mask converts the screen-space optical sigma back into shutter-local
+space before feathering both ends. This extends the broad left penumbra without
+softening the accurately matched window-side edges. The redundant 0.96 shadow
+ceiling is also gone; the reference veil now sets the final limit by itself.
+
+Sunset currently carries one explicitly experimental botanical shadow. It is a
+partly opened niuro / pani-niuro frond, informed by the long pinnate form of the
+Nepali wild food ferns documented in the [review of Nepalese food
+ferns](https://pmc.ncbi.nlm.nih.gov/articles/PMC9699988/). This is not a return
+to the old canopy: one deterministic rachis enters mostly from beyond the
+upper-right crop, with paired lanceolate pinnae and a quiet crozier. It fades in
+only after the shutter has opened, is weaker on Documents and articles, and is
+omitted below 600 px where a cropped rachis could resemble the rejected vertical
+mullion.
+
+The niuro is deliberately static. It lives inside the cached paper shader,
+beneath grain and sunset multiplication, so scrolling adds no draw call,
+texture, filter surface, or DOM animation. Its entire experiment is controlled
+by `data-fern-strength` on `#sunlit-scene`; removing that attribute or setting it
+to zero restores the foliage-free endpoint. The ambient grain now renders at
+its native twenty distinct states per second rather than redrawing the same
+state three times at 60 fps. Mode transitions remain 60 fps.
 
 ### 5. An unboxed portrait
 
@@ -919,8 +948,9 @@ a cleanup pass. Fix them only when in scope, and preserve the visual language
 while doing so.
 
 - A midrange phone still needs GPU, memory, power, and scroll traces before
-  promotion. Preserve the single cached paper pass and do not restore foliage,
-  DOM shutters, or viewport filter stacks as part of that test.
+  promotion. Preserve the single cached paper pass; do not expand the optional
+  niuro into animated/DOM foliage, restore DOM shutters, or add viewport filter
+  stacks as part of that test.
 - MathML-only output cuts the dense specimen's HTML and element count by more
   than half. Dual HTML and MathML remains the default until Safari, Chromium,
   Firefox, VoiceOver, NVDA, overflow, and print checks pass.

@@ -279,7 +279,8 @@
       height: viewport.height,
       dpr: viewport.dpr,
       maxDpr: 1,
-      ambientFps: 60,
+      /* The grain source itself has twenty discrete states per second. */
+      ambientFps: 20,
       transitionFps: 60,
       seed: seed,
       epochMs: epochMs,
@@ -289,6 +290,9 @@
       route: route,
       paused: manualPaused,
       reducedMotion: reducedMotion,
+      fernStrength: Math.max(0, Math.min(1, finiteNumber(
+        scene.getAttribute('data-fern-strength'), 0
+      ))),
       visible: !document.hidden,
       transition: activeTransition(),
       nowMs: Date.now(),

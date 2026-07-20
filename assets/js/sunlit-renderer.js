@@ -16,7 +16,7 @@
 })(typeof self !== 'undefined' ? self : this, function(scope) {
   'use strict';
 
-  var VERSION = '1.4.0-experimental';
+  var VERSION = '1.5.0-experimental';
   var CHANNEL_COUNT = 5;
   var SHADE = 0;
   var SUNSET = 1;
@@ -66,6 +66,7 @@
     'uniform vec4 u_mixes;',
     'uniform float u_relief;',
     'uniform vec2 u_route;',
+    'uniform float u_fern_strength;',
     '',
     'float hash21(vec2 p) {',
     '  p = fract(p * vec2(123.34, 456.21));',
@@ -155,6 +156,93 @@
     '  variance += 10000.0 * clamp((maskCoordinate - 0.750) / 0.125, 0.0, 1.0);',
     '  variance += 10000.0 * clamp((maskCoordinate - 0.875) / 0.125, 0.0, 1.0);',
     '  return sqrt(max(variance, 0.0));',
+    '}',
+    '',
+    'float niuroPinna(',
+    '  vec2 point, vec2 centre, vec2 direction,',
+    '  float lengthPx, float widthPx, float featherPx',
+    ') {',
+    '  vec2 tangent = normalize(direction);',
+    '  vec2 normal = vec2(-tangent.y, tangent.x);',
+    '  vec2 offset = point - centre;',
+    '  vec2 local = vec2(dot(offset, tangent), dot(offset, normal));',
+    '  float halfLength = max(lengthPx * 0.5, 0.001);',
+    '  float along = clamp(abs(local.x) / halfLength, 0.0, 1.0);',
+    '  // A broad linear-lanceolate pinna: recognisably niuro at native size,',
+    '  // but without tiny serrations that would turn into decorative noise.',
+    '  float halfWidth = widthPx * pow(max(0.0, 1.0 - along * along), 0.62);',
+    '  float distanceField = max(abs(local.x) - halfLength, abs(local.y) - halfWidth);',
+    '  return 1.0 - smoothstep(-featherPx, featherPx, distanceField);',
+    '}',
+    '',
+    'float niuroShadow(vec2 point, vec2 resolution, float mobile) {',
+    '  float scale = clamp(min(resolution.x / 1280.0, resolution.y / 720.0), 0.30, 1.30);',
+    '  vec2 root = mix(',
+    '    vec2(resolution.x * 1.075, resolution.y * 0.88),',
+    '    vec2(resolution.x * 1.16, resolution.y * 0.44), mobile',
+    '  );',
+    '  vec2 tip = mix(',
+    '    vec2(resolution.x * 0.84, resolution.y * 0.22),',
+    '    vec2(resolution.x * 0.89, resolution.y * 0.08), mobile',
+    '  );',
+    '  vec2 axis = tip - root;',
+    '  float axisLength = max(length(axis), 1.0);',
+    '  vec2 direction = axis / axisLength;',
+    '  vec2 normal = vec2(-direction.y, direction.x);',
+    '  vec2 fromRoot = point - root;',
+    '  float alongPx = dot(fromRoot, direction);',
+    '  float along = clamp(alongPx / axisLength, 0.0, 1.0);',
+    '  float bend = scale * (14.0 * sin(along * 2.8274334) + 6.0 * along * along);',
+    '  float crossPx = dot(fromRoot, normal) - bend;',
+    '  float rachisWidth = mix(3.2, 1.45, along) * scale;',
+    '  float rachisDistance = max(',
+    '    abs(crossPx) - rachisWidth, max(-alongPx, alongPx - axisLength)',
+    '  );',
+    '  float feather = mix(8.0, 5.5, mobile) * scale;',
+    '  float shadow = 1.0 - smoothstep(-feather, feather, rachisDistance);',
+    '',
+    '  // Eleven mature pairs and four still-unfurling pairs share one rachis.',
+    '  // On a phone only the crozier and upper pairs enter the cropped field.',
+    '  for (int pinna = 0; pinna < 15; pinna++) {',
+    '    if (mobile > 0.5 && pinna < 9) continue;',
+    '    float index = float(pinna);',
+    '    float t = 0.08 + index * 0.055;',
+    '    float localBend = scale * (14.0 * sin(t * 2.8274334) + 6.0 * t * t);',
+    '    float bendDerivative = scale * (39.584067 * cos(t * 2.8274334) + 12.0 * t);',
+    '    vec2 tangent = normalize(direction + normal * bendDerivative / axisLength);',
+    '    vec2 branchNormal = vec2(-tangent.y, tangent.x);',
+    '    vec2 centre = root + direction * axisLength * t + normal * localBend;',
+    '    float envelope = pow(max(0.0, sin(3.14159265 * clamp(t / 0.92, 0.0, 1.0))), 0.72);',
+    '    float pinnaLength = mix(22.0, 58.0, envelope) * scale;',
+    '    pinnaLength *= 1.0 - 0.76 * smoothstep(0.62, 0.90, t);',
+    '    if (pinna < 2) pinnaLength *= 0.78;',
+    '    float pinnaWidth = pinnaLength * 0.145;',
+    '',
+    '    vec2 leftDirection = normalize(tangent * 0.34 + branchNormal * 0.94);',
+    '    vec2 rightDirection = normalize(tangent * 0.34 - branchNormal * 0.94);',
+    '    float leftLength = pinnaLength * (0.97 + 0.035 * sin(index * 2.13));',
+    '    float rightLength = pinnaLength * (0.93 + 0.04 * cos(index * 1.71));',
+    '    vec2 leftCentre = centre + leftDirection * leftLength * 0.47;',
+    '    vec2 rightCentre = centre + tangent * (3.5 * scale) + rightDirection * rightLength * 0.47;',
+    '    shadow = max(shadow, niuroPinna(',
+    '      point, leftCentre, leftDirection, leftLength, pinnaWidth, feather',
+    '    ));',
+    '    shadow = max(shadow, niuroPinna(',
+    '      point, rightCentre, rightDirection, rightLength, pinnaWidth * 0.94, feather',
+    '    ));',
+    '  }',
+    '',
+    '  // A slightly irregular one-turn crozier identifies the partly opened',
+    '  // frond without turning the shadow into a perfect ornamental spiral.',
+    '  vec2 crozierCentre = tip - direction * (17.0 * scale) + normal * (4.0 * scale);',
+    '  vec2 curl = point - crozierCentre;',
+    '  float curlAngle = atan(curl.y, curl.x);',
+    '  float curlProgress = (curlAngle + 3.14159265) / 6.2831853;',
+    '  float curlRadius = scale * mix(22.0, 6.0, curlProgress);',
+    '  curlRadius += scale * 1.15 * sin(curlAngle * 2.0 + 0.7);',
+    '  float curlDistance = abs(length(curl) - curlRadius) - 1.8 * scale;',
+    '  shadow = max(shadow, 1.0 - smoothstep(-feather * 0.82, feather * 0.82, curlDistance));',
+    '  return clamp(shadow, 0.0, 1.0);',
     '}',
     '',
     'void main() {',
@@ -252,8 +340,9 @@
     '    float bandLeft = -u_resolution.x * 0.01 * index;',
     '    float bandTop = origin + period * index;',
     '    float transformedOrigin = bandLeft + childOrigin + childTranslate;',
+    '    float projectionDenominator = perspectiveU * childSin - childCos;',
     '    float localOffset = (transformedOrigin - perspective -',
-    '      perspectiveU * perspective) / (perspectiveU * childSin - childCos);',
+    '      perspectiveU * perspective) / projectionDenominator;',
     '    float localX = childOrigin + localOffset;',
     '    float perspectiveDepth = perspective + childSin * localOffset;',
     '    float projectionScale = perspective / max(perspectiveDepth, 1.0);',
@@ -262,7 +351,18 @@
     '    // The 100vw solid left border has ten-pixel transparent mitres.',
     '    // Their diagonal joins make each shadow 76->56px in shade and',
     '    // 40->20px at sunset instead of the constant-width bars we had.',
-    '    float onFiniteCore = step(0.0, localX) * step(localX, u_resolution.x);',
+    '    // Every edge receives the same optical blur. A hard step here made',
+    '    // the rays terminate abruptly at the finite shutter boundary.',
+    '    float localDerivative = (',
+    '      childCos - childSin * (transformedOrigin - perspective) / perspective',
+    '    ) / (projectionDenominator * projectionDenominator);',
+    '    float localSoftness = sigma * abs(localDerivative);',
+    '    float onFiniteCore =',
+    '      smoothstep(-2.0 * localSoftness, 2.0 * localSoftness, localX) *',
+    '      (1.0 - smoothstep(',
+    '        u_resolution.x - 2.0 * localSoftness,',
+    '        u_resolution.x + 2.0 * localSoftness, localX',
+    '      ));',
     '    float bevel = 10.0 * clamp(localX / u_resolution.x, 0.0, 1.0);',
     '    float interval = blurredInterval(',
     '      localY, bevel, outerDepth - bevel, projectionScale, sigma',
@@ -290,7 +390,21 @@
     '  float veilStart = mix(0.13, 0.45, mobile);',
     '  float veilReveal = clamp((veilCoordinate - veilStart) / (1.0 - veilStart), 0.0, 1.0);',
     '  float shadowAlpha = coverage * veilReveal * attenuation(uv);',
-    '  paper = mix(paper, shadowPigment, clamp(shadowAlpha, 0.0, 0.96));',
+    '  paper = mix(paper, shadowPigment, clamp(shadowAlpha, 0.0, 1.0));',
+    '',
+    '  // The optional sunset experiment is one cropped niuro (pani-niuro)',
+    '  // crozier, not a canopy. It shares the shutter pigment and the cached',
+    '  // paper pass, so it adds no steady-state or scroll-time rendering work.',
+    '  if (u_fern_strength > 0.001 && mobile < 0.5) {',
+    '    float fernArrival = smoothstep(0.18, 0.82, min(apertureMix, planeMix));',
+    '    float routeStrength = mix(',
+    '      0.09, 0.24, clamp((u_route.x - 0.74) / 0.26, 0.0, 1.0)',
+    '    );',
+    '    float fernAlpha = u_fern_strength * fernArrival * routeStrength *',
+    '      niuroShadow(screen, u_resolution, mobile) * attenuation(uv);',
+    '    vec3 fernPigment = vec3(0.52, 0.55, 0.51);',
+    '    paper = mix(paper, fernPigment, clamp(fernAlpha, 0.0, 0.25));',
+    '  }',
     '',
     '  paper = clamp(paper, vec3(0.0), vec3(1.0));',
     '  out_color = vec4(paper, 1.0);',
@@ -541,6 +655,7 @@
     this.transition = null;
     this.paused = Boolean(this.options.paused);
     this.reducedMotion = Boolean(this.options.reducedMotion);
+    this.fernStrength = clamp(Number(this.options.fernStrength) || 0, 0, 1);
     this.visible = this.options.visible !== false;
     this.active = false;
     this.disposed = false;
@@ -657,7 +772,7 @@
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
     resources.paperUniforms = uniformMap(gl, paperProgram, [
-        'u_resolution', 'u_seed', 'u_mixes', 'u_relief', 'u_route'
+        'u_resolution', 'u_seed', 'u_mixes', 'u_relief', 'u_route', 'u_fern_strength'
       ]);
     resources.atmosphereUniforms = uniformMap(gl, atmosphereProgram, [
         'u_noise', 'u_paper', 'u_resolution', 'u_noise_offset', 'u_sunset', 'u_pass'
@@ -928,6 +1043,7 @@
     gl.uniform4f(uniforms.u_mixes, channels[0], channels[1], channels[2], channels[3]);
     gl.uniform1f(uniforms.u_relief, channels[4]);
     gl.uniform2f(uniforms.u_route, route[0], route[1]);
+    gl.uniform1f(uniforms.u_fern_strength, this.fernStrength);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     this.paperCacheState = cacheState;
