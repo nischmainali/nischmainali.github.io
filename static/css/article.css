@@ -1853,18 +1853,19 @@ html.article-figure-is-open {
 
   /* A real right marginal field changes the optical center of the article.
    * Preserve the already approved outer positions of the TOC and marginalia,
-   * then place prose halfway between them. The gap contracts gently as prose
-   * grows, keeping both outer fields fixed. Never create the triad when either
-   * the exterior TOC or the right marginal field is absent. */
+   * then weight their channels by visual density rather than making them equal:
+   * the darker TOC receives more air, while the quieter sidenote remains tied
+   * to its sentence. Never create the triad when either outer field is absent. */
   .single.blog.has-article-marginalia:has(.article-contents-rail) {
-    --article-balanced-column-gap: calc(17.55rem - var(--article-measure) / 4);
-    --article-balanced-prose-inset: calc(var(--article-balanced-column-gap) - 4rem);
-    --article-marginal-gap: var(--article-balanced-column-gap);
+    --article-toc-prose-gap: 10rem;
+    --article-prose-marginal-gap: calc(25.1rem - var(--article-measure) / 2);
+    --article-weighted-prose-inset: calc(var(--article-toc-prose-gap) - 4rem);
+    --article-marginal-gap: var(--article-prose-marginal-gap);
   }
 
   .single.blog.has-article-marginalia:has(.article-contents-rail) .article-body {
     margin-right: auto;
-    margin-left: var(--article-balanced-prose-inset);
+    margin-left: var(--article-weighted-prose-inset);
   }
 
   .single.blog .article-contents-rail {
@@ -1886,7 +1887,7 @@ html.article-figure-is-open {
     left: calc(
       0rem
       - var(--article-rail-width)
-      - var(--article-balanced-column-gap)
+      - var(--article-toc-prose-gap)
     );
   }
 

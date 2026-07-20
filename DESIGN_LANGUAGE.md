@@ -581,10 +581,14 @@ exception to the otherwise useful asymmetry: when both the exterior TOC and a
 real right marginal field are present, the old 220px/41.6px channels read as an
 accidentally missing column. Those pages now declare their marginalia at build
 time and form a calibrated triad. The TOC and marginalia retain their approved
-outer positions while prose moves into the optical midpoint between them. The
-paired channels contract from 8.55rem to 8.175rem as prose grows. If either the
-TOC or marginalia is absent, prose remains centered on the sheet; never reserve
-an empty column merely for template symmetry.
+outer positions. An initial arithmetically equal arrangement proved too close
+because the compact, dark TOC carries more visual weight than the wider, quieter
+note. The final composition therefore gives the TOC side a steady 10rem channel
+and lets the note side contract gently from about 7.1rem to 6.35rem as the prose
+grows. This places the prose between its original centered position and the
+literal midpoint: balanced by perception rather than generic symmetry. If
+either the TOC or marginalia is absent, prose remains centered on the sheet;
+never reserve an empty column merely for template symmetry.
 
 Asana Math 000.962 supplies the mathematical voice. Linden Hill revives
 Goudy's Deepdene, and its page texture calls for a warm old-style companion.
@@ -631,8 +635,9 @@ Its governing choices are:
   settles between 2.5rem and 4.5rem from the viewport top while scrolling. Its
   prose measure interpolates from 36rem to the restrained 37.5rem maximum
   described above. On an article with real marginalia, the prose axis shifts
-  left just enough to create equal optical channels to the rail and note field;
-  the two outer fields themselves do not move. Reserved old-style section
+  left to form weighted optical channels: more air follows the denser rail,
+  while the quieter note remains visibly attached to its sentence. The two
+  outer fields themselves do not move. Reserved old-style section
   numbers, typographic indentation, and an active ancestor trail make hierarchy
   legible at a glance. A wine reading-progress rule and the current H2/H3 path
   remain fixed above the independently scrolling outline, which quietly keeps
