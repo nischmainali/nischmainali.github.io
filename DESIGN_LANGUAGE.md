@@ -1,15 +1,13 @@
 # Design language and long-term visual working note
 
 - Last baseline study: 2026-07-20
-- Baseline checkpoint: `7c9d201` (`main`)
-- Current accepted environmental direction: **Lokta Conservatory**
-- Design worktree: `experiment/lokta-conservatory`
-- Current opened-article experiment: **Lokta Field Note**
-- Article branch: `experiment/article-reading-system` (**not yet accepted**)
-- Current environmental successor experiment: **Lokta Sunlight reader**
-- Successor branch: `experiment/lokta-sunlight-reader` (**not yet accepted**)
-- Archived predecessor checkpoint: `c26729b`
-- Hugo pinned for the article experiment: `v0.164.0+extended`
+- Accepted production direction: **Lokta Sunlight reader + Lokta Field Note**
+- Production branch: `main`
+- Accepted implementation lineage: `experiment/toc-outside-sheet`
+- Pre-promotion main archive: `archive/pre-field-note-main-2026-07-20`
+  (`d37a896`)
+- Earlier article checkpoint: `c26729b`
+- Hugo version: `v0.164.0+extended`
 - Reference theme checkout: `/Users/nisch/code/site/hugo-paged`
 - Live site repository: `/Users/nisch/code/site/nisch-hugo-site`
 
@@ -165,12 +163,13 @@ static CSS poster. Performance work may remove redundant computation, but it
 must preserve the progressive blur, transition continuity, paper relief, and
 build-time mathematics.
 
-#### Experimental successor: Lokta Sunlight reader
+#### Accepted successor: Lokta Sunlight reader
 
-The `experiment/lokta-sunlight-reader` branch tests a closer reconstruction of
-Sunlit's optics on the Lokta Field Note. The checkpoint at `c26729b` preserves
-the preceding article and environmental implementation. Promotion requires
-Nisch's visual approval.
+The implementation developed on `experiment/lokta-sunlight-reader` is the
+accepted reconstruction of Sunlit's optics on the Lokta Field Note. The
+checkpoint at `c26729b` preserves the preceding article and environmental
+implementation; the accepted lineage continues through
+`experiment/toc-outside-sheet` and `main`.
 
 The pass notes below form a chronological record. Later headings supersede the
 implementation claims in earlier headings. The ray-first optics pass records
@@ -516,13 +515,13 @@ Preserve the distinction between wide editorial matter and the narrower reading
 column. Avoid wrapping the article in a second container, adding a sticky social
 rail, or surrounding metadata with UI chrome.
 
-#### Lokta Field Note article system (experimental)
+#### Lokta Field Note article system (accepted)
 
-The `experiment/article-reading-system` branch develops the opened article into
-a more complete editorial object while deliberately leaving the Documents list,
-global navigation, environmental field, and page frame alone. This is an
-experiment awaiting Nisch's visual approval; it must not be described as an
-accepted mainline system until that approval happens.
+The system developed on `experiment/article-reading-system` makes the opened
+article a more complete editorial object while deliberately leaving the
+Documents list, global navigation, environmental field, and page frame alone.
+It was accepted for mainline use on 20 July 2026 after the sunlight-reader and
+exterior-contents passes.
 
 The experiment borrows editorial machinery from the local
 `slotThe.github.io`/Tony Zorman reference, particularly its clear post opening,
@@ -537,8 +536,7 @@ discipline with TurnTrout's accessible HTML+MathML delivery, responsive
 overflow cues, keyboard focus, and print care. Those ideas are re-authored for
 this page: formulas remain bare ink on the Lokta surface, numbers use the quiet
 Jost marginal voice, and statements read as book passages rather than panels.
-This provenance and the entire mathematics layer remain experimental with the
-rest of the branch.
+This provenance and the mathematics layer are part of the accepted reader.
 
 The TurnTrout-derived successor pass adds editorial mechanics that strengthen
 the existing paper without importing that site's visible identity. The site
@@ -709,7 +707,7 @@ Its governing choices are:
   keeps equations, statements, and figures together where possible; and adds
   the destination of external links in plain text.
 
-Experimental authoring controls are intentionally few:
+Article authoring controls are intentionally few:
 
 - `subtitle` and `show_toc` are optional front-matter controls. Mathematics is
   detected during rendering and requires no page flag;
@@ -840,16 +838,16 @@ The site is intentionally small:
 - `assets/js/sunlit.js`, `sunlit-worker.js`, and `sunlit-renderer.js` — state and
   route continuity, worker lifecycle, the cached projected-light plane, paper
   relief, and procedural grain;
-- `layouts/_default/single.html` — experimental site-owned opened-article
-  structure, leaving the vendored theme template untouched;
+- `layouts/blog/single.html` — site-owned opened-article structure scoped to
+  Blog posts, leaving generic pages and the vendored theme template untouched;
 - `layouts/baseof.html`, `layouts/blog/section.html`, and
   `layouts/docs/section.html` — the Hugo 0.164 list-template bridge. It preserves
   the vendored theme's existing Documents and Notes markup while keeping its
   legacy layout files untouched;
 - `layouts/_markup/` — Hugo 0.164 site-owned heading, link, image, code, and
   mathematical passthrough hooks;
-- `layouts/partials/article-meta.html` and `article-end.html` — experimental
-  article opening and quiet return treatment;
+- `layouts/partials/article-meta.html` and `article-end.html` — article opening
+  and quiet return treatment;
 - `layouts/partials/render-math.html` — the one strict build-time KaTeX entry
   point shared by Markdown and numbered equations;
 - `data/math.toml` — the deliberately small central macro table;

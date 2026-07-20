@@ -6,7 +6,7 @@ with Hugo 0.164.0; generated output is not stored in Git.
 ## Local development
 
 ```sh
-hugo server --buildDrafts --disableFastRender --bind 127.0.0.1 --port 1315
+hugo server --buildDrafts --renderToMemory --disableFastRender --bind 127.0.0.1 --port 1315
 ```
 
 Open <http://127.0.0.1:1315/>. Hugo may create a local `.hugo_build.lock`; it is

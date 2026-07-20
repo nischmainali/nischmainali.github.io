@@ -1,6 +1,6 @@
 # Unified site blueprint: the Lokta Sunlight reader
 
-Status: experimental implementation in progress on `experiment/lokta-sunlight-reader`
+Status: accepted for `main` on 20 July 2026
 
 Prepared: 19 July 2026
 
@@ -14,9 +14,10 @@ Predecessor checkpoint: `c26729b` on `experiment/article-reading-system`
 > mullion, and two-field shutter specifications below as historical research.
 > `DESIGN_LANGUAGE.md` records the current implementation.
 
-## Experimental implementation record
+## Accepted implementation record
 
-Phases 1 through 4 now exist on the successor branch. Hugo remains the compiler.
+Phases 1 through 4 were completed through the successor branches and accepted as
+the production baseline. Hugo remains the compiler.
 The environment uses one opaque WebGL2 canvas with worker, main-thread, and CSS
 poster tiers. The article remains static HTML with build-time mathematics,
 references, citations, highlighting, and responsive media.
