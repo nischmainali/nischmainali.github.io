@@ -84,7 +84,7 @@
         var theme = stored === 'sunset' || stored === 'dark' ? 'sunset' : 'shade';
         var posterTheme = theme;
         try {
-          var transition = JSON.parse(sessionStorage.getItem('sunlit-transition') || 'null');
+          var transition = JSON.parse(sessionStorage.getItem('sunlit-transition-v2') || 'null');
           var transitionTarget = transition && (transition.to === 'sunset' || transition.to === 'dark') ? 'sunset' : 'shade';
           var transitionSource = transition && (transition.from === 'sunset' || transition.from === 'dark') ? 'sunset' : 'shade';
           var transitionStart = Number(transition && transition.startTimeMs);
@@ -93,9 +93,20 @@
             transitionEnd = transitionStart + (transitionTarget === 'sunset' ? 5350 : 3000);
           }
           if (transition && transitionTarget === theme && now >= transitionStart && now <= transitionEnd) {
-            posterTheme = transitionSource;
+            var targetColor = transitionTarget === 'sunset' ? 1 : 0;
+            var sourceColor = transitionSource === 'sunset' ? 1 : 0;
+            if (Array.isArray(transition.fromValues) && transition.fromValues.length === 5) {
+              var savedColor = Number(transition.fromValues[3]);
+              if (isFinite(savedColor)) sourceColor = Math.max(0, Math.min(1, savedColor));
+            }
+            var colorDistance = Math.abs(targetColor - sourceColor);
+            var colorDuration = 3000 * colorDistance;
+            var colorProgress = colorDuration > 0 ?
+              Math.max(0, Math.min(1, (now - transitionStart) / colorDuration)) : 1;
+            var sampledColor = sourceColor + (targetColor - sourceColor) * colorProgress;
+            posterTheme = sampledColor >= 0.5 ? 'sunset' : 'shade';
           } else if (transition) {
-            sessionStorage.removeItem('sunlit-transition');
+            sessionStorage.removeItem('sunlit-transition-v2');
           }
         } catch (e) {
           posterTheme = theme;

@@ -93,69 +93,61 @@ Treat these as typographic marginalia, not logos. They should feel discovered on
 the page. Do not multiply decorative symbols across every component or turn the
 floral mark into a loud brand stamp.
 
-### 4. The Lokta Conservatory environmental field
+### 4. The Lokta sunlight environmental field
 
-The environmental layer began as an independent reconstruction of the visible
-behavior of `https://www.sunlit.place/`. The accepted successor keeps that
-reference's excellent light physics—diagonal shutters, the vertical window-frame
-shadow, six-stage directional blur, moving Gaussian grain, and the long mode
-transition—but gives the surface and silhouettes an identity specific to this
-site.
+The environmental layer reconstructs the visible optics of
+`https://www.sunlit.place/` on a Nepal-biased fibrous sheet. Nisch removed the
+reference's vertical mullion and every botanical silhouette after visual review.
+The current successor contains no fern, canopy, falling leaf, or other foliage.
+Its identity comes from projected window light, Lokta material, and a restrained
+lichen cast.
 
-The scene still has two states rather than a conventional light/dark theme.
-**Shade** is a gently graded lokta-paper field moving only slightly from warm
-ivory toward lichen. The tonal distance across the page must stay shallow: it
-should read as one fibrous sheet, not a beige-to-green split. A locally bundled,
-procedural fibre texture sits under the finer moving grain. Broad shutter light
-provides the environmental movement without visible foliage becoming a second
-subject.
+The scene has two states. **Shade** keeps a shallow move from warm covered paper
+toward a clearer green-white window side. **Sunset** uses the reference's peach
+multiply light with a small green-gold bias. Both states keep daylight ink.
+Treat them as two positions of one sun and shutter system, rather than a light
+theme and dark theme.
 
-The paper also participates in the mode change. A sparse, non-repeating set of
-paired highlight-and-shadow fibres is effectively absent in shade, then resolves
-slowly behind the sunset color as raking light reveals the sheet's relief. This
-response intentionally lags the main color transition and is quieter on mobile.
-It should be perceived as thickness in the paper, never recognized immediately
-as a drawn pattern. Keep the local tonal difference around three to five percent
-and do not add cursor parallax or continuous movement to this layer.
+One indexed slat field drives the rays. Desktop shade uses a 64 px period with a
+56 px shadow body; phone shade uses 58 px with a 42 px body. Sunset opens the
+same field to periods of 73.6 and 66.7 px with 20 px bodies. The plane moves from
+-20 to -16 degrees and travels 10vw along the slat axis. Do not cross-fade two
+complete stripe textures. That method creates doubled frequencies and makes the
+transition look synthetic.
 
-**Sunset** is green-gold reflected light, not a dark mode and not an orange
-filter. It narrows and separates the shutters, introduces a restrained
-rhododendron blush, and reveals one niuro-like fern composition at the lower
-right. The fern is deliberately feathered and edge-bound so it can be distinctive
-without occupying the reading measure. Eight sparse peepal leaves fall on
-desktop and five on mobile. Their role is an occasional sign of life, not a
-continuous foreground event.
+The right edge keeps a six-pixel base blur. Diffusion grows across the page
+through the reference's approximate 8, 25, 50, and 100 px stages. Each ray keeps
+its measured depth while its pigment feathers along the slat axis, with a small
+index-dependent fan. A separate, broad oblique veil covers the left field and
+fades continuously; it must never resolve into a shared hard edge or vertical
+boundary. The same neutral moss-gray shadow pigment remains through sunset;
+warm light changes its appearance without making it darker.
 
-The governing rule is **silhouette identity and surface character, not more
-darkness or more objects**. Preserve the single-frond composition, low object
-count, quiet shadows, local paper fibre, and long motion. New Nepal-evoking
-botanical references should refine the silhouette vocabulary rather than add a
-second decorative layer. In particular, do not restore the generic 300-leaf
-canopy, make the fern darker, or saturate the amber to create more drama.
+The slat aperture changes over 500 ms, the plane settles over 1.2 seconds, the
+peach field over three seconds, and the six-pixel base diffusion remains fixed.
+Raking paper relief enters after a 550 ms delay over 4.8 seconds and returns over
+2.4 seconds. The rays stay still after reaching either endpoint. Continuous life
+comes from the reference-matched Gaussian grain at twenty stepped positions per
+second. Grain and mode transitions continue under `prefers-reduced-motion`; the
+pause control freezes the ambient clock.
 
-Home, Docs, and articles share the same environmental grammar, but the accepted
-strength is intentionally gentle enough for navigation and long reading. Check
-all three before increasing any shadow opacity. Future animation should remain
-slow and environmental; bouncing UI, scroll spectacle, parallax stacks, and
-gratuitous hover motion are not part of this language. At Nisch's explicit
-request, grain, falling leaves, and mode transitions continue even when
-`prefers-reduced-motion` is active. Do not silently restore a motion override.
+A sparse set of paired highlight-and-shadow fibres remains near-invisible in
+shade and resolves under raking sunset light. Keep the local tonal difference
+around three to five percent. The fibres should register as paper thickness on a
+second look. Cursor parallax and drifting ray phases do not belong here.
 
-Page navigation must preserve one environmental moment. The chosen state is
-applied before first paint, and the grain, fern, and falling leaves share a
-session-wide clock so that following a link does not replay or visibly jump the
-scene. Do not add a page-loading veil over the background. A deliberate press of
-the sun/moon control should still produce the full atmospheric transition:
-content pages change; the light does not.
+Home, Documents, and articles share the field. Route attenuation protects the
+article measure while the outer sheet retains the full projection. Check all
+three before changing shadow strength. Page navigation preserves the mode,
+grain clock, seed, and any active transition. The next page must enter the same
+patch of light without a loading veil or replay.
 
-Performance work follows the same rule: make the living page arrive sooner,
-not visually poorer. Local CSS and JavaScript use deterministic content versions
-so repeat visits can retain them safely. Linden Hill prose receives first-font
-priority while the decorative grain is fetched at low priority. Shade does not
-construct sunset-only falling leaves until they are needed; shutter and article
-geometry are batched and reused rather than repeatedly measured. Do not trade
-away the grain, progressive blur, motion continuity, or mathematical fidelity
-for a synthetic loading state.
+The worker renders one opaque canvas and caches the paper and shutter pass.
+Ambient frames copy that surface, add grain, and apply the sunset multiplier.
+The renderer performs no work in response to scroll. Keep the worker fallback,
+DPR cap, deterministic asset versions, and static CSS poster. Performance work
+may remove redundant computation, but it must preserve the progressive blur,
+transition continuity, paper relief, and build-time mathematics.
 
 #### Experimental successor: Lokta Sunlight reader
 
@@ -163,6 +155,10 @@ The `experiment/lokta-sunlight-reader` branch tests a closer reconstruction of
 Sunlit's optics on the Lokta Field Note. The checkpoint at `c26729b` preserves
 the preceding article and environmental implementation. Promotion requires
 Nisch's visual approval.
+
+The pass notes below form a chronological record. Later headings supersede the
+implementation claims in earlier headings. The ray-first optics pass records
+the current environmental state.
 
 The live Sunlit production bundle supplied the control measurements. The first
 Sunlit-calibrated checkpoint matched these parts of the reference:
@@ -261,14 +257,12 @@ clean right field measured about `rgb(218,174,133)`, compared with Sunlit near
 already asked for warmer light with less depth and weaker dark shadows, so treat
 both differences as accepted constraints rather than missed calibration.
 
-#### Hybrid shadow restoration pass (20 July 2026)
+#### Hybrid shadow restoration pass (20 July 2026, superseded)
 
-Nisch removed two reference details after reviewing the calibrated successor.
-The current branch has no vertical mullion in either the WebGL scene or its CSS
-poster, and it creates no falling leaves. Keep both absences deliberate. The two
-niuro fronds and the edge-cropped peepal canopy supply the remaining botanical
-shadow; strengthen one frond before adding another moving object if the scene
-needs more silhouette identity.
+Nisch removed the vertical mullion and falling leaves after reviewing the
+calibrated successor. This checkpoint retained two niuro fronds and an
+edge-cropped peepal canopy. The later ray-first pass removed those remaining
+forms.
 
 The mode change now borrows the predecessor's optical choreography without
 restoring its costly DOM filter stack. Shade and sunset use complete shutter
@@ -309,7 +303,7 @@ confirming that the environmental clock continued.
 #### QA and continuity polish (20 July 2026)
 
 The environmental controller now gives each saved mode change an exact end time.
-It derives that time from the six channel distances, so a partial reversal keeps
+It derives that time from the channel distances, so a partial reversal keeps
 only the time needed to reach its new endpoint. The pre-paint header and the live
 controller read the same value and discard expired records. During page changes,
 the source poster stays beneath the canvas until the resumed frame reaches full
@@ -317,8 +311,8 @@ opacity. The sun control announces the requested destination during that short
 handoff instead of describing the source poster.
 
 Home now anchors its title dingbat to the title itself. The portrait keeps the
-accepted crop-sheet geometry and cross-fades its shade and sunset veils over the
-same 1.6 second interval as the botanical channel. Documents constrains its
+accepted crop-sheet geometry and cross-fades its shade and sunset veils over a
+1.6 second interval. Documents constrains its
 measure to the paper inset from 768 through 799 px, removes the doubled interval
 before the first entry, and gives entry titles a wine hairline and forest-ink
 focus state. These changes extend the existing print vocabulary without adding
@@ -332,6 +326,36 @@ reviewed Home, Documents, the scratch specimen, and the Gaussian-process note at
 kept the prose and canvas painted. Route handoffs, active outline tracking,
 mathematical overflow, focus treatment, page width, and the browser console
 showed no new fault.
+
+#### Ray-first optics pass (20 July 2026)
+
+Nisch removed the remaining canopy and both fern compositions. The renderer now
+uses five channels: aperture, plane, diffusion, sunset, and paper relief. It no
+longer compiles a botanical shader, creates instance buffers, uploads foliage on
+resize, or draws plant fragments during ambient frames.
+
+The live Sunlit bundle corrected two earlier assumptions. Its slat aperture
+morphs over 500 ms; an inert parent transition had made 1.8 seconds look like the
+ray clock in the stylesheet. Its 10vw translation runs along the rotated slat
+axis and does not shift an infinite stripe field across its normal. The current
+shader follows those mechanics. It morphs one indexed field, applies the plane
+translation in local coordinates, and keeps diffusion fixed in both modes. The
+serialized diffusion channel remains only so an older in-flight page transition
+can cross a navigation boundary without invalid state.
+
+A Gaussian-damped Fourier field now convolves the complete periodic shutter
+instead of blurring one isolated slat. It therefore preserves the correct shadow
+duty cycle beneath the 50 and 100 px covered-side blur. The right edge begins at
+six pixels; an independent 200-degree pigment feather, a one-percent-per-band
+fan, and the broad oblique veil replace the former common cutoff. This removes
+the periodic modulus seam, doubled midpoint pattern, and vertical dark boundary.
+The shadow uses one green-biased neutral pigment in shade and sunset.
+
+Browser checks covered Home and the scratch article at 1280 and 390 px in both
+states, plus both directions of the transition. The pages kept their width, the
+worker remained active, and the phone article preserved its reading hierarchy.
+The final promotion matrix still needs the other routes and browsers listed in
+the experiment gate.
 
 ### 5. An unboxed portrait
 
@@ -610,11 +634,12 @@ rendering, and the absence of article console errors.
 
 The current colors are best understood by role rather than as a large token set:
 
-- shade surface: a shallow `#f5f2e8` through `#f1f1e8` to `#eef0e7` field;
-- sunset overlay: muted amber `#d9ad84` at restrained opacity, multiply-blended;
-- reflected accent: rhododendron wine `rgba(143, 58, 65, 0.15)` near the upper right;
-- architectural shadow: moss-gray `#bcc5b5`, made softer and more diffuse at sunset;
-- botanical shadow: `#687866`, used at low opacity for the fern and peepal leaves;
+- shade surface: warm `vec3(0.987, 0.977, 0.966)` clearing toward a faint
+  green-white `vec3(0.985, 0.989, 0.979)`;
+- sunset light: the reference-calibrated `vec3(1.015, 0.758, 0.571)` multiply
+  field with a restrained rhododendron cast near the upper right;
+- architectural shadow: one moss-neutral `vec3(0.772, 0.786, 0.766)` pigment,
+  shaped by progressive diffusion rather than a darker sunset color;
 - paper surface: locally generated lokta-like pulp beneath fine moving grain,
   plus a sparse paired-stroke relief revealed by sunset's raking light;
 - legacy warm page variable: `#fbf7f0` (not the active environmental surface);
@@ -676,16 +701,16 @@ The site is intentionally small:
 - `content/_index.md` — home structure and selected works;
 - `content/blog/` — documents and draft test pages;
 - `static/css/custom.css` — local page/layout refinements and portrait treatment;
-- `static/css/sunlit.css` — shade/sunset geometry, blur, grain, foliage, and toggle;
+- `static/css/sunlit.css` — shade/sunset poster, paper handoff, and controls;
 - `static/textures/lokta-fibres.svg` — the repeating pulp-scale paper field;
-- `static/textures/lokta-raking-relief.svg` — non-repeating paired fibres that
-  become visible only as sunset settles;
+- `static/textures/lokta-raking-relief.svg` — archived predecessor plate; the
+  current renderer synthesizes the paired raking fibres procedurally;
 - `static/textures/gaussian-noise.png` — the licensed local reference for the
   source grain; production synthesizes the same 512-pixel Gaussian statistics
   once in the worker and does not request this 231 KB file;
 - `assets/js/sunlit.js`, `sunlit-worker.js`, and `sunlit-renderer.js` — state and
-  route continuity, worker lifecycle, the cached light plane, procedural grain,
-  and the instanced Nepalese botanical silhouettes;
+  route continuity, worker lifecycle, the cached projected-light plane, paper
+  relief, and procedural grain;
 - `layouts/_default/single.html` — experimental site-owned opened-article
   structure, leaving the vendored theme template untouched;
 - `layouts/baseof.html`, `layouts/blog/section.html`, and
@@ -775,8 +800,7 @@ The following behavior was observed in the accepted worktree:
   horizontal overflow.
 - At mobile width the portrait moves into flow and measures about 240 px; the
   title and prose use the available 358 px content width.
-- With reduced motion active, the grain, sparse falling leaves, and transitions
-  intentionally continue.
+- With reduced motion active, the grain and mode transitions continue.
 - Home, Docs, and article pages intentionally share the same gently calibrated
   environmental strength.
 
@@ -827,8 +851,8 @@ strict production, draft, syntax, and content checks passed.
 
 A third 2026-07-17 pass addressed mathematical-page arrival and the last rail
 collision. Timestamp cache-busters became deterministic source hashes; the
-primary reading face now precedes low-priority grain; shade defers sunset-only
-leaf construction; and the environmental, outline, and formula scripts batch
+primary reading face now precedes low-priority grain; the then-current shade
+deferred sunset-only leaf construction; and the environmental, outline, and formula scripts batch
 or cache repeated work. Warm local reloads of the complete scratch specimen
 settled at 47–48 ms in the inspected browser. The narrower 36rem prose measure
 and right-growing 42rem technical measure leave a 2.25rem interval between
@@ -839,8 +863,8 @@ horizontal overflow or console warnings.
 
 On 2026-07-19 the first paint-budget pass replaced the old fixed-element tree
 with one scene. The successor experiment above removes that pass's scroll pause,
-restores stepped grain and full foliage motion, and keeps the expensive paper
-work in a cached texture. Opened posts place the environmental and reading
+keeps stepped grain, and stores the expensive paper work in a cached texture.
+Opened posts place the environmental and reading
 sheets on explicit sibling paint planes. The first article image fetches at
 normal priority. Future work must preserve this separation.
 
@@ -850,11 +874,9 @@ These are implementation findings, not permission for a future agent to launch
 a cleanup pass. Fix them only when in scope, and preserve the visual language
 while doing so.
 
-- The experimental renderer draws 300 edge-cropped canopy instances and two
-  procedural fern fronds in one instanced pass. A midrange phone still needs
-  GPU, memory, power, and scroll traces before promotion. Do not translate these
-  forms back into DOM nodes or viewport filter stacks, and do not restore the
-  removed falling-leaf loop as a performance test.
+- A midrange phone still needs GPU, memory, power, and scroll traces before
+  promotion. Preserve the single cached paper pass and do not restore foliage,
+  DOM shutters, or viewport filter stacks as part of that test.
 - MathML-only output cuts the dense specimen's HTML and element count by more
   than half. Dual HTML and MathML remains the default until Safari, Chromium,
   Firefox, VoiceOver, NVDA, overflow, and print checks pass.

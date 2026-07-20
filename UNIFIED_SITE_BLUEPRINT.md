@@ -6,6 +6,14 @@ Prepared: 19 July 2026
 
 Predecessor checkpoint: `c26729b` on `experiment/article-reading-system`
 
+> **Superseded environmental details, 20 July 2026:** Nisch removed the vertical
+> mullion, canopy, ferns, and falling leaves after visual review. The current
+> branch uses one five-channel ray field with no foliage. It morphs one indexed
+> slat projection over 500 ms, moves the plane over 1.2 seconds, and preserves
+> fixed six-pixel diffusion and a three-second color clock. Treat the vegetation,
+> mullion, and two-field shutter specifications below as historical research.
+> `DESIGN_LANGUAGE.md` records the current implementation.
+
 ## Experimental implementation record
 
 Phases 1 through 4 now exist on the successor branch. Hugo remains the compiler.
@@ -14,18 +22,18 @@ poster tiers. The article remains static HTML with build-time mathematics,
 references, citations, highlighting, and responsive media.
 
 The renderer follows the measured Sunlit geometry, blur direction, grain
-statistics, cluster envelopes, and transition clocks. It keeps four authored
-departures: lichen-white Lokta color, peepal and niuro silhouettes, route-aware
-reading attenuation, and accessible motion controls. The implementation omits
-Sunlit's React bundle, loading veil, remote noise file, 715-node scene, and live
+statistics, and transition clocks. It keeps three authored departures:
+lichen-white Lokta color, route-aware reading attenuation, and accessible motion
+controls. The implementation omits Sunlit's foliage and vertical mullion as well
+as its React bundle, loading veil, remote noise file, 715-node scene, and live
 backdrop-filter stack.
 
 The worker caches the procedural paper and shutter pass in an RGBA8 framebuffer.
 It redraws that texture for theme, route, or geometry changes. Ambient frames
-copy the cached texture through a shader, draw one instanced botanical pass, add
-the generated Gaussian grain, and finish with the sunset multiply field. The
-shader copy replaces `blitFramebuffer`, which produced an unpainted default
-buffer in Chromium during browser QA. The controller has no scroll listener.
+copy the cached texture through a shader, add the generated Gaussian grain, and
+finish with the sunset multiply field. The shader copy replaces
+`blitFramebuffer`, which produced an unpainted default buffer in Chromium during
+browser QA. The controller has no scroll listener.
 
 The visual control now uses these source measurements:
 
@@ -35,11 +43,10 @@ The visual control now uses these source measurements:
 | sunset plane | -16 degrees plus 10vw; periods 74 px and 67 px |
 | shutter depth | 56 px desktop, 42 px phone, 20 px sunset |
 | veil | 85 degrees/20 percent; 75 degrees/45 percent on phone |
-| diffusion | broadest at left, six-pixel edge at right |
-| mullion | fixed vertical 24 px shadow with right edge at 70% (`right: 30vw`) |
+| diffusion | broadest at left, six-pixel edge at right; fixed in both modes |
 | grain | generated 512 x 512 R8 Gaussian field; 20 stepped states per second |
-| canopy/travel | 300 cropped peepal instances; 30 falling instances |
-| clocks | 0.5/1.2/1.0 or 0.5/3.0 seconds, plus 4.8-second Lokta relief |
+| foliage / mullion | deliberately absent |
+| clocks | 0.5/1.2/3.0 seconds, plus 4.8-second Lokta relief |
 
 The document pass resolves equation and statement references at build time. It
 adds stable citation occurrence IDs, an alphabetical bibliography, References
@@ -67,7 +74,7 @@ the browser must do:
 ```text
 fixed environmental plane          static document plane
 -------------------------          ---------------------
-light, shutters, leaves,            title, prose, MathML,
+light, shutters, paper,             title, prose, MathML,
 paper, grain, mode transition       TOC, notes, figures, links
 
 one isolated rendered surface      ordinary streamed HTML
@@ -93,7 +100,7 @@ Five moments define success:
 3. **Scrolling:** a fast fling never exposes an unpainted band. The environmental
    motion does not pause, restart, or steal the next text paint.
 4. **Changing light:** the sun/moon control produces Sunlit's long, physical shift
-   in shutter geometry, color, grain, and foliage. It is not a color-scheme fade.
+   in shutter geometry, color, grain, and paper relief. It is not a color-scheme fade.
 5. **Following a link:** the new document appears like the next sheet in the same
    patch of light. State, seed, and animation phase do not visibly jump.
 
@@ -981,7 +988,8 @@ Before accepting a change, answer all of these:
 - `static/css/sunlit.css`: complete poster, canvas handoff, and quiet controls
 - `assets/js/sunlit.js`: state, continuity, capability selection, and fallbacks
 - `assets/js/sunlit-worker.js`: worker lifecycle and renderer command bridge
-- `assets/js/sunlit-renderer.js`: cached paper, instanced plants, grain, and clocks
+- `assets/js/sunlit-renderer.js`: cached projected paper, periodic ray optics,
+  procedural fibres, grain, and clocks
 - `static/css/article.css`: article geometry and visual grammar
 - `assets/js/article.js`: progressive article enhancements
 - `layouts/partials/render-math.html`: strict Hugo/KaTeX entry point

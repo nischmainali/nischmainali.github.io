@@ -8,11 +8,9 @@
 
 :root {
   --sunlit-paper-near: #fdf9f5;
-  --sunlit-paper-far: #f5f7f2;
-  --sunlit-shadow: #a7a8a4;
-  --sunlit-shadow-feather: rgba(216, 221, 213, 0.68);
-  --sunlit-botanical: #687866;
-  --sunlit-botanical-soft: #899785;
+  --sunlit-paper-far: #fbfcf8;
+  --sunlit-shadow: #c5c9c3;
+  --sunlit-shadow-feather: rgba(231, 233, 228, 0.72);
   --sunlit-sunset: #e4b68a;
   --sunlit-rhododendron: rgba(143, 58, 65, 0.08);
   --sunlit-utility-ink: #28352d;
@@ -74,32 +72,34 @@ body > .crop-c {
   content: "";
   position: absolute;
   inset: -1.5rem;
-  background:
-    url("../textures/lokta-fibres.svg") 17px 11px / 360px 360px repeat,
-    url("../textures/lokta-raking-relief.svg?v=2") center / cover no-repeat;
-  opacity: 0.28;
+  background: url("../textures/lokta-fibres.svg") 17px 11px / 360px 360px repeat;
+  opacity: 0.3;
 }
 
-/* A static architectural plate prevents the prepaint state from becoming a
- * blank gradient. It has no animation and never depends on document paint. */
+/* A static projected-slat field prevents the prepaint state from becoming a
+ * blank gradient. Its long, low-contrast feather avoids a visible cutoff, so
+ * the brief poster cannot reintroduce the removed vertical mullion. */
 #sunlit-scene::after {
   content: "";
   position: absolute;
-  inset: -35vh -35vw;
+  inset: -18vh -18vw;
   z-index: 0;
   background: repeating-linear-gradient(
       to bottom,
-      rgba(167, 168, 164, 0.08) 0,
-      rgba(167, 168, 164, 0.27) 6px,
-      rgba(167, 168, 164, 0.27) 50px,
-      rgba(167, 168, 164, 0.08) 56px,
-      transparent 62px 64px
+      transparent 0,
+      rgba(231, 233, 228, 0.24) 4px,
+      rgba(214, 218, 212, 0.72) 8px,
+      rgba(197, 201, 195, 0.92) 13px 47px,
+      rgba(214, 218, 212, 0.72) 52px,
+      rgba(231, 233, 228, 0.24) 57px,
+      transparent 61px 64px
     );
-  opacity: 0.64;
+  filter: blur(7px);
+  opacity: 0.84;
   transform: rotate(-20deg);
-  transform-origin: center;
-  -webkit-mask-image: linear-gradient(105deg, transparent 0 20%, #000 100%);
-  mask-image: linear-gradient(105deg, transparent 0 20%, #000 100%);
+  transform-origin: center top;
+  -webkit-mask-image: linear-gradient(105deg, transparent 0 18%, rgba(0, 0, 0, 0.12) 42%, rgba(0, 0, 0, 0.56) 70%, #000 100%);
+  mask-image: linear-gradient(105deg, transparent 0 18%, rgba(0, 0, 0, 0.12) 42%, rgba(0, 0, 0, 0.56) 70%, #000 100%);
 }
 
 body.sunset #sunlit-scene {
@@ -109,22 +109,25 @@ body.sunset #sunlit-scene {
 }
 
 body.sunset #sunlit-scene::before {
-  opacity: 0.4;
+  opacity: 0.32;
 }
 
 body.sunset #sunlit-scene::after {
   background: repeating-linear-gradient(
       to bottom,
-      rgba(154, 156, 150, 0.08) 0,
-      rgba(154, 156, 150, 0.30) 5px,
-      rgba(154, 156, 150, 0.30) 15px,
-      rgba(154, 156, 150, 0.08) 20px,
-      transparent 26px 74px
+      transparent 0,
+      rgba(232, 233, 229, 0.22) 4px,
+      rgba(216, 219, 214, 0.68) 8px,
+      rgba(197, 201, 195, 0.92) 12px 27px,
+      rgba(216, 219, 214, 0.68) 32px,
+      rgba(232, 233, 229, 0.22) 37px,
+      transparent 42px 74px
     );
-  opacity: 0.38;
+  filter: blur(7px);
+  opacity: 0.84;
   transform: rotate(-16deg) translate3d(10vw, 0, 0);
-  -webkit-mask-image: linear-gradient(101deg, transparent 0 20%, #000 100%);
-  mask-image: linear-gradient(101deg, transparent 0 20%, #000 100%);
+  -webkit-mask-image: linear-gradient(101deg, transparent 0 18%, rgba(0, 0, 0, 0.12) 42%, rgba(0, 0, 0, 0.56) 70%, #000 100%);
+  mask-image: linear-gradient(101deg, transparent 0 18%, rgba(0, 0, 0, 0.12) 42%, rgba(0, 0, 0, 0.56) 70%, #000 100%);
 }
 
 #sunlit-canvas {
@@ -136,7 +139,7 @@ body.sunset #sunlit-scene::after {
   opacity: 0;
   pointer-events: none;
   z-index: 1;
-  transition: opacity 140ms ease-out;
+  transition: opacity 90ms ease-out;
 }
 
 #sunlit-scene.is-live #sunlit-canvas {
@@ -309,21 +312,33 @@ body.sunset #theme-toggle .moon {
   #sunlit-scene::after {
     background: repeating-linear-gradient(
       to bottom,
-      rgba(167, 168, 164, 0.08) 0,
-      rgba(167, 168, 164, 0.30) 6px,
-      rgba(167, 168, 164, 0.30) 36px,
-      rgba(167, 168, 164, 0.08) 42px,
-      transparent 48px 58px
+      transparent 0,
+      rgba(231, 233, 228, 0.24) 4px,
+      rgba(214, 218, 212, 0.70) 8px,
+      rgba(197, 201, 195, 0.90) 12px 38px,
+      rgba(214, 218, 212, 0.70) 43px,
+      rgba(231, 233, 228, 0.24) 48px,
+      transparent 53px 58px
     );
-    -webkit-mask-image: linear-gradient(95deg, transparent 0 45%, #000 100%);
-    mask-image: linear-gradient(95deg, transparent 0 45%, #000 100%);
-    opacity: 0.54;
+    -webkit-mask-image: linear-gradient(95deg, transparent 0 30%, rgba(0, 0, 0, 0.14) 48%, rgba(0, 0, 0, 0.58) 72%, #000 100%);
+    mask-image: linear-gradient(95deg, transparent 0 30%, rgba(0, 0, 0, 0.14) 48%, rgba(0, 0, 0, 0.58) 72%, #000 100%);
+    opacity: 0.82;
   }
 
   body.sunset #sunlit-scene::after {
-    -webkit-mask-image: linear-gradient(91deg, transparent 0 45%, #000 100%);
-    mask-image: linear-gradient(91deg, transparent 0 45%, #000 100%);
-    opacity: 0.26;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      rgba(232, 233, 229, 0.22) 4px,
+      rgba(216, 219, 214, 0.66) 8px,
+      rgba(197, 201, 195, 0.90) 12px 27px,
+      rgba(216, 219, 214, 0.66) 32px,
+      rgba(232, 233, 229, 0.22) 37px,
+      transparent 42px 67px
+    );
+    -webkit-mask-image: linear-gradient(91deg, transparent 0 30%, rgba(0, 0, 0, 0.14) 48%, rgba(0, 0, 0, 0.58) 72%, #000 100%);
+    mask-image: linear-gradient(91deg, transparent 0 30%, rgba(0, 0, 0, 0.14) 48%, rgba(0, 0, 0, 0.58) 72%, #000 100%);
+    opacity: 0.82;
   }
 }
 

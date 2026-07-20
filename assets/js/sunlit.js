@@ -11,17 +11,21 @@
   var THEME_KEY = 'sunlit-theme';
   var EPOCH_KEY = 'sunlit-motion-epoch';
   var SEED_KEY = 'sunlit-scene-seed';
-  var TRANSITION_KEY = 'sunlit-transition';
+  var TRANSITION_KEY = 'sunlit-transition-v2';
+  var TRANSITION_CHANNEL_COUNT = 5;
   var PAUSED_KEY = 'sunlit-atmosphere-paused';
   var AMBIENT_OFFSET_KEY = 'sunlit-ambient-offset';
   var AMBIENT_TIME_KEY = 'sunlit-ambient-time';
+  /* Channel order: shutter aperture, plane, optical diffusion, sunset,
+   * paper relief. The diffusion channel remains serialized so transitions
+   * already in flight survive a page change, although the ray blur is fixed. */
   var TRANSITION_DURATIONS = {
-    shade: [1800, 1200, 1800, 3000, 1600, 2400],
-    sunset: [1800, 1200, 1800, 3000, 1600, 4800]
+    shade: [500, 1200, 1800, 3000, 2400],
+    sunset: [500, 1200, 1800, 3000, 4800]
   };
   var TRANSITION_DELAYS = {
-    shade: [0, 0, 0, 0, 0, 0],
-    sunset: [0, 0, 0, 0, 0, 550]
+    shade: [0, 0, 0, 0, 0],
+    sunset: [0, 0, 0, 0, 550]
   };
 
   var scene = document.getElementById('sunlit-scene');
@@ -95,9 +99,9 @@
     var target = value === 'sunset' ? 1 : 0;
     var durations = TRANSITION_DURATIONS[value];
     var delays = TRANSITION_DELAYS[value];
-    var hasValues = Array.isArray(fromValues) && fromValues.length === 6;
+    var hasValues = Array.isArray(fromValues) && fromValues.length === TRANSITION_CHANNEL_COUNT;
     var remainingMs = 0;
-    for (var index = 0; index < 6; index += 1) {
+    for (var index = 0; index < TRANSITION_CHANNEL_COUNT; index += 1) {
       var distance = 1;
       if (hasValues) {
         var from = Math.max(0, Math.min(1, finiteNumber(fromValues[index], 1 - target)));
@@ -179,7 +183,8 @@
       from: normalizeTheme(saved.from),
       to: theme,
       startTimeMs: startTimeMs,
-      fromValues: Array.isArray(saved.fromValues) && saved.fromValues.length === 6 ? saved.fromValues : null,
+      fromValues: Array.isArray(saved.fromValues) &&
+        saved.fromValues.length === TRANSITION_CHANNEL_COUNT ? saved.fromValues : null,
       endTimeMs: endTimeMs,
       nowMs: currentNow
     };
@@ -216,7 +221,7 @@
     );
   }
 
-  function reveal(detail) {
+  function reveal() {
     if (disposed) return;
     window.clearTimeout(readyTimer);
     readyTimer = 0;
@@ -234,9 +239,6 @@
       }
     }, 220);
     scene.setAttribute('data-renderer-tier', tier);
-    if (detail && detail.instanceCount != null) {
-      scene.setAttribute('data-botanical-instances', String(detail.instanceCount));
-    }
     if (window.performance && typeof window.performance.mark === 'function') {
       window.performance.mark('lokta-sunlight-ready');
     }
@@ -375,6 +377,7 @@
     if (disposed || renderer || fallbackPromise) return fallbackPromise;
     stopWorker();
     window.clearTimeout(readyTimer);
+    showPoster();
     replaceTransferredCanvas();
     tier = 'main';
     fallbackPromise = loadRenderer(scene.getAttribute('data-engine-src')).then(function(api) {
@@ -409,10 +412,10 @@
       tier = 'worker';
       worker.onmessage = function(event) {
         var message = event.data || {};
-        if (message.type === 'ready') reveal(message);
+        if (message.type === 'ready') reveal();
         if (message.type === 'state') resolvePendingState(message);
         if (message.type === 'context-lost') showPoster();
-        if (message.type === 'context-restored') reveal(message);
+        if (message.type === 'context-restored') reveal();
         if (message.type === 'error') mainThreadFallback();
       };
       worker.onerror = function() {
@@ -529,7 +532,8 @@
 
     statePromise.then(function(state) {
       if (generation !== themeGeneration) return;
-      var fromValues = state && Array.isArray(state.values) ? state.values : null;
+      var fromValues = state && Array.isArray(state.values) &&
+        state.values.length === TRANSITION_CHANNEL_COUNT ? state.values : null;
       storageSet(sessionStorage, TRANSITION_KEY, JSON.stringify({
         from: previous,
         to: theme,
@@ -575,7 +579,8 @@
   }
 
   var startingTransition = activeTransition();
-  applyThemeVisual(startingTransition ? startingTransition.from : theme);
+  var prepaintTheme = document.body.classList.contains('sunset') ? 'sunset' : 'shade';
+  applyThemeVisual(startingTransition ? prepaintTheme : theme);
   applyThemeControl(theme);
   updateAtmosphereControl();
   if (themeButton) themeButton.addEventListener('click', changeTheme);

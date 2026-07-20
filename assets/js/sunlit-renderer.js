@@ -16,19 +16,18 @@
 })(typeof self !== 'undefined' ? self : this, function(scope) {
   'use strict';
 
-  var VERSION = '1.2.0-experimental';
-  var CHANNEL_COUNT = 6;
+  var VERSION = '1.3.0-experimental';
+  var CHANNEL_COUNT = 5;
   var SHADE = 0;
   var SUNSET = 1;
 
-  /* Channel order: shutter field, plane, shutter field companion, sunset,
-   * botanicals, paper relief. The two shutter channels intentionally share
-   * one slow clock: they survive saved states from the first renderer while
-   * now driving a fixed-endpoint cross-fade rather than a changing modulus. */
-  var SUNSET_DURATIONS = [1800, 1200, 1800, 3000, 1600, 4800];
-  var SHADE_DURATIONS = [1800, 1200, 1800, 3000, 1600, 2400];
-  var SUNSET_DELAYS = [0, 0, 0, 0, 0, 550];
-  var SHADE_DELAYS = [0, 0, 0, 0, 0, 0];
+  /* Channel order: shutter aperture, plane, optical diffusion, sunset,
+   * paper relief. Sunlit's slats open quickly; the projection, softness,
+   * paper color, and raking relief each keep their own physical clock. */
+  var SUNSET_DURATIONS = [500, 1200, 1800, 3000, 4800];
+  var SHADE_DURATIONS = [500, 1200, 1800, 3000, 2400];
+  var SUNSET_DELAYS = [0, 0, 0, 0, 550];
+  var SHADE_DELAYS = [0, 0, 0, 0, 0];
   var SUNSET_TIMING = { durations: SUNSET_DURATIONS, delays: SUNSET_DELAYS };
   var SHADE_TIMING = { durations: SHADE_DURATIONS, delays: SHADE_DELAYS };
   var NOISE_SIZE = 512;
@@ -63,10 +62,9 @@
     'in vec2 v_uv;',
     'out vec4 out_color;',
     'uniform vec2 u_resolution;',
-    'uniform float u_time;',
     'uniform float u_seed;',
     'uniform vec4 u_mixes;',
-    'uniform vec2 u_extra;',
+    'uniform float u_relief;',
     'uniform vec2 u_route;',
     '',
     'float hash21(vec2 p) {',
@@ -122,27 +120,45 @@
     '  return highlight - shadow;',
     '}',
     '',
-    'float shutterStripe(float coordinate, float period, float depth, float softness) {',
-    '  float phase = mod(coordinate, period);',
-    '  float signedStripe = abs(phase - depth * 0.5) - depth * 0.5;',
-    '  float stripe = 1.0 - smoothstep(-softness, softness, signedStripe);',
-    '  float duty = depth / period;',
-    '  return mix(stripe, duty, smoothstep(period * 0.28, period * 0.92, softness));',
+    'float periodicBlurredBand(float offset, float halfWidth, float period, float sigma) {',
+    '  float duty = clamp((2.0 * halfWidth) / period, 0.0, 1.0);',
+    '  float phase = 6.28318530718 * offset / period;',
+    '  float sigmaRatio = sigma / period;',
+    '  // Beyond this ratio every retained harmonic contributes under two',
+    '  // percent. Return the exact duty cycle and spare the covered half of',
+    '  // the sheet eight trigonometric/exponential evaluations per pixel.',
+    '  if (sigmaRatio > 0.45) return duty;',
+    '  float coverage = duty;',
+    '  // A Gaussian-blurred periodic box field. Summing the harmonics, not one',
+    '  // isolated band, preserves the correct average shadow beneath broad blur.',
+    '  for (int harmonic = 1; harmonic <= 8; harmonic++) {',
+    '    float n = float(harmonic);',
+    '    float coefficient = 2.0 * sin(3.14159265359 * n * duty) / (3.14159265359 * n);',
+    '    float damping = exp(-19.7392088022 * n * n * sigmaRatio * sigmaRatio);',
+    '    coverage += coefficient * cos(n * phase) * damping;',
+    '  }',
+    '  return clamp(coverage, 0.0, 1.0);',
+    '}',
+    '',
+    'float progressiveBlur(float screenX) {',
+    '  float blurPx = 100.0;',
+    '  blurPx = mix(blurPx, 50.0, smoothstep(0.375, 0.500, screenX));',
+    '  blurPx = mix(blurPx, 25.0, smoothstep(0.500, 0.625, screenX));',
+    '  blurPx = mix(blurPx, 8.0, smoothstep(0.625, 0.750, screenX));',
+    '  blurPx = mix(blurPx, 0.5, smoothstep(0.750, 0.875, screenX));',
+    '  return mix(blurPx, 0.0, smoothstep(0.875, 1.000, screenX));',
     '}',
     '',
     'void main() {',
     '  vec2 uv = v_uv;',
-    '  float slatMix = u_mixes.x;',
+    '  float apertureMix = u_mixes.x;',
     '  float planeMix = u_mixes.y;',
-    '  float architectureMix = u_mixes.z;',
-    '  float sunsetMix = u_mixes.w;',
-    '  float reliefMix = u_extra.y;',
+    '  float reliefMix = u_relief;',
     '',
-    '  // A warm window-side white turning almost imperceptibly toward lichen.',
-    '  // Keep the chroma below the threshold where the sheet reads as a green',
-    '  // gradient; the environmental identity should arrive through light.',
-    '  vec3 nearPaper = vec3(0.992, 0.976, 0.962);',
-    '  vec3 farPaper = vec3(0.962, 0.970, 0.948);',
+    '  // The covered side stays warm; the window side clears toward a barely',
+    '  // green white. It is one sheet, not a beige-to-green gradient.',
+    '  vec3 nearPaper = vec3(0.987, 0.977, 0.966);',
+    '  vec3 farPaper = vec3(0.985, 0.989, 0.979);',
     '  float paperGradient = smoothstep(-0.08, 1.08, uv.x * 0.82 + uv.y * 0.10);',
     '  vec3 paper = mix(nearPaper, farPaper, paperGradient);',
     '  float windowBloom = 1.0 - smoothstep(0.0, 0.95, length((uv - vec2(0.18, 0.90)) * vec2(0.72, 1.0)));',
@@ -161,45 +177,62 @@
     '  float reliefVisibility = 0.07 + 0.93 * reliefMix;',
     '  paper += vec3(relief * reliefVisibility * 0.012);',
     '',
-    '  // CSS transforms use a top-down Y axis; WebGL UVs are bottom-up. Work',
-    '  // in screen coordinates so Sunlit\'s -20/-16 degree plane keeps the',
-    '  // same visible direction instead of being mirrored vertically.',
-    '  vec2 px = vec2((uv.x - 0.5) * u_resolution.x, (0.5 - uv.y) * u_resolution.y);',
-    '  px.x -= u_resolution.x * 0.10 * planeMix;',
+    '  // Sunlit\'s transformed container is a zero-height fixed plane, so its',
+    '  // transform origin is the viewport\'s top centre. Invert that transform',
+    '  // in top-down screen coordinates. The helper returns R(-angle), hence',
+    '  // passing the authored negative angle produces the correct inverse and',
+    '  // leaves the visible bands rising toward the right.',
+    '  vec2 px = vec2((uv.x - 0.5) * u_resolution.x, (1.0 - uv.y) * u_resolution.y);',
     '  float angle = radians(mix(-20.0, -16.0, planeMix));',
     '  vec2 shutter = rotate2d(px, angle);',
-    '  shutter.y += 300.0;',
+    '  shutter.x -= u_resolution.x * 0.10 * planeMix;',
     '',
     '  float mobile = 1.0 - step(600.0, u_resolution.x);',
     '  float shadePeriod = mix(64.0, 58.0, mobile);',
-    '  float sunsetPeriod = mix(74.0, 67.0, mobile);',
+    '  float period = mix(shadePeriod, shadePeriod * 1.15, apertureMix);',
     '  float shadeDepth = mix(56.0, 42.0, mobile);',
-    '  float sunsetDepth = 20.0;',
-    '  float clarityRamp = smoothstep(0.10, 0.92, uv.x);',
-    '  float clarity = pow(clarityRamp, 0.88);',
-    '  float shadeSoftness = mix(shadePeriod * 1.58, 10.0, clarity);',
-    '  float sunsetSoftness = mix(sunsetPeriod * 1.58, 10.0, clarity);',
-    '  float shadeStripe = shutterStripe(shutter.y, shadePeriod, shadeDepth, shadeSoftness);',
-    '  float sunsetStripe = shutterStripe(shutter.y, sunsetPeriod, sunsetDepth, sunsetSoftness);',
-    '  // Cross-fade two complete optical fields. Interpolating the modulus made',
-    '  // every ray slide through the others and caused the old half-second snap.',
-    '  float shutterMix = clamp((slatMix + architectureMix) * 0.5, 0.0, 1.0);',
-    '  float stripe = mix(shadeStripe, sunsetStripe, shutterMix);',
+    '  float depth = mix(shadeDepth, 20.0, apertureMix);',
+    '  float origin = -300.0 + 18.0 * apertureMix;',
+    '  float bandIndex = floor((shutter.y - origin) / period);',
+    '  float bandTop = origin + bandIndex * period;',
+    '  float bandCenter = bandTop + depth * 0.5;',
+    '  float bandOffset = shutter.y - bandCenter;',
     '',
+    '  // Each deployed slat shifted one viewport-percent along its own axis.',
+    '  // Preserve that finite-surface fan, but keep aperture depth independent',
+    '  // of the pigment feather: the slat does not become a tapered wedge.',
+    '  float along = shutter.x / u_resolution.x + 0.5 + bandIndex * 0.010;',
+    '  float materialStart = mix(0.10, 0.36, mobile);',
+    '  float across = clamp(bandOffset / max(depth, 1.0), -0.5, 0.5);',
+    '  float gradientPosition = (0.90 - along) / max(0.90 - materialStart, 0.01);',
+    '  gradientPosition = clamp(gradientPosition + across * 0.12, 0.0, 1.0);',
+    '',
+    '  // The source keeps a static six-pixel slat blur in both modes. The old',
+    '  // diffusion channel remains in saved state for compatibility but is',
+    '  // deliberately optically inert.',
+    '  float baseBlur = 6.0;',
+    '  float spread = progressiveBlur(uv.x);',
+    '  float sigma = sqrt(baseBlur * baseBlur + spread * spread);',
+    '  float stripe = periodicBlurredBand(bandOffset, depth * 0.5, period, sigma);',
+    '',
+    '  // Approximate the deployed 200-degree material gradient independently',
+    '  // from geometry: neutral shadow -> translucent pale feather -> clear.',
+    '  vec3 shadowShade = vec3(0.772, 0.786, 0.766);',
+    '  vec3 shadowFeather = vec3(0.906, 0.914, 0.894);',
+    '  float coreToFeather = smoothstep(0.0, 0.30, gradientPosition);',
+    '  vec3 shadowPigment = mix(shadowShade, shadowFeather, coreToFeather);',
+    '  float pigmentAlpha = mix(1.0, 0.647, coreToFeather);',
+    '  pigmentAlpha *= 1.0 - smoothstep(0.30, 1.0, gradientPosition);',
+    '',
+    '  // Sunlit\'s separate paper-coloured veil covers the window-side field.',
+    '  // Keep it independent of the per-slat pigment so it cannot alter depth.',
     '  float desktopVeil = (0.996 * uv.x + 0.087 * uv.y) / 1.083;',
     '  float mobileVeil = (0.966 * uv.x + 0.259 * uv.y) / 1.225;',
     '  float veilCoordinate = mix(desktopVeil, mobileVeil, mobile);',
     '  float veilStart = mix(0.20, 0.45, mobile);',
-    '  float architectureReveal = clamp((veilCoordinate - veilStart) / (1.0 - veilStart), 0.0, 1.0);',
-    '  float mobileStrength = mix(1.0, mix(0.85, 0.68, shutterMix), mobile);',
-    '  vec3 shadowShade = mix(vec3(0.655, 0.660, 0.645), vec3(0.425, 0.435, 0.395), sunsetMix * 0.22);',
-    '  // The predecessor cleared the window side with paper-colored veils.',
-    '  // Keep that luminous air instead of laying a second dark field over the',
-    '  // sheet; the periodic shutters alone carry the architectural shadow.',
-    '  float luminousVeil = 1.0 - architectureReveal;',
-    '  paper += vec3(0.006, 0.007, 0.004) * luminousVeil * mix(1.0, 0.65, sunsetMix);',
-    '  float shadowAlpha = mix(0.42, 0.50, shutterMix) * architectureReveal * attenuation(uv) * mobileStrength;',
-    '  paper = mix(paper, shadowShade, clamp(stripe * shadowAlpha, 0.0, 0.52));',
+    '  float veilReveal = clamp((veilCoordinate - veilStart) / (1.0 - veilStart), 0.0, 1.0);',
+    '  float shadowAlpha = stripe * pigmentAlpha * veilReveal * attenuation(uv) * 0.96;',
+    '  paper = mix(paper, shadowPigment, clamp(shadowAlpha, 0.0, 0.96));',
     '',
     '  paper = clamp(paper, vec3(0.0), vec3(1.0));',
     '  out_color = vec4(paper, 1.0);',
@@ -244,120 +277,6 @@
     '}'
   ].join('\n');
 
-  var BOTANICAL_VERTEX = [
-    '#version 300 es',
-    'precision highp float;',
-    'layout(location = 0) in vec2 a_corner;',
-    'layout(location = 1) in vec4 a_instance0;',
-    'layout(location = 2) in vec4 a_instance1;',
-    'layout(location = 3) in vec4 a_instance2;',
-    'uniform vec2 u_resolution;',
-    'uniform float u_time;',
-    'uniform float u_botanical;',
-    'uniform float u_motion;',
-    'uniform vec2 u_route;',
-    'out vec2 v_local;',
-    'out float v_opacity;',
-    'out float v_blur;',
-    'flat out float v_kind;',
-    '',
-    'float attenuation(float x) {',
-    '  float distanceFromMeasure = abs(x - 0.5) / 0.285;',
-    '  float field = exp(-pow(distanceFromMeasure, 4.0));',
-    '  return mix(u_route.y, u_route.x, field);',
-    '}',
-    '',
-    'void main() {',
-    '  float x = a_instance0.x;',
-    '  float y = a_instance0.y;',
-    '  float size = a_instance0.z;',
-    '  float rotation = a_instance0.w;',
-    '  float opacity = a_instance1.x;',
-    '  float blurPx = a_instance1.y;',
-    '  float kind = a_instance1.z;',
-    '  float phase = a_instance1.w;',
-    '  float mobile = 1.0 - step(600.0, u_resolution.x);',
-    '  float desktopVeil = (0.996 * x + 0.087 * (1.0 - y)) / 1.083;',
-    '  float mobileVeil = (0.966 * x + 0.259 * (1.0 - y)) / 1.225;',
-    '  float veilCoordinate = mix(desktopVeil, mobileVeil, mobile);',
-    '  float veilStart = mix(0.20, 0.45, mobile);',
-    '  float botanicalReveal = clamp((veilCoordinate - veilStart) / (1.0 - veilStart), 0.0, 1.0);',
-    '',
-    '  if (kind > 1.5 && kind < 2.5) {',
-    '    rotation += sin(u_time * 0.29 + phase) * 0.018 * u_motion;',
-    '    opacity *= mix(mix(0.024, 0.014, mobile), mix(0.105, 0.040, mobile), u_botanical);',
-    '  } else if (kind > 2.5) {',
-    '    rotation += sin(u_time * 0.22 + phase) * 0.007 * u_motion;',
-    '    opacity *= mix(mix(0.018, 0.010, mobile), mix(0.075, 0.032, mobile), u_botanical);',
-    '  } else {',
-    '    opacity *= mix(0.0, mix(0.16, 0.040, mobile), u_botanical);',
-    '  }',
-    '',
-    '  vec2 scale = vec2(size * 0.72, size);',
-    '  if (kind > 1.5 && kind < 2.5) scale = vec2(size, size * 0.34);',
-    '  if (kind > 2.5) scale = vec2(size, max(2.4, size * 0.055));',
-    '',
-    '  float c = cos(rotation);',
-    '  float s = sin(rotation);',
-    '  vec2 localPx = mat2(c, -s, s, c) * (a_corner * scale);',
-    '  vec2 center = vec2(x * 2.0 - 1.0, 1.0 - y * 2.0);',
-    '  vec2 clipOffset = vec2(localPx.x * 2.0 / u_resolution.x, -localPx.y * 2.0 / u_resolution.y);',
-    '',
-    '  v_local = a_corner;',
-    '  v_opacity = opacity * botanicalReveal * attenuation(x);',
-    '  v_blur = blurPx / max(size, 1.0);',
-    '  v_kind = kind;',
-    '  gl_Position = vec4(center + clipOffset, 0.0, 1.0);',
-    '}'
-  ].join('\n');
-
-  var BOTANICAL_FRAGMENT = [
-    '#version 300 es',
-    'precision highp float;',
-    'in vec2 v_local;',
-    'in float v_opacity;',
-    'in float v_blur;',
-    'flat in float v_kind;',
-    'out vec4 out_color;',
-    '',
-    'float peepalShape(vec2 p) {',
-    '  float y = clamp(p.y, -1.0, 1.0);',
-    '  float lower = 0.84 * max(0.0, y + 1.0);',
-    '  float upper = 0.90 * sqrt(max(0.0, 1.0 - y * y));',
-    '  upper *= 1.0 - 0.13 * smoothstep(0.70, 1.0, y);',
-    '  float halfWidth = mix(lower, upper, step(0.0, y));',
-    '  return max(abs(p.x) - halfWidth, abs(y) - 1.0);',
-    '}',
-    '',
-    'float pinnaShape(vec2 p) {',
-    '  float taper = max(0.0, 1.0 - abs(p.x));',
-    '  return max(abs(p.x) - 1.0, abs(p.y) - (0.08 + 0.78 * taper));',
-    '}',
-    '',
-    'float rachisShape(vec2 p) {',
-    '  vec2 q = vec2(max(abs(p.x) - 0.88, 0.0), p.y);',
-    '  return length(q) - 0.12;',
-    '}',
-    '',
-    'void main() {',
-    '  float distanceField;',
-    '  if (v_kind > 2.5) {',
-    '    distanceField = rachisShape(v_local);',
-    '  } else if (v_kind > 1.5) {',
-    '    distanceField = pinnaShape(v_local);',
-    '  } else {',
-    '    distanceField = peepalShape(v_local);',
-    '  }',
-    '  float edge = max(fwidth(distanceField) * 0.85, 0.012) + v_blur * 0.72;',
-    '  float coverage = 1.0 - smoothstep(-edge, edge, distanceField);',
-    '  if (coverage <= 0.001 || v_opacity <= 0.001) discard;',
-    '  vec3 primary = vec3(0.408, 0.471, 0.400);',
-    '  vec3 soft = vec3(0.529, 0.584, 0.514);',
-    '  vec3 ink = mix(primary, soft, step(1.5, v_kind) * 0.34);',
-    '  out_color = vec4(ink, coverage * v_opacity);',
-    '}'
-  ].join('\n');
-
   function clamp(value, minimum, maximum) {
     return Math.min(maximum, Math.max(minimum, value));
   }
@@ -377,14 +296,33 @@
     return [1.0, 1.0];
   }
 
-  function easeInOut(value) {
+  function cubicBezier(value, x1, y1, x2, y2) {
     value = clamp(value, 0, 1);
-    return value * value * (3 - 2 * value);
+    var t = value;
+    for (var iteration = 0; iteration < 6; iteration += 1) {
+      var oneMinus = 1 - t;
+      var sampleX = 3 * oneMinus * oneMinus * t * x1 +
+        3 * oneMinus * t * t * x2 + t * t * t;
+      var derivative = 3 * oneMinus * oneMinus * x1 +
+        6 * oneMinus * t * (x2 - x1) + 3 * t * t * (1 - x2);
+      if (Math.abs(derivative) < 0.000001) break;
+      t = clamp(t - (sampleX - value) / derivative, 0, 1);
+    }
+    var remaining = 1 - t;
+    return 3 * remaining * remaining * t * y1 +
+      3 * remaining * t * t * y2 + t * t * t;
+  }
+
+  function easeInOut(value) {
+    return cubicBezier(value, 0.42, 0, 0.58, 1);
   }
 
   function easeOut(value) {
-    value = clamp(value, 0, 1);
-    return 1 - Math.pow(1 - value, 3);
+    return cubicBezier(value, 0, 0, 0.58, 1);
+  }
+
+  function easeMaterial(value) {
+    return cubicBezier(value, 0.4, 0, 0.2, 1);
   }
 
   function hashSeed(seed) {
@@ -468,7 +406,7 @@
 
   function endpointChannels(theme) {
     var endpoint = theme === 'sunset' ? 1 : 0;
-    return new Float32Array([endpoint, endpoint, endpoint, endpoint, endpoint, endpoint]);
+    return new Float32Array([endpoint, endpoint, endpoint, endpoint, endpoint]);
   }
 
   function compileShader(gl, type, source) {
@@ -516,30 +454,6 @@
     return uniforms;
   }
 
-  function bezierPoint(points, t) {
-    var oneMinus = 1 - t;
-    var a = oneMinus * oneMinus * oneMinus;
-    var b = 3 * oneMinus * oneMinus * t;
-    var c = 3 * oneMinus * t * t;
-    var d = t * t * t;
-    return {
-      x: a * points[0].x + b * points[1].x + c * points[2].x + d * points[3].x,
-      y: a * points[0].y + b * points[1].y + c * points[2].y + d * points[3].y
-    };
-  }
-
-  function bezierTangent(points, t) {
-    var oneMinus = 1 - t;
-    return {
-      x: 3 * oneMinus * oneMinus * (points[1].x - points[0].x) +
-        6 * oneMinus * t * (points[2].x - points[1].x) +
-        3 * t * t * (points[3].x - points[2].x),
-      y: 3 * oneMinus * oneMinus * (points[1].y - points[0].y) +
-        6 * oneMinus * t * (points[2].y - points[1].y) +
-        3 * t * t * (points[3].y - points[2].y)
-    };
-  }
-
   function Renderer(canvas, options) {
     if (!canvas || typeof canvas.getContext !== 'function') {
       throw new TypeError('SunlitRenderer requires an HTMLCanvasElement or OffscreenCanvas');
@@ -580,7 +494,6 @@
     this.gl = null;
     this.resources = null;
     this.paperCacheState = null;
-    this.botanicalCount = 0;
     this.ambientFrozen = false;
     this.ambientFrozenMs = 0;
 
@@ -632,22 +545,16 @@
       paperUniforms: null,
       atmosphereProgram: null,
       atmosphereUniforms: null,
-      botanicalProgram: null,
-      botanicalUniforms: null,
       fullscreenVao: null,
       fullscreenBuffer: null,
       paperTexture: null,
       paperFramebuffer: null,
-      noiseTexture: null,
-      botanicalVao: null,
-      botanicalQuadBuffer: null,
-      botanicalInstanceBuffer: null
+      noiseTexture: null
     };
     this.resources = resources;
 
     var paperProgram = resources.paperProgram = createProgram(gl, FULLSCREEN_VERTEX, PAPER_FRAGMENT);
     var atmosphereProgram = resources.atmosphereProgram = createProgram(gl, FULLSCREEN_VERTEX, ATMOSPHERE_FRAGMENT);
-    var botanicalProgram = resources.botanicalProgram = createProgram(gl, BOTANICAL_VERTEX, BOTANICAL_FRAGMENT);
 
     var fullscreenVao = resources.fullscreenVao = gl.createVertexArray();
     var fullscreenBuffer = resources.fullscreenBuffer = gl.createBuffer();
@@ -656,26 +563,6 @@
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
     gl.enableVertexAttribArray(0);
     gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-
-    var botanicalVao = resources.botanicalVao = gl.createVertexArray();
-    var botanicalQuadBuffer = resources.botanicalQuadBuffer = gl.createBuffer();
-    var botanicalInstanceBuffer = resources.botanicalInstanceBuffer = gl.createBuffer();
-    gl.bindVertexArray(botanicalVao);
-    gl.bindBuffer(gl.ARRAY_BUFFER, botanicalQuadBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-      -1, -1, 1, -1, -1, 1,
-      -1, 1, 1, -1, 1, 1
-    ]), gl.STATIC_DRAW);
-    gl.enableVertexAttribArray(0);
-    gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, botanicalInstanceBuffer);
-    var stride = 12 * 4;
-    for (var attribute = 1; attribute <= 3; attribute += 1) {
-      gl.enableVertexAttribArray(attribute);
-      gl.vertexAttribPointer(attribute, 4, gl.FLOAT, false, stride, (attribute - 1) * 4 * 4);
-      gl.vertexAttribDivisor(attribute, 1);
-    }
 
     gl.bindVertexArray(null);
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
@@ -712,15 +599,11 @@
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
     resources.paperUniforms = uniformMap(gl, paperProgram, [
-        'u_resolution', 'u_time', 'u_seed', 'u_mixes', 'u_extra', 'u_route'
+        'u_resolution', 'u_seed', 'u_mixes', 'u_relief', 'u_route'
       ]);
     resources.atmosphereUniforms = uniformMap(gl, atmosphereProgram, [
         'u_noise', 'u_paper', 'u_resolution', 'u_noise_offset', 'u_sunset', 'u_pass'
       ]);
-    resources.botanicalUniforms = uniformMap(gl, botanicalProgram, [
-        'u_resolution', 'u_time', 'u_botanical', 'u_motion', 'u_route'
-      ]);
-
     gl.disable(gl.DEPTH_TEST);
     gl.disable(gl.CULL_FACE);
     gl.disable(gl.SCISSOR_TEST);
@@ -736,12 +619,8 @@
     var resources = this.resources;
     if (resources.paperProgram) gl.deleteProgram(resources.paperProgram);
     if (resources.atmosphereProgram) gl.deleteProgram(resources.atmosphereProgram);
-    if (resources.botanicalProgram) gl.deleteProgram(resources.botanicalProgram);
     if (resources.fullscreenBuffer) gl.deleteBuffer(resources.fullscreenBuffer);
-    if (resources.botanicalQuadBuffer) gl.deleteBuffer(resources.botanicalQuadBuffer);
-    if (resources.botanicalInstanceBuffer) gl.deleteBuffer(resources.botanicalInstanceBuffer);
     if (resources.fullscreenVao) gl.deleteVertexArray(resources.fullscreenVao);
-    if (resources.botanicalVao) gl.deleteVertexArray(resources.botanicalVao);
     if (resources.paperFramebuffer) gl.deleteFramebuffer(resources.paperFramebuffer);
     if (resources.paperTexture) gl.deleteTexture(resources.paperTexture);
     if (resources.noiseTexture) gl.deleteTexture(resources.noiseTexture);
@@ -786,7 +665,9 @@
       var duration = timing.durations[index] * distance;
       var delay = timing.delays[index] * distance;
       var progress = duration <= 0 ? 1 : clamp((elapsed - delay) / duration, 0, 1);
-      var eased = index === 1 ? easeOut(progress) : easeInOut(progress);
+      var eased = index === 1 ? easeOut(progress) :
+        (index === 4 && transition.toTheme === 'sunset' ?
+          easeMaterial(progress) : easeInOut(progress));
       values[index] = transition.from[index] +
         (transition.target[index] - transition.from[index]) * eased;
       if (elapsed < delay + duration) complete = false;
@@ -831,119 +712,6 @@
     }
   };
 
-  Renderer.prototype._buildBotanicalInstances = function() {
-    var random = seededRandom(this.seed ^ 0x4c4f4b54);
-    var instances = [];
-    var minimumDimension = Math.max(320, Math.min(this.width, this.height));
-    var mobile = this.width < 600;
-
-    function push(x, y, size, rotation, opacity, blur, kind, phase, duration, delay, drift, spin) {
-      instances.push(
-        x, y, size, rotation,
-        opacity, blur, kind, phase,
-        duration || 0, delay || 0, drift || 0, spin || 0
-      );
-    }
-
-    for (var leaf = 0; leaf < 300; leaf += 1) {
-      var firstCluster = leaf < 150;
-      /* Sunlit's two envelopes live mostly beyond the upper and right edges:
-       * only their aggregate shadow enters the sheet. The silhouettes below
-       * are local peepal leaves, but their crop and depth match that geometry. */
-      var centerX = firstCluster ?
-        0.95 - 20 / this.width :
-        0.75 - 14 / this.width;
-      var centerY = firstCluster ?
-        0.15 - 500 / this.height :
-        0.40 - 350 / this.height;
-      var x = centerX + (random() - 0.5) * 0.40;
-      var y = centerY + (random() - 0.5) * 0.80;
-      var envelopeX = (x - centerX) / 0.20;
-      var envelopeY = (y - centerY) / 0.40;
-      var envelopeRadius = Math.sqrt(envelopeX * envelopeX + envelopeY * envelopeY) / Math.SQRT2;
-      var canopyOpacity = Math.max(0, 0.90 - 1.10 * envelopeRadius);
-      y += 0.40 * (x - centerX) * this.width / this.height;
-      var canopySize = 40 + random() * 30;
-      var canopyBlur = 8 + Math.pow(1 - clamp(x, 0, 1), 1.2) * 30;
-      push(
-        x, y, canopySize, 0.7853982 + random() * Math.PI,
-        canopyOpacity, canopyBlur,
-        0, random() * Math.PI * 2
-      );
-    }
-
-    var renderer = this;
-    function addFrond(points, pairs, scale, opacity, phaseOffset) {
-      var previous = bezierPoint(points, 0);
-      for (var index = 0; index <= pairs; index += 1) {
-        var t = index / pairs;
-        var point = bezierPoint(points, t);
-        var tangent = bezierTangent(points, t);
-        var tangentAngle = Math.atan2(tangent.y, tangent.x);
-        var normalX = -tangent.y;
-        var normalY = tangent.x;
-        var normalLength = Math.max(0.0001, Math.sqrt(normalX * normalX + normalY * normalY));
-        normalX /= normalLength;
-        normalY /= normalLength;
-        var envelope = Math.pow(Math.sin(Math.PI * clamp(t, 0.02, 0.98)), 0.72);
-        var pinnaLength = minimumDimension * scale * (0.22 + 0.78 * envelope);
-        var offset = (3 + envelope * 8) / Math.max(renderer.width, renderer.height);
-
-        if (index > 0 && index < pairs) {
-          push(
-            point.x + normalX * offset, point.y + normalY * offset,
-            pinnaLength, tangentAngle + Math.PI * 0.54,
-            opacity, 6.0 + (1 - envelope) * 4.0,
-            2, phaseOffset + t * 3.0
-          );
-          push(
-            point.x - normalX * offset, point.y - normalY * offset,
-            pinnaLength * 0.92, tangentAngle - Math.PI * 0.54,
-            opacity * 0.94, 6.4 + (1 - envelope) * 4.2,
-            2, phaseOffset + 1.4 + t * 3.0
-          );
-        }
-
-        if (index > 0) {
-          var dx = (point.x - previous.x) * renderer.width;
-          var dy = (point.y - previous.y) * renderer.height;
-          var segmentLength = Math.sqrt(dx * dx + dy * dy) * 0.52;
-          push(
-            (point.x + previous.x) * 0.5,
-            (point.y + previous.y) * 0.5,
-            segmentLength,
-            Math.atan2(dy, dx),
-            opacity * 0.88, 4.0,
-            3, phaseOffset + t * 2.0
-          );
-        }
-        previous = point;
-      }
-    }
-
-    addFrond([
-      { x: 1.16, y: -0.18 },
-      { x: 1.07, y: 0.01 },
-      { x: 0.94, y: 0.28 },
-      { x: 0.76, y: 0.47 }
-    ], mobile ? 18 : 23, mobile ? 0.066 : 0.074, 0.58, 0.3);
-
-    if (!mobile) {
-      addFrond([
-        { x: 1.20, y: -0.04 },
-        { x: 1.09, y: 0.10 },
-        { x: 1.00, y: 0.26 },
-        { x: 0.89, y: 0.40 }
-      ], 16, 0.052, 0.32, 2.2);
-    }
-
-    var data = new Float32Array(instances);
-    this.botanicalCount = data.length / 12;
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.resources.botanicalInstanceBuffer);
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, data, this.gl.STATIC_DRAW);
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
-  };
-
   Renderer.prototype._allocatePaperTarget = function() {
     var gl = this.gl;
     var resources = this.resources;
@@ -978,7 +746,6 @@
     if (this.gl && !this.contextLost && this.resources) {
       this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
       this._allocatePaperTarget();
-      this._buildBotanicalInstances();
       this.renderFrame();
     }
   };
@@ -1073,9 +840,12 @@
   };
 
   Renderer.prototype._paperChanged = function(channels, route) {
+    /* Diffusion is retained only as a saved-state compatibility channel, and
+     * sunset is composited in the atmosphere pass. Neither invalidates the
+     * cached paper surface. */
     var next = [
       this.canvas.width, this.canvas.height,
-      channels[0], channels[1], channels[2], channels[3], channels[4], channels[5],
+      channels[0], channels[1], channels[4],
       route[0], route[1]
     ];
     var previous = this.paperCacheState;
@@ -1086,7 +856,7 @@
     return null;
   };
 
-  Renderer.prototype._renderPaper = function(ambientSeconds, channels, route, cacheState) {
+  Renderer.prototype._renderPaper = function(channels, route, cacheState) {
     var gl = this.gl;
     var resources = this.resources;
     var uniforms = resources.paperUniforms;
@@ -1096,10 +866,9 @@
     gl.useProgram(resources.paperProgram);
     gl.bindVertexArray(resources.fullscreenVao);
     gl.uniform2f(uniforms.u_resolution, this.width, this.height);
-    gl.uniform1f(uniforms.u_time, ambientSeconds);
     gl.uniform1f(uniforms.u_seed, (this.seed % 104729) / 104729);
     gl.uniform4f(uniforms.u_mixes, channels[0], channels[1], channels[2], channels[3]);
-    gl.uniform2f(uniforms.u_extra, channels[4], channels[5]);
+    gl.uniform1f(uniforms.u_relief, channels[4]);
     gl.uniform2f(uniforms.u_route, route[0], route[1]);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
@@ -1121,25 +890,6 @@
     gl.drawArrays(gl.TRIANGLES, 0, 3);
     gl.bindTexture(gl.TEXTURE_2D, null);
     gl.activeTexture(gl.TEXTURE0);
-  };
-
-  Renderer.prototype._renderBotanicals = function(ambientSeconds, channels, route) {
-    if (!this.botanicalCount) return;
-    var gl = this.gl;
-    var resources = this.resources;
-    var uniforms = resources.botanicalUniforms;
-    gl.enable(gl.BLEND);
-    gl.blendEquation(gl.FUNC_ADD);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-    gl.useProgram(resources.botanicalProgram);
-    gl.bindVertexArray(resources.botanicalVao);
-    gl.uniform2f(uniforms.u_resolution, this.width, this.height);
-    gl.uniform1f(uniforms.u_time, ambientSeconds);
-    gl.uniform1f(uniforms.u_botanical, channels[4]);
-    gl.uniform1f(uniforms.u_motion, this.reducedMotion ? 0.32 : 1.0);
-    gl.uniform2f(uniforms.u_route, route[0], route[1]);
-    gl.drawArraysInstanced(gl.TRIANGLES, 0, 6, this.botanicalCount);
-    gl.disable(gl.BLEND);
   };
 
   Renderer.prototype._renderAtmosphere = function(ambientSeconds, channels) {
@@ -1182,9 +932,8 @@
       var ambientSeconds = this._ambientTimeMs(nowMs) / 1000;
       this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
       var cacheState = this._paperChanged(channels, route);
-      if (cacheState) this._renderPaper(ambientSeconds, channels, route, cacheState);
+      if (cacheState) this._renderPaper(channels, route, cacheState);
       this._blitPaper();
-      this._renderBotanicals(ambientSeconds, channels, route);
       this._renderAtmosphere(ambientSeconds, channels);
       this.gl.bindVertexArray(null);
       this.gl.flush();
@@ -1195,8 +944,7 @@
           version: VERSION,
           width: this.width,
           height: this.height,
-          dpr: this.dpr,
-          instanceCount: this.botanicalCount
+          dpr: this.dpr
         });
       }
       return true;
@@ -1286,7 +1034,6 @@
       this._createResources();
       this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
       this._allocatePaperTarget();
-      this._buildBotanicalInstances();
       this.renderFrame();
       this.onContextRestored();
       this._ensureLoop();
@@ -1320,8 +1067,7 @@
       values: Array.prototype.slice.call(channels),
       width: this.width,
       height: this.height,
-      dpr: this.dpr,
-      instanceCount: this.botanicalCount
+      dpr: this.dpr
     };
   };
 
