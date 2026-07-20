@@ -97,10 +97,11 @@ floral mark into a loud brand stamp.
 
 The environmental layer reconstructs the visible optics of
 `https://www.sunlit.place/` on a Nepal-biased fibrous sheet. Nisch removed the
-reference's vertical mullion and every botanical silhouette after visual review.
-The current successor contains no fern, canopy, falling leaf, or other foliage.
-Its identity comes from projected window light, Lokta material, and a restrained
-lichen cast.
+reference's vertical mullion and all of the earlier canopy, falling-leaf, and
+multi-frond systems after visual review. Its identity comes first from projected
+window light, Lokta material, and a restrained lichen cast. The only current
+botanical exception is the optional, sunset-only niuro study documented below;
+it must remain one quiet cropped accent, never a second foliage system.
 
 The scene has two states. **Shade** keeps a shallow move from warm covered paper
 toward a clearer green-white window side. **Sunset** uses the reference's peach
@@ -135,8 +136,9 @@ peach field over three seconds, and the six-pixel base diffusion remains fixed.
 Raking paper relief enters after a 550 ms delay over 4.8 seconds and returns over
 2.4 seconds. The rays stay still after reaching either endpoint. Continuous life
 comes from the reference-matched Gaussian grain at twenty stepped positions per
-second. Grain and mode transitions continue under `prefers-reduced-motion`; the
-pause control freezes the ambient clock.
+second. Under `prefers-reduced-motion`, the complete optics and mode transition
+remain intact while the grain advances at a gentler ten positions per second;
+the pause control freezes the ambient clock.
 
 A sparse set of paired highlight-and-shadow fibres remains near-invisible in
 shade and resolves under raking sunset light. Keep the local tonal difference
@@ -418,17 +420,20 @@ Nepali wild food ferns documented in the [review of Nepalese food
 ferns](https://pmc.ncbi.nlm.nih.gov/articles/PMC9699988/). This is not a return
 to the old canopy: one deterministic rachis enters mostly from beyond the
 upper-right crop, with paired lanceolate pinnae and a quiet crozier. It fades in
-only after the shutter has opened, is weaker on Documents and articles, and is
-omitted below 600 px where a cropped rachis could resemble the rejected vertical
-mullion.
+only after the shutter has opened, is weaker on Documents and articles, and has
+its own smooth 640-to-760 px responsive entrance. That independent fade prevents
+a cropped rachis from popping in or resembling the rejected vertical mullion on
+tall narrow screens; it does not alter the shutter's exact 600 px breakpoint.
 
 The niuro is deliberately static. It lives inside the cached paper shader,
 beneath grain and sunset multiplication, so scrolling adds no draw call,
 texture, filter surface, or DOM animation. Its entire experiment is controlled
 by `data-fern-strength` on `#sunlit-scene`; removing that attribute or setting it
-to zero restores the foliage-free endpoint. The ambient grain now renders at
-its native twenty distinct states per second rather than redrawing the same
-state three times at 60 fps. Mode transitions remain 60 fps.
+to zero restores the foliage-free endpoint. The shader rejects the niuro path
+before evaluating its morphology whenever the frond is invisible, including
+shade and narrow widths. The ambient grain renders at its native twenty distinct
+states per second rather than redrawing the same state three times at 60 fps;
+reduced motion uses ten. Mode transitions remain 60 fps.
 
 ### 5. An unboxed portrait
 
