@@ -108,20 +108,27 @@ multiply light with a small green-gold bias. Both states keep daylight ink.
 Treat them as two positions of one sun and shutter system, rather than a light
 theme and dark theme.
 
-One indexed slat field drives the rays. Desktop shade uses a 64 px period with a
-56 px shadow body; phone shade uses 58 px with a 42 px body. Sunset opens the
-same field to periods of 73.6 and 66.7 px with 20 px bodies. The plane moves from
--20 to -16 degrees and travels 10vw along the slat axis. Do not cross-fade two
-complete stripe textures. That method creates doubled frequencies and makes the
-transition look synthetic.
+A finite projected slat field drives the rays. Each source slat is 180vw wide:
+a 100vw solid `#c7c7c7` border joined to an 80vw material surface. Ten-pixel
+transparent top and bottom mitres make that solid border taper from 76 to 56 px
+in desktop shade and from 40 to 20 px at sunset. Phone shade tapers from 62 to
+42 px. Source periods are 64/58 px in desktop/phone shade and 73.6/66.7 px at
+sunset. Every slat shifts left by one viewport percent, rotates four degrees in
+depth around 90vw, and passes through a 50vw perspective. The parent plane moves
+from -20 to -16 degrees and travels 10vw along its own rotated axis. This is a
+projective fan, not a parallel repeating texture. Do not cross-fade two stripe
+textures or flatten the child plane back into a two-dimensional period.
 
-The right edge keeps a six-pixel base blur. Diffusion grows across the page
-through the reference's approximate 8, 25, 50, and 100 px stages. Each ray keeps
-its measured depth while its pigment feathers along the slat axis, with a small
-index-dependent fan. A separate, broad oblique veil covers the left field and
-fades continuously; it must never resolve into a shared hard edge or vertical
-boundary. The same neutral moss-gray shadow pigment remains through sunset;
-warm light changes its appearance without making it darker.
+The right edge keeps a six-pixel base blur. Sunlit's rotated progressive stack
+occupies `[-0.5H, W-0.5H]`, not `[0,W]`, and layers 0.5, 8, 25, 50, and three
+overlapping 100 px masks. The cached shader uses their second-moment Gaussian
+equivalent; the overlap reaches roughly 135 px at the covered edge while the
+right field returns to the six-pixel slat blur. A separate 85-degree desktop or
+75-degree phone paper veil covers the left field and fades continuously. Its
+aspect-ratio-aware coordinate must never collapse into a vertical boundary.
+The visible viewport lies almost entirely in the solid border extension, so it
+uses one neutral shadow pigment in shade and sunset; warm light changes its
+appearance without replacing it with a darker sunset color.
 
 The slat aperture changes over 500 ms, the plane settles over 1.2 seconds, the
 peach field over three seconds, and the six-pixel base diffusion remains fixed.
@@ -144,10 +151,13 @@ patch of light without a loading veil or replay.
 
 The worker renders one opaque canvas and caches the paper and shutter pass.
 Ambient frames copy that surface, add grain, and apply the sunset multiplier.
-The renderer performs no work in response to scroll. Keep the worker fallback,
-DPR cap, deterministic asset versions, and static CSS poster. Performance work
-may remove redundant computation, but it must preserve the progressive blur,
-transition continuity, paper relief, and build-time mathematics.
+The projective shader finds the nearest source slat analytically and evaluates
+thirteen neighbours, enough for the widest overlapping blur while remaining
+independent of viewport height. The renderer performs no work in response to
+scroll. Keep the worker fallback, DPR cap, deterministic asset versions, and
+static CSS poster. Performance work may remove redundant computation, but it
+must preserve the progressive blur, transition continuity, paper relief, and
+build-time mathematics.
 
 #### Experimental successor: Lokta Sunlight reader
 
@@ -356,6 +366,40 @@ states, plus both directions of the transition. The pages kept their width, the
 worker remained active, and the phone article preserved its reading hierarchy.
 The final promotion matrix still needs the other routes and browsers listed in
 the experiment gate.
+
+#### Projective shutter correction pass (20 July 2026)
+
+Direct matched captures showed that the ray-first field was not yet close
+enough. Its direction was broadly right, but its bands remained parallel, the
+shadow bodies were too thin, and their reveal began 350 to 500 px too late. The
+cause was structural: the shader had reproduced the parent rotation but omitted
+Sunlit's child `rotateY(4deg)`, `perspective: 50vw`, 100vw solid border, and
+transparent border mitres.
+
+The successor now inverts the complete CSS homography per fragment. At a
+1280 × 720 viewport its computed shade shutter rectangles agree with the live
+reference to sub-pixel rounding: shutter 0 begins near `(2.98, -801.91)` and
+measures about `2084.06 × 750.35`; shutter 8 begins near `(93.20, -343.35)` and
+measures about `2063.94 × 882.04`. The effective far-right periods now match at
+roughly 70 px in shade and 79–80 px at sunset, while ray angle changes across
+the fan instead of remaining globally fixed.
+
+Filtered slats composite source-over rather than by additive clamping. The
+progressive blur coordinate includes the rotated stack's `0.5H` offset, and its
+overlapping mask variances are accumulated before the six-pixel base blur. The
+paper veil uses the exact aspect-aware 85/75-degree direction. Because the DOM
+reference blurs that veil after compositing while the cached renderer folds the
+operations into one pass, the desktop analytical stop begins at 13 percent to
+match the reference's apparent 20 percent stop; phone remains at 45 percent.
+
+Endpoint audits at 1280 × 720 found matching projective slopes, periods, shadow
+depths, and 10–90 edge widths. Shade and sunset retain a deliberately small
+Nepal-specific difference in paper fibre and green cast. No vertical mullion,
+canopy, fern, or falling leaf returned. A 13-neighbour analytic lattice lookup
+replaced the fixed 20-slat loop, preserving broad-blur tails while supporting
+tall viewports and reducing transition work. Home, the mobile article, and a
+long mathematical fling remained painted; the CSS poster still exists only as
+the short pre-WebGL and failure fallback.
 
 ### 5. An unboxed portrait
 
