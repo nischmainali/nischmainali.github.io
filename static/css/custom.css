@@ -24,6 +24,29 @@
 .blog:not(.single) .toc-line a {
   font-size: 1.2em;
   line-height: 1.25;
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+  transition: color 120ms ease, text-decoration-color 120ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .blog:not(.single) .toc-line a:hover {
+    color: #173d31;
+    text-decoration-color: rgba(111, 59, 63, 0.56);
+  }
+}
+
+.blog:not(.single) .toc-line a:focus-visible {
+  color: #173d31;
+  outline: 1px solid rgba(111, 59, 63, 0.62);
+  outline-offset: 0.2rem;
+  text-decoration-color: rgba(111, 59, 63, 0.56);
+}
+
+.blog:not(.single) .main > .toc-line:first-child {
+  margin-top: 0;
 }
 
 /* Fix meta-line spacing - remove negative margins from inline styles */
@@ -148,6 +171,7 @@
 
 /* === Home Page === */
 .home h1 {
+  position: relative;
   font-size: clamp(1.6rem, 2.7vw, 1.95rem);
   font-style: normal;
 }
@@ -198,11 +222,21 @@
     linear-gradient(142deg, rgba(248, 228, 188, 0.12) 0%, rgba(246, 233, 210, 0.05) 48%, rgba(70, 48, 28, 0.1) 100%);
   mix-blend-mode: soft-light;
   opacity: 0.34;
+  transition: opacity 1.6s ease-in-out;
 }
 
-/* Soft, irregular edge instead of a hard rectangle/radius frame */
 .profile-burn::after {
-  display: none;
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    radial-gradient(90% 70% at 18% 12%, rgba(222, 174, 106, 0.15), rgba(222, 174, 106, 0) 68%),
+    linear-gradient(142deg, rgba(164, 111, 60, 0.14) 0%, rgba(112, 78, 46, 0.08) 48%, rgba(17, 12, 8, 0.28) 100%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 1.6s ease-in-out;
 }
 
 .profile-image {
@@ -214,6 +248,7 @@
   opacity: 0.98;
   filter: saturate(1.08) contrast(1.06) brightness(1.02) sepia(0.02);
   mix-blend-mode: normal;
+  transition: opacity 1.6s ease-in-out, filter 1.6s ease-in-out;
   -webkit-mask-image: radial-gradient(140% 118% at 50% 50%, #000 82%, rgba(0, 0, 0, 0.9) 88%, rgba(0, 0, 0, 0.35) 96%, transparent 100%);
   mask-image: radial-gradient(140% 118% at 50% 50%, #000 82%, rgba(0, 0, 0, 0.9) 88%, rgba(0, 0, 0, 0.35) 96%, transparent 100%);
 }
@@ -225,10 +260,10 @@ body.sunset .profile-image {
 }
 
 body.sunset .profile-burn::before {
-  background:
-    radial-gradient(90% 70% at 18% 12%, rgba(222, 174, 106, 0.15), rgba(222, 174, 106, 0) 68%),
-    linear-gradient(142deg, rgba(164, 111, 60, 0.14) 0%, rgba(112, 78, 46, 0.08) 48%, rgba(17, 12, 8, 0.28) 100%);
-  mix-blend-mode: screen;
+  opacity: 0;
+}
+
+body.sunset .profile-burn::after {
   opacity: 0.24;
 }
 
@@ -357,6 +392,12 @@ body.sunset .profile-burn::before {
   .publications a {
     display: block;
     padding: 0.45em 0;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .blog:not(.single) .main {
+    width: min(100%, var(--text-width));
   }
 }
 

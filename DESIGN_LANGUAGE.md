@@ -306,6 +306,33 @@ the destination content and fixed canvas in the first captured frame. Two
 captures 700 ms apart under reduced motion differed across the live surface,
 confirming that the environmental clock continued.
 
+#### QA and continuity polish (20 July 2026)
+
+The environmental controller now gives each saved mode change an exact end time.
+It derives that time from the six channel distances, so a partial reversal keeps
+only the time needed to reach its new endpoint. The pre-paint header and the live
+controller read the same value and discard expired records. During page changes,
+the source poster stays beneath the canvas until the resumed frame reaches full
+opacity. The sun control announces the requested destination during that short
+handoff instead of describing the source poster.
+
+Home now anchors its title dingbat to the title itself. The portrait keeps the
+accepted crop-sheet geometry and cross-fades its shade and sunset veils over the
+same 1.6 second interval as the botanical channel. Documents constrains its
+measure to the paper inset from 768 through 799 px, removes the doubled interval
+before the first entry, and gives entry titles a wine hairline and forest-ink
+focus state. These changes extend the existing print vocabulary without adding
+cards or motion.
+
+Opened articles place the skip link first in keyboard order and label both
+navigation regions. The sticky outline keeps its small type, but interactive
+nested entries and the return link use a stronger quiet ink over sunset. We
+reviewed Home, Documents, the scratch specimen, and the Gaussian-process note at
+1280, 1180, 1179, 768, and 390 px in shade and sunset. The 4200 px article fling
+kept the prose and canvas painted. Route handoffs, active outline tracking,
+mathematical overflow, focus treatment, page width, and the browser console
+showed no new fault.
+
 ### 5. An unboxed portrait
 
 On the home page the portrait occupies the right side of the introductory area.

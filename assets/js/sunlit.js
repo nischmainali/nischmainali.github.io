@@ -15,6 +15,14 @@
   var PAUSED_KEY = 'sunlit-atmosphere-paused';
   var AMBIENT_OFFSET_KEY = 'sunlit-ambient-offset';
   var AMBIENT_TIME_KEY = 'sunlit-ambient-time';
+  var TRANSITION_DURATIONS = {
+    shade: [1800, 1200, 1800, 3000, 1600, 2400],
+    sunset: [1800, 1200, 1800, 3000, 1600, 4800]
+  };
+  var TRANSITION_DELAYS = {
+    shade: [0, 0, 0, 0, 0, 0],
+    sunset: [0, 0, 0, 0, 0, 550]
+  };
 
   var scene = document.getElementById('sunlit-scene');
   var canvas = document.getElementById('sunlit-canvas');
@@ -83,6 +91,23 @@
     return value === 'sunset' || value === 'dark' ? 'sunset' : 'shade';
   }
 
+  function transitionEndTime(value, startTimeMs, fromValues) {
+    var target = value === 'sunset' ? 1 : 0;
+    var durations = TRANSITION_DURATIONS[value];
+    var delays = TRANSITION_DELAYS[value];
+    var hasValues = Array.isArray(fromValues) && fromValues.length === 6;
+    var remainingMs = 0;
+    for (var index = 0; index < 6; index += 1) {
+      var distance = 1;
+      if (hasValues) {
+        var from = Math.max(0, Math.min(1, finiteNumber(fromValues[index], 1 - target)));
+        distance = Math.abs(target - from);
+      }
+      remainingMs = Math.max(remainingMs, (durations[index] + delays[index]) * distance);
+    }
+    return startTimeMs + remainingMs;
+  }
+
   function getEpoch(now) {
     var stored = finiteNumber(storageGet(sessionStorage, EPOCH_KEY), 0);
     if (stored > 0 && stored <= now) return stored;
@@ -135,32 +160,50 @@
 
   function activeTransition() {
     var saved = readJson(sessionStorage, TRANSITION_KEY);
-    if (!saved || normalizeTheme(saved.to) !== theme) return null;
+    if (!saved) return null;
+    if (normalizeTheme(saved.to) !== theme) {
+      storageRemove(sessionStorage, TRANSITION_KEY);
+      return null;
+    }
     var startTimeMs = finiteNumber(saved.startTimeMs, 0);
     var currentNow = Date.now();
-    var age = currentNow - startTimeMs;
-    /* The raking-light channel may finish 5.35 seconds after entering sunset.
-     * Keep that last material response continuous across a quick page change. */
-    if (startTimeMs <= 0 || age < 0 || age > 6000) return null;
+    var endTimeMs = finiteNumber(
+      saved.endTimeMs,
+      transitionEndTime(theme, startTimeMs, saved.fromValues)
+    );
+    if (startTimeMs <= 0 || currentNow < startTimeMs || currentNow > endTimeMs) {
+      storageRemove(sessionStorage, TRANSITION_KEY);
+      return null;
+    }
     return {
       from: normalizeTheme(saved.from),
       to: theme,
       startTimeMs: startTimeMs,
       fromValues: Array.isArray(saved.fromValues) && saved.fromValues.length === 6 ? saved.fromValues : null,
+      endTimeMs: endTimeMs,
       nowMs: currentNow
     };
   }
 
-  function applyThemeState(value) {
+  function applyThemeVisual(value) {
     var isSunset = value === 'sunset';
     document.body.classList.toggle('sunset', isSunset);
     document.body.setAttribute('data-theme', value);
+  }
+
+  function applyThemeControl(value) {
+    var isSunset = value === 'sunset';
     if (favicon) {
       favicon.href = favicon.getAttribute(isSunset ? 'data-sunset-href' : 'data-shade-href');
     }
     if (!themeButton) return;
     themeButton.setAttribute('aria-pressed', String(isSunset));
     themeButton.setAttribute('aria-label', isSunset ? 'Switch to daylight' : 'Switch to sunset');
+  }
+
+  function applyThemeState(value) {
+    applyThemeVisual(value);
+    applyThemeControl(value);
   }
 
   function updateAtmosphereControl() {
@@ -179,11 +222,14 @@
     readyTimer = 0;
     scene.classList.remove('is-fallback');
     scene.classList.remove('is-handoff-complete');
-    applyThemeState(theme);
     scene.classList.add('is-live');
     window.clearTimeout(handoffTimer);
     handoffTimer = window.setTimeout(function() {
       if (!disposed && scene.classList.contains('is-live')) {
+        /* Keep the saved source poster beneath the resuming canvas until the
+         * opaque WebGL frame has completed its short fade. Changing the body
+         * first exposes the target poster through that fade as a color pulse. */
+        applyThemeVisual(theme);
         scene.classList.add('is-handoff-complete');
       }
     }, 220);
@@ -476,7 +522,8 @@
       from: previous,
       to: theme,
       startTimeMs: startTimeMs,
-      fromValues: null
+      fromValues: null,
+      endTimeMs: transitionEndTime(theme, startTimeMs, null)
     }));
     sendTheme(theme, startTimeMs, null);
 
@@ -487,7 +534,8 @@
         from: previous,
         to: theme,
         startTimeMs: startTimeMs,
-        fromValues: fromValues
+        fromValues: fromValues,
+        endTimeMs: transitionEndTime(theme, startTimeMs, fromValues)
       }));
     });
   }
@@ -527,7 +575,8 @@
   }
 
   var startingTransition = activeTransition();
-  applyThemeState(startingTransition ? startingTransition.from : theme);
+  applyThemeVisual(startingTransition ? startingTransition.from : theme);
+  applyThemeControl(theme);
   updateAtmosphereControl();
   if (themeButton) themeButton.addEventListener('click', changeTheme);
   if (atmosphereButton) atmosphereButton.addEventListener('click', toggleAtmosphere);

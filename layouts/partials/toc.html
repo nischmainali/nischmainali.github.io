@@ -6,7 +6,7 @@
       {{- $headings = (index $headings 0).Headings -}}
     {{- end -}}
     {{- with $headings }}
-<nav id="TableOfContents">
+<nav id="TableOfContents" aria-label="On this page">
   {{- template "article-toc-tree" (dict "headings" . "page" $page) -}}
 </nav>
     {{- end -}}

@@ -26,6 +26,7 @@
   --article-wine: #6f3b3f;
   --article-muted: rgba(32, 38, 34, 0.62);
   --article-faint: rgba(32, 38, 34, 0.42);
+  --article-quiet-ink: rgba(32, 38, 34, 0.72);
   --article-rule: rgba(83, 76, 95, 0.28);
   --article-rule-strong: rgba(78, 71, 88, 0.42);
   --article-block: rgba(233, 221, 207, 0.34);
@@ -44,6 +45,7 @@
   --article-wine: #704044;
   --article-muted: rgba(32, 35, 31, 0.64);
   --article-faint: rgba(32, 35, 31, 0.44);
+  --article-quiet-ink: rgba(32, 35, 31, 0.74);
   --article-rule: rgba(92, 72, 72, 0.3);
   --article-rule-strong: rgba(92, 72, 72, 0.44);
   --article-block: rgba(217, 190, 151, 0.25);
@@ -110,6 +112,8 @@
 
 .single.blog .article-skip-link:focus {
   opacity: 1;
+  outline: 1px solid var(--article-wine);
+  outline-offset: 0.14rem;
   pointer-events: auto;
   transform: translate(-50%, 0);
 }
@@ -1738,15 +1742,15 @@ html.article-figure-is-open {
     min-height: 1.4rem;
     padding: 0.25rem 0 0.35rem;
     border: 0;
-    color: var(--article-faint);
+    color: var(--article-quiet-ink);
     font-family: Jost, sans-serif;
-    font-size: 0.51rem;
+    font-size: 0.55rem;
     letter-spacing: 0.07em;
     line-height: 1.35;
     text-align: right;
     text-decoration: none;
     text-transform: uppercase;
-    opacity: 0.68;
+    opacity: 0.8;
     transition: color 120ms ease, opacity 120ms ease;
   }
 
@@ -1817,7 +1821,7 @@ html.article-figure-is-open {
   }
 
   .single.blog #TableOfContents > ul > li > a {
-    color: var(--article-muted);
+    color: var(--article-quiet-ink);
     font-size: 1.035em;
     font-variant: small-caps;
     letter-spacing: 0.025em;
@@ -1828,7 +1832,7 @@ html.article-figure-is-open {
   }
 
   .single.blog #TableOfContents ul ul a {
-    color: var(--article-faint);
+    color: var(--article-quiet-ink);
   }
 }
 

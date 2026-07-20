@@ -87,9 +87,15 @@
           var transition = JSON.parse(sessionStorage.getItem('sunlit-transition') || 'null');
           var transitionTarget = transition && (transition.to === 'sunset' || transition.to === 'dark') ? 'sunset' : 'shade';
           var transitionSource = transition && (transition.from === 'sunset' || transition.from === 'dark') ? 'sunset' : 'shade';
-          var transitionAge = now - Number(transition && transition.startTimeMs);
-          if (transition && transitionTarget === theme && transitionAge >= 0 && transitionAge <= 5200) {
+          var transitionStart = Number(transition && transition.startTimeMs);
+          var transitionEnd = Number(transition && transition.endTimeMs);
+          if (!(transitionEnd > transitionStart)) {
+            transitionEnd = transitionStart + (transitionTarget === 'sunset' ? 5350 : 3000);
+          }
+          if (transition && transitionTarget === theme && now >= transitionStart && now <= transitionEnd) {
             posterTheme = transitionSource;
+          } else if (transition) {
+            sessionStorage.removeItem('sunlit-transition');
           }
         } catch (e) {
           posterTheme = theme;
@@ -100,9 +106,12 @@
         }
       })();
     </script>
+    {{ if and .IsPage (eq $section "blog") }}
+    <a class="article-skip-link" href="#article-prose-start">Skip to article text</a>
+    {{ end }}
     {{ partial "sunlit.html" . }}
     <div class="crop-h"></div><div class="crop-v"></div><div class="crop-c"></div>
-    <nav class="nav-top small">
+    <nav class="nav-top small" aria-label="Primary">
     <div class="logo">
     {{ with default .Site.Params.logo.en (index .Site.Params.logo $section) }}
       <a href="{{ relURL .url }}">
