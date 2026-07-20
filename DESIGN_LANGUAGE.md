@@ -618,9 +618,12 @@ Its governing choices are:
   fraction into the left optical gutter and keeps the following Linden Hill
   prose unchanged. The foreground letter remains selectable and readable. A
   separate empty, accessibility-hidden span carries the ornamental layer.
-  The float reserves the ornament's full em square, begins with the first prose
-  line, and leaves a deliberate interval before the rest of the word. Shade and
-  sunset use fixed two-ink calibrations, with a quieter ornament at sunset;
+  One invariant float reserves exactly three opening lines at every measure;
+  the painted square is aligned independently inside it, so neither responsive
+  reflow nor font scaling can move its ink away from the first line. There is no
+  second mobile calibration and no transform on the float itself. The initial
+  leaves a deliberate interval before the rest of the word. Shade and sunset
+  use fixed two-ink calibrations, with a quieter ornament at sunset;
 - the title area carries only the publication date beneath the subtitle. Author,
   revision, reading-time, category, and topic registers were explicitly removed
   after the first specimen proved them to be unnecessary complication;

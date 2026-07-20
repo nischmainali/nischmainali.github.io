@@ -193,44 +193,51 @@
 
 /* A two-ink opening initial. The foreground letter remains real text; the
  * aria-hidden ornamental layer sits behind it and stays out of copy or speech.
- * The F1 ornament fills its entire em square, so the float and face must share
- * one width; the small negative left margin is the only optical hang. */
+ * Its painted square and its three-line float exclusion are separate pieces of
+ * geometry: the former stays registered to the first line while the latter
+ * reserves exactly three lines of the invariant opening prose. This avoids a
+ * transformed float and a second, conflicting mobile calibration. */
 .single.blog .article-body > p:first-of-type:has(> .article-dropcap:first-child) {
   margin-top: 0;
 }
 
 .single.blog .article-dropcap {
+  --article-dropcap-size: 4.65rem;
+  /* Three lines at the opening's 1.08rem size and 1.59 leading. */
+  --article-dropcap-exclusion: 5.1516rem;
+  --article-dropcap-ink-shift: 1.055rem;
   position: relative;
   float: left;
-  display: grid;
-  place-items: center;
-  width: 4.65rem;
-  height: 4.72rem;
-  margin: 0.02rem 0.2rem -0.2rem -0.55rem;
+  display: block;
+  width: var(--article-dropcap-size);
+  height: var(--article-dropcap-exclusion);
+  margin: 0 0.2rem 0 -0.55rem;
   color: var(--article-dropcap-ink);
-  font-size: 4.65rem;
+  font-size: var(--article-dropcap-size);
   line-height: 1;
   text-align: center;
-  /* These display faces paint well above their reported CSS line box. Move the
-   * visible initial, but leave its three-line float exclusion in place. */
-  transform: translateY(1rem);
   user-select: text;
 }
 
 .single.blog .article-dropcap-ornament,
 .single.blog .article-dropcap-letter {
-  grid-area: 1 / 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: var(--article-dropcap-size);
+  height: var(--article-dropcap-size);
   font-size: inherit;
   font-style: normal;
   font-variant: normal;
   font-weight: normal;
   line-height: 1;
   text-transform: uppercase;
+  transform: translateY(var(--article-dropcap-ink-shift));
 }
 
 .single.blog .article-dropcap-ornament {
-  display: grid;
-  place-items: center;
   color: var(--article-dropcap-ornament);
   font-family: "EB Garamond Initials F1", serif;
   pointer-events: none;
@@ -242,7 +249,6 @@
 }
 
 .single.blog .article-dropcap-letter {
-  position: relative;
   color: inherit;
   font-family: "EB Garamond Initials F2", "Linden Hill", Palatino, serif;
 }
@@ -1985,13 +1991,6 @@ html.article-figure-is-open {
 
   .single.blog .article-body {
     line-height: 1.58;
-  }
-
-  .single.blog .article-dropcap {
-    width: 4.2rem;
-    height: 4.45rem;
-    margin: 0.03rem 0.2rem -0.12rem -0.55rem;
-    font-size: 4.2rem;
   }
 
   .single.blog .section-anchor {
