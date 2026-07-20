@@ -120,19 +120,23 @@ from -20 to -16 degrees and travels 10vw along its own rotated axis. This is a
 projective fan, not a parallel repeating texture. Do not cross-fade two stripe
 textures or flatten the child plane back into a two-dimensional period.
 
-The right edge keeps a six-pixel base blur. Sunlit's rotated progressive stack
-occupies `[-0.5H, W-0.5H]`, not `[0,W]`, and layers 0.5, 8, 25, 50, and three
-overlapping 100 px masks. The cached shader uses their second-moment Gaussian
-equivalent; the overlap reaches roughly 135 px at the covered edge while the
-right field returns to the six-pixel slat blur. A separate 85-degree desktop or
-75-degree phone paper veil covers the left field and fades continuously. Its
-aspect-ratio-aware coordinate must never collapse into a vertical boundary.
+The shade right edge keeps a six-pixel base blur. Sunset adds a restrained
+optical bloom to 10.5 px; it softens the projected boundary without changing
+slat width, phase, or depth. Sunlit's rotated progressive stack occupies
+`[-0.5H, W-0.5H]`, not `[0,W]`, and layers 0.5, 8, 25, 50, and three overlapping
+100 px masks. The cached shader uses their second-moment Gaussian equivalent;
+the overlap reaches roughly 135 px at the covered edge. A separate 85-degree
+desktop or 75-degree phone paper veil covers the left field and fades
+continuously. In sunset its normalized reveal is raised to the power `1.52`,
+allowing the mid-left repetition to dissolve sooner while leaving the
+window-side depth nearly unchanged. Its aspect-ratio-aware coordinate must never
+collapse into a vertical boundary.
 The visible viewport lies almost entirely in the solid border extension, so it
 uses one neutral shadow pigment in shade and sunset; warm light changes its
 appearance without replacing it with a darker sunset color.
 
 The slat aperture changes over 500 ms, the plane settles over 1.2 seconds, the
-peach field over three seconds, and the six-pixel base diffusion remains fixed.
+base diffusion blooms over 1.8 seconds, and the peach field over three seconds.
 Raking paper relief enters after a 550 ms delay over 4.8 seconds and returns over
 2.4 seconds. The rays stay still after reaching either endpoint. Continuous life
 comes from the reference-matched Gaussian grain at twenty stepped positions per
@@ -434,6 +438,13 @@ before evaluating its morphology whenever the frond is invisible, including
 shade and narrow widths. The ambient grain renders at its native twenty distinct
 states per second rather than redrawing the same state three times at 60 fps;
 reduced motion uses ten. Mode transitions remain 60 fps.
+
+The final sunset-boundary calibration is intentionally limited to diffusion and
+veil response. A twelve-frame grain-averaged audit against the reference found
+the 10–90 percent window-side edge widths within roughly one pixel at 1280 px;
+the `1.52` veil curve removes the remaining over-defined mid-left shoulder. Do
+not compensate by changing shutter period, finite-edge masking, progressive
+blur geometry, pigment opacity, or the shade endpoint.
 
 ### 5. An unboxed portrait
 

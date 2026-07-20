@@ -16,7 +16,7 @@
 })(typeof self !== 'undefined' ? self : this, function(scope) {
   'use strict';
 
-  var VERSION = '1.5.1-experimental';
+  var VERSION = '1.5.2-experimental';
   var CHANNEL_COUNT = 5;
   var SHADE = 0;
   var SUNSET = 1;
@@ -245,6 +245,7 @@
     '  vec2 uv = v_uv;',
     '  float apertureMix = u_mixes.x;',
     '  float planeMix = u_mixes.y;',
+    '  float diffusionMix = u_mixes.z;',
     '  float reliefMix = u_relief;',
     '',
     '  // The covered side stays warm; the window side clears toward a barely',
@@ -293,10 +294,10 @@
     '  float outerDepth = contentDepth + 20.0;',
     '  float origin = -300.0 + 18.0 * apertureMix;',
     '',
-    '  // The source keeps a static six-pixel slat blur in both modes. The old',
-    '  // diffusion channel remains in saved state for compatibility but is',
-    '  // deliberately optically inert.',
-    '  float baseBlur = 6.0;',
+    '  // Keep shade at the source\'s six-pixel slat blur, then let sunset pick',
+    '  // up a small optical bloom. This prevents its boundaries from reading',
+    '  // like crisp painted bars while preserving the projective geometry.',
+    '  float baseBlur = mix(6.0, 10.5, diffusionMix);',
     '  // Sunlit rotates a viewport-tall blur stack by 90 degrees around its',
     '  // centre. Its horizontal footprint is therefore [-.5H, W-.5H], not',
     '  // [0,W]; preserving that offset lets the rays resolve much farther in.',
@@ -384,7 +385,14 @@
     '  // that later backdrop pass into one cached shader shifts its apparent',
     '  // 20% stop left by about seven viewport percent on desktop.',
     '  float veilStart = mix(0.13, 0.45, mobile);',
-    '  float veilReveal = clamp((veilCoordinate - veilStart) / (1.0 - veilStart), 0.0, 1.0);',
+    '  float linearVeilReveal = clamp(',
+    '    (veilCoordinate - veilStart) / (1.0 - veilStart), 0.0, 1.0',
+    '  );',
+    '  // In sunset the projected field dissolves into the covered side more',
+    '  // gradually. The right edge keeps its depth; only the long left tail',
+    '  // loses contrast instead of ending as a visible periodic texture.',
+    '  float sunsetVeilReveal = pow(linearVeilReveal, 1.52);',
+    '  float veilReveal = mix(linearVeilReveal, sunsetVeilReveal, diffusionMix);',
     '  float shadowAlpha = coverage * veilReveal * attenuation(uv);',
     '  paper = mix(paper, shadowPigment, clamp(shadowAlpha, 0.0, 1.0));',
     '',
@@ -1020,7 +1028,7 @@
      * cached paper surface. */
     var next = [
       this.canvas.width, this.canvas.height,
-      channels[0], channels[1], channels[4],
+      channels[0], channels[1], channels[2], channels[4],
       route[0], route[1]
     ];
     var previous = this.paperCacheState;
