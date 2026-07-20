@@ -24,7 +24,7 @@ Here is my <a href="/pdfs/cv.pdf">cv</a>.
     <source
       type="image/webp"
       srcset="/nisch-480.webp 480w, /nisch-800.webp 800w"
-      sizes="(max-width: 767px) 240px, 290px">
+      sizes="(max-width: 480px) 240px, (max-width: 768px) 288px, 290px">
     <img
       src="/nisch.jpg"
       alt="Nischal Mainali"

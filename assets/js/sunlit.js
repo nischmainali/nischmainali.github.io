@@ -139,7 +139,9 @@
     var startTimeMs = finiteNumber(saved.startTimeMs, 0);
     var currentNow = Date.now();
     var age = currentNow - startTimeMs;
-    if (startTimeMs <= 0 || age < 0 || age > 5200) return null;
+    /* The raking-light channel may finish 5.35 seconds after entering sunset.
+     * Keep that last material response continuous across a quick page change. */
+    if (startTimeMs <= 0 || age < 0 || age > 6000) return null;
     return {
       from: normalizeTheme(saved.from),
       to: theme,

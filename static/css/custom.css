@@ -163,8 +163,18 @@
   max-width: calc(100% - 22rem);
 }
 
-.home .home-intro p {
+.home .home-intro {
   margin: 1em 0;
+  font-size: 1.17em;
+  line-height: 1.5;
+}
+
+.home .home-intro p {
+  margin: 0;
+}
+
+.home .home-intro p + p {
+  margin-top: 0.45em;
 }
 
 .profile-burn {
@@ -323,7 +333,7 @@ body.sunset .profile-burn::before {
   inset: auto;
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 768px) {
   .home h3,
   .home .home-intro {
     max-width: 100%;

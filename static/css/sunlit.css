@@ -33,13 +33,19 @@ body {
 /* Keep every route on one explicit foreground plane. This prevents Chromium
  * from folding a long mathematical article into the environmental texture. */
 body > .nav-top,
-body > .home,
 body > h1.title,
 body > h2.subtitle,
 body > .main,
 body > .article-shell,
 body > footer {
   position: relative;
+  z-index: 1;
+}
+
+/* Home is already a direct flex item, so z-index works without positioning it.
+ * Leaving it unpositioned keeps the absolute portrait registered to the body
+ * and the paper's crop geometry rather than to the post-navigation flow. */
+body > .home {
   z-index: 1;
 }
 
@@ -96,19 +102,6 @@ body > .crop-c {
   mask-image: linear-gradient(105deg, transparent 0 20%, #000 100%);
 }
 
-.sunlit-poster-mullion {
-  position: absolute;
-  top: -6px;
-  bottom: -6px;
-  right: 30vw;
-  z-index: 0;
-  display: block;
-  width: 24px;
-  background: var(--sunlit-shadow);
-  opacity: 0.25;
-  filter: blur(6px);
-}
-
 body.sunset #sunlit-scene {
   background:
     radial-gradient(circle at 86% 14%, var(--sunlit-rhododendron), transparent 40%),
@@ -154,8 +147,7 @@ body.sunset #sunlit-scene::after {
  * static filtered plate. Otherwise the browser may keep a second viewport-wide
  * raster alive underneath the canvas during a fling. */
 #sunlit-scene.is-handoff-complete::before,
-#sunlit-scene.is-handoff-complete::after,
-#sunlit-scene.is-handoff-complete .sunlit-poster-mullion {
+#sunlit-scene.is-handoff-complete::after {
   display: none;
 }
 

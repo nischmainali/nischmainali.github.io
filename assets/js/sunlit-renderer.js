@@ -16,14 +16,21 @@
 })(typeof self !== 'undefined' ? self : this, function(scope) {
   'use strict';
 
-  var VERSION = '1.1.0-experimental';
+  var VERSION = '1.2.0-experimental';
   var CHANNEL_COUNT = 6;
   var SHADE = 0;
   var SUNSET = 1;
 
-  var DEFAULT_DURATIONS = [500, 1200, 500, 3000, 1000, 4800];
-  var SHADE_DURATIONS = [500, 1200, 500, 3000, 500, 2400];
-  var REDUCED_DURATIONS = [120, 160, 190, 260, 160, 300];
+  /* Channel order: shutter field, plane, shutter field companion, sunset,
+   * botanicals, paper relief. The two shutter channels intentionally share
+   * one slow clock: they survive saved states from the first renderer while
+   * now driving a fixed-endpoint cross-fade rather than a changing modulus. */
+  var SUNSET_DURATIONS = [1800, 1200, 1800, 3000, 1600, 4800];
+  var SHADE_DURATIONS = [1800, 1200, 1800, 3000, 1600, 2400];
+  var SUNSET_DELAYS = [0, 0, 0, 0, 0, 550];
+  var SHADE_DELAYS = [0, 0, 0, 0, 0, 0];
+  var SUNSET_TIMING = { durations: SUNSET_DURATIONS, delays: SUNSET_DELAYS };
+  var SHADE_TIMING = { durations: SHADE_DURATIONS, delays: SHADE_DELAYS };
   var NOISE_SIZE = 512;
   var NOISE_POSITIONS = [
     [0, 32], [-16, -32], [-64, 16], [72, -72], [-16, 56], [-72, -32],
@@ -115,6 +122,14 @@
     '  return highlight - shadow;',
     '}',
     '',
+    'float shutterStripe(float coordinate, float period, float depth, float softness) {',
+    '  float phase = mod(coordinate, period);',
+    '  float signedStripe = abs(phase - depth * 0.5) - depth * 0.5;',
+    '  float stripe = 1.0 - smoothstep(-softness, softness, signedStripe);',
+    '  float duty = depth / period;',
+    '  return mix(stripe, duty, smoothstep(period * 0.28, period * 0.92, softness));',
+    '}',
+    '',
     'void main() {',
     '  vec2 uv = v_uv;',
     '  float slatMix = u_mixes.x;',
@@ -141,7 +156,9 @@
     '  for (int fibre = 0; fibre < 7; fibre++) {',
     '    relief += reliefPair(uv, float(fibre));',
     '  }',
-    '  float reliefVisibility = smoothstep(0.72, 1.0, reliefMix);',
+    '  // Raking light begins as nearly invisible thickness in shade, then',
+    '  // resolves continuously instead of appearing at the end of the fade.',
+    '  float reliefVisibility = 0.07 + 0.93 * reliefMix;',
     '  paper += vec3(relief * reliefVisibility * 0.012);',
     '',
     '  // CSS transforms use a top-down Y axis; WebGL UVs are bottom-up. Work',
@@ -156,38 +173,33 @@
     '  float mobile = 1.0 - step(600.0, u_resolution.x);',
     '  float shadePeriod = mix(64.0, 58.0, mobile);',
     '  float sunsetPeriod = mix(74.0, 67.0, mobile);',
-    '  float period = mix(shadePeriod, sunsetPeriod, architectureMix);',
-    '  float stripeHeight = mix(mix(56.0, 42.0, mobile), 20.0, slatMix);',
-    '  float phase = mod(shutter.y, period);',
-    '  float signedStripe = abs(phase - stripeHeight * 0.5) - stripeHeight * 0.5;',
+    '  float shadeDepth = mix(56.0, 42.0, mobile);',
+    '  float sunsetDepth = 20.0;',
     '  float clarityRamp = smoothstep(0.10, 0.92, uv.x);',
-    '  float softness = mix(period * 1.58, 10.0, pow(clarityRamp, 0.88));',
-    '  float stripe = 1.0 - smoothstep(-softness, softness, signedStripe);',
-    '  float duty = stripeHeight / period;',
-    '  stripe = mix(stripe, duty, smoothstep(period * 0.28, period * 0.92, softness));',
+    '  float clarity = pow(clarityRamp, 0.88);',
+    '  float shadeSoftness = mix(shadePeriod * 1.58, 10.0, clarity);',
+    '  float sunsetSoftness = mix(sunsetPeriod * 1.58, 10.0, clarity);',
+    '  float shadeStripe = shutterStripe(shutter.y, shadePeriod, shadeDepth, shadeSoftness);',
+    '  float sunsetStripe = shutterStripe(shutter.y, sunsetPeriod, sunsetDepth, sunsetSoftness);',
+    '  // Cross-fade two complete optical fields. Interpolating the modulus made',
+    '  // every ray slide through the others and caused the old half-second snap.',
+    '  float shutterMix = clamp((slatMix + architectureMix) * 0.5, 0.0, 1.0);',
+    '  float stripe = mix(shadeStripe, sunsetStripe, shutterMix);',
     '',
     '  float desktopVeil = (0.996 * uv.x + 0.087 * uv.y) / 1.083;',
     '  float mobileVeil = (0.966 * uv.x + 0.259 * uv.y) / 1.225;',
     '  float veilCoordinate = mix(desktopVeil, mobileVeil, mobile);',
     '  float veilStart = mix(0.20, 0.45, mobile);',
     '  float architectureReveal = clamp((veilCoordinate - veilStart) / (1.0 - veilStart), 0.0, 1.0);',
-    '  float mobileStrength = mix(1.0, mix(0.85, 0.68, slatMix), mobile);',
+    '  float mobileStrength = mix(1.0, mix(0.85, 0.68, shutterMix), mobile);',
     '  vec3 shadowShade = mix(vec3(0.655, 0.660, 0.645), vec3(0.425, 0.435, 0.395), sunsetMix * 0.22);',
-    '  // The broad directional blur in the reference overlaps into a quiet',
-    '  // field shadow. Model that wash separately so the right edge can deepen',
-    '  // without turning each shutter edge into a high-contrast stripe.',
-    '  float fieldShadowAlpha = mix(0.29, 0.08, slatMix) * architectureReveal * attenuation(uv) * mobileStrength;',
-    '  paper = mix(paper, shadowShade, fieldShadowAlpha);',
-    '  float shadowAlpha = mix(0.42, 0.50, slatMix) * architectureReveal * attenuation(uv) * mobileStrength;',
+    '  // The predecessor cleared the window side with paper-colored veils.',
+    '  // Keep that luminous air instead of laying a second dark field over the',
+    '  // sheet; the periodic shutters alone carry the architectural shadow.',
+    '  float luminousVeil = 1.0 - architectureReveal;',
+    '  paper += vec3(0.006, 0.007, 0.004) * luminousVeil * mix(1.0, 0.65, sunsetMix);',
+    '  float shadowAlpha = mix(0.42, 0.50, shutterMix) * architectureReveal * attenuation(uv) * mobileStrength;',
     '  paper = mix(paper, shadowShade, clamp(stripe * shadowAlpha, 0.0, 0.52));',
-    '',
-    '  // Sunlit keeps the 24px mullion outside the transformed shutter plane:',
-    '  // it stays vertical at right:30vw while the slats rotate beneath it.',
-    '  float mullionCenter = u_resolution.x * 0.70 - 12.0;',
-    '  float mullionDistance = abs(uv.x * u_resolution.x - mullionCenter) - 12.0;',
-    '  float mullion = 1.0 - smoothstep(-4.0, 8.0, mullionDistance);',
-    '  float mullionAlpha = 0.25 * attenuation(uv);',
-    '  paper = mix(paper, shadowShade, mullion * mullionAlpha);',
     '',
     '  paper = clamp(paper, vec3(0.0), vec3(1.0));',
     '  out_color = vec4(paper, 1.0);',
@@ -271,35 +283,7 @@
     '  float veilStart = mix(0.20, 0.45, mobile);',
     '  float botanicalReveal = clamp((veilCoordinate - veilStart) / (1.0 - veilStart), 0.0, 1.0);',
     '',
-    '  if (kind > 0.5 && kind < 1.5) {',
-    '    float duration = max(a_instance2.x, 0.25);',
-    '    float activeTime = u_time - a_instance2.y;',
-    '    float progress = fract(max(activeTime, 0.0) / duration);',
-    '    float lateralPx;',
-    '    float travelRotation;',
-    '    if (progress < 0.20) {',
-    '      float segment = smoothstep(0.0, 1.0, progress / 0.20);',
-    '      lateralPx = mix(0.0, -50.0, segment);',
-    '      travelRotation = mix(0.0, 0.7853982, segment);',
-    '    } else if (progress < 0.40) {',
-    '      float segment = smoothstep(0.0, 1.0, (progress - 0.20) / 0.20);',
-    '      lateralPx = mix(-50.0, 50.0, segment);',
-    '      travelRotation = mix(0.7853982, -0.7853982, segment);',
-    '    } else {',
-    '      float segment = smoothstep(0.0, 1.0, (progress - 0.40) / 0.60);',
-    '      lateralPx = mix(50.0, 0.0, segment);',
-    '      travelRotation = mix(-0.7853982, 3.1415927, segment);',
-    '    }',
-    '    x += (lateralPx * u_motion) / u_resolution.x;',
-    '    y += progress;',
-    '    rotation += travelRotation * u_motion;',
-    '    size *= mix(1.0, 1.20, smoothstep(0.40, 1.0, progress));',
-    '    float fadeIn = step(0.0, activeTime) * smoothstep(0.0, 0.20, progress);',
-    '    float fadeOut = 1.0 - smoothstep(0.96, 1.0, progress);',
-    '    float travelShade = mix(0.18, 0.08, mobile);',
-    '    float travelSunset = mix(0.50, 0.22, mobile);',
-    '    opacity *= fadeIn * fadeOut * mix(travelShade, travelSunset, u_botanical);',
-    '  } else if (kind > 1.5 && kind < 2.5) {',
+    '  if (kind > 1.5 && kind < 2.5) {',
     '    rotation += sin(u_time * 0.29 + phase) * 0.018 * u_motion;',
     '    opacity *= mix(mix(0.024, 0.014, mobile), mix(0.105, 0.040, mobile), u_botanical);',
     '  } else if (kind > 2.5) {',
@@ -782,25 +766,30 @@
     this.channels = this._sampleTransition(Number(initial.nowMs) || Date.now());
   };
 
-  Renderer.prototype._durationsForTransition = function() {
-    if (this.reducedMotion) return REDUCED_DURATIONS;
-    return this.theme === 'sunset' ? DEFAULT_DURATIONS : SHADE_DURATIONS;
+  Renderer.prototype._timingForTransition = function(transition) {
+    return transition.toTheme === 'sunset' ? SUNSET_TIMING : SHADE_TIMING;
   };
 
   Renderer.prototype._sampleTransition = function(nowMs) {
     if (!this.transition) return copyChannels(this.channels);
     var transition = this.transition;
-    var durations = this._durationsForTransition();
+    var timing = this._timingForTransition(transition);
     var elapsed = Math.max(0, nowMs - transition.startMs);
     var values = new Float32Array(CHANNEL_COUNT);
     var complete = true;
 
     for (var index = 0; index < CHANNEL_COUNT; index += 1) {
-      var progress = clamp(elapsed / durations[index], 0, 1);
-      var eased = index === 1 || index === 4 ? easeOut(progress) : easeInOut(progress);
+      /* Reversals cover only the remaining channel distance. This retains the
+       * endpoint clocks without making a half-finished transition take a full
+       * second pass to return. The relief delay scales by the same distance. */
+      var distance = Math.abs(transition.target[index] - transition.from[index]);
+      var duration = timing.durations[index] * distance;
+      var delay = timing.delays[index] * distance;
+      var progress = duration <= 0 ? 1 : clamp((elapsed - delay) / duration, 0, 1);
+      var eased = index === 1 ? easeOut(progress) : easeInOut(progress);
       values[index] = transition.from[index] +
         (transition.target[index] - transition.from[index]) * eased;
-      if (progress < 1) complete = false;
+      if (elapsed < delay + duration) complete = false;
     }
 
     this.channels = values;
@@ -880,18 +869,6 @@
         x, y, canopySize, 0.7853982 + random() * Math.PI,
         canopyOpacity, canopyBlur,
         0, random() * Math.PI * 2
-      );
-    }
-
-    for (var falling = 0; falling < 30; falling += 1) {
-      push(
-        0.80 + random() * 0.25, random() * 0.50,
-        30 + random() * 20,
-        0,
-        0.80, 12 + random() * 8,
-        1, random() * Math.PI * 2,
-        3 + random() * 3, random() * 3,
-        0, 0
       );
     }
 
@@ -1066,14 +1043,6 @@
     nowMs = Number(nowMs) || this._now();
     if (this.transition) this.channels = this._sampleTransition(nowMs);
     this.reducedMotion = Boolean(reduced);
-    if (this.transition) {
-      this.transition = {
-        from: copyChannels(this.channels),
-        target: endpointChannels(this.theme),
-        startMs: nowMs,
-        toTheme: this.theme
-      };
-    }
     this._synchronizeAmbientFreeze(nowMs, false);
     this.renderFrame(nowMs);
     this._ensureLoop();

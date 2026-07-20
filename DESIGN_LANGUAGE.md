@@ -164,8 +164,8 @@ Sunlit's optics on the Lokta Field Note. The checkpoint at `c26729b` preserves
 the preceding article and environmental implementation. Promotion requires
 Nisch's visual approval.
 
-The live Sunlit production bundle supplied the control measurements. The
-successor matches these parts of the reference:
+The live Sunlit production bundle supplied the control measurements. The first
+Sunlit-calibrated checkpoint matched these parts of the reference:
 
 - the 85-degree desktop field and 75-degree phone field, including the 20 and
   45 percent clearing points;
@@ -192,10 +192,10 @@ persistence, reduced-motion handling, and a remembered atmosphere pause.
 The browser receives one opaque WebGL2 canvas. A worker owns it when
 `OffscreenCanvas` is available; the same renderer runs on the main thread as the
 first fallback, and a complete CSS poster remains beneath both. The renderer
-caches paper, shutters, and the mullion in an RGBA8 texture. Steady frames copy
-that texture, draw the instanced plants, add grain, then apply the sunset
-multiplier. It redraws the paper texture during a mode or route change and after
-resize. Scroll never enters the environmental controller.
+caches paper and shutters in an RGBA8 texture. Steady frames copy that texture,
+draw the instanced plants, add grain, then apply the sunset multiplier. It
+redraws the paper texture during a mode or route change and after resize. Scroll
+never enters the environmental controller.
 
 The controller stores the mode, seed, scene epoch, ambient offset, and an active
 transition. A destination page resumes the same phase. The poster remains until
@@ -260,6 +260,38 @@ clean right field measured about `rgb(218,174,133)`, compared with Sunlit near
 `rgb(217,169,129)`. The local shutter variation also remains softer. Nisch had
 already asked for warmer light with less depth and weaker dark shadows, so treat
 both differences as accepted constraints rather than missed calibration.
+
+#### Hybrid shadow restoration pass (20 July 2026)
+
+Nisch removed two reference details after reviewing the calibrated successor.
+The current branch has no vertical mullion in either the WebGL scene or its CSS
+poster, and it creates no falling leaves. Keep both absences deliberate. The two
+niuro fronds and the edge-cropped peepal canopy supply the remaining botanical
+shadow; strengthen one frond before adding another moving object if the scene
+needs more silhouette identity.
+
+The mode change now borrows the predecessor's optical choreography without
+restoring its costly DOM filter stack. Shade and sunset use complete shutter
+fields at their fixed endpoint periods and depths. The renderer cross-fades
+those fields over 1.8 seconds while the plane moves for 1.2 seconds and paper
+color changes over three. Botanicals use 1.6 seconds. Raking relief enters after
+a 550 ms delay over 4.8 seconds and returns to shade over 2.4 seconds. A reversed
+toggle scales each remaining channel duration to its current distance from the
+new endpoint.
+
+This pass also removes the broad dark field wash. A small paper-colored veil
+keeps the window side luminous, while the periodic shutter field carries the
+architectural shadow. Preserve the current worker, cached texture, route
+attenuation, session clock, and active-transition handoff. Reduced-motion mode
+keeps the full environmental timing and 30 fps ambient surface; it must not
+collapse the mode transition.
+
+The same pass restored the home portrait's crop-sheet registration. `.home`
+remains an unpositioned flex item with its own stacking level, so the absolute
+portrait uses the page as its containing field. At 1280 px the portrait begins
+near `(788, 198)` and measures about `291 × 218` px. The semantic introduction
+keeps its 1.17 em / 1.5 rhythm, and the portrait returns to document flow at
+768 px and below.
 
 The article finishing values are a 36rem prose measure, a 42rem breakout, an
 8.25rem contents rail, and a 2.25rem rail gap. Prose uses 1.055rem at 1.61 line
@@ -791,10 +823,11 @@ These are implementation findings, not permission for a future agent to launch
 a cleanup pass. Fix them only when in scope, and preserve the visual language
 while doing so.
 
-- The experimental renderer draws 300 canopy instances, thirty falling leaves,
-  and a procedural fern in one instanced pass. A midrange phone still needs GPU,
-  memory, power, and scroll traces before promotion. Do not translate these
-  counts back into DOM nodes or viewport filter stacks.
+- The experimental renderer draws 300 edge-cropped canopy instances and two
+  procedural fern fronds in one instanced pass. A midrange phone still needs
+  GPU, memory, power, and scroll traces before promotion. Do not translate these
+  forms back into DOM nodes or viewport filter stacks, and do not restore the
+  removed falling-leaf loop as a performance test.
 - MathML-only output cuts the dense specimen's HTML and element count by more
   than half. Dual HTML and MathML remains the default until Safari, Chromium,
   Firefox, VoiceOver, NVDA, overflow, and print checks pass.
