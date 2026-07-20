@@ -561,6 +561,19 @@ The pass adds no remote annotations, recursive popups, backlinks,
 transclusion, or second toolbar. Citation previews remain part of the later
 bibliography phase.
 
+The `experiment/toc-outside-sheet` branch tests one further spatial idea. On a
+genuinely wide viewport, the crop marks become the edge of a real reading
+sheet: the contents rail leaves that sheet completely and hangs in the quiet
+left desk field. It keeps a 1.5rem interval from the crop boundary and centers
+itself vertically while remaining bounded by the article, so it still arrives
+and departs with the text. The prose grows only from 36rem to 37.5rem. This is
+not a generic fixed sidebar and must never acquire its own card, veil, or page
+chrome; its character comes from the asymmetry and its dialogue with the crop
+marks. The exterior arrangement begins only at 1360px, where the full 8.25rem
+rail retains a 28px viewport margin. From 1180–1359px the accepted inset rail
+returns unchanged, and below 1180px the existing in-flow treatments remain in
+force.
+
 Asana Math 000.962 supplies the mathematical voice. Linden Hill revives
 Goudy's Deepdene, and its page texture calls for a warm old-style companion.
 Times-derived math brought an institutional tone. KaTeX's Computer Modern
@@ -598,9 +611,13 @@ Its governing choices are:
 - the title field ends in whitespace rather than a full-width divider. Section
   headings likewise rely on type and rhythm, not repeated horizontal rules;
 - at 1180 px and above, contents become a slim, article-local sticky rail in the
-  left margin. The rail is 8.25rem wide with a 2.25rem inner interval; its left
-  edge lands exactly on the title's paper inset while the interval remains open
-  beside wide code and figures. Reserved old-style section
+  left margin. From 1180–1359px, the rail is 8.25rem wide with a 2.25rem inner
+  interval; its left edge lands exactly on the title's paper inset while the
+  interval remains open beside wide code and figures. At 1360px and above, the
+  outside-sheet experiment moves that same rail wholly past the left crop mark,
+  preserves a 1.5rem exterior interval, centers it vertically in the viewport,
+  and gives prose the restrained 37.5rem measure described above. Reserved
+  old-style section
   numbers, typographic indentation, and an active ancestor trail make hierarchy
   legible at a glance. A wine reading-progress rule and the current H2/H3 path
   remain fixed above the independently scrolling outline, which quietly keeps

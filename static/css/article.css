@@ -1836,6 +1836,38 @@ html.article-figure-is-open {
   }
 }
 
+/* On a genuinely wide screen the crop marks become the edge of a real sheet:
+ * the contents rail moves wholly into the outer desk space while prose receives
+ * one small extension. The 1360px threshold is geometric, not device-based:
+ * below it, a full 8.25rem rail plus a 1.5rem crop gap would lose its safe
+ * viewport margin, so the accepted inset composition remains in force. */
+@media (min-width: 1360px) {
+  .single.blog {
+    --article-measure: 37.5rem;
+    --article-measure-to-sheet-edge: 12.25rem;
+    --article-rail-exterior-gap: 1.5rem;
+  }
+
+  .single.blog .article-contents-rail {
+    left: calc(
+      0rem
+      - var(--article-measure-to-sheet-edge)
+      - var(--article-rail-exterior-gap)
+      - var(--article-rail-width)
+    );
+  }
+
+  /* Center the reader's instrument in the viewport while its article-local
+   * wrapper still governs arrival and departure at the document boundaries. */
+  .single.blog .article-contents {
+    top: 50vh;
+    top: 50dvh;
+    max-height: calc(100vh - 3rem);
+    max-height: calc(100dvh - 3rem);
+    transform: translateY(-50%);
+  }
+}
+
 @media (min-width: 1180px) {
   .single.blog .sidenote-ref {
     cursor: default;
