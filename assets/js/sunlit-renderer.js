@@ -650,7 +650,6 @@
 
     this.seed = hashSeed(this.options.seed);
     this.epochMs = Number(this.options.epochMs) || Date.now();
-    this.ambientOffsetMs = Number(this.options.ambientOffsetMs) || 0;
     this.maxDpr = clamp(Number(this.options.maxDpr) || 1, 0.5, 1.5);
     this.ambientFrameIntervalMs = 1000 / clamp(Number(this.options.ambientFps) || 30, 1, 60);
     this.transitionFrameIntervalMs = 1000 / clamp(Number(this.options.transitionFps) || 60, 1, 60);
@@ -663,7 +662,6 @@
     this.theme = normalizeTheme(this.options.theme);
     this.channels = endpointChannels(this.theme);
     this.transition = null;
-    this.paused = Boolean(this.options.paused);
     this.reducedMotion = Boolean(this.options.reducedMotion);
     this.fernStrength = clamp(Number(this.options.fernStrength) || 0, 0, 1);
     this.visible = this.options.visible !== false;
@@ -677,8 +675,6 @@
     this.gl = null;
     this.resources = null;
     this.paperCacheState = null;
-    this.ambientFrozen = false;
-    this.ambientFrozenMs = 0;
 
     this.boundLoop = this._loop.bind(this);
     this.boundContextLost = this._handleContextLost.bind(this);
@@ -690,7 +686,6 @@
     }
 
     this._setInitialTransition(this.options.transition);
-    this._synchronizeAmbientFreeze(Number(this.options.nowMs) || Date.now(), true);
 
     try {
       this._createContextAndResources();
@@ -878,21 +873,7 @@
   };
 
   Renderer.prototype._ambientTimeMs = function(nowMs) {
-    if (this.ambientFrozen) return this.ambientFrozenMs;
-    return Math.max(0, this._rawSceneTimeMs(nowMs) - this.ambientOffsetMs);
-  };
-
-  Renderer.prototype._synchronizeAmbientFreeze = function(nowMs, initializing) {
-    var shouldFreeze = this.paused;
-    if (shouldFreeze && !this.ambientFrozen) {
-      this.ambientFrozenMs = initializing && isFinite(Number(this.options.ambientTimeMs)) ?
-        Math.max(0, Number(this.options.ambientTimeMs)) :
-        Math.max(0, this._rawSceneTimeMs(nowMs) - this.ambientOffsetMs);
-      this.ambientFrozen = true;
-    } else if (!shouldFreeze && this.ambientFrozen) {
-      this.ambientOffsetMs = Math.max(0, this._rawSceneTimeMs(nowMs) - this.ambientFrozenMs);
-      this.ambientFrozen = false;
-    }
+    return this._rawSceneTimeMs(nowMs);
   };
 
   Renderer.prototype._allocatePaperTarget = function() {
@@ -979,21 +960,11 @@
     this._ensureLoop();
   };
 
-  Renderer.prototype.setPaused = function(paused, nowMs) {
-    if (this.disposed) return;
-    nowMs = Number(nowMs) || this._now();
-    this.paused = Boolean(paused);
-    this._synchronizeAmbientFreeze(nowMs, false);
-    this.renderFrame(nowMs);
-    this._ensureLoop();
-  };
-
   Renderer.prototype.setReducedMotion = function(reduced, nowMs) {
     if (this.disposed) return;
     nowMs = Number(nowMs) || this._now();
     if (this.transition) this.channels = this._sampleTransition(nowMs);
     this.reducedMotion = Boolean(reduced);
-    this._synchronizeAmbientFreeze(nowMs, false);
     this.renderFrame(nowMs);
     this._ensureLoop();
   };
@@ -1007,19 +978,6 @@
       this.renderFrame();
       this._ensureLoop();
     }
-  };
-
-  Renderer.prototype.setClock = function(clock) {
-    if (this.disposed || !clock) return;
-    var nowMs = Number(clock.nowMs) || this._now();
-    if (isFinite(Number(clock.epochMs))) this.epochMs = Number(clock.epochMs);
-    if (isFinite(Number(clock.ambientOffsetMs))) this.ambientOffsetMs = Math.max(0, Number(clock.ambientOffsetMs));
-    if (isFinite(Number(clock.ambientTimeMs)) && this.ambientFrozen) {
-      this.ambientFrozenMs = Math.max(0, Number(clock.ambientTimeMs));
-    }
-    this._synchronizeAmbientFreeze(nowMs, false);
-    this.renderFrame(nowMs);
-    this._ensureLoop();
   };
 
   Renderer.prototype._paperChanged = function(channels, route) {
@@ -1140,10 +1098,6 @@
     }
   };
 
-  Renderer.prototype._needsContinuousFrames = function() {
-    return Boolean(this.transition || this.routeTransition || !this.paused);
-  };
-
   Renderer.prototype._requestFrame = function() {
     var renderer = this;
     if (typeof scope.requestAnimationFrame === 'function') {
@@ -1168,7 +1122,7 @@
 
   Renderer.prototype._ensureLoop = function() {
     if (!this.active || !this.visible || this.disposed || this.contextLost || this.frameHandle != null) return;
-    if (!this.ready || this._needsContinuousFrames()) this.frameHandle = this._requestFrame();
+    this.frameHandle = this._requestFrame();
   };
 
   Renderer.prototype._loop = function() {
@@ -1235,14 +1189,11 @@
       version: VERSION,
       theme: this.theme,
       route: this.route,
-      paused: this.paused,
       reducedMotion: this.reducedMotion,
       visible: this.visible,
       ready: this.ready,
       contextLost: this.contextLost,
       epochMs: this.epochMs,
-      ambientOffsetMs: this.ambientOffsetMs,
-      ambientTimeMs: this._ambientTimeMs(nowMs),
       transition: this.transition ? {
         startTimeMs: this.transition.startMs,
         to: this.transition.toTheme,

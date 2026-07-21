@@ -89,22 +89,11 @@
             durationMs: message.durationMs
           });
           break;
-        case 'pause':
-          renderer.setPaused(message.paused, message.nowMs);
-          break;
         case 'reduced-motion':
           renderer.setReducedMotion(message.reduced, message.nowMs);
           break;
         case 'visibility':
           renderer.setVisible(message.visible);
-          break;
-        case 'clock':
-          renderer.setClock({
-            epochMs: message.epochMs,
-            ambientOffsetMs: message.ambientOffsetMs,
-            ambientTimeMs: message.ambientTimeMs,
-            nowMs: message.nowMs
-          });
           break;
         case 'render':
           renderer.renderFrame(message.nowMs);

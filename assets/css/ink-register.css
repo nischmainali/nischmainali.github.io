@@ -569,7 +569,7 @@ html[data-ink] body .publications a:hover {
   color: var(--palette-bg-main);
 }
 
-html[data-ink] body :is(#theme-toggle, #atmosphere-toggle):focus-visible {
+html[data-ink] body #theme-toggle:focus-visible {
   outline-color: var(--site-focus);
   box-shadow: 0 0 0 2px var(--site-focus-accent);
 }

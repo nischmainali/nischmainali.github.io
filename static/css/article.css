@@ -59,14 +59,12 @@
 
 /* The light control belongs to the crop corner, not to the reading viewport.
  * Let it leave with the masthead so it can never cover marginalia or prose. */
-.single.blog #theme-toggle,
-.single.blog #atmosphere-toggle {
+.single.blog #theme-toggle {
   position: absolute;
   left: 20px;
 }
 
 .single.blog #theme-toggle { top: 20px; }
-.single.blog #atmosphere-toggle { top: 48px; }
 
 /* The environmental sheet and the reading matter must be sibling paint
  * planes. With the scene at a negative z-index behind a transparent root,
@@ -2110,7 +2108,6 @@ html.article-figure-is-open {
   .single.blog .nav-top,
   .single.blog #sunlit-scene,
   .single.blog #theme-toggle,
-  .single.blog #atmosphere-toggle,
   .single.blog .crop-h,
   .single.blog .crop-v,
   .single.blog .crop-c,

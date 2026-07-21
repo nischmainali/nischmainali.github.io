@@ -13,9 +13,6 @@
   var SEED_KEY = 'sunlit-scene-seed';
   var TRANSITION_KEY = 'sunlit-transition-v2';
   var TRANSITION_CHANNEL_COUNT = 5;
-  var PAUSED_KEY = 'sunlit-atmosphere-paused';
-  var AMBIENT_OFFSET_KEY = 'sunlit-ambient-offset';
-  var AMBIENT_TIME_KEY = 'sunlit-ambient-time';
   /* Channel order: shutter aperture, plane, optical diffusion, sunset,
    * paper relief. The diffusion channel remains serialized so transitions
    * already in flight survive a page change, although the ray blur is fixed. */
@@ -31,7 +28,6 @@
   var scene = document.getElementById('sunlit-scene');
   var canvas = document.getElementById('sunlit-canvas');
   var themeButton = document.getElementById('theme-toggle');
-  var atmosphereButton = document.getElementById('atmosphere-toggle');
   var favicon = document.getElementById('sunlit-favicon');
   if (!scene || !canvas) return;
 
@@ -151,16 +147,8 @@
   var route = scene.getAttribute('data-route') || 'home';
   var epochMs = getEpoch(now);
   var seed = getSeed();
-  var ambientOffsetMs = Math.max(0, finiteNumber(storageGet(sessionStorage, AMBIENT_OFFSET_KEY), 0));
-  var manualPaused = storageGet(localStorage, PAUSED_KEY) === 'true';
   var reducedQuery = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
   var reducedMotion = Boolean(reducedQuery && reducedQuery.matches);
-  var ambientTimeMs = finiteNumber(storageGet(sessionStorage, AMBIENT_TIME_KEY), NaN);
-
-  if (manualPaused && !isFinite(ambientTimeMs)) {
-    ambientTimeMs = Math.max(0, now - epochMs - ambientOffsetMs);
-    storageSet(sessionStorage, AMBIENT_TIME_KEY, ambientTimeMs);
-  }
 
   function activeTransition() {
     var saved = readJson(sessionStorage, TRANSITION_KEY);
@@ -209,16 +197,6 @@
   function applyThemeState(value) {
     applyThemeVisual(value);
     applyThemeControl(value);
-  }
-
-  function updateAtmosphereControl() {
-    if (!atmosphereButton) return;
-    atmosphereButton.setAttribute('aria-pressed', String(manualPaused));
-    atmosphereButton.disabled = false;
-    atmosphereButton.setAttribute(
-      'aria-label',
-      manualPaused ? 'Resume atmosphere' : (reducedMotion ? 'Pause gentle atmosphere' : 'Pause atmosphere')
-    );
   }
 
   function reveal() {
@@ -284,11 +262,8 @@
       transitionFps: 60,
       seed: seed,
       epochMs: epochMs,
-      ambientOffsetMs: ambientOffsetMs,
-      ambientTimeMs: isFinite(ambientTimeMs) ? ambientTimeMs : undefined,
       theme: theme,
       route: route,
-      paused: manualPaused,
       reducedMotion: reducedMotion,
       fernStrength: Math.max(0, Math.min(1, finiteNumber(
         scene.getAttribute('data-fern-strength'), 0
@@ -338,16 +313,6 @@
       pendingState[requestId] = { resolve: resolve, timer: timer };
       worker.postMessage({ type: 'state', requestId: requestId, nowMs: Date.now() });
     });
-  }
-
-  function persistClock(state) {
-    if (!state) return;
-    epochMs = finiteNumber(state.epochMs, epochMs);
-    ambientOffsetMs = Math.max(0, finiteNumber(state.ambientOffsetMs, ambientOffsetMs));
-    ambientTimeMs = Math.max(0, finiteNumber(state.ambientTimeMs, ambientTimeMs || 0));
-    storageSet(sessionStorage, EPOCH_KEY, epochMs);
-    storageSet(sessionStorage, AMBIENT_OFFSET_KEY, ambientOffsetMs);
-    if (manualPaused) storageSet(sessionStorage, AMBIENT_TIME_KEY, ambientTimeMs);
   }
 
   function clearPendingState() {
@@ -501,11 +466,6 @@
     }
   }
 
-  function sendPaused(value, at) {
-    if (worker) worker.postMessage({ type: 'pause', paused: value, nowMs: at });
-    else if (renderer) renderer.setPaused(value, at);
-  }
-
   function sendReduced(value, at) {
     if (worker) worker.postMessage({ type: 'reduced-motion', reduced: value, nowMs: at });
     else if (renderer) renderer.setReducedMotion(value, at);
@@ -548,20 +508,9 @@
     });
   }
 
-  function toggleAtmosphere() {
-    manualPaused = !manualPaused;
-    storageSet(localStorage, PAUSED_KEY, String(manualPaused));
-    updateAtmosphereControl();
-    sendPaused(manualPaused, Date.now());
-    queryState().then(persistClock);
-    if (!manualPaused) storageRemove(sessionStorage, AMBIENT_TIME_KEY);
-  }
-
   function motionPreferenceChanged(event) {
     reducedMotion = Boolean(event.matches);
-    updateAtmosphereControl();
     sendReduced(reducedMotion, Date.now());
-    queryState().then(persistClock);
   }
 
   function dispose() {
@@ -586,9 +535,7 @@
   var prepaintTheme = document.body.classList.contains('sunset') ? 'sunset' : 'shade';
   applyThemeVisual(startingTransition ? prepaintTheme : theme);
   applyThemeControl(theme);
-  updateAtmosphereControl();
   if (themeButton) themeButton.addEventListener('click', changeTheme);
-  if (atmosphereButton) atmosphereButton.addEventListener('click', toggleAtmosphere);
 
   window.addEventListener('resize', function() { scheduleResize(false); }, { passive: true });
   window.addEventListener('orientationchange', function() { scheduleResize(true); });

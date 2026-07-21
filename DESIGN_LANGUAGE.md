@@ -140,7 +140,7 @@ Raking paper relief enters after a 550 ms delay over 4.8 seconds and returns ove
 comes from the reference-matched Gaussian grain at twenty stepped positions per
 second. Under `prefers-reduced-motion`, the complete optics and mode transition
 remain intact while the grain advances at a gentler ten positions per second;
-the pause control freezes the ambient clock.
+the ambient clock continues whenever the page is visible.
 
 A sparse set of paired highlight-and-shadow fibres remains near-invisible in
 shade and resolves under raking sunset light. Keep the local tonal difference
@@ -198,7 +198,7 @@ Four choices remain specific to this site. The paper keeps a low-chroma lichen
 cast at the reference luminance. Peepal and niuro forms replace the generic
 rounded leaves. A broad attenuation field reduces shadow contrast beneath
 Documents and article measures. The controls keep names, state, keyboard focus,
-persistence, reduced-motion handling, and a remembered atmosphere pause.
+persistence, and reduced-motion handling.
 
 The browser receives one opaque WebGL2 canvas. A worker owns it when
 `OffscreenCanvas` is available; the same renderer runs on the main thread as the
@@ -263,8 +263,8 @@ in two.
   square can show the letter at once; the 169 KB F1 ornament may arrive later
   without moving the prose.
 - Reduced-motion preference leaves the clock running at 30 frames per second. It
-  lowers lateral leaf travel and fern sway to 32 percent. The pause control alone
-  freezes the scene.
+  lowers lateral leaf travel and fern sway to 32 percent. The scene remains live
+  whenever the page is visible.
 
 The local sunset keeps a small Nepal-specific green-gold bias. At 1440 px its
 clean right field measured about `rgb(218,174,133)`, compared with Sunlit near
