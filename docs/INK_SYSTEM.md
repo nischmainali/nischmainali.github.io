@@ -5,9 +5,9 @@ Status: experimental public candidate · Branch: `experiment/toc-outside-sheet` 
 ## Purpose
 
 The Ink control lets each browser keep one editorial impression of the Lokta
-Field Note. It changes the printed vocabulary while typography, crop geometry,
-article measure, marginalia, mathematics, WebGL sunlight, grain, and motion stay
-fixed.
+Field Note. It changes the printed vocabulary and the sheet's restrained paper
+cast while typography, crop geometry, article measure, marginalia, mathematics,
+WebGL sunlight geometry, grain, and motion stay fixed.
 
 The control occupies the crop frame's upper-right corner, opposite the light
 control. The left instrument changes the atmosphere; the right instrument
@@ -82,9 +82,12 @@ Visited links share the normal contrast-safe link color. Navigation history
 should not introduce an uncontrolled extra color into the comparison. The
 source visited inks remain recorded for later review.
 
-The source paper colors appear on the proof slip and on small secondary washes.
-Ink selection does not tint or redraw the WebGL canvas. One sheet stays beneath
-one sun while the printed impression changes.
+The source paper colors appear exactly on the proof slip and on small secondary
+washes. The living sheet uses a lighter optical adaptation of each flat editor
+background: peach for Arbutus, warm parchment for Cyprus, lichen for Elea,
+verdant paper for Arcadia, and warm ivory for Modus. The adaptation shifts the
+cached paper before the existing shadows and sunset multiplier are applied, so
+fibres, relief, ray contrast, and the environmental choreography remain intact.
 
 ## Moving-surface correction
 
@@ -125,10 +128,12 @@ decorative rules can remain translucent because they do not carry meaning.
 - `assets/css/ink-register.css` maps theme roles and draws the crop-registered
   proof slip.
 - `assets/js/ink-register.js` owns interaction, persistence, and tab sync.
+- `assets/js/sunlit.js`, `sunlit-worker.js`, and `sunlit-renderer.js` pass one
+  calibrated paper impression into the existing cached environmental surface.
 
-The renderer may listen to `lokta:inkchange` in a later experiment, but the
-current sunlight code does not. Ink selection must not restart its worker,
-grain clock, transition, or cached paper pass.
+The renderer listens to `lokta:inkchange`, reads the palette's calibrated paper
+impression, and redraws the cached paper pass exactly once. It does not restart
+the worker, grain clock, theme transition, or continuous atmosphere pass.
 
 ## Review protocol
 

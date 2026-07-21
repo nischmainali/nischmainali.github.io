@@ -92,7 +92,7 @@
     if (origin === "linked") return "Linked impression · choose one to keep it";
     if (origin === "chosen") return "Your chosen impression · kept in this browser";
     if (origin === "temporary") return "Current impression · storage unavailable";
-    return "House ink · sunlight held constant";
+    return "House impression · sunlight held constant";
   }
 
   function updateMark(ink) {

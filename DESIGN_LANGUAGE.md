@@ -488,9 +488,12 @@ hairlines, representative swatches, Linden Hill/Jost division, and paper
 texture. It adds no scrim, blur, rounded container, or toolbar.
 
 The two crop instruments have separate responsibilities. The left control
-moves the sun and shutter field; the right control changes editorial ink. Ink
-selection never restarts the WebGL worker, redraws its cached paper, or changes
-the grain and transition clocks. Opened articles let both instruments leave
+moves the sun and shutter field; the right control changes editorial ink and a
+restrained optical cast in the Lokta sheet. Selection redraws the cached paper
+once, but never restarts the WebGL worker or changes the grain and transition
+clocks. The source paper swatch stays exact in the proof slip; the larger living
+surface uses a lighter adaptation so fibres, relief, ray contrast, and the
+Sunlit choreography remain legible. Opened articles let both instruments leave
 with the masthead so neither can cover the contents rail or marginalia.
 
 Lokta Hybrid remains the canonical HTML, no-JavaScript, print, and

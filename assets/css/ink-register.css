@@ -4,7 +4,9 @@
  * The five upstream palettes below are transcribed from the current 2026
  * Protesilaos theme sources.  Named colors remain exact.  The site aliases
  * then translate those colors into paper, ink, rule, link, article, and syntax
- * roles without touching the WebGL sunlight field.
+ * roles. Each palette also supplies one optically adapted paper impression;
+ * the renderer applies it to the cached Lokta sheet without changing the
+ * sunlight geometry, texture, or motion clocks.
  *
  * Ef sources: https://github.com/protesilaos/ef-themes
  * Modus source: https://github.com/protesilaos/modus-themes
@@ -12,6 +14,10 @@
 
 /* The accepted site palette, kept as the comparison control. */
 html[data-ink="lokta-hybrid"] {
+  --sunlit-paper-near: #fdf9f5;
+  --sunlit-paper-far: #fbfcf8;
+  --sunlit-ink-paper: #fcfbf8;
+  --sunlit-ink-strength: 0;
   --palette-bg-main: #fbf7f0;
   --palette-bg-dim: #f0d8cf;
   --palette-bg-alt: #e7d2cb;
@@ -79,6 +85,10 @@ html[data-ink="lokta-hybrid"] {
 
 /* Ef Arbutus: ef-arbutus-theme.el. */
 html[data-ink="ef-arbutus"] {
+  --sunlit-paper-near: #f9e8dd;
+  --sunlit-paper-far: #f5ebe1;
+  --sunlit-ink-paper: #f7e8dd;
+  --sunlit-ink-strength: 1;
   --palette-bg-main: #ffead8;
   --palette-bg-dim: #f0d8cf;
   --palette-bg-alt: #e7d2cb;
@@ -147,6 +157,10 @@ html[data-ink="ef-arbutus"] {
 
 /* Ef Cyprus: ef-cyprus-theme.el. */
 html[data-ink="ef-cyprus"] {
+  --sunlit-paper-near: #f8f0e6;
+  --sunlit-paper-far: #f3f1e8;
+  --sunlit-ink-paper: #f6f0e5;
+  --sunlit-ink-strength: 1;
   --palette-bg-main: #fcf7ef;
   --palette-bg-dim: #f0ece0;
   --palette-bg-alt: #e5e3d8;
@@ -214,6 +228,10 @@ html[data-ink="ef-cyprus"] {
 
 /* Ef Elea Light: ef-elea-light-theme.el. */
 html[data-ink="ef-elea-light"] {
+  --sunlit-paper-near: #f0f3e7;
+  --sunlit-paper-far: #ebf5ea;
+  --sunlit-ink-paper: #eef4e9;
+  --sunlit-ink-strength: 1;
   --palette-bg-main: #edf5e2;
   --palette-bg-dim: #e3e9d6;
   --palette-bg-alt: #d0d7ca;
@@ -281,6 +299,10 @@ html[data-ink="ef-elea-light"] {
 
 /* Ef Arcadia: ef-arcadia-theme.el. */
 html[data-ink="ef-arcadia"] {
+  --sunlit-paper-near: #e7ece1;
+  --sunlit-paper-far: #e1efe5;
+  --sunlit-ink-paper: #e4eee3;
+  --sunlit-ink-strength: 1;
   --palette-bg-main: #d6e4d3;
   --palette-bg-dim: #ced7c8;
   --palette-bg-alt: #c5c9c8;
@@ -348,6 +370,10 @@ html[data-ink="ef-arcadia"] {
 
 /* Modus Operandi Tinted: modus-themes-operandi-tinted-palette. */
 html[data-ink="modus-operandi-tinted"] {
+  --sunlit-paper-near: #f9f2e9;
+  --sunlit-paper-far: #f5f4ec;
+  --sunlit-ink-paper: #f7f2ea;
+  --sunlit-ink-strength: 1;
   --palette-bg-main: #fbf7f0;
   --palette-bg-dim: #efe9dd;
   --palette-bg-alt: #dfd5cf;

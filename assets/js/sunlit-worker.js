@@ -95,6 +95,9 @@
         case 'visibility':
           renderer.setVisible(message.visible);
           break;
+        case 'ink-paper':
+          renderer.setInkPaper(message.color, message.strength);
+          break;
         case 'render':
           renderer.renderFrame(message.nowMs);
           break;

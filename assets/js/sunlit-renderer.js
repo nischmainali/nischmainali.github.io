@@ -16,7 +16,7 @@
 })(typeof self !== 'undefined' ? self : this, function(scope) {
   'use strict';
 
-  var VERSION = '1.5.2-experimental';
+  var VERSION = '1.6.0-experimental';
   var CHANNEL_COUNT = 5;
   var SHADE = 0;
   var SUNSET = 1;
@@ -67,6 +67,8 @@
     'uniform float u_relief;',
     'uniform vec2 u_route;',
     'uniform float u_fern_strength;',
+    'uniform vec3 u_ink_paper;',
+    'uniform float u_ink_strength;',
     '',
     'float hash21(vec2 p) {',
     '  p = fract(p * vec2(123.34, 456.21));',
@@ -269,6 +271,12 @@
     '  // resolves continuously instead of appearing at the end of the fade.',
     '  float reliefVisibility = 0.07 + 0.93 * reliefMix;',
     '  paper += vec3(relief * reliefVisibility * 0.012);',
+    '',
+    '  // Translate a flat editor background into a lit Lokta impression. An',
+    '  // additive optical offset preserves the fibres, relief, gradients, and',
+    '  // ray contrast instead of painting an opaque color layer over them.',
+    '  vec3 paperReference = vec3(0.989, 0.986, 0.975);',
+    '  paper += (u_ink_paper - paperReference) * u_ink_strength;',
     '',
     '  // Reconstruct Sunlit\'s actual shutter plane rather than drawing an',
     '  // infinite stripe texture. The parent turns around the viewport\'s top',
@@ -478,6 +486,16 @@
     return [1.0, 1.0];
   }
 
+  function normalizeInkPaper(value) {
+    var fallback = [0.989, 0.986, 0.975];
+    if (!value || typeof value.length !== 'number' || value.length < 3) return fallback;
+    return [
+      clamp(Number(value[0]) || 0, 0, 1),
+      clamp(Number(value[1]) || 0, 0, 1),
+      clamp(Number(value[2]) || 0, 0, 1)
+    ];
+  }
+
   function cubicBezier(value, x1, y1, x2, y2) {
     value = clamp(value, 0, 1);
     var t = value;
@@ -664,6 +682,8 @@
     this.transition = null;
     this.reducedMotion = Boolean(this.options.reducedMotion);
     this.fernStrength = clamp(Number(this.options.fernStrength) || 0, 0, 1);
+    this.inkPaper = normalizeInkPaper(this.options.inkPaper);
+    this.inkPaperStrength = clamp(Number(this.options.inkPaperStrength) || 0, 0, 1);
     this.visible = this.options.visible !== false;
     this.active = false;
     this.disposed = false;
@@ -777,7 +797,8 @@
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
     resources.paperUniforms = uniformMap(gl, paperProgram, [
-        'u_resolution', 'u_seed', 'u_mixes', 'u_relief', 'u_route', 'u_fern_strength'
+        'u_resolution', 'u_seed', 'u_mixes', 'u_relief', 'u_route', 'u_fern_strength',
+        'u_ink_paper', 'u_ink_strength'
       ]);
     resources.atmosphereUniforms = uniformMap(gl, atmosphereProgram, [
         'u_noise', 'u_paper', 'u_resolution', 'u_noise_offset', 'u_sunset', 'u_pass'
@@ -980,6 +1001,22 @@
     }
   };
 
+  Renderer.prototype.setInkPaper = function(color, strength) {
+    if (this.disposed) return;
+    var nextColor = normalizeInkPaper(color);
+    var nextStrength = clamp(Number(strength) || 0, 0, 1);
+    var changed = Math.abs(nextStrength - this.inkPaperStrength) > 0.00005;
+    for (var index = 0; index < 3; index += 1) {
+      changed = changed || Math.abs(nextColor[index] - this.inkPaper[index]) > 0.00005;
+    }
+    if (!changed) return;
+    this.inkPaper = nextColor;
+    this.inkPaperStrength = nextStrength;
+    this.paperCacheState = null;
+    this.renderFrame();
+    this._ensureLoop();
+  };
+
   Renderer.prototype._paperChanged = function(channels, route) {
     /* Diffusion is retained only as a saved-state compatibility channel, and
      * sunset is composited in the atmosphere pass. Neither invalidates the
@@ -987,7 +1024,8 @@
     var next = [
       this.canvas.width, this.canvas.height,
       channels[0], channels[1], channels[2], channels[4],
-      route[0], route[1]
+      route[0], route[1],
+      this.inkPaper[0], this.inkPaper[1], this.inkPaper[2], this.inkPaperStrength
     ];
     var previous = this.paperCacheState;
     if (!previous || previous.length !== next.length) return next;
@@ -1012,6 +1050,11 @@
     gl.uniform1f(uniforms.u_relief, channels[4]);
     gl.uniform2f(uniforms.u_route, route[0], route[1]);
     gl.uniform1f(uniforms.u_fern_strength, this.fernStrength);
+    gl.uniform3f(
+      uniforms.u_ink_paper,
+      this.inkPaper[0], this.inkPaper[1], this.inkPaper[2]
+    );
+    gl.uniform1f(uniforms.u_ink_strength, this.inkPaperStrength);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     this.paperCacheState = cacheState;
@@ -1202,7 +1245,9 @@
       values: Array.prototype.slice.call(channels),
       width: this.width,
       height: this.height,
-      dpr: this.dpr
+      dpr: this.dpr,
+      inkPaper: this.inkPaper.slice(),
+      inkPaperStrength: this.inkPaperStrength
     };
   };
 

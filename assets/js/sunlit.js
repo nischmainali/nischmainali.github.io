@@ -87,6 +87,33 @@
     return isFinite(value) ? value : fallback;
   }
 
+  function parseHexColor(value) {
+    var match = String(value || '').trim().match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+    if (!match) return null;
+    var source = match[1];
+    if (source.length === 3) {
+      source = source.charAt(0) + source.charAt(0) +
+        source.charAt(1) + source.charAt(1) +
+        source.charAt(2) + source.charAt(2);
+    }
+    return [
+      parseInt(source.slice(0, 2), 16) / 255,
+      parseInt(source.slice(2, 4), 16) / 255,
+      parseInt(source.slice(4, 6), 16) / 255
+    ];
+  }
+
+  function readInkPaper() {
+    var styles = window.getComputedStyle(document.documentElement);
+    return {
+      color: parseHexColor(styles.getPropertyValue('--sunlit-ink-paper')) ||
+        [0.989, 0.986, 0.975],
+      strength: Math.max(0, Math.min(1, finiteNumber(
+        styles.getPropertyValue('--sunlit-ink-strength'), 0
+      )))
+    };
+  }
+
   function normalizeTheme(value) {
     return value === 'sunset' || value === 'dark' ? 'sunset' : 'shade';
   }
@@ -249,6 +276,7 @@
 
   function initialOptions() {
     var viewport = getViewport();
+    var inkPaper = readInkPaper();
     lastWidth = viewport.width;
     lastHeight = viewport.height;
     lastDpr = viewport.dpr;
@@ -268,6 +296,8 @@
       fernStrength: Math.max(0, Math.min(1, finiteNumber(
         scene.getAttribute('data-fern-strength'), 0
       ))),
+      inkPaper: inkPaper.color,
+      inkPaperStrength: inkPaper.strength,
       visible: !document.hidden,
       transition: activeTransition(),
       nowMs: Date.now(),
@@ -354,7 +384,10 @@
       var options = initialOptions();
       return api.generateNoiseDataAsync(options.seed).then(function(noiseData) {
         if (disposed) return;
+        var latestInkPaper = readInkPaper();
         options.noiseData = noiseData;
+        options.inkPaper = latestInkPaper.color;
+        options.inkPaperStrength = latestInkPaper.strength;
         options.onReady = reveal;
         options.onError = function() { window.setTimeout(failMainRenderer, 0); };
         options.onContextLost = showPoster;
@@ -476,6 +509,19 @@
     else if (renderer) renderer.setVisible(value);
   }
 
+  function sendInkPaper() {
+    var inkPaper = readInkPaper();
+    if (worker) {
+      worker.postMessage({
+        type: 'ink-paper',
+        color: inkPaper.color,
+        strength: inkPaper.strength
+      });
+    } else if (renderer) {
+      renderer.setInkPaper(inkPaper.color, inkPaper.strength);
+    }
+  }
+
   function changeTheme() {
     var previous = theme;
     var next = theme === 'sunset' ? 'shade' : 'sunset';
@@ -536,6 +582,7 @@
   applyThemeVisual(startingTransition ? prepaintTheme : theme);
   applyThemeControl(theme);
   if (themeButton) themeButton.addEventListener('click', changeTheme);
+  window.addEventListener('lokta:inkchange', sendInkPaper);
 
   window.addEventListener('resize', function() { scheduleResize(false); }, { passive: true });
   window.addEventListener('orientationchange', function() { scheduleResize(true); });
