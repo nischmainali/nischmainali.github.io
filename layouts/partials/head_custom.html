@@ -32,3 +32,4 @@
 {{ if .Page.Store.Get "hasDropcap" }}
 <link rel="preload" href="{{ "vendor/fonts/eb-garamond-initials/EBGaramond-InitialsF2-LatinCaps.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
 {{ end }}
+{{ partial "palette-lab.html" . }}

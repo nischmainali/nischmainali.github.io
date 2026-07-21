@@ -27,6 +27,11 @@ Open <http://127.0.0.1:1315/>. Hugo may create a local `.hugo_build.lock`; it is
 ignored by Git. The mathematics pipeline requires Hugo 0.164.0 Extended; check
 `hugo version` before diagnosing template errors from an older local binary.
 
+On the current experimental branch, local preview also exposes a development
+palette register that is absent from production builds. See
+[`docs/PALETTE_PROOF.md`](docs/PALETTE_PROOF.md) for the six comparison palettes,
+their semantic mapping, and the review protocol.
+
 For a production-style build:
 
 ```sh
@@ -106,7 +111,7 @@ The figure shortcode accepts three placements and two surface treatments:
 
 - `content/` — authored pages and posts. Some theme examples remain as drafts or
   unlinked reference pages.
-- `assets/` — Hugo-processed article images and minified, fingerprinted
+- `assets/` — Hugo-processed article images and minified, fingerprinted CSS and
   JavaScript sources.
 - `static/` — files copied to stable public URLs, including images, PDFs, CSS,
   local fonts, and licensed surface textures.

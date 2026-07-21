@@ -1,0 +1,11 @@
+{{- /*
+  A development-only palette proof register.  Include this partial once in the
+  document head while comparing palettes.  The synchronous, tiny script applies
+  a persisted data-palette before first paint, then inserts its fixed control at
+  DOMContentLoaded.  Hugo excludes the complete lab from production builds.
+*/ -}}
+{{- if hugo.IsServer -}}
+{{- $styles := resources.Get "css/palette-lab.css" | minify | fingerprint "md5" -}}
+<link rel="stylesheet" href="{{ $styles.RelPermalink }}">
+<script src="{{ partialCached "js-asset-url.html" "js/palette-lab.js" "js/palette-lab.js" }}"></script>
+{{- end -}}

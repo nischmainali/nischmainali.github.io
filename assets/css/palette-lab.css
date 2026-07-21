@@ -1,0 +1,935 @@
+/*
+ * Development palette proofs for the Lokta Field Note.
+ *
+ * The five upstream palettes below are transcribed from the current 2026
+ * Protesilaos theme sources.  Named colors remain exact.  The site aliases
+ * then translate those colors into paper, ink, rule, link, article, and syntax
+ * roles without touching the WebGL sunlight field.
+ *
+ * Ef sources: https://github.com/protesilaos/ef-themes
+ * Modus source: https://github.com/protesilaos/modus-themes
+ */
+
+/* The accepted site palette, kept as the comparison control. */
+html[data-palette="lokta-hybrid"] {
+  --palette-bg-main: #fbf7f0;
+  --palette-bg-dim: #f0d8cf;
+  --palette-bg-alt: #e7d2cb;
+  --palette-fg-main: #202622;
+  --palette-fg-dim: #657465;
+  --palette-fg-alt: #5d3026;
+  --palette-border: #6e678f;
+  --palette-link: #005077;
+  --palette-link-visited: #6f3b3f;
+  --palette-heading: #184034;
+  --palette-heading-alt: #093060;
+  --palette-accent: #6f3b3f;
+  --palette-accent-alt: #765a2f;
+  --palette-focus: #173f51;
+  --palette-hover: #dbe0c0;
+  --palette-selection: #dbe0c0;
+  --palette-sunset-link: #00455f;
+  --palette-sunset-link-visited: #63363b;
+  --palette-sunset-heading: #17382d;
+  --palette-sunset-heading-alt: #153744;
+  --palette-sunset-accent: #63363b;
+  --palette-syntax-error: #8a343d;
+  --palette-syntax-comment: #657465;
+  --palette-syntax-keyword: #743f49;
+  --palette-syntax-string: #765a2f;
+  --palette-syntax-number: #4b5e86;
+  --palette-syntax-name: #235969;
+  --palette-syntax-type: #184034;
+  --palette-syntax-variable: #6f3b3f;
+  --palette-syntax-added: #2d6549;
+  --palette-syntax-removed: #8a343d;
+  --proof-shade-ink: #202622;
+  --proof-shade-muted: #4f524f;
+  --proof-shade-link: #173f51;
+  --proof-shade-heading: #173d31;
+  --proof-shade-heading-alt: #093060;
+  --proof-shade-accent: #6f3b3f;
+  --proof-sunset-ink: #1f2421;
+  --proof-sunset-muted: #303330;
+  --proof-sunset-link: #0d3648;
+  --proof-sunset-heading: #12382d;
+  --proof-sunset-heading-alt: #0d3648;
+  --proof-sunset-accent: #542227;
+  --proof-shade-syntax-error: #743f49;
+  --proof-shade-syntax-comment: #475547;
+  --proof-shade-syntax-keyword: #743f49;
+  --proof-shade-syntax-string: #684d22;
+  --proof-shade-syntax-number: #3f5179;
+  --proof-shade-syntax-name: #225868;
+  --proof-shade-syntax-type: #225868;
+  --proof-shade-syntax-variable: #225868;
+  --proof-shade-syntax-added: #245c3e;
+  --proof-shade-syntax-removed: #743f49;
+  --proof-sunset-syntax-error: #54222d;
+  --proof-sunset-syntax-comment: #283528;
+  --proof-sunset-syntax-keyword: #54222d;
+  --proof-sunset-syntax-string: #472d00;
+  --proof-sunset-syntax-number: #213156;
+  --proof-sunset-syntax-name: #003747;
+  --proof-sunset-syntax-type: #003747;
+  --proof-sunset-syntax-variable: #003747;
+  --proof-sunset-syntax-added: #143822;
+  --proof-sunset-syntax-removed: #54222d;
+}
+
+/* Ef Arbutus: ef-arbutus-theme.el. */
+html[data-palette="ef-arbutus"] {
+  --palette-bg-main: #ffead8;
+  --palette-bg-dim: #f0d8cf;
+  --palette-bg-alt: #e7d2cb;
+  --palette-fg-main: #393330;
+  --palette-fg-dim: #6e678f;
+  --palette-fg-alt: #8a5f4a;
+  --palette-border: #c0b4a6;
+  --palette-link: #00704f;
+  --palette-link-visited: #6448ca;
+  --palette-heading: #007000;
+  --palette-heading-alt: #0f7688;
+  --palette-accent: #aa184f;
+  --palette-accent-alt: #b44405;
+  --palette-focus: #208f10;
+  --palette-hover: #afdeaf;
+  --palette-selection: #dbe0c0;
+  /* Exact fg-added is the source palette's sunset-safe green. */
+  --palette-sunset-link: #005000;
+  --palette-sunset-link-visited: color-mix(in srgb, #6448ca 42%, #393330);
+  --palette-sunset-heading: #005000;
+  --palette-sunset-heading-alt: color-mix(in srgb, #0f7688 48%, #393330);
+  --palette-sunset-accent: color-mix(in srgb, #aa184f 55%, #393330);
+  --palette-syntax-error: #b20f00;
+  --palette-syntax-comment: #6e678f;
+  --palette-syntax-keyword: #8f2f30;
+  --palette-syntax-string: #557000;
+  --palette-syntax-number: #a23ea4;
+  --palette-syntax-name: #007000;
+  --palette-syntax-type: #b0000f;
+  --palette-syntax-variable: #aa184f;
+  --palette-syntax-added: #005000;
+  --palette-syntax-removed: #8f1313;
+  --proof-shade-ink: #393330;
+  --proof-shade-muted: #544c73;
+  --proof-shade-link: #005e3f;
+  --proof-shade-heading: #a20a49;
+  --proof-shade-heading-alt: #006000;
+  --proof-shade-accent: #a80005;
+  --proof-sunset-ink: #282220;
+  --proof-sunset-muted: #352d51;
+  --proof-sunset-link: #003b1f;
+  --proof-sunset-heading: #6b0020;
+  --proof-sunset-heading-alt: #003c00;
+  --proof-sunset-accent: #6c0000;
+  --proof-shade-syntax-error: #a80005;
+  --proof-shade-syntax-comment: #544c73;
+  --proof-shade-syntax-keyword: #8f2f30;
+  --proof-shade-syntax-string: #405900;
+  --proof-shade-syntax-number: #89238b;
+  --proof-shade-syntax-name: #006000;
+  --proof-shade-syntax-type: #a80005;
+  --proof-shade-syntax-variable: #a20a49;
+  --proof-shade-syntax-added: #005e3f;
+  --proof-shade-syntax-removed: #8f2f30;
+  --proof-sunset-syntax-error: #6c0000;
+  --proof-sunset-syntax-comment: #352d51;
+  --proof-sunset-syntax-keyword: #6a0512;
+  --proof-sunset-syntax-string: #223800;
+  --proof-sunset-syntax-number: #5d0061;
+  --proof-sunset-syntax-name: #003c00;
+  --proof-sunset-syntax-type: #6c0000;
+  --proof-sunset-syntax-variable: #6b0020;
+  --proof-sunset-syntax-added: #003b1f;
+  --proof-sunset-syntax-removed: #6c0000;
+}
+
+/* Ef Cyprus: ef-cyprus-theme.el. */
+html[data-palette="ef-cyprus"] {
+  --palette-bg-main: #fcf7ef;
+  --palette-bg-dim: #f0ece0;
+  --palette-bg-alt: #e5e3d8;
+  --palette-fg-main: #242521;
+  --palette-fg-dim: #59786f;
+  --palette-fg-alt: #7f475a;
+  --palette-border: #c4c0b6;
+  --palette-link: #a7601f;
+  --palette-link-visited: #1f70af;
+  --palette-heading: #557400;
+  --palette-heading-alt: #007a9f;
+  --palette-accent: #ca3400;
+  --palette-accent-alt: #9a456f;
+  --palette-focus: #007f00;
+  --palette-hover: #efc26f;
+  --palette-selection: #e0e7e5;
+  --palette-sunset-link: #005000;
+  --palette-sunset-link-visited: color-mix(in srgb, #1f70af 45%, #242521);
+  --palette-sunset-heading: #005000;
+  --palette-sunset-heading-alt: color-mix(in srgb, #007a9f 48%, #242521);
+  --palette-sunset-accent: color-mix(in srgb, #ca3400 54%, #242521);
+  --palette-syntax-error: #dd0020;
+  --palette-syntax-comment: #8f6f4a;
+  --palette-syntax-keyword: #006f00;
+  --palette-syntax-string: #ca3400;
+  --palette-syntax-number: #00824f;
+  --palette-syntax-name: #a7601f;
+  --palette-syntax-type: #444fcf;
+  --palette-syntax-variable: #007a9f;
+  --palette-syntax-added: #005000;
+  --palette-syntax-removed: #8f1313;
+  --proof-shade-ink: #242521;
+  --proof-shade-muted: #39574f;
+  --proof-shade-link: #833f00;
+  --proof-shade-heading: #3d5a00;
+  --proof-shade-heading-alt: #00577b;
+  --proof-shade-accent: #a80000;
+  --proof-sunset-ink: #232320;
+  --proof-sunset-muted: #1a3730;
+  --proof-sunset-link: #5e1c00;
+  --proof-sunset-heading: #1f3900;
+  --proof-sunset-heading-alt: #003556;
+  --proof-sunset-accent: #6c0000;
+  --proof-shade-syntax-error: #a80000;
+  --proof-shade-syntax-comment: #6a4c28;
+  --proof-shade-syntax-keyword: #006000;
+  --proof-shade-syntax-string: #a80000;
+  --proof-shade-syntax-number: #005f2f;
+  --proof-shade-syntax-name: #833f00;
+  --proof-shade-syntax-type: #3a40c0;
+  --proof-shade-syntax-variable: #00577b;
+  --proof-shade-syntax-added: #005f2f;
+  --proof-shade-syntax-removed: #a80000;
+  --proof-sunset-syntax-error: #6c0000;
+  --proof-sunset-syntax-comment: #492c04;
+  --proof-sunset-syntax-keyword: #003c00;
+  --proof-sunset-syntax-string: #6c0000;
+  --proof-sunset-syntax-number: #003b0d;
+  --proof-sunset-syntax-name: #5e1c00;
+  --proof-sunset-syntax-type: #231699;
+  --proof-sunset-syntax-variable: #003556;
+  --proof-sunset-syntax-added: #003b0d;
+  --proof-sunset-syntax-removed: #6c0000;
+}
+
+/* Ef Elea Light: ef-elea-light-theme.el. */
+html[data-palette="ef-elea-light"] {
+  --palette-bg-main: #edf5e2;
+  --palette-bg-dim: #e3e9d6;
+  --palette-bg-alt: #d0d7ca;
+  --palette-fg-main: #221321;
+  --palette-fg-dim: #676470;
+  --palette-fg-alt: #5f5f1f;
+  --palette-border: #a5aaaf;
+  --palette-link: #00601f;
+  --palette-link-visited: #80308f;
+  --palette-heading: #355500;
+  --palette-heading-alt: #5032aa;
+  --palette-accent: #9f356a;
+  --palette-accent-alt: #00677f;
+  --palette-focus: #770080;
+  --palette-hover: #dfbac0;
+  --palette-selection: #d9d2ef;
+  --palette-sunset-link: #005000;
+  --palette-sunset-link-visited: color-mix(in srgb, #80308f 46%, #221321);
+  --palette-sunset-heading: #005000;
+  --palette-sunset-heading-alt: color-mix(in srgb, #5032aa 52%, #221321);
+  --palette-sunset-accent: color-mix(in srgb, #9f356a 52%, #221321);
+  --palette-syntax-error: #d00000;
+  --palette-syntax-comment: #7f4f4a;
+  --palette-syntax-keyword: #894852;
+  --palette-syntax-string: #007047;
+  --palette-syntax-number: #5032aa;
+  --palette-syntax-name: #355500;
+  --palette-syntax-type: #162f8f;
+  --palette-syntax-variable: #80308f;
+  --palette-syntax-added: #005000;
+  --palette-syntax-removed: #8f1313;
+  --proof-shade-ink: #221321;
+  --proof-shade-muted: #53505c;
+  --proof-shade-link: #005f1e;
+  --proof-shade-heading: #355500;
+  --proof-shade-heading-alt: #5032aa;
+  --proof-shade-accent: #91285e;
+  --proof-sunset-ink: #221321;
+  --proof-sunset-muted: #33313b;
+  --proof-sunset-link: #003c00;
+  --proof-sunset-heading: #1c3900;
+  --proof-sunset-heading-alt: #3b108d;
+  --proof-sunset-accent: #67003c;
+  --proof-shade-syntax-error: #91285e;
+  --proof-shade-syntax-comment: #744541;
+  --proof-shade-syntax-keyword: #7e3e49;
+  --proof-shade-syntax-string: #005e37;
+  --proof-shade-syntax-number: #5032aa;
+  --proof-shade-syntax-name: #355500;
+  --proof-shade-syntax-type: #162f8f;
+  --proof-shade-syntax-variable: #7f2e8d;
+  --proof-shade-syntax-added: #005e37;
+  --proof-shade-syntax-removed: #7e3e49;
+  --proof-sunset-syntax-error: #67003c;
+  --proof-sunset-syntax-comment: #512522;
+  --proof-sunset-syntax-keyword: #591e2a;
+  --proof-sunset-syntax-string: #003b17;
+  --proof-sunset-syntax-number: #3b108d;
+  --proof-sunset-syntax-name: #1c3900;
+  --proof-sunset-syntax-type: #102686;
+  --proof-sunset-syntax-variable: #5a0069;
+  --proof-sunset-syntax-added: #003b17;
+  --proof-sunset-syntax-removed: #591e2a;
+}
+
+/* Ef Arcadia: ef-arcadia-theme.el. */
+html[data-palette="ef-arcadia"] {
+  --palette-bg-main: #d6e4d3;
+  --palette-bg-dim: #ced7c8;
+  --palette-bg-alt: #c5c9c8;
+  --palette-fg-main: #40314e;
+  --palette-fg-dim: #646170;
+  --palette-fg-alt: #3f5f5f;
+  --palette-border: #959a9f;
+  --palette-link: #503094;
+  --palette-link-visited: #775228;
+  --palette-heading: #113384;
+  --palette-heading-alt: #005070;
+  --palette-accent: #922e7f;
+  --palette-accent-alt: #206020;
+  --palette-focus: #495080;
+  --palette-hover: #afbad0;
+  --palette-selection: #b3c5c0;
+  --palette-sunset-link: #503094;
+  --palette-sunset-link-visited: #113384;
+  --palette-sunset-heading: #113384;
+  --palette-sunset-heading-alt: color-mix(in srgb, #005070 55%, #40314e);
+  --palette-sunset-accent: color-mix(in srgb, #922e7f 55%, #40314e);
+  --palette-syntax-error: #800e38;
+  --palette-syntax-comment: #72366f;
+  --palette-syntax-keyword: #125a7f;
+  --palette-syntax-string: #2a5090;
+  --palette-syntax-number: #503094;
+  --palette-syntax-name: #922e7f;
+  --palette-syntax-type: #005070;
+  --palette-syntax-variable: #006e50;
+  --palette-syntax-added: #005200;
+  --palette-syntax-removed: #8f1013;
+  --proof-shade-ink: #40314e;
+  --proof-shade-muted: #53505e;
+  --proof-shade-link: #503094;
+  --proof-shade-heading: #113384;
+  --proof-shade-heading-alt: #005070;
+  --proof-shade-accent: #8b2779;
+  --proof-sunset-ink: #2c1d38;
+  --proof-sunset-muted: #33303e;
+  --proof-sunset-link: #3e197e;
+  --proof-sunset-heading: #0a2b7b;
+  --proof-sunset-heading-alt: #003554;
+  --proof-sunset-accent: #620053;
+  --proof-shade-syntax-error: #8b2779;
+  --proof-shade-syntax-comment: #72366f;
+  --proof-shade-syntax-keyword: #0e577c;
+  --proof-shade-syntax-string: #2a5090;
+  --proof-shade-syntax-number: #503094;
+  --proof-shade-syntax-name: #8b2779;
+  --proof-shade-syntax-type: #005070;
+  --proof-shade-syntax-variable: #005e41;
+  --proof-shade-syntax-added: #005e41;
+  --proof-shade-syntax-removed: #8b2779;
+  --proof-sunset-syntax-error: #620053;
+  --proof-sunset-syntax-comment: #541952;
+  --proof-sunset-syntax-keyword: #003457;
+  --proof-sunset-syntax-string: #0a2f6d;
+  --proof-sunset-syntax-number: #3e197e;
+  --proof-sunset-syntax-name: #620053;
+  --proof-sunset-syntax-type: #003554;
+  --proof-sunset-syntax-variable: #003a21;
+  --proof-sunset-syntax-added: #003a21;
+  --proof-sunset-syntax-removed: #620053;
+}
+
+/* Modus Operandi Tinted: modus-themes-operandi-tinted-palette. */
+html[data-palette="modus-operandi-tinted"] {
+  --palette-bg-main: #fbf7f0;
+  --palette-bg-dim: #efe9dd;
+  --palette-bg-alt: #dfd5cf;
+  --palette-fg-main: #000000;
+  --palette-fg-dim: #595959;
+  --palette-fg-alt: #193668;
+  --palette-border: #9f9690;
+  --palette-link: #3546c2;
+  --palette-link-visited: #721045;
+  --palette-heading: #574316;
+  --palette-heading-alt: #193668;
+  --palette-accent: #a0132f;
+  --palette-accent-alt: #00598b;
+  --palette-focus: #d00000;
+  --palette-hover: #b2e4dc;
+  --palette-selection: #c2bcb5;
+  --palette-sunset-link: #0000b0;
+  --palette-sunset-link-visited: #721045;
+  --palette-sunset-heading: #574316;
+  --palette-sunset-heading-alt: #193668;
+  --palette-sunset-accent: #7f0000;
+  --palette-syntax-error: #a60000;
+  --palette-syntax-comment: #7f0000;
+  --palette-syntax-keyword: #0031a9;
+  --palette-syntax-string: #00598b;
+  --palette-syntax-number: #721045;
+  --palette-syntax-name: #602938;
+  --palette-syntax-type: #306010;
+  --palette-syntax-variable: #00603f;
+  --palette-syntax-added: #005000;
+  --palette-syntax-removed: #8f1313;
+  --proof-shade-ink: #000000;
+  --proof-shade-muted: #525151;
+  --proof-shade-link: #3342be;
+  --proof-shade-heading: #005e3e;
+  --proof-shade-heading-alt: #193668;
+  --proof-shade-accent: #005587;
+  --proof-sunset-ink: #000000;
+  --proof-sunset-muted: #333232;
+  --proof-sunset-link: #1d1998;
+  --proof-sunset-heading: #003b1d;
+  --proof-sunset-heading-alt: #003262;
+  --proof-sunset-accent: #003262;
+  --proof-shade-syntax-error: #7f0000;
+  --proof-shade-syntax-comment: #7f0000;
+  --proof-shade-syntax-keyword: #0031a9;
+  --proof-shade-syntax-string: #005587;
+  --proof-shade-syntax-number: #531ab6;
+  --proof-shade-syntax-name: #602938;
+  --proof-shade-syntax-type: #2d5c0b;
+  --proof-shade-syntax-variable: #005e3e;
+  --proof-shade-syntax-added: #005e3e;
+  --proof-shade-syntax-removed: #7f0000;
+  --proof-sunset-syntax-error: #6c0000;
+  --proof-sunset-syntax-comment: #6c0000;
+  --proof-sunset-syntax-keyword: #001e99;
+  --proof-sunset-syntax-string: #003262;
+  --proof-sunset-syntax-number: #3d0097;
+  --proof-sunset-syntax-name: #562030;
+  --proof-sunset-syntax-type: #0a3b00;
+  --proof-sunset-syntax-variable: #003b1d;
+  --proof-sunset-syntax-added: #003b1d;
+  --proof-sunset-syntax-removed: #6c0000;
+}
+
+/*
+ * One semantic adapter for all proofs.  Canonical named colors stay available
+ * as --palette-*; --site-* values account for the transparent living surface.
+ */
+html[data-palette] {
+  --site-ink: var(--proof-shade-ink);
+  --site-muted: var(--proof-shade-muted);
+  --site-secondary: var(--proof-shade-muted);
+  --site-link: var(--proof-shade-link);
+  --site-link-visited: var(--proof-shade-link);
+  --site-heading: var(--proof-shade-heading);
+  --site-heading-alt: var(--proof-shade-heading-alt);
+  --site-accent: var(--proof-shade-accent);
+  --site-ornament: var(--palette-accent);
+  --site-accent-alt: var(--palette-accent-alt);
+  --site-focus: var(--site-ink);
+  --site-focus-accent: var(--palette-focus);
+  --site-rule: color-mix(in srgb, var(--palette-border) 46%, transparent);
+  --site-rule-strong: color-mix(in srgb, var(--palette-border) 68%, transparent);
+  --site-wash: color-mix(in srgb, var(--palette-bg-dim) 38%, transparent);
+  --site-wash-strong: color-mix(in srgb, var(--palette-bg-dim) 54%, transparent);
+  --site-selection: var(--palette-selection);
+  --site-hover: var(--palette-hover);
+  --syntax-error: var(--proof-shade-syntax-error);
+  --syntax-comment: var(--proof-shade-syntax-comment);
+  --syntax-keyword: var(--proof-shade-syntax-keyword);
+  --syntax-string: var(--proof-shade-syntax-string);
+  --syntax-number: var(--proof-shade-syntax-number);
+  --syntax-name: var(--proof-shade-syntax-name);
+  --syntax-type: var(--proof-shade-syntax-type);
+  --syntax-variable: var(--proof-shade-syntax-variable);
+  --syntax-added: var(--proof-shade-syntax-added);
+  --syntax-removed: var(--proof-shade-syntax-removed);
+}
+
+html[data-palette] body.sunset {
+  --site-ink: var(--proof-sunset-ink);
+  --site-muted: var(--proof-sunset-muted);
+  --site-secondary: var(--proof-sunset-muted);
+  --site-link: var(--proof-sunset-link);
+  --site-link-visited: var(--proof-sunset-link);
+  --site-heading: var(--proof-sunset-heading);
+  --site-heading-alt: var(--proof-sunset-heading-alt);
+  --site-accent: var(--proof-sunset-accent);
+  --site-rule: color-mix(in srgb, color-mix(in srgb, var(--palette-border) 68%, var(--palette-fg-main)) 50%, transparent);
+  --site-rule-strong: color-mix(in srgb, color-mix(in srgb, var(--palette-border) 66%, var(--palette-fg-main)) 70%, transparent);
+  --site-wash: color-mix(in srgb, var(--palette-bg-dim) 24%, transparent);
+  --site-wash-strong: color-mix(in srgb, var(--palette-bg-dim) 36%, transparent);
+  --syntax-error: var(--proof-sunset-syntax-error);
+  --syntax-comment: var(--proof-sunset-syntax-comment);
+  --syntax-keyword: var(--proof-sunset-syntax-keyword);
+  --syntax-string: var(--proof-sunset-syntax-string);
+  --syntax-number: var(--proof-sunset-syntax-number);
+  --syntax-name: var(--proof-sunset-syntax-name);
+  --syntax-type: var(--proof-sunset-syntax-type);
+  --syntax-variable: var(--proof-sunset-syntax-variable);
+  --syntax-added: var(--proof-sunset-syntax-added);
+  --syntax-removed: var(--proof-sunset-syntax-removed);
+}
+
+/* Global print roles.  Geometry, type, motion, and the sunlight shader stay put. */
+html[data-palette] body {
+  --bg-body: var(--palette-bg-main);
+  --bg-block: var(--site-wash);
+  --border-color: var(--site-rule);
+  --box-shadow: 5px 5px 5px color-mix(in srgb, var(--palette-bg-main) 72%, var(--palette-border));
+  --sunlit-utility-ink: var(--site-ink);
+  color: var(--site-ink);
+  caret-color: var(--site-focus);
+}
+
+html[data-palette] body ::selection {
+  background: var(--site-selection);
+  color: var(--site-ink);
+}
+
+html[data-palette] body a {
+  color: var(--site-link);
+}
+
+html[data-palette] body a:visited {
+  color: var(--site-link-visited);
+}
+
+html[data-palette] body :is(nav, footer, sup, .article-toc, .article-code-tools) a:visited,
+html[data-palette] body a[href^="#"]:visited {
+  color: var(--site-link);
+}
+
+html[data-palette] body .nav-top {
+  border-color: var(--site-rule-strong);
+}
+
+html[data-palette] body .menu .active {
+  border-color: var(--site-ornament);
+}
+
+html[data-palette] body h1.title::before {
+  color: var(--site-ornament);
+}
+
+html[data-palette] body > :is(.crop-h, .crop-v, .crop-c) {
+  color: color-mix(in srgb, var(--site-ink) 52%, transparent);
+}
+
+html[data-palette] body.single .main h2 {
+  color: var(--site-heading);
+}
+
+html[data-palette] body.single .main h3 {
+  color: var(--site-heading-alt);
+}
+
+html[data-palette] body :is(.subtitle, .meta-line, footer, .entry-preview) {
+  color: var(--site-muted);
+}
+
+html[data-palette] body .home h2 {
+  color: var(--site-heading);
+}
+
+html[data-palette] body .blog:not(.single) .toc-line a:is(:hover, :focus-visible),
+html[data-palette] body .site-search label {
+  color: var(--site-heading);
+}
+
+html[data-palette] body .blog:not(.single) .toc-line a:is(:hover, :focus-visible) {
+  text-decoration-color: color-mix(in srgb, var(--site-accent) 58%, transparent);
+}
+
+html[data-palette] body .site-search input {
+  border-bottom-color: var(--site-rule-strong);
+}
+
+html[data-palette] body .site-search input:focus {
+  border-bottom-color: var(--site-focus);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--site-focus) 24%, transparent);
+}
+
+html[data-palette] body :is(.site-search-status, .site-search-preview) {
+  color: var(--site-muted);
+}
+
+html[data-palette] body .site-search-results > li::before {
+  border-color: color-mix(in srgb, var(--site-accent) 58%, transparent);
+}
+
+html[data-palette] body .publications a {
+  color: var(--site-ink);
+}
+
+html[data-palette] body .publications a:hover {
+  background-color: var(--site-link);
+  color: var(--palette-bg-main);
+}
+
+html[data-palette] body :is(#theme-toggle, #atmosphere-toggle):focus-visible {
+  outline-color: var(--site-focus);
+  box-shadow: 0 0 0 2px var(--site-focus-accent);
+}
+
+/* Article aliases preserve the field-note grammar while changing its inks. */
+html[data-palette] body.single.blog {
+  --article-ink: var(--site-ink);
+  --article-green: var(--site-heading);
+  --article-blue: var(--site-link);
+  --article-wine: var(--site-accent);
+  --article-muted: var(--site-muted);
+  --article-faint: var(--site-muted);
+  --article-quiet-ink: color-mix(in oklch, var(--site-muted) 72%, var(--site-ink));
+  --article-rule: var(--site-rule);
+  --article-rule-strong: var(--site-rule-strong);
+  --article-block: var(--site-wash);
+  --article-block-strong: var(--site-wash-strong);
+  --article-code-ink: var(--site-ink);
+  --article-dropcap-ink: var(--site-heading);
+  --article-dropcap-ornament: color-mix(in srgb, var(--site-ornament) 32%, transparent);
+  --article-focus-paper: color-mix(in srgb, var(--palette-bg-main) 96%, white);
+  --article-focus-backdrop: color-mix(in srgb, var(--site-ink) 56%, transparent);
+}
+
+html[data-palette] body.sunset.single.blog {
+  --article-muted: var(--site-muted);
+  --article-faint: var(--site-muted);
+  --article-quiet-ink: color-mix(in oklch, var(--site-muted) 72%, var(--site-ink));
+  --article-dropcap-ornament: color-mix(in srgb, var(--site-ornament) 25%, transparent);
+  --article-focus-paper: color-mix(in srgb, var(--palette-bg-main) 83%, #dfb183);
+  --article-focus-backdrop: color-mix(in srgb, var(--site-ink) 58%, transparent);
+}
+
+/* Chroma receives the source theme's semantic code roles. */
+html[data-palette] body.single.blog .chroma {
+  color: var(--article-code-ink);
+}
+
+html[data-palette] body.single.blog .chroma :is(.err, .gr, .gt) {
+  color: var(--syntax-error);
+}
+
+html[data-palette] body.single.blog .chroma :is(.c, .ch, .cm, .c1, .cs, .cp, .cpf) {
+  color: var(--syntax-comment);
+}
+
+html[data-palette] body.single.blog .chroma :is(.k, .kc, .kd, .kn, .kp, .kr, .kt, .ow) {
+  color: var(--syntax-keyword);
+}
+
+html[data-palette] body.single.blog .chroma :is(.s, .sa, .sb, .sc, .dl, .sd, .s1, .s2, .se, .sh, .si, .sx, .sr, .ss) {
+  color: var(--syntax-string);
+}
+
+html[data-palette] body.single.blog .chroma :is(.m, .mb, .mf, .mh, .mi, .il, .mo) {
+  color: var(--syntax-number);
+}
+
+html[data-palette] body.single.blog .chroma :is(.na, .nb, .bp, .nf, .fm, .nn, .nt) {
+  color: var(--syntax-name);
+}
+
+html[data-palette] body.single.blog .chroma :is(.nc, .nd, .ne) {
+  color: var(--syntax-type);
+}
+
+html[data-palette] body.single.blog .chroma :is(.nv, .vc, .vg, .vi, .vm) {
+  color: var(--syntax-variable);
+}
+
+html[data-palette] body.single.blog .chroma .gd {
+  background: color-mix(in srgb, var(--syntax-removed) 9%, transparent);
+  color: var(--syntax-removed);
+}
+
+html[data-palette] body.single.blog .chroma .gi {
+  background: color-mix(in srgb, var(--syntax-added) 9%, transparent);
+  color: var(--syntax-added);
+}
+
+/* Resolve the few article details that predate the semantic token layer. */
+html[data-palette] body.single.blog .article-body blockquote {
+  color: var(--article-quiet-ink);
+}
+
+html[data-palette] body.single.blog .article-body kbd {
+  background: color-mix(in srgb, var(--palette-bg-main) 45%, transparent);
+}
+
+html[data-palette] body.single.blog .article-body tbody tr + tr td {
+  border-top-color: var(--article-rule);
+}
+
+html[data-palette] body.single.blog :is(.equation-ref, .statement-ref) {
+  border-bottom-color: color-mix(in srgb, var(--article-blue) 38%, transparent);
+}
+
+html[data-palette] body.single.blog :is(.article-citation a, .article-end-link) {
+  border-bottom-color: color-mix(in srgb, var(--article-wine) 42%, transparent);
+}
+
+/*
+ * The lab itself is a printer's register, not a floating product panel.  It
+ * stays out of layout, uses square paper geometry, and has no shadow or blur.
+ */
+.palette-lab {
+  --palette-lab-paper: var(--palette-bg-main, #fbf7f0);
+  --palette-lab-ink: var(--palette-fg-main, #202622);
+  --palette-lab-muted: var(--proof-shade-muted, #4f524f);
+  --palette-lab-rule: color-mix(in srgb, var(--palette-border, #6e678f) 58%, transparent);
+  --palette-lab-mark: var(--palette-accent, #6f3b3f);
+  position: fixed;
+  bottom: max(0.8rem, env(safe-area-inset-bottom));
+  left: max(0.8rem, env(safe-area-inset-left));
+  z-index: 4000;
+  width: min(19rem, calc(100vw - 1.6rem));
+  color: var(--palette-lab-ink);
+  font-family: Jost, Optima, Candara, sans-serif;
+  font-size: 0.72rem;
+  line-height: 1.25;
+  text-align: left;
+}
+
+.palette-lab button {
+  border-radius: 0;
+  font: inherit;
+}
+
+.palette-lab__toggle {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  width: 100%;
+  min-height: 2.15rem;
+  padding: 0.42rem 0.55rem 0.38rem;
+  border: 0;
+  border-block: 1px solid var(--palette-lab-rule);
+  background-color: var(--palette-lab-paper);
+  background-image: url("../textures/lokta-fibres.svg");
+  background-size: 300px auto;
+  box-shadow: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.palette-lab__toggle-label,
+.palette-lab__eyebrow,
+.palette-lab__index,
+.palette-lab__keys {
+  letter-spacing: 0.095em;
+  text-transform: uppercase;
+}
+
+.palette-lab__toggle-label {
+  padding-right: 0.65rem;
+  color: var(--palette-lab-muted);
+  font-size: 0.61rem;
+}
+
+.palette-lab__current {
+  min-width: 0;
+  overflow: hidden;
+  font-family: "Linden Hill", Palatino, serif;
+  font-size: 0.89rem;
+  font-style: italic;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.palette-lab__toggle:focus-visible,
+.palette-lab__choice:focus-visible {
+  outline: 1px solid var(--palette-lab-ink);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 2px var(--palette-focus, #173f51);
+}
+
+.palette-lab__panel {
+  position: absolute;
+  bottom: calc(100% + 0.35rem);
+  left: 0;
+  width: 100%;
+  max-height: min(76vh, 38rem);
+  padding: 0.72rem 0.64rem 0.58rem;
+  border-block: 1px solid var(--palette-lab-rule);
+  background-color: var(--palette-lab-paper);
+  background-image:
+    linear-gradient(var(--palette-lab-rule), var(--palette-lab-rule)),
+    linear-gradient(var(--palette-lab-rule), var(--palette-lab-rule)),
+    url("../textures/lokta-fibres.svg");
+  background-position: left 0.48rem top, left top 0.48rem, center;
+  background-repeat: no-repeat, no-repeat, repeat;
+  background-size: 0.68rem 1px, 1px 0.68rem, 300px auto;
+  box-shadow: none;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.palette-lab__panel[hidden] {
+  display: none;
+}
+
+.palette-lab__heading {
+  margin: 0;
+  font-family: "Linden Hill", Palatino, serif;
+  font-size: 1.05rem;
+  font-style: italic;
+  font-weight: normal;
+  line-height: 1.1;
+}
+
+.palette-lab__eyebrow {
+  margin: 0 0 0.22rem;
+  color: var(--palette-lab-muted);
+  font-size: 0.57rem;
+}
+
+.palette-lab__note {
+  margin: 0.25rem 0 0.68rem;
+  color: var(--palette-lab-muted);
+  font-size: 0.61rem;
+  line-height: 1.35;
+}
+
+.palette-lab__choices {
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid var(--palette-lab-rule);
+}
+
+.palette-lab__choice {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.35rem minmax(0, 1fr) auto;
+  align-items: center;
+  width: 100%;
+  min-height: 2.55rem;
+  padding: 0.32rem 0.18rem 0.3rem;
+  border: 0;
+  border-top: 1px solid var(--palette-lab-rule);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.palette-lab__choice::before {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 0;
+  border-top: 1px solid var(--palette-lab-mark);
+  content: "";
+}
+
+.palette-lab__choice[aria-checked="true"]::before {
+  width: 2.15rem;
+}
+
+.palette-lab__choice:is(:hover, :focus-visible) .palette-lab__name,
+.palette-lab__choice[aria-checked="true"] .palette-lab__name {
+  color: var(--palette-lab-mark);
+}
+
+.palette-lab__index {
+  color: var(--palette-lab-muted);
+  font-size: 0.54rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.palette-lab__name {
+  display: block;
+  font-family: "Linden Hill", Palatino, serif;
+  font-size: 0.83rem;
+  line-height: 1.05;
+}
+
+.palette-lab__description {
+  display: block;
+  margin-top: 0.16rem;
+  color: var(--palette-lab-muted);
+  font-size: 0.54rem;
+  letter-spacing: 0.025em;
+  line-height: 1.2;
+}
+
+.palette-lab__swatches {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 0.5rem;
+}
+
+.palette-lab__swatch {
+  display: block;
+  width: 0.48rem;
+  height: 0.28rem;
+  outline: 1px solid color-mix(in srgb, var(--palette-lab-ink) 18%, transparent);
+  outline-offset: -1px;
+  background: var(--palette-lab-swatch);
+}
+
+.palette-lab__toggle .palette-lab__swatches {
+  margin-left: 0.65rem;
+}
+
+.palette-lab__toggle .palette-lab__swatch {
+  width: 0.42rem;
+  height: 0.24rem;
+}
+
+.palette-lab__keys {
+  margin: 0.5rem 0 0;
+  color: var(--palette-lab-muted);
+  font-size: 0.51rem;
+  text-align: right;
+}
+
+.palette-lab__status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+@media (max-width: 30rem) {
+  .palette-lab {
+    right: max(0.7rem, env(safe-area-inset-right));
+    bottom: max(0.7rem, env(safe-area-inset-bottom));
+    left: max(0.7rem, env(safe-area-inset-left));
+    width: auto;
+  }
+
+  .palette-lab__panel {
+    max-height: 68vh;
+  }
+}
+
+@media (forced-colors: active) {
+  .palette-lab__toggle,
+  .palette-lab__panel {
+    border: 1px solid CanvasText;
+    background: Canvas;
+    color: CanvasText;
+  }
+
+  .palette-lab__choice[aria-checked="true"] {
+    outline: 2px solid Highlight;
+    outline-offset: -3px;
+  }
+}
+
+@media print {
+  .palette-lab {
+    display: none !important;
+  }
+}
