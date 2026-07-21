@@ -99,7 +99,7 @@
   z-index: 1000;
   padding: 0.4rem 0.7rem;
   border: 1px solid var(--article-rule-strong);
-  background: #f5f2e8;
+  background: var(--article-focus-paper);
   color: var(--article-blue);
   font-family: Jost, sans-serif;
   font-size: 0.76rem;
@@ -1223,7 +1223,7 @@
     center;
   background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat;
   background-size: 1rem 1px, 1px 1rem, 1rem 1px, 1px 1rem, cover, 340px auto;
-  box-shadow: 0 1.6rem 5rem rgba(15, 21, 17, 0.3);
+  box-shadow: 0 1.6rem 5rem color-mix(in srgb, var(--article-ink) 30%, transparent);
 }
 
 .single.blog .article-figure-focus-sheet > figure {

@@ -353,9 +353,11 @@
     button.addEventListener("click", function () {
       copyText(code.textContent).then(function () {
         button.textContent = "Copied";
+        button.setAttribute("aria-label", "Code copied to clipboard");
         button.dataset.state = "copied";
         window.setTimeout(function () {
           button.textContent = "Copy";
+          button.setAttribute("aria-label", "Copy code to clipboard");
           delete button.dataset.state;
         }, 1600);
       }).catch(function () {
@@ -387,11 +389,21 @@
 
   function syncSidenoteToggle(pair) {
     var wide = railQuery.matches;
-    pair.toggle.setAttribute(
-      "aria-label",
-      wide ? "Sidenote " + pair.number : "Toggle sidenote " + pair.number
-    );
-    pair.toggle.setAttribute("aria-expanded", wide ? "true" : String(pair.toggle.checked));
+    if (wide) {
+      /* The note is already present in the marginal field. Remove the hidden
+       * checkbox from the keyboard and accessibility trees instead of
+       * announcing an operative, unchecked control for visible content. */
+      pair.toggle.disabled = true;
+      pair.toggle.tabIndex = -1;
+      pair.toggle.setAttribute("aria-hidden", "true");
+      pair.toggle.removeAttribute("aria-expanded");
+    } else {
+      pair.toggle.disabled = false;
+      pair.toggle.removeAttribute("tabindex");
+      pair.toggle.removeAttribute("aria-hidden");
+      pair.toggle.setAttribute("aria-label", "Toggle sidenote " + pair.number);
+      pair.toggle.setAttribute("aria-expanded", String(pair.toggle.checked));
+    }
   }
 
   document.querySelectorAll(".article-body .sidenote").forEach(function (note, index) {
@@ -668,6 +680,7 @@
         scheduleMathOverflow(scroller);
       }, { passive: true });
       scroller.addEventListener("keydown", function (event) {
+        if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
         var maxScroll = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
         if (maxScroll <= 1) return;
 

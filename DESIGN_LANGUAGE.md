@@ -1,6 +1,6 @@
 # Design language and long-term visual working note
 
-- Last baseline study: 2026-07-20
+- Last baseline study: 2026-07-21
 - Accepted production direction: **Lokta Sunlight reader + Lokta Field Note**
 - Production branch: `main`
 - Accepted implementation lineage: `experiment/toc-outside-sheet`
@@ -138,9 +138,10 @@ base diffusion blooms over 1.8 seconds, and the peach field over three seconds.
 Raking paper relief enters after a 550 ms delay over 4.8 seconds and returns over
 2.4 seconds. The rays stay still after reaching either endpoint. Continuous life
 comes from the reference-matched Gaussian grain at twenty stepped positions per
-second. Under `prefers-reduced-motion`, the complete optics and mode transition
-remain intact while the grain advances at a gentler ten positions per second;
-the ambient clock continues whenever the page is visible.
+second. Under `prefers-reduced-motion`, the renderer keeps the complete optics,
+material texture, blur, and current endpoint but holds them as one still frame;
+mode and route changes settle directly without replaying movement. This is not
+the old flattened fallback. Returning to normal motion resumes the shared clock.
 
 A sparse set of paired highlight-and-shadow fibres remains near-invisible in
 shade and resolves under raking sunset light. Keep the local tonal difference
@@ -435,8 +436,10 @@ by `data-fern-strength` on `#sunlit-scene`; removing that attribute or setting i
 to zero restores the foliage-free endpoint. The shader rejects the niuro path
 before evaluating its morphology whenever the frond is invisible, including
 shade and narrow widths. The ambient grain renders at its native twenty distinct
-states per second rather than redrawing the same state three times at 60 fps;
-reduced motion uses ten. Mode transitions remain 60 fps.
+states per second rather than redrawing the same state three times at 60 fps.
+Between those states the renderer sleeps instead of waking at display refresh
+rate. Mode transitions remain 60 fps in the normal-motion experience; reduced
+motion holds a fully rendered endpoint without a continuous loop.
 
 The final sunset-boundary calibration is intentionally limited to diffusion and
 veil response. A twelve-frame grain-averaged audit against the reference found
@@ -477,7 +480,7 @@ Interaction vocabulary should stay small: underline, ink-color shift, subtle
 background fill, and atmospheric theme transition. Avoid pill buttons, glowing
 outlines, springy transforms, moving links, and fleets of icon buttons.
 
-#### Experimental editorial ink register (21 July 2026)
+#### Editorial ink register candidate (accepted in branch, 21 July 2026)
 
 The palette proof now has a public-candidate successor on
 `experiment/toc-outside-sheet`. A tiny printer's registration mark occupies the
@@ -507,9 +510,10 @@ linked page until the visitor chooses an ink.
 Treat the random choice as local printing variation, not visitor tracking. It
 uses no cookie, account, request, or server record. The accepted shade and
 sunset contrast corrections remain part of each ink, and the control must keep
-its keyboard, touch, forced-color, reduced-motion, and cross-tab behavior. This
-section records an experiment pending Nisch's visual review; it does not yet
-replace the Lokta Hybrid color baseline below.
+its keyboard, touch, forced-color, reduced-motion, and cross-tab behavior. Nisch
+accepted this register as part of the current successor on 21 July 2026. The
+branch still remains separate from `main` until an explicit promotion, and
+Lokta Hybrid remains the canonical failure-safe and the color baseline below.
 
 ## Page grammars
 
@@ -581,6 +585,11 @@ F1 and F2 faces from the official OFL source. Forest ink sits over a muted
 madder ornament; the color stays fixed, and the glyph has no motion or
 surrounding component. TurnTrout's random accent treatment and first-line
 transformation do not belong here.
+
+The intricate F1 ornament is delivered as 26 single-letter WOFF2 subsets with
+`unicode-range`, so an article downloads only the initial it actually prints
+(5.3 KB for the current `T`) rather than the 168.6 KB all-letter source. The
+source subset, checksum provenance, F2 face, and OFL remain together locally.
 
 The accepted Gwern-intelligence pass borrows editorial behavior from
 [Gwern.net's design system](https://gwern.net/design) while leaving its
@@ -1029,6 +1038,28 @@ keeps stepped grain, and stores the expensive paper work in a cached texture.
 Opened posts place the environmental and reading
 sheets on explicit sibling paint planes. The first article image fetches at
 normal priority. Future work must preserve this separation.
+
+On 2026-07-21 a release-candidate QA pass covered Home, Documents, Search, the
+Gaussian-process article, and the complete private specimen. The six editorial
+inks were checked in shade and sunset with no page-level overflow; every
+prose, heading, link, and quiet-text role cleared 4.5:1 against the measured
+broad shadow field in both modes. Pointer and keyboard ink choice, sunlight
+mode changes, active outline tracking, wide-equation keyboard scrolling,
+mobile sidenote disclosure, figure focus and return, code-copy feedback, and a
+fast jump through the long specimen all remained operative without a blank
+content frame or console error.
+
+That pass also established the current performance and accessibility contract.
+Reduced motion now holds the complete rendered endpoint as a still sheet, while
+the ordinary ambient loop sleeps between its twenty authored grain states
+instead of waking at display refresh rate. Visible desktop sidenotes no longer
+expose a misleading hidden checkbox, modified browser shortcuts pass through a
+focused equation, and no-script visitors see the complete static poster without
+a dead mode button. Per-letter ornament subsets reduce the present `T` drop-cap
+request from 168.6 KB to 5.3 KB without changing its geometry. Strict production
+and draft builds, both source validators, JavaScript syntax checks, local-only
+asset checks, and font-subset validation passed. The sole retained content
+warning is the already documented remote GIF in an unpublished legacy fixture.
 
 ## Known rough edges: observe before fixing
 

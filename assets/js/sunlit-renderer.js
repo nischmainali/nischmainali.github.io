@@ -828,7 +828,7 @@
   };
 
   Renderer.prototype._setInitialTransition = function(initial) {
-    if (!initial || initial.immediate === true) return;
+    if (!initial || initial.immediate === true || this.reducedMotion) return;
     var fromTheme = normalizeTheme(initial.from);
     var toTheme = normalizeTheme(initial.to || this.theme);
     var startMs = Number(initial.startTimeMs);
@@ -943,7 +943,7 @@
     var current = this._sampleTransition(nowMs);
     this.theme = targetTheme;
 
-    if (options.immediate === true) {
+    if (options.immediate === true || this.reducedMotion) {
       this.transition = null;
       this.channels = endpointChannels(targetTheme);
     } else {
@@ -966,7 +966,7 @@
     var nowMs = Number(options.nowMs) || this._now();
     var current = this._sampleRoute(nowMs);
     this.route = route;
-    if (Number(options.durationMs) > 0) {
+    if (Number(options.durationMs) > 0 && !this.reducedMotion) {
       this.routeTransition = {
         from: current,
         target: target,
@@ -984,8 +984,19 @@
   Renderer.prototype.setReducedMotion = function(reduced, nowMs) {
     if (this.disposed) return;
     nowMs = Number(nowMs) || this._now();
-    if (this.transition) this.channels = this._sampleTransition(nowMs);
     this.reducedMotion = Boolean(reduced);
+    if (this.reducedMotion) {
+      /* Keep the complete material, blur, shutter, and fern composition, but
+       * settle it at its authored endpoint. Reduced motion is a still living
+       * sheet, not a stripped-down fallback or a slower perpetual animation. */
+      this.transition = null;
+      this.channels = endpointChannels(this.theme);
+      if (this.routeTransition) {
+        this.routeCurrent = this.routeTransition.target.slice();
+        this.routeTransition = null;
+      }
+      this._cancelFrame();
+    }
     this.renderFrame(nowMs);
     this._ensureLoop();
   };
@@ -1141,16 +1152,20 @@
     }
   };
 
-  Renderer.prototype._requestFrame = function() {
+  Renderer.prototype._requestFrame = function(delayMs) {
     var renderer = this;
-    if (typeof scope.requestAnimationFrame === 'function') {
+    delayMs = Math.max(0, Number(delayMs) || 0);
+    /* Ambient grain has twenty authored states per second. Sleeping until the
+     * next state avoids 60–120 no-op callbacks; short mode transitions still
+     * align their frames with the display compositor. */
+    if (delayMs <= 20 && typeof scope.requestAnimationFrame === 'function') {
       this.frameUsesTimeout = false;
       return scope.requestAnimationFrame(this.boundLoop);
     }
     this.frameUsesTimeout = true;
     return scope.setTimeout(function() {
       renderer.boundLoop();
-    }, 16);
+    }, Math.max(1, delayMs));
   };
 
   Renderer.prototype._cancelFrame = function() {
@@ -1165,7 +1180,12 @@
 
   Renderer.prototype._ensureLoop = function() {
     if (!this.active || !this.visible || this.disposed || this.contextLost || this.frameHandle != null) return;
-    this.frameHandle = this._requestFrame();
+    if (this.reducedMotion && this.ready && !this.transition && !this.routeTransition) return;
+    var nowMs = this._now();
+    var changingMode = Boolean(this.transition || this.routeTransition);
+    var interval = changingMode ? this.transitionFrameIntervalMs : this.ambientFrameIntervalMs;
+    var elapsed = this.lastRenderedAtMs ? nowMs - this.lastRenderedAtMs : interval;
+    this.frameHandle = this._requestFrame(Math.max(0, interval - elapsed));
   };
 
   Renderer.prototype._loop = function() {
@@ -1173,10 +1193,7 @@
     if (!this.active || !this.visible || this.disposed || this.contextLost) return;
     var nowMs = this._now();
     var changingMode = Boolean(this.transition || this.routeTransition);
-    var ambientInterval = this.reducedMotion ?
-      Math.max(this.ambientFrameIntervalMs, 1000 / 10) :
-      this.ambientFrameIntervalMs;
-    var interval = changingMode ? this.transitionFrameIntervalMs : ambientInterval;
+    var interval = changingMode ? this.transitionFrameIntervalMs : this.ambientFrameIntervalMs;
     if (!this.lastRenderedAtMs || nowMs - this.lastRenderedAtMs >= interval - 2) {
       this.renderFrame(nowMs);
     }

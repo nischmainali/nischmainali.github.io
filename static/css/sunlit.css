@@ -173,6 +173,12 @@ body.sunset #sunlit-scene::after {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* The static poster is already the complete no-script experience. Do not
+ * leave a focusable promise of a mode change when its controller is absent. */
+body.no-js #theme-toggle {
+  display: none;
+}
+
 #theme-toggle {
   top: 20px;
   opacity: 1;

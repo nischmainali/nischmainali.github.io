@@ -144,3 +144,8 @@ opening, arrow selection, Escape return, focus-leave dismissal, navigation and
 reload persistence, linked overrides, tab synchronization, reduced motion,
 forced colors, printing, no-JavaScript fallback, console output, and horizontal
 overflow.
+
+Automated screenshots must request `?ink=lokta-hybrid` (or another explicit
+ink) so a clean JavaScript browser does not exercise the intentionally random
+first-visit assignment. A linked ink is temporary and does not overwrite the
+browser's remembered choice until the test deliberately selects a row.
