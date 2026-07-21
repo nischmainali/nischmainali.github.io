@@ -477,6 +477,37 @@ Interaction vocabulary should stay small: underline, ink-color shift, subtle
 background fill, and atmospheric theme transition. Avoid pill buttons, glowing
 outlines, springy transforms, moving links, and fleets of icon buttons.
 
+#### Experimental editorial ink register (21 July 2026)
+
+The palette proof now has a public-candidate successor on
+`experiment/toc-outside-sheet`. A tiny printer's registration mark occupies the
+upper-right crop corner as the exact spatial counterpart to the upper-left
+light control. It opens one square Lokta proof slip down and inward from the
+crop intersection. The slip preserves the successful comparison register's
+hairlines, representative swatches, Linden Hill/Jost division, and paper
+texture. It adds no scrim, blur, rounded container, or toolbar.
+
+The two crop instruments have separate responsibilities. The left control
+moves the sun and shutter field; the right control changes editorial ink. Ink
+selection never restarts the WebGL worker, redraws its cached paper, or changes
+the grain and transition clocks. Opened articles let both instruments leave
+with the masthead so neither can cover the contents rail or marginalia.
+
+Lokta Hybrid remains the canonical HTML, no-JavaScript, print, and
+storage-failure impression. On a first capable visit, the browser assigns one
+ink from Lokta Hybrid, Ef Arbutus, Ef Elea Light, and Ef Arcadia and stores that
+choice on the device. All six proof inks remain selectable in the experimental
+register; Ef Cyprus and Modus Operandi Tinted do not enter the random pool. A
+manual choice replaces the assignment. A valid `?ink=` link applies only to the
+linked page until the visitor chooses an ink.
+
+Treat the random choice as local printing variation, not visitor tracking. It
+uses no cookie, account, request, or server record. The accepted shade and
+sunset contrast corrections remain part of each ink, and the control must keep
+its keyboard, touch, forced-color, reduced-motion, and cross-tab behavior. This
+section records an experiment pending Nisch's visual review; it does not yet
+replace the Lokta Hybrid color baseline below.
+
 ## Page grammars
 
 ### Home

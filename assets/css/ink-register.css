@@ -1,5 +1,5 @@
 /*
- * Development palette proofs for the Lokta Field Note.
+ * Editorial ink register for the Lokta Field Note.
  *
  * The five upstream palettes below are transcribed from the current 2026
  * Protesilaos theme sources.  Named colors remain exact.  The site aliases
@@ -11,7 +11,7 @@
  */
 
 /* The accepted site palette, kept as the comparison control. */
-html[data-palette="lokta-hybrid"] {
+html[data-ink="lokta-hybrid"] {
   --palette-bg-main: #fbf7f0;
   --palette-bg-dim: #f0d8cf;
   --palette-bg-alt: #e7d2cb;
@@ -78,7 +78,7 @@ html[data-palette="lokta-hybrid"] {
 }
 
 /* Ef Arbutus: ef-arbutus-theme.el. */
-html[data-palette="ef-arbutus"] {
+html[data-ink="ef-arbutus"] {
   --palette-bg-main: #ffead8;
   --palette-bg-dim: #f0d8cf;
   --palette-bg-alt: #e7d2cb;
@@ -146,7 +146,7 @@ html[data-palette="ef-arbutus"] {
 }
 
 /* Ef Cyprus: ef-cyprus-theme.el. */
-html[data-palette="ef-cyprus"] {
+html[data-ink="ef-cyprus"] {
   --palette-bg-main: #fcf7ef;
   --palette-bg-dim: #f0ece0;
   --palette-bg-alt: #e5e3d8;
@@ -213,7 +213,7 @@ html[data-palette="ef-cyprus"] {
 }
 
 /* Ef Elea Light: ef-elea-light-theme.el. */
-html[data-palette="ef-elea-light"] {
+html[data-ink="ef-elea-light"] {
   --palette-bg-main: #edf5e2;
   --palette-bg-dim: #e3e9d6;
   --palette-bg-alt: #d0d7ca;
@@ -280,7 +280,7 @@ html[data-palette="ef-elea-light"] {
 }
 
 /* Ef Arcadia: ef-arcadia-theme.el. */
-html[data-palette="ef-arcadia"] {
+html[data-ink="ef-arcadia"] {
   --palette-bg-main: #d6e4d3;
   --palette-bg-dim: #ced7c8;
   --palette-bg-alt: #c5c9c8;
@@ -347,7 +347,7 @@ html[data-palette="ef-arcadia"] {
 }
 
 /* Modus Operandi Tinted: modus-themes-operandi-tinted-palette. */
-html[data-palette="modus-operandi-tinted"] {
+html[data-ink="modus-operandi-tinted"] {
   --palette-bg-main: #fbf7f0;
   --palette-bg-dim: #efe9dd;
   --palette-bg-alt: #dfd5cf;
@@ -417,7 +417,7 @@ html[data-palette="modus-operandi-tinted"] {
  * One semantic adapter for all proofs.  Canonical named colors stay available
  * as --palette-*; --site-* values account for the transparent living surface.
  */
-html[data-palette] {
+html[data-ink] {
   --site-ink: var(--proof-shade-ink);
   --site-muted: var(--proof-shade-muted);
   --site-secondary: var(--proof-shade-muted);
@@ -448,7 +448,7 @@ html[data-palette] {
   --syntax-removed: var(--proof-shade-syntax-removed);
 }
 
-html[data-palette] body.sunset {
+html[data-ink] body.sunset {
   --site-ink: var(--proof-sunset-ink);
   --site-muted: var(--proof-sunset-muted);
   --site-secondary: var(--proof-sunset-muted);
@@ -474,7 +474,7 @@ html[data-palette] body.sunset {
 }
 
 /* Global print roles.  Geometry, type, motion, and the sunlight shader stay put. */
-html[data-palette] body {
+html[data-ink] body {
   --bg-body: var(--palette-bg-main);
   --bg-block: var(--site-wash);
   --border-color: var(--site-rule);
@@ -484,98 +484,98 @@ html[data-palette] body {
   caret-color: var(--site-focus);
 }
 
-html[data-palette] body ::selection {
+html[data-ink] body ::selection {
   background: var(--site-selection);
   color: var(--site-ink);
 }
 
-html[data-palette] body a {
+html[data-ink] body a {
   color: var(--site-link);
 }
 
-html[data-palette] body a:visited {
+html[data-ink] body a:visited {
   color: var(--site-link-visited);
 }
 
-html[data-palette] body :is(nav, footer, sup, .article-toc, .article-code-tools) a:visited,
-html[data-palette] body a[href^="#"]:visited {
+html[data-ink] body :is(nav, footer, sup, .article-toc, .article-code-tools) a:visited,
+html[data-ink] body a[href^="#"]:visited {
   color: var(--site-link);
 }
 
-html[data-palette] body .nav-top {
+html[data-ink] body .nav-top {
   border-color: var(--site-rule-strong);
 }
 
-html[data-palette] body .menu .active {
+html[data-ink] body .menu .active {
   border-color: var(--site-ornament);
 }
 
-html[data-palette] body h1.title::before {
+html[data-ink] body h1.title::before {
   color: var(--site-ornament);
 }
 
-html[data-palette] body > :is(.crop-h, .crop-v, .crop-c) {
+html[data-ink] body > :is(.crop-h, .crop-v, .crop-c) {
   color: color-mix(in srgb, var(--site-ink) 52%, transparent);
 }
 
-html[data-palette] body.single .main h2 {
+html[data-ink] body.single .main h2 {
   color: var(--site-heading);
 }
 
-html[data-palette] body.single .main h3 {
+html[data-ink] body.single .main h3 {
   color: var(--site-heading-alt);
 }
 
-html[data-palette] body :is(.subtitle, .meta-line, footer, .entry-preview) {
+html[data-ink] body :is(.subtitle, .meta-line, footer, .entry-preview) {
   color: var(--site-muted);
 }
 
-html[data-palette] body .home h2 {
+html[data-ink] body .home h2 {
   color: var(--site-heading);
 }
 
-html[data-palette] body .blog:not(.single) .toc-line a:is(:hover, :focus-visible),
-html[data-palette] body .site-search label {
+html[data-ink] body .blog:not(.single) .toc-line a:is(:hover, :focus-visible),
+html[data-ink] body .site-search label {
   color: var(--site-heading);
 }
 
-html[data-palette] body .blog:not(.single) .toc-line a:is(:hover, :focus-visible) {
+html[data-ink] body .blog:not(.single) .toc-line a:is(:hover, :focus-visible) {
   text-decoration-color: color-mix(in srgb, var(--site-accent) 58%, transparent);
 }
 
-html[data-palette] body .site-search input {
+html[data-ink] body .site-search input {
   border-bottom-color: var(--site-rule-strong);
 }
 
-html[data-palette] body .site-search input:focus {
+html[data-ink] body .site-search input:focus {
   border-bottom-color: var(--site-focus);
   box-shadow: 0 1px 0 color-mix(in srgb, var(--site-focus) 24%, transparent);
 }
 
-html[data-palette] body :is(.site-search-status, .site-search-preview) {
+html[data-ink] body :is(.site-search-status, .site-search-preview) {
   color: var(--site-muted);
 }
 
-html[data-palette] body .site-search-results > li::before {
+html[data-ink] body .site-search-results > li::before {
   border-color: color-mix(in srgb, var(--site-accent) 58%, transparent);
 }
 
-html[data-palette] body .publications a {
+html[data-ink] body .publications a {
   color: var(--site-ink);
 }
 
-html[data-palette] body .publications a:hover {
+html[data-ink] body .publications a:hover {
   background-color: var(--site-link);
   color: var(--palette-bg-main);
 }
 
-html[data-palette] body :is(#theme-toggle, #atmosphere-toggle):focus-visible {
+html[data-ink] body :is(#theme-toggle, #atmosphere-toggle):focus-visible {
   outline-color: var(--site-focus);
   box-shadow: 0 0 0 2px var(--site-focus-accent);
 }
 
 /* Article aliases preserve the field-note grammar while changing its inks. */
-html[data-palette] body.single.blog {
+html[data-ink] body.single.blog {
   --article-ink: var(--site-ink);
   --article-green: var(--site-heading);
   --article-blue: var(--site-link);
@@ -594,7 +594,7 @@ html[data-palette] body.single.blog {
   --article-focus-backdrop: color-mix(in srgb, var(--site-ink) 56%, transparent);
 }
 
-html[data-palette] body.sunset.single.blog {
+html[data-ink] body.sunset.single.blog {
   --article-muted: var(--site-muted);
   --article-faint: var(--site-muted);
   --article-quiet-ink: color-mix(in oklch, var(--site-muted) 72%, var(--site-ink));
@@ -604,291 +604,369 @@ html[data-palette] body.sunset.single.blog {
 }
 
 /* Chroma receives the source theme's semantic code roles. */
-html[data-palette] body.single.blog .chroma {
+html[data-ink] body.single.blog .chroma {
   color: var(--article-code-ink);
 }
 
-html[data-palette] body.single.blog .chroma :is(.err, .gr, .gt) {
+html[data-ink] body.single.blog .chroma :is(.err, .gr, .gt) {
   color: var(--syntax-error);
 }
 
-html[data-palette] body.single.blog .chroma :is(.c, .ch, .cm, .c1, .cs, .cp, .cpf) {
+html[data-ink] body.single.blog .chroma :is(.c, .ch, .cm, .c1, .cs, .cp, .cpf) {
   color: var(--syntax-comment);
 }
 
-html[data-palette] body.single.blog .chroma :is(.k, .kc, .kd, .kn, .kp, .kr, .kt, .ow) {
+html[data-ink] body.single.blog .chroma :is(.k, .kc, .kd, .kn, .kp, .kr, .kt, .ow) {
   color: var(--syntax-keyword);
 }
 
-html[data-palette] body.single.blog .chroma :is(.s, .sa, .sb, .sc, .dl, .sd, .s1, .s2, .se, .sh, .si, .sx, .sr, .ss) {
+html[data-ink] body.single.blog .chroma :is(.s, .sa, .sb, .sc, .dl, .sd, .s1, .s2, .se, .sh, .si, .sx, .sr, .ss) {
   color: var(--syntax-string);
 }
 
-html[data-palette] body.single.blog .chroma :is(.m, .mb, .mf, .mh, .mi, .il, .mo) {
+html[data-ink] body.single.blog .chroma :is(.m, .mb, .mf, .mh, .mi, .il, .mo) {
   color: var(--syntax-number);
 }
 
-html[data-palette] body.single.blog .chroma :is(.na, .nb, .bp, .nf, .fm, .nn, .nt) {
+html[data-ink] body.single.blog .chroma :is(.na, .nb, .bp, .nf, .fm, .nn, .nt) {
   color: var(--syntax-name);
 }
 
-html[data-palette] body.single.blog .chroma :is(.nc, .nd, .ne) {
+html[data-ink] body.single.blog .chroma :is(.nc, .nd, .ne) {
   color: var(--syntax-type);
 }
 
-html[data-palette] body.single.blog .chroma :is(.nv, .vc, .vg, .vi, .vm) {
+html[data-ink] body.single.blog .chroma :is(.nv, .vc, .vg, .vi, .vm) {
   color: var(--syntax-variable);
 }
 
-html[data-palette] body.single.blog .chroma .gd {
+html[data-ink] body.single.blog .chroma .gd {
   background: color-mix(in srgb, var(--syntax-removed) 9%, transparent);
   color: var(--syntax-removed);
 }
 
-html[data-palette] body.single.blog .chroma .gi {
+html[data-ink] body.single.blog .chroma .gi {
   background: color-mix(in srgb, var(--syntax-added) 9%, transparent);
   color: var(--syntax-added);
 }
 
 /* Resolve the few article details that predate the semantic token layer. */
-html[data-palette] body.single.blog .article-body blockquote {
+html[data-ink] body.single.blog .article-body blockquote {
   color: var(--article-quiet-ink);
 }
 
-html[data-palette] body.single.blog .article-body kbd {
+html[data-ink] body.single.blog .article-body kbd {
   background: color-mix(in srgb, var(--palette-bg-main) 45%, transparent);
 }
 
-html[data-palette] body.single.blog .article-body tbody tr + tr td {
+html[data-ink] body.single.blog .article-body tbody tr + tr td {
   border-top-color: var(--article-rule);
 }
 
-html[data-palette] body.single.blog :is(.equation-ref, .statement-ref) {
+html[data-ink] body.single.blog :is(.equation-ref, .statement-ref) {
   border-bottom-color: color-mix(in srgb, var(--article-blue) 38%, transparent);
 }
 
-html[data-palette] body.single.blog :is(.article-citation a, .article-end-link) {
+html[data-ink] body.single.blog :is(.article-citation a, .article-end-link) {
   border-bottom-color: color-mix(in srgb, var(--article-wine) 42%, transparent);
 }
 
 /*
- * The lab itself is a printer's register, not a floating product panel.  It
- * stays out of layout, uses square paper geometry, and has no shadow or blur.
+ * The public control is the crop frame's ink register: a small optical mark
+ * opposite the sun, opening one square proof slip down and into the sheet.
  */
-.palette-lab {
-  --palette-lab-paper: var(--palette-bg-main, #fbf7f0);
-  --palette-lab-ink: var(--palette-fg-main, #202622);
-  --palette-lab-muted: var(--proof-shade-muted, #4f524f);
-  --palette-lab-rule: color-mix(in srgb, var(--palette-border, #6e678f) 58%, transparent);
-  --palette-lab-mark: var(--palette-accent, #6f3b3f);
+.ink-register {
+  --ink-register-paper: var(--palette-bg-main, #fbf7f0);
+  --ink-register-ink: var(--palette-fg-main, #202622);
+  --ink-register-muted: var(--proof-shade-muted, #4f524f);
+  --ink-register-rule: color-mix(in srgb, var(--palette-border, #6e678f) 58%, transparent);
+  --ink-register-mark: var(--palette-accent, #6f3b3f);
+  --ink-mark-a: var(--site-link, #005077);
+  --ink-mark-b: var(--site-heading, #184034);
+  --ink-mark-c: var(--site-accent, #6f3b3f);
   position: fixed;
-  bottom: max(0.8rem, env(safe-area-inset-bottom));
-  left: max(0.8rem, env(safe-area-inset-left));
-  z-index: 4000;
-  width: min(19rem, calc(100vw - 1.6rem));
-  color: var(--palette-lab-ink);
+  top: 20px;
+  right: 20px;
+  z-index: 1200;
+  width: 20px;
+  height: 20px;
+  visibility: hidden;
+  color: var(--ink-register-ink);
   font-family: Jost, Optima, Candara, sans-serif;
   font-size: 0.72rem;
   line-height: 1.25;
   text-align: left;
 }
 
-.palette-lab button {
+.ink-register[data-ready] {
+  visibility: visible;
+}
+
+body.sunset .ink-register {
+  --ink-register-muted: var(--proof-sunset-muted, #303330);
+}
+
+body.no-js .ink-register {
+  display: none;
+}
+
+.ink-register button {
   border-radius: 0;
   font: inherit;
+  touch-action: manipulation;
 }
 
-.palette-lab__toggle {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  width: 100%;
-  min-height: 2.15rem;
-  padding: 0.42rem 0.55rem 0.38rem;
+.ink-register__toggle {
+  position: relative;
+  display: block;
+  width: 20px;
+  height: 20px;
+  padding: 0;
   border: 0;
-  border-block: 1px solid var(--palette-lab-rule);
-  background-color: var(--palette-lab-paper);
-  background-image: url("../textures/lokta-fibres.svg");
-  background-size: 300px auto;
+  background: transparent;
   box-shadow: none;
-  color: inherit;
+  color: var(--sunlit-utility-ink, var(--ink-register-ink));
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.palette-lab__toggle-label,
-.palette-lab__eyebrow,
-.palette-lab__index,
-.palette-lab__keys {
-  letter-spacing: 0.095em;
-  text-transform: uppercase;
+/* The painted mark stays 18px; the pseudo-element supplies a 44px target. */
+.ink-register__toggle::before {
+  position: absolute;
+  inset: -12px -20px -12px -4px;
+  content: "";
 }
 
-.palette-lab__toggle-label {
-  padding-right: 0.65rem;
-  color: var(--palette-lab-muted);
-  font-size: 0.61rem;
+.ink-register__mark {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  display: block;
+  width: 18px;
+  height: 18px;
+  background:
+    linear-gradient(currentColor, currentColor) center top / 1px 4px no-repeat,
+    linear-gradient(currentColor, currentColor) right center / 4px 1px no-repeat,
+    linear-gradient(currentColor, currentColor) center bottom / 1px 4px no-repeat,
+    linear-gradient(currentColor, currentColor) left center / 4px 1px no-repeat;
+  opacity: 0.38;
+  transition: opacity 120ms ease-out;
 }
 
-.palette-lab__current {
-  min-width: 0;
-  overflow: hidden;
-  font-family: "Linden Hill", Palatino, serif;
-  font-size: 0.89rem;
-  font-style: italic;
-  line-height: 1.1;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.ink-register__mark::before {
+  position: absolute;
+  inset: 4px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  content: "";
 }
 
-.palette-lab__toggle:focus-visible,
-.palette-lab__choice:focus-visible {
-  outline: 1px solid var(--palette-lab-ink);
-  outline-offset: 3px;
+.ink-register__mark::after {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: currentColor;
+  content: "";
+}
+
+.ink-register__mark span {
+  position: absolute;
+  inset: 5px;
+  border-top: 1px solid var(--ink-mark-a);
+  border-right: 1px solid var(--ink-mark-b);
+  border-bottom: 1px solid var(--ink-mark-c);
+  border-left: 1px solid var(--ink-mark-a);
+  border-radius: 50%;
+  opacity: 0;
+  transform: rotate(18deg);
+  transition: opacity 120ms ease-out;
+}
+
+.ink-register__toggle:is(:hover, :focus-visible) .ink-register__mark,
+.ink-register[data-open] .ink-register__mark {
+  opacity: 0.72;
+}
+
+.ink-register__toggle:is(:hover, :focus-visible) .ink-register__mark span,
+.ink-register[data-open] .ink-register__mark span {
+  opacity: 1;
+}
+
+.ink-register__toggle:focus-visible {
+  outline: 1px solid var(--ink-register-ink);
+  outline-offset: 4px;
   box-shadow: 0 0 0 2px var(--palette-focus, #173f51);
 }
 
-.palette-lab__panel {
+.ink-register__choice:focus-visible {
+  outline: 1px solid var(--palette-focus, #173f51);
+  outline-offset: -3px;
+  box-shadow: none;
+}
+
+.ink-register__toggle:focus-visible {
+  border-radius: 50%;
+}
+
+.ink-register__panel {
   position: absolute;
-  bottom: calc(100% + 0.35rem);
-  left: 0;
-  width: 100%;
-  max-height: min(76vh, 38rem);
-  padding: 0.72rem 0.64rem 0.58rem;
-  border-block: 1px solid var(--palette-lab-rule);
-  background-color: var(--palette-lab-paper);
+  top: calc(100% + 0.625rem);
+  right: 10px;
+  width: 19rem;
+  max-height: min(76dvh, 38rem);
+  padding: 0.76rem 0.64rem 0.58rem;
+  border-block: 1px solid var(--ink-register-rule);
+  background-color: var(--ink-register-paper);
   background-image:
-    linear-gradient(var(--palette-lab-rule), var(--palette-lab-rule)),
-    linear-gradient(var(--palette-lab-rule), var(--palette-lab-rule)),
-    url("../textures/lokta-fibres.svg");
-  background-position: left 0.48rem top, left top 0.48rem, center;
+    linear-gradient(var(--ink-register-rule), var(--ink-register-rule)),
+    linear-gradient(var(--ink-register-rule), var(--ink-register-rule)),
+    var(--ink-register-texture);
+  background-position: right 0.48rem top, right top 0.48rem, center;
   background-repeat: no-repeat, no-repeat, repeat;
   background-size: 0.68rem 1px, 1px 0.68rem, 300px auto;
   box-shadow: none;
   overflow-y: auto;
   overscroll-behavior: contain;
+  transform-origin: top right;
 }
 
-.palette-lab__panel[hidden] {
+.ink-register[data-open] .ink-register__panel {
+  animation: ink-register-enter 130ms ease-out both;
+}
+
+.ink-register__panel[hidden] {
   display: none;
 }
 
-.palette-lab__heading {
+@keyframes ink-register-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ink-register__eyebrow,
+.ink-register__index,
+.ink-register__keys {
+  letter-spacing: 0.095em;
+  text-transform: uppercase;
+}
+
+.ink-register__heading {
   margin: 0;
   font-family: "Linden Hill", Palatino, serif;
-  font-size: 1.05rem;
+  font-size: 1.08rem;
   font-style: italic;
   font-weight: normal;
   line-height: 1.1;
 }
 
-.palette-lab__eyebrow {
+.ink-register__eyebrow {
   margin: 0 0 0.22rem;
-  color: var(--palette-lab-muted);
+  color: var(--ink-register-muted);
   font-size: 0.57rem;
 }
 
-.palette-lab__note {
-  margin: 0.25rem 0 0.68rem;
-  color: var(--palette-lab-muted);
+.ink-register__note {
+  margin: 0.25rem 0 0.7rem;
+  color: var(--ink-register-muted);
   font-size: 0.61rem;
   line-height: 1.35;
 }
 
-.palette-lab__choices {
+.ink-register__choices {
   margin: 0;
   padding: 0;
-  border-bottom: 1px solid var(--palette-lab-rule);
+  border-bottom: 1px solid var(--ink-register-rule);
 }
 
-.palette-lab__choice {
+.ink-register__choice {
   position: relative;
   display: grid;
   grid-template-columns: 1.35rem minmax(0, 1fr) auto;
   align-items: center;
   width: 100%;
-  min-height: 2.55rem;
-  padding: 0.32rem 0.18rem 0.3rem;
+  min-height: 2.75rem;
+  padding: 0.34rem 0.18rem 0.32rem;
   border: 0;
-  border-top: 1px solid var(--palette-lab-rule);
+  border-top: 1px solid var(--ink-register-rule);
   background: transparent;
   color: inherit;
   cursor: pointer;
   text-align: left;
 }
 
-.palette-lab__choice::before {
+.ink-register__choice::before {
   position: absolute;
   top: -1px;
   left: 0;
   width: 0;
-  border-top: 1px solid var(--palette-lab-mark);
+  border-top: 1px solid var(--ink-register-mark);
   content: "";
 }
 
-.palette-lab__choice[aria-checked="true"]::before {
+.ink-register__choice[aria-checked="true"]::before {
   width: 2.15rem;
 }
 
-.palette-lab__choice:is(:hover, :focus-visible) .palette-lab__name,
-.palette-lab__choice[aria-checked="true"] .palette-lab__name {
-  color: var(--palette-lab-mark);
+.ink-register__choice:is(:hover, :focus-visible) .ink-register__name,
+.ink-register__choice[aria-checked="true"] .ink-register__name {
+  color: var(--ink-register-mark);
 }
 
-.palette-lab__index {
-  color: var(--palette-lab-muted);
+.ink-register__index {
+  color: var(--ink-register-muted);
   font-size: 0.54rem;
   font-variant-numeric: tabular-nums;
 }
 
-.palette-lab__name {
+.ink-register__name {
   display: block;
   font-family: "Linden Hill", Palatino, serif;
-  font-size: 0.83rem;
+  font-size: 0.84rem;
   line-height: 1.05;
 }
 
-.palette-lab__description {
+.ink-register__description {
   display: block;
   margin-top: 0.16rem;
-  color: var(--palette-lab-muted);
+  color: var(--ink-register-muted);
   font-size: 0.54rem;
   letter-spacing: 0.025em;
   line-height: 1.2;
 }
 
-.palette-lab__swatches {
+.ink-register__swatches {
   display: flex;
   align-items: center;
   gap: 2px;
   margin-left: 0.5rem;
 }
 
-.palette-lab__swatch {
+.ink-register__swatch {
   display: block;
   width: 0.48rem;
   height: 0.28rem;
-  outline: 1px solid color-mix(in srgb, var(--palette-lab-ink) 18%, transparent);
+  outline: 1px solid color-mix(in srgb, var(--ink-register-ink) 18%, transparent);
   outline-offset: -1px;
-  background: var(--palette-lab-swatch);
+  background: var(--ink-register-swatch);
 }
 
-.palette-lab__toggle .palette-lab__swatches {
-  margin-left: 0.65rem;
-}
-
-.palette-lab__toggle .palette-lab__swatch {
-  width: 0.42rem;
-  height: 0.24rem;
-}
-
-.palette-lab__keys {
+.ink-register__keys {
   margin: 0.5rem 0 0;
-  color: var(--palette-lab-muted);
+  color: var(--ink-register-muted);
   font-size: 0.51rem;
   text-align: right;
 }
 
-.palette-lab__status {
+.ink-register__status {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -901,35 +979,112 @@ html[data-palette] body.single.blog :is(.article-citation a, .article-end-link) 
   white-space: nowrap;
 }
 
-@media (max-width: 30rem) {
-  .palette-lab {
-    right: max(0.7rem, env(safe-area-inset-right));
-    bottom: max(0.7rem, env(safe-area-inset-bottom));
-    left: max(0.7rem, env(safe-area-inset-left));
-    width: auto;
+/* Follow the 992px paper's upper-right crop corner as exterior margins grow. */
+@media (min-width: 992px) {
+  .ink-register {
+    top: calc(2rem + 20px);
+    right: calc(50vw - 476px);
+  }
+}
+
+/* Opened articles let every crop utility leave with the masthead. */
+.single.blog .ink-register {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+@media (max-width: 767px) {
+  body > .nav-top {
+    padding-right: 2.25rem;
   }
 
-  .palette-lab__panel {
-    max-height: 68vh;
+  .ink-register__panel {
+    position: fixed;
+    top: max(3.25rem, calc(env(safe-area-inset-top) + 3.25rem));
+    right: max(0.7rem, env(safe-area-inset-right));
+    left: max(0.7rem, env(safe-area-inset-left));
+    width: auto;
+    max-height: calc(100dvh - 4rem - env(safe-area-inset-bottom));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ink-register__mark,
+  .ink-register__mark span {
+    transition: none;
+  }
+
+  .ink-register[data-open] .ink-register__panel {
+    animation: none;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .ink-register {
+    --ink-register-rule: color-mix(in srgb, var(--ink-register-ink) 72%, transparent);
   }
 }
 
 @media (forced-colors: active) {
-  .palette-lab__toggle,
-  .palette-lab__panel {
-    border: 1px solid CanvasText;
+  .ink-register__toggle,
+  .ink-register__panel,
+  .ink-register__choice {
+    border-color: CanvasText;
     background: Canvas;
     color: CanvasText;
+    forced-color-adjust: auto;
   }
 
-  .palette-lab__choice[aria-checked="true"] {
+  .ink-register__swatches {
+    display: none;
+  }
+
+  .ink-register__choice[aria-checked="true"]::before {
+    width: 2.15rem;
+    border-top: 2px solid Highlight;
+  }
+
+  .ink-register__toggle:focus-visible,
+  .ink-register__choice:focus-visible {
     outline: 2px solid Highlight;
-    outline-offset: -3px;
+    box-shadow: none;
   }
 }
 
 @media print {
-  .palette-lab {
+  html[data-ink] body,
+  html[data-ink] body.sunset {
+    --palette-bg-main: #fbf7f0;
+    --site-ink: #202622;
+    --site-muted: #4f524f;
+    --site-secondary: #4f524f;
+    --site-link: #173f51;
+    --site-link-visited: #173f51;
+    --site-heading: #173d31;
+    --site-heading-alt: #093060;
+    --site-accent: #6f3b3f;
+    --site-ornament: #6f3b3f;
+    --site-accent-alt: #765a2f;
+    --site-focus: #202622;
+    --site-focus-accent: #173f51;
+    --site-rule: rgba(83, 76, 95, 0.28);
+    --site-rule-strong: rgba(78, 71, 88, 0.42);
+    --site-wash: rgba(240, 216, 207, 0.3);
+    --site-wash-strong: rgba(224, 208, 194, 0.48);
+    --syntax-error: #743f49;
+    --syntax-comment: #475547;
+    --syntax-keyword: #743f49;
+    --syntax-string: #684d22;
+    --syntax-number: #3f5179;
+    --syntax-name: #225868;
+    --syntax-type: #225868;
+    --syntax-variable: #225868;
+    --syntax-added: #245c3e;
+    --syntax-removed: #743f49;
+  }
+
+  .ink-register {
     display: none !important;
   }
 }

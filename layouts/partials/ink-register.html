@@ -1,0 +1,61 @@
+{{- $defaultInk := hugo.Data.inks.default -}}
+<aside
+  id="ink-register"
+  class="ink-register"
+  data-ink-register
+  style="--ink-register-texture: url('{{ partial "static-asset-url.html" "textures/lokta-fibres.svg" }}')">
+  <button
+    id="ink-toggle"
+    class="ink-register__toggle"
+    type="button"
+    aria-expanded="false"
+    aria-controls="ink-register-panel"
+    aria-haspopup="dialog"
+    aria-label="Choose ink. Current ink: Lokta Hybrid">
+    <span class="ink-register__mark" aria-hidden="true"><span></span></span>
+  </button>
+
+  <section
+    id="ink-register-panel"
+    class="ink-register__panel"
+    role="dialog"
+    aria-modal="false"
+    aria-labelledby="ink-register-heading"
+    hidden
+    inert>
+    <p class="ink-register__eyebrow">This copy</p>
+    <h2 id="ink-register-heading" class="ink-register__heading">Editorial ink</h2>
+    <p class="ink-register__note" data-ink-note>One impression, kept in this browser</p>
+
+    <div
+      class="ink-register__choices"
+      role="radiogroup"
+      aria-label="Editorial ink"
+      aria-orientation="vertical">
+      {{- range $index, $ink := hugo.Data.inks.inks }}
+      <button
+        class="ink-register__choice"
+        type="button"
+        role="radio"
+        aria-checked="{{ if eq $ink.id $defaultInk }}true{{ else }}false{{ end }}"
+        tabindex="{{ if eq $ink.id $defaultInk }}0{{ else }}-1{{ end }}"
+        data-ink-value="{{ $ink.id }}"
+        data-ink-name="{{ $ink.name }}"
+        data-ink-description="{{ $ink.description }}">
+        <span class="ink-register__index">{{ printf "%02d" (add $index 1) }}</span>
+        <span class="ink-register__copy">
+          <span class="ink-register__name">{{ $ink.name }}</span>
+          <span class="ink-register__description">{{ $ink.description }}</span>
+        </span>
+        <span class="ink-register__swatches" aria-hidden="true">
+          {{- range $ink.swatches }}
+          <span class="ink-register__swatch" style="--ink-register-swatch: {{ . }}"></span>
+          {{- end }}
+        </span>
+      </button>
+      {{- end }}
+    </div>
+    <p class="ink-register__keys">↑↓ choose · home/end · esc close</p>
+    <p class="ink-register__status" role="status" aria-live="polite" aria-atomic="true"></p>
+  </section>
+</aside>

@@ -27,10 +27,11 @@ Open <http://127.0.0.1:1315/>. Hugo may create a local `.hugo_build.lock`; it is
 ignored by Git. The mathematics pipeline requires Hugo 0.164.0 Extended; check
 `hugo version` before diagnosing template errors from an older local binary.
 
-On the current experimental branch, local preview also exposes a development
-palette register that is absent from production builds. See
-[`docs/PALETTE_PROOF.md`](docs/PALETTE_PROOF.md) for the six comparison palettes,
-their semantic mapping, and the review protocol.
+The current experimental branch promotes the palette proof into a public Ink
+control. Lokta remains the canonical fallback, while a first visit receives one
+remembered impression from the approved pool. See
+[`docs/INK_SYSTEM.md`](docs/INK_SYSTEM.md) for persistence, semantic mapping,
+interaction, and the review protocol.
 
 For a production-style build:
 
@@ -116,7 +117,8 @@ The figure shortcode accepts three placements and two surface treatments:
 - `static/` — files copied to stable public URLs, including images, PDFs, CSS,
   local fonts, and licensed surface textures.
 - `layouts/` — site-level Hugo template overrides.
-- `data/` — build-time registries for shared mathematics and citations.
+- `data/` — build-time registries for shared mathematics, citations, and the
+  editorial ink set.
 - `scripts/` — source validation. `check_content.py` is the maintained entry
   point; `check_math.py` is its compatibility wrapper.
 - `themes/hugo-paged/` — vendored and locally modified base theme. Do not replace

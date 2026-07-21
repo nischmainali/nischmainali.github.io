@@ -1,0 +1,114 @@
+{{- /* Permanent ink head: canonical Lokta without JS; a remembered ink
+  is applied before paint; the interactive register is deferred. */ -}}
+{{- $inkConfig := dict
+  "default" hugo.Data.inks.default
+  "randomPool" hugo.Data.inks.random_pool
+  "inks" hugo.Data.inks.inks
+-}}
+<script id="ink-register-data" type="application/json">{{ jsonify $inkConfig | safeJS }}</script>
+<script>
+  (function () {
+    "use strict";
+
+    var STORAGE_KEY = "nisch-ink-v1";
+    var root = document.documentElement;
+    var config;
+
+    try {
+      config = JSON.parse(document.getElementById("ink-register-data").textContent);
+    } catch (error) {
+      return;
+    }
+
+    var ids = config.inks.map(function (ink) { return ink.id; });
+    var fallback = ids.indexOf(config.default) >= 0 ? config.default : "lokta-hybrid";
+
+    function storage(name) {
+      try { return window[name]; } catch (error) { return null; }
+    }
+
+    function read(store) {
+      if (!store) return null;
+      try {
+        var value = JSON.parse(store.getItem(STORAGE_KEY) || "null");
+        if (!value || value.version !== 1 || ids.indexOf(value.id) < 0) return null;
+        value.source = value.source === "assigned" ? "assigned" : "chosen";
+        return value;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function write(store, record) {
+      if (!store) return false;
+      try {
+        var value = JSON.stringify(record);
+        store.setItem(STORAGE_KEY, value);
+        return store.getItem(STORAGE_KEY) === value;
+      } catch (error) {
+        return false;
+      }
+    }
+
+    function requestedInk() {
+      try {
+        var params = new URL(window.location.href).searchParams;
+        var value = params.get("ink") || params.get("palette");
+        return ids.indexOf(value) >= 0 ? value : null;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function assignedInk() {
+      var pool = config.randomPool.filter(function (id) {
+        return ids.indexOf(id) >= 0;
+      });
+      if (!pool.length) return fallback;
+      var index;
+      try {
+        var random = new Uint32Array(1);
+        window.crypto.getRandomValues(random);
+        index = random[0] % pool.length;
+      } catch (error) {
+        index = Math.floor(Math.random() * pool.length);
+      }
+      return pool[index];
+    }
+
+    var local = storage("localStorage");
+    var session = storage("sessionStorage");
+    var requested = requestedInk();
+    var localInk = read(local);
+    var sessionInk = read(session);
+    var ink = fallback;
+    var origin = "canonical";
+
+    if (requested) {
+      ink = requested;
+      origin = "linked";
+    } else if (localInk) {
+      ink = localInk.id;
+      origin = localInk.source;
+    } else if (sessionInk) {
+      ink = sessionInk.id;
+      origin = sessionInk.source;
+    } else {
+      var candidate = assignedInk();
+      var record = { id: candidate, source: "assigned", version: 1 };
+      if (write(local, record)) {
+        ink = candidate;
+        origin = "assigned";
+      } else if (write(session, record)) {
+        ink = candidate;
+        origin = "assigned";
+      }
+    }
+
+    root.dataset.ink = ink;
+    root.dataset.inkOrigin = origin;
+  }());
+</script>
+{{- $styles := resources.Get "css/ink-register.css" | minify | fingerprint "md5" -}}
+<link rel="stylesheet" href="{{ $styles.RelPermalink }}">
+<script src="{{ partialCached "js-asset-url.html" "js/ink-register.js" "js/ink-register.js" }}" defer></script>

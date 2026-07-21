@@ -1,0 +1,38 @@
+default = "lokta-hybrid"
+random_pool = ["lokta-hybrid", "ef-arbutus", "ef-elea-light", "ef-arcadia"]
+
+[[inks]]
+id = "lokta-hybrid"
+name = "Lokta Hybrid"
+description = "Field-note ink · forest and wine"
+swatches = ["#fbf7f0", "#202622", "#005077", "#184034", "#6f3b3f", "#6e678f"]
+
+[[inks]]
+id = "ef-arbutus"
+name = "Ef Arbutus"
+description = "Peach paper · green and madder"
+swatches = ["#ffead8", "#393330", "#00704f", "#007000", "#aa184f", "#6e678f"]
+
+[[inks]]
+id = "ef-cyprus"
+name = "Ef Cyprus"
+description = "Ochre paper · olive and wine"
+swatches = ["#fcf7ef", "#242521", "#a7601f", "#557400", "#ca3400", "#59786f"]
+
+[[inks]]
+id = "ef-elea-light"
+name = "Ef Elea Light"
+description = "Lichen paper · plum and olive"
+swatches = ["#edf5e2", "#221321", "#00601f", "#355500", "#9f356a", "#676470"]
+
+[[inks]]
+id = "ef-arcadia"
+name = "Ef Arcadia"
+description = "Verdant paper · plum and indigo"
+swatches = ["#d6e4d3", "#40314e", "#503094", "#113384", "#922e7f", "#646170"]
+
+[[inks]]
+id = "modus-operandi-tinted"
+name = "Modus Operandi Tinted"
+description = "Warm paper · rigorous blue ink"
+swatches = ["#fbf7f0", "#000000", "#3546c2", "#574316", "#a0132f", "#595959"]
