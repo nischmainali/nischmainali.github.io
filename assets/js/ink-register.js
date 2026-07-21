@@ -209,10 +209,11 @@
     });
   });
 
-  register.addEventListener("focusout", function () {
-    queueMicrotask(function () {
-      if (!register.contains(document.activeElement)) setOpen(false);
-    });
+  register.addEventListener("focusout", function (event) {
+    /* A pointer press briefly leaves document.activeElement on <body> before
+     * the choice receives focus. Follow the focus destination directly so the
+     * panel cannot become hidden/inert before the ensuing click is delivered. */
+    if (!register.contains(event.relatedTarget)) setOpen(false);
   });
 
   document.addEventListener("pointerdown", function (event) {
