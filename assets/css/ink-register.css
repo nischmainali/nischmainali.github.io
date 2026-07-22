@@ -540,6 +540,10 @@ html[data-ink] body h1.title::before {
   color: var(--site-ornament);
 }
 
+html[data-ink] body .home-title-ornament {
+  color: var(--site-ornament);
+}
+
 html[data-ink] body > :is(.crop-h, .crop-v, .crop-c) {
   color: color-mix(in srgb, var(--site-ink) 52%, transparent);
 }
@@ -586,11 +590,11 @@ html[data-ink] body .site-search-results > li::before {
   border-color: color-mix(in srgb, var(--site-accent) 58%, transparent);
 }
 
-html[data-ink] body .publications a {
+html[data-ink] body .publications .publication-row {
   color: var(--site-ink);
 }
 
-html[data-ink] body .publications a:hover {
+html[data-ink] body .publications .publication-row:is(:hover, :focus-visible) {
   background-color: var(--site-link);
   color: var(--palette-bg-main);
 }

@@ -41,8 +41,8 @@ body > footer {
 }
 
 /* Home is already a direct flex item, so z-index works without positioning it.
- * Leaving it unpositioned keeps the absolute portrait registered to the body
- * and the paper's crop geometry rather than to the post-navigation flow. */
+ * Its internal grid stays in normal flow while the global paper and crop
+ * geometry remain owned by the body. */
 body > .home {
   z-index: 1;
 }

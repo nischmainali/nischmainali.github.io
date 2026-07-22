@@ -519,16 +519,33 @@ Lokta Hybrid remains the canonical failure-safe and the color baseline below.
 
 ### Home
 
-The home page is a compact self-introduction, not a hero landing page. It contains
-a name, two short statements of research interest, a CV link, a portrait, and a
-plain selected-works list. Its asymmetry—the portrait beside the introduction,
-with publications spanning below—adds character without introducing a grid of
-cards.
+The home page is a compact field-desk frontispiece, not a hero landing page. Its
+existing paper shell, crop marks, navigation clearances, and environmental light
+remain the frame. Inside that frame, one structural grid registers the italic
+name and research proposition with a portrait plate; selected work spans below
+as a compact bibliography.
 
-Keep the opening direct and conversational. The publications should read like a
-bibliography, not like product tiles. If future home sections are added, first
-ask whether they belong in the same editorial flow. Default answer: do not add a
-new dashboard-like section.
+The opening has four facts only: the name, one exact research proposition, one
+quiet affiliation sentence, and a curriculum-vitae link. A large but faint `❧`
+sits behind the name as an explicit, assistively hidden ornament. It is part of
+the title composition rather than a viewport-positioned decoration. There is no
+eyebrow, portrait caption, status widget, or additional homepage subtitle.
+
+Each selected work is one complete link whose year, `❡`, title, and collaborators
+share a restrained ledger row. The year remains a separate left register and the
+authors sit quietly below the title. Venue and record-type labels are deliberately
+omitted. The text measure stops a little before the right edge and the horizontal
+rules taper into the paper, so the open space reads as margin rather than a
+missing column. Rows remain close together and invert as a whole on hover or
+keyboard focus, using the active ink palette rather than fixed colors. They
+should read like bibliography entries, never product tiles or cards.
+
+At narrow widths the source order becomes the composition: identity first,
+portrait second, bibliography third. The portrait remains in normal flow at
+every width, the ornament stays attached to its heading, and neither element may
+disturb the global crop-mark geometry. If future home sections are proposed,
+first ask whether the content has earned another editorial passage. Default
+answer: do not add a dashboard-like section.
 
 ### Documents list
 
