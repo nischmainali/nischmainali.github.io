@@ -7,18 +7,26 @@
   if (!disclosures.length) return;
 
   var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+  var OPEN_DELAY = 45;
+  var CLOSE_DELAY = 90;
   var active = null;
   var pinned = null;
+  var pendingOpen = null;
   var openTimer = 0;
   var closeTimer = 0;
   var rowObserver = "ResizeObserver" in window ? new ResizeObserver(function (entries) {
     entries.forEach(function (entry) {
       var item = entry.target.closest(".publication-item");
-      if (item) item.style.setProperty("--paper-row-height", entry.target.getBoundingClientRect().height + "px");
+      var sizes = entry.borderBoxSize;
+      var borderBox = sizes && typeof sizes.length === "number"
+        ? sizes[0]
+        : sizes;
+      var blockSize = borderBox && borderBox.blockSize
+        ? borderBox.blockSize
+        : entry.target.getBoundingClientRect().height;
+      if (item) item.style.setProperty("--paper-row-height", blockSize + "px");
     });
   }) : null;
-
-  document.documentElement.classList.add("home-readout-ready");
 
   function itemFor(disclosure) {
     return disclosure.closest(".publication-item");
@@ -27,6 +35,7 @@
   function clearTimers() {
     window.clearTimeout(openTimer);
     window.clearTimeout(closeTimer);
+    pendingOpen = null;
     openTimer = 0;
     closeTimer = 0;
   }
@@ -65,19 +74,34 @@
     if (!finePointer.matches || pinned) return;
     window.clearTimeout(closeTimer);
     window.clearTimeout(openTimer);
+    closeTimer = 0;
+    pendingOpen = disclosure;
     openTimer = window.setTimeout(function () {
-      if (pinned) return;
+      var item = itemFor(disclosure);
+      openTimer = 0;
+      if (pendingOpen !== disclosure) return;
+      pendingOpen = null;
+      if (!item || pinned) return;
+      if (!item.matches(":hover") && !item.contains(document.activeElement)) return;
       open(disclosure, "transient");
-    }, 170);
+    }, OPEN_DELAY);
   }
 
   function scheduleTransientClose(disclosure) {
+    if (pendingOpen === disclosure) {
+      window.clearTimeout(openTimer);
+      pendingOpen = null;
+      openTimer = 0;
+    }
     if (pinned || active !== disclosure) return;
-    window.clearTimeout(openTimer);
     window.clearTimeout(closeTimer);
     closeTimer = window.setTimeout(function () {
-      if (active === disclosure && !pinned) close(disclosure);
-    }, 220);
+      var item = itemFor(disclosure);
+      closeTimer = 0;
+      if (!item || active !== disclosure || pinned) return;
+      if (item.matches(":hover") || item.contains(document.activeElement)) return;
+      close(disclosure);
+    }, CLOSE_DELAY);
   }
 
   function togglePinned(disclosure) {
@@ -121,8 +145,8 @@
     summary.addEventListener("pointerdown", function (event) {
       if (event.button !== 0) return;
       event.preventDefault();
-      togglePinned(disclosure);
       summary.focus({ preventScroll: true });
+      togglePinned(disclosure);
     });
 
     summary.addEventListener("click", function (event) {

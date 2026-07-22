@@ -32,13 +32,11 @@
           <span class="publication-inspect__label" aria-hidden="true">note</span>
         </summary>
         <div class="paper-readout-frame">
-          <aside class="paper-readout" aria-labelledby="paper-readout-title-{{ $work.id }}">
+          <aside class="paper-readout" aria-label="Preview of {{ $work.title }}">
             <span class="paper-readout__corners" aria-hidden="true"></span>
             <button class="paper-readout__close" type="button" data-paper-readout-close>
               <span class="readout-visually-hidden">Close paper preview</span>
             </button>
-            <p class="paper-readout__register"><span>paper {{ .index }}</span><span>{{ .identifier }}</span></p>
-            <h3 id="paper-readout-title-{{ $work.id }}">{{ .heading }}</h3>
             <figure class="paper-readout__figure">
               {{ partial "paper-readout-plate.html" (dict "Kind" .plate "ID" $work.id) }}
               <figcaption>{{ .plate_caption }}</figcaption>
