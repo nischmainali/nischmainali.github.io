@@ -26,20 +26,21 @@ Publication data now lives in `data/selected_works.toml`. The homepage shortcode
 
 ## Behaviour
 
-- On a wide screen, the note sits beyond the reading column and crosses the right crop line.
-- On a medium screen, it opens below the selected row as a compact two-column sheet.
-- On a phone, it becomes a single-column note inside the page measure.
-- A fine pointer can preview a note by resting on a row. Clicking the inspect mark pins it.
-- Keyboard focus opens the same note. Escape closes it. The close control returns focus to the inspect mark.
+- On screens at least 1480 pixels wide, the preview sits in the outer right margin. Two short lines connect its upper left edge to the circular control.
+- On a medium screen, the preview opens below the selected row as a compact two-column sheet. The same two lines cross the empty space between the control and the preview's upper right edge.
+- On a phone, the preview becomes a single-column sheet inside the page measure. The connector reduces to a short pair of lines below the control.
+- The dotted circular control is the only way to open a preview. Hover changes the control's colour but does not open anything.
+- The active row changes colour, and the dotted circle rotates while the preview is open. The preview's text and paper surface stay still.
+- Clicking the same control closes its preview. Escape and the close control also close it and return focus to the circular control.
 - Only one note can be open at a time.
 
 The title remains a normal link. The inspect control has its own hit area so opening a note cannot accidentally follow the paper link.
 
 ## Performance and access
 
-The figures are inline SVG. There are no preview-image downloads, remote data calls, canvas renders, or scroll handlers. The small stylesheet and script load only on the homepage. The content is present in the built HTML before the script runs, and the native `details` element remains usable without JavaScript.
+The figures and connector lines use inline SVG. There are no preview image downloads, remote data calls, canvas renders, or scroll handlers. The small stylesheet and script load only on the homepage. The content is present in the built HTML before the script runs, and the native `details` element remains usable without JavaScript.
 
-Motion is limited to a short entrance shift and is removed when reduced motion is requested. The note uses the active ink palette and both lighting modes. It is hidden in print because the ledger already contains the durable record.
+The opening sequence uses opacity and transforms. The circular control, connector, and outer registration corners provide the continuing movement, while the readable content stays fixed. Reduced motion keeps the complete static shape and removes the rotation and entrance movement. The note uses the active ink palette and both lighting modes. It is hidden in print because the ledger already contains the durable record.
 
 ## Decision rule
 

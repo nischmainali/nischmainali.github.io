@@ -27,15 +27,28 @@
       </a>
       {{- with .readout }}
       <details class="paper-readout-shell" data-paper-readout>
-        <summary class="publication-inspect" role="button" aria-label="Preview {{ $work.title }}">
-          <span class="publication-inspect__signal" aria-hidden="true"></span>
-          <span class="publication-inspect__label" aria-hidden="true">note</span>
+        <summary class="publication-inspect" role="button" aria-label="Open preview of {{ $work.title }}" aria-controls="paper-readout-{{ $work.id }}" aria-expanded="false" data-open-label="Open preview of {{ $work.title }}" data-close-label="Close preview of {{ $work.title }}">
+          <span class="publication-inspect__signal" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <g class="publication-inspect__dial">
+                <circle class="publication-inspect__orbit" cx="12" cy="12" r="8.65" pathLength="100"></circle>
+                <path class="publication-inspect__index" d="M12 1.75v3.1"></path>
+              </g>
+              <circle class="publication-inspect__core" cx="12" cy="12" r="1.15"></circle>
+            </svg>
+          </span>
         </summary>
-        <div class="paper-readout-frame">
+        <div class="paper-readout-frame" id="paper-readout-{{ $work.id }}">
+          <span class="paper-readout__rails" aria-hidden="true">
+            <svg viewBox="0 0 48 32" preserveAspectRatio="none" focusable="false">
+              <path class="paper-readout__rail paper-readout__rail--upper" pathLength="1" d="M3 4 L45 24"></path>
+              <path class="paper-readout__rail paper-readout__rail--lower" pathLength="1" d="M5 12 L45 29"></path>
+            </svg>
+          </span>
           <aside class="paper-readout" aria-label="Preview of {{ $work.title }}">
             <span class="paper-readout__corners" aria-hidden="true"></span>
-            <button class="paper-readout__close" type="button" data-paper-readout-close>
-              <span class="readout-visually-hidden">Close paper preview</span>
+            <button class="paper-readout__close" type="button" data-paper-readout-close aria-label="Close preview of {{ $work.title }}">
+              <span class="readout-visually-hidden">Close preview</span>
             </button>
             <figure class="paper-readout__figure">
               {{ partial "paper-readout-plate.html" (dict "Kind" .plate "ID" $work.id) }}
