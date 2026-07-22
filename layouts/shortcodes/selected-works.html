@@ -38,18 +38,19 @@
             </svg>
           </span>
         </summary>
+        <svg class="paper-readout__rails" aria-hidden="true" focusable="false">
+          <path class="paper-readout__rail paper-readout__rail--upper" pathLength="1"></path>
+          <path class="paper-readout__rail paper-readout__rail--lower" pathLength="1"></path>
+        </svg>
         <div class="paper-readout-frame" id="paper-readout-{{ $work.id }}">
-          <span class="paper-readout__rails" aria-hidden="true">
-            <svg viewBox="0 0 48 32" preserveAspectRatio="none" focusable="false">
-              <path class="paper-readout__rail paper-readout__rail--upper" pathLength="1" d="M3 4 L45 24"></path>
-              <path class="paper-readout__rail paper-readout__rail--lower" pathLength="1" d="M5 12 L45 29"></path>
-            </svg>
-          </span>
           <aside class="paper-readout" aria-label="Preview of {{ $work.title }}">
             <span class="paper-readout__corners" aria-hidden="true"></span>
             <button class="paper-readout__close" type="button" data-paper-readout-close aria-label="Close preview of {{ $work.title }}">
               <span class="readout-visually-hidden">Close preview</span>
             </button>
+            {{- with .venue }}
+            <p class="paper-readout__source">{{ . }}</p>
+            {{- end }}
             <figure class="paper-readout__figure">
               {{ partial "paper-readout-plate.html" (dict "Kind" .plate "ID" $work.id) }}
               <figcaption>{{ .plate_caption }}</figcaption>

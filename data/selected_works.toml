@@ -10,6 +10,7 @@ collaborators = "with L. Teixeira"
 url = "https://arxiv.org/abs/2504.12916"
 
 [works.readout]
+venue = "arXiv"
 contribution = "We derive exact stochastic gradient dynamics for a linear transformer, which reveal staged learning and conservation laws, and then use the same measurements to study nonlinear models."
 plate = "icl-dynamics"
 plate_caption = "A conceptual trace of separated learning timescales and the later onset of in-context learning."
@@ -34,6 +35,7 @@ collaborators = "with R. da Silveira and Y. Burak"
 url = "https://www.cell.com/neuron/fulltext/S0896-6273(25)00043-1"
 
 [works.readout]
+venue = "Neuron"
 contribution = "Across species and environments, the statistics of hippocampal place fields are captured by threshold crossings of a Gaussian process."
 plate = "gp-thresholds"
 plate_caption = "A related technical plate showing smooth Gaussian process paths crossing a field threshold."
