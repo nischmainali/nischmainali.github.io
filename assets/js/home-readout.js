@@ -12,6 +12,7 @@
   if (!disclosures.length) return;
 
   var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+  var connectedLayout = window.matchMedia("(min-width: 1480px)");
   var active = null;
   var connectorFrame = 0;
 
@@ -59,6 +60,23 @@
     return point.x.toFixed(2) + " " + point.y.toFixed(2);
   }
 
+  function clearConnector(disclosure) {
+    var panel = disclosure.querySelector(".paper-readout");
+    var paths = disclosure.querySelectorAll(".paper-readout__rail");
+    var junctions = disclosure.querySelectorAll(".paper-readout__junction");
+
+    if (panel) panel.style.removeProperty("--readout-panel-top");
+    paths.forEach(function (path) {
+      path.removeAttribute("d");
+    });
+    junctions.forEach(function (junction) {
+      junction.removeAttribute("cx");
+      junction.removeAttribute("cy");
+    });
+    disclosure.setAttribute("data-readout-connector", "none");
+    disclosure.setAttribute("data-readout-route", "under");
+  }
+
   function updateConnector(disclosure) {
     if (!disclosure.open) return;
 
@@ -67,56 +85,47 @@
     var panel = disclosure.querySelector(".paper-readout");
     var upper = disclosure.querySelector(".paper-readout__rail--upper");
     var lower = disclosure.querySelector(".paper-readout__rail--lower");
-    if (!item || !signal || !panel || !upper || !lower) return;
+    var upperJunction = disclosure.querySelector(".paper-readout__junction--upper");
+    var lowerJunction = disclosure.querySelector(".paper-readout__junction--lower");
+    if (!item || !signal || !panel || !upper || !lower || !upperJunction || !lowerJunction) return;
+
+    if (!connectedLayout.matches) {
+      clearConnector(disclosure);
+      return;
+    }
 
     var signalBox = layoutBox(signal, item);
-    var panelBox = layoutBox(panel, item);
-    if (!signalBox.width || !panelBox.width || !panelBox.height) return;
+    if (!signalBox.width || !panel.offsetWidth || !panel.offsetHeight) return;
 
     var center = {
       x: signalBox.x + signalBox.width / 2,
       y: signalBox.y + signalBox.height / 2
     };
-    var radius = Math.min(signalBox.width, signalBox.height) * 8.65 / 24;
-    var panelLeft = panelBox.x;
-    var panelRight = panelBox.x + panelBox.width;
-    var panelTop = panelBox.y;
-    var panelBottom = panelBox.y + panelBox.height;
-    var panelIsOutboard = panelLeft > signalBox.x + signalBox.width + 2;
-    var side = panelIsOutboard ? "left" : "right";
-    var targetX = side === "left" ? panelLeft : panelRight;
-    var upperTarget = { x: targetX, y: panelTop };
-    var lowerTarget = { x: targetX, y: panelBottom };
-    var upperSource = pointOnOrbit(center, upperTarget, radius);
-    var lowerSource;
-    var lowerPath;
-
-    upper.setAttribute("d", "M " + pathPoint(upperSource) + " L " + pathPoint(upperTarget));
-
-    var overlapsOrbit = side === "right"
-      && panelLeft < center.x
-      && panelRight > center.x;
-
-    if (overlapsOrbit) {
-      var spineX = Math.min(item.offsetWidth - 2, panelRight + 5);
-      var firstTurn = {
-        x: spineX,
-        y: Math.min(panelTop - 3, center.y + radius + 5)
-      };
-      lowerSource = pointOnOrbit(center, firstTurn, radius);
-      lowerPath = "M " + pathPoint(lowerSource)
-        + " L " + pathPoint(firstTurn)
-        + " L " + pathPoint({ x: spineX, y: panelBottom })
-        + " L " + pathPoint(lowerTarget);
-      disclosure.setAttribute("data-readout-route", "bracket");
-    } else {
-      lowerSource = pointOnOrbit(center, lowerTarget, radius);
-      lowerPath = "M " + pathPoint(lowerSource) + " L " + pathPoint(lowerTarget);
-      disclosure.setAttribute("data-readout-route", "direct");
+    var centeredTop = (center.y - panel.offsetHeight / 2).toFixed(2) + "px";
+    if (panel.style.getPropertyValue("--readout-panel-top") !== centeredTop) {
+      panel.style.setProperty("--readout-panel-top", centeredTop);
     }
 
-    lower.setAttribute("d", lowerPath);
-    disclosure.setAttribute("data-readout-connector", side);
+    var panelBox = layoutBox(panel, item);
+    if (!panelBox.width || !panelBox.height) return;
+
+    var radius = Math.min(signalBox.width, signalBox.height) * 8.65 / 24;
+    var panelLeft = panelBox.x;
+    var panelTop = panelBox.y;
+    var panelBottom = panelBox.y + panelBox.height;
+    var upperTarget = { x: panelLeft, y: panelTop };
+    var lowerTarget = { x: panelLeft, y: panelBottom };
+    var upperSource = pointOnOrbit(center, upperTarget, radius);
+    var lowerSource = pointOnOrbit(center, lowerTarget, radius);
+
+    upper.setAttribute("d", "M " + pathPoint(upperSource) + " L " + pathPoint(upperTarget));
+    lower.setAttribute("d", "M " + pathPoint(lowerSource) + " L " + pathPoint(lowerTarget));
+    upperJunction.setAttribute("cx", upperSource.x.toFixed(2));
+    upperJunction.setAttribute("cy", upperSource.y.toFixed(2));
+    lowerJunction.setAttribute("cx", lowerSource.x.toFixed(2));
+    lowerJunction.setAttribute("cy", lowerSource.y.toFixed(2));
+    disclosure.setAttribute("data-readout-route", "symmetric");
+    disclosure.setAttribute("data-readout-connector", "left");
   }
 
   function queueConnectors() {
@@ -179,10 +188,12 @@
       if (active && active !== disclosure) closeDisclosure(active, false);
       active = disclosure;
       setItemState(disclosure, true);
+      updateConnector(disclosure);
       queueConnectors();
       return;
     }
 
+    clearConnector(disclosure);
     setItemState(disclosure, false);
     if (active === disclosure) active = null;
   }
@@ -235,6 +246,9 @@
   });
 
   window.addEventListener("resize", queueConnectors, { passive: true });
+  if (connectedLayout.addEventListener) {
+    connectedLayout.addEventListener("change", queueConnectors);
+  }
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(queueConnectors);
   }
@@ -242,6 +256,9 @@
   window.addEventListener("pagehide", function () {
     if (rowObserver) rowObserver.disconnect();
     if (geometryObserver) geometryObserver.disconnect();
+    if (connectedLayout.removeEventListener) {
+      connectedLayout.removeEventListener("change", queueConnectors);
+    }
     if (connectorFrame) window.cancelAnimationFrame(connectorFrame);
   }, { once: true });
 }());

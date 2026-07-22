@@ -203,7 +203,7 @@
 .home-title-ornament {
   position: absolute;
   z-index: -1;
-  top: -3.25rem;
+  top: -3.6rem;
   left: -1.2rem;
   color: var(--site-ornament, #6f3b3f);
   font-size: clamp(11.7rem, 13.4vw, 13rem);
@@ -515,7 +515,7 @@ html[data-ink] body.is-home .home .publications .publication-row:focus-visible {
   }
 
   .home-title-ornament {
-    top: -2.42rem;
+    top: -2.75rem;
     left: -0.8rem;
     font-size: clamp(9.5rem, 39vw, 10.7rem);
   }
