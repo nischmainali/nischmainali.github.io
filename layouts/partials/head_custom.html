@@ -33,3 +33,7 @@
 <link rel="preload" href="{{ "vendor/fonts/eb-garamond-initials/EBGaramond-InitialsF2-LatinCaps.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
 {{ end }}
 {{ partial "ink-head.html" . }}
+{{- if .IsHome -}}
+{{- $homeReadoutStyles := resources.Get "css/home-readout.css" | minify | fingerprint "md5" -}}
+<link rel="stylesheet" href="{{ $homeReadoutStyles.RelPermalink }}">
+{{- end -}}

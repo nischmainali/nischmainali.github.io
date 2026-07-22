@@ -1,0 +1,59 @@
+{{- $works := hugo.Data.selected_works.works -}}
+{{- if not $works -}}
+  {{- errorf "data/selected_works.toml contains no works" -}}
+{{- end -}}
+{{- $seen := dict -}}
+<section class="publications" aria-labelledby="selected-works-title">
+  <h2 id="selected-works-title">Selected works</h2>
+  <ul class="publication-ledger">
+    {{- range $works }}
+      {{- $work := . -}}
+      {{- if not .id -}}
+        {{- errorf "A selected work is missing its id" -}}
+      {{- end -}}
+      {{- if isset $seen .id -}}
+        {{- errorf "Selected work id %q is repeated" .id -}}
+      {{- end -}}
+      {{- $seen = merge $seen (dict .id true) -}}
+      {{- $hasReadout := isset . "readout" -}}
+    <li class="publication-item{{ if $hasReadout }} has-readout{{ end }}" data-publication="{{ .id }}">
+      <a class="publication-row" href="{{ .url | safeURL }}" id="publication-{{ .id }}">
+        <span class="publication-year">{{ .year }}</span>
+        <span class="publication-mark" aria-hidden="true">❡</span>
+        <span class="publication-body">
+          <span class="publication-title">{{ .title }}</span>
+          <span class="publication-collaborators">{{ .collaborators }}</span>
+        </span>
+      </a>
+      {{- with .readout }}
+      <details class="paper-readout-shell" data-paper-readout>
+        <summary class="publication-inspect" role="button" aria-label="Preview {{ $work.title }}">
+          <span class="publication-inspect__signal" aria-hidden="true"></span>
+          <span class="publication-inspect__label" aria-hidden="true">note</span>
+        </summary>
+        <div class="paper-readout-frame">
+          <aside class="paper-readout" aria-labelledby="paper-readout-title-{{ $work.id }}">
+            <span class="paper-readout__corners" aria-hidden="true"></span>
+            <button class="paper-readout__close" type="button" data-paper-readout-close>
+              <span class="readout-visually-hidden">Close paper preview</span>
+            </button>
+            <p class="paper-readout__register"><span>paper {{ .index }}</span><span>{{ .identifier }}</span></p>
+            <h3 id="paper-readout-title-{{ $work.id }}">{{ .heading }}</h3>
+            <figure class="paper-readout__figure">
+              {{ partial "paper-readout-plate.html" (dict "Kind" .plate "ID" $work.id) }}
+              <figcaption>{{ .plate_caption }}</figcaption>
+            </figure>
+            <p class="paper-readout__contribution">{{ .contribution }}</p>
+            <nav class="paper-readout__links" aria-label="Links for {{ $work.title }}">
+              {{- range .links }}
+              <a href="{{ .url | safeURL }}">{{ .label }}</a>
+              {{- end }}
+            </nav>
+          </aside>
+        </div>
+      </details>
+      {{- end }}
+    </li>
+    {{- end }}
+  </ul>
+</section>

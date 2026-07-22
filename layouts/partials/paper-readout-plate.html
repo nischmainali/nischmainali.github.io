@@ -1,0 +1,57 @@
+{{- $kind := .Kind -}}
+{{- $id := .ID -}}
+{{- if eq $kind "icl-dynamics" -}}
+<svg class="paper-readout__plate" viewBox="0 0 640 330" role="img" aria-labelledby="plate-title-{{ $id }} plate-desc-{{ $id }}">
+  <title id="plate-title-{{ $id }}">Separated learning timescales</title>
+  <desc id="plate-desc-{{ $id }}">Three learning traces settle at different rates before a marked onset of in-context learning.</desc>
+  <g class="paper-readout__plate-grid" fill="none">
+    <path d="M54 272.5H600M54 272.5V38"/>
+    <path d="M54 217.5H600M54 162.5H600M54 107.5H600M179 38V273M304 38V273M429 38V273M554 38V273"/>
+  </g>
+  <path class="paper-readout__plate-threshold" d="M54 116H600" fill="none"/>
+  <g class="paper-readout__plate-curves" fill="none">
+    <path d="M54 256C87 221 106 155 145 115C184 75 223 65 271 62C339 58 449 58 600 58"/>
+    <path d="M54 262C127 256 167 232 205 189C250 137 286 100 342 90C406 79 489 79 600 79"/>
+    <path d="M54 267C187 265 259 256 312 225C369 191 400 139 454 113C495 94 541 92 600 92"/>
+  </g>
+  <g class="paper-readout__plate-points">
+    <circle cx="145" cy="115" r="4.5"/><circle cx="342" cy="90" r="4.5"/><circle cx="454" cy="113" r="4.5"/>
+  </g>
+  <path class="paper-readout__plate-marker" d="M454 42V273" fill="none"/>
+  <g class="paper-readout__plate-labels">
+    <text x="68" y="55">fast mode</text>
+    <text x="202" y="208">intermediate</text>
+    <text x="405" y="250">slow mode</text>
+    <text x="466" y="57">ICL onset</text>
+  </g>
+</svg>
+{{- else if eq $kind "gp-thresholds" -}}
+<svg class="paper-readout__plate" viewBox="0 0 640 330" role="img" aria-labelledby="plate-title-{{ $id }} plate-desc-{{ $id }}">
+  <title id="plate-title-{{ $id }}">Gaussian process threshold crossings</title>
+  <desc id="plate-desc-{{ $id }}">Several smooth sample paths cross a horizontal threshold between six observed points.</desc>
+  <g class="paper-readout__plate-grid" fill="none">
+    <path d="M44 278H608M44 278V35"/>
+    <path d="M44 217H608M44 156H608M44 95H608M157 35V278M270 35V278M383 35V278M496 35V278"/>
+  </g>
+  <path class="paper-readout__plate-band" d="M44 191C82 167 111 112 149 108C188 104 217 168 255 173C296 178 324 106 365 99C402 92 432 139 470 144C511 149 541 91 608 68L608 170C550 190 516 216 474 211C430 206 399 159 361 166C321 174 296 240 254 236C211 231 190 178 148 183C106 188 78 229 44 245Z"/>
+  <path class="paper-readout__plate-threshold" d="M44 156H608" fill="none"/>
+  <g class="paper-readout__plate-curves" fill="none">
+    <path d="M44 218C82 204 108 143 147 146C185 149 214 216 254 209C294 202 319 132 361 135C401 137 428 188 470 183C512 179 543 123 608 108"/>
+    <path d="M44 237C79 219 110 161 149 164C188 167 215 196 253 191C294 185 321 114 364 121C405 128 432 168 471 164C513 160 549 110 608 91"/>
+    <path d="M44 199C86 187 107 126 148 127C188 128 219 233 256 224C294 215 321 147 361 149C401 152 429 205 471 200C512 195 546 131 608 123"/>
+  </g>
+  <g class="paper-readout__plate-observations">
+    <circle cx="81" cy="204" r="5"/><circle cx="171" cy="172" r="5"/><circle cx="260" cy="204" r="5"/>
+    <circle cx="351" cy="138" r="5"/><circle cx="443" cy="176" r="5"/><circle cx="541" cy="130" r="5"/>
+  </g>
+  <g class="paper-readout__plate-points">
+    <circle cx="199" cy="156" r="4"/><circle cx="335" cy="156" r="4"/><circle cx="493" cy="156" r="4"/>
+  </g>
+  <g class="paper-readout__plate-labels">
+    <text x="51" y="148">field threshold</text>
+    <text x="500" y="267">position</text>
+  </g>
+</svg>
+{{- else -}}
+  {{- errorf "Unknown paper readout plate %q" $kind -}}
+{{- end -}}

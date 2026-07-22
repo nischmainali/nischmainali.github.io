@@ -1,0 +1,71 @@
+# Homepage publication records. The ledger and its optional paper notes are
+# rendered from this one source so the visible title, authors, and links stay in
+# agreement.
+
+[[works]]
+id = "icl-linear-transformers"
+year = 2025
+title = "Exact Learning Dynamics of In-Context Learning in Linear Transformers and Its Application"
+collaborators = "with L. Teixeira"
+url = "https://arxiv.org/abs/2504.12916"
+
+[works.readout]
+index = "01"
+heading = "How in-context learning develops"
+identifier = "arXiv:2504.12916"
+contribution = "We derive exact stochastic gradient dynamics for a linear transformer, which reveal staged learning and conservation laws, and then use the same measurements to study nonlinear models."
+plate = "icl-dynamics"
+plate_caption = "A conceptual trace of separated learning timescales and the later onset of in-context learning."
+
+[[works.readout.links]]
+label = "Paper"
+url = "https://arxiv.org/abs/2504.12916"
+
+[[works.readout.links]]
+label = "PDF"
+url = "https://arxiv.org/pdf/2504.12916"
+
+[[works.readout.links]]
+label = "HTML"
+url = "https://arxiv.org/html/2504.12916"
+
+[[works]]
+id = "place-fields"
+year = 2025
+title = "Universal statistics of hippocampal place fields across species and dimensionalities"
+collaborators = "with R. da Silveira and Y. Burak"
+url = "https://www.cell.com/neuron/fulltext/S0896-6273(25)00043-1"
+
+[works.readout]
+index = "02"
+heading = "Place fields across species"
+identifier = "Neuron 113, 1110 to 1120"
+contribution = "Across species and environments, the statistics of hippocampal place fields are captured by threshold crossings of a Gaussian process."
+plate = "gp-thresholds"
+plate_caption = "A related technical plate showing smooth Gaussian process paths crossing a field threshold."
+
+[[works.readout.links]]
+label = "Article"
+url = "https://www.cell.com/neuron/fulltext/S0896-6273(25)00043-1"
+
+[[works.readout.links]]
+label = "Preprint"
+url = "https://doi.org/10.1101/2024.06.11.597569"
+
+[[works.readout.links]]
+label = "Notes"
+url = "/blog/gp-code-notes/"
+
+[[works]]
+id = "statistical-mechanics"
+year = 2024
+title = "Statistical mechanics of deep learning"
+collaborators = "with F. Behrens and others"
+url = "https://iopscience.iop.org/article/10.1088/1742-5468/ad3a60/meta"
+
+[[works]]
+id = "moral-reasoning"
+year = 2018
+title = "Automated Classification of Modes of Moral Reasoning in Judicial Decisions"
+collaborators = "with collaborators"
+url = "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3205286"
