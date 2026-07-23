@@ -1,11 +1,6 @@
 (function () {
   "use strict";
 
-  var motionReview = new URLSearchParams(window.location.search).get("readout-motion");
-  if (motionReview === "full") {
-    document.documentElement.setAttribute("data-readout-motion", "full");
-  }
-
   var disclosures = Array.prototype.slice.call(
     document.querySelectorAll("[data-paper-readout]")
   );
@@ -60,12 +55,27 @@
     return point.x.toFixed(2) + " " + point.y.toFixed(2);
   }
 
+  function pointInRail(point, railBox) {
+    return {
+      x: point.x - railBox.x,
+      y: point.y - railBox.y
+    };
+  }
+
   function clearConnector(disclosure) {
     var panel = disclosure.querySelector(".paper-readout");
+    var rails = disclosure.querySelector(".paper-readout__rails");
     var paths = disclosure.querySelectorAll(".paper-readout__rail");
     var junctions = disclosure.querySelectorAll(".paper-readout__junction");
 
     if (panel) panel.style.removeProperty("--readout-panel-top");
+    if (rails) {
+      rails.style.removeProperty("left");
+      rails.style.removeProperty("top");
+      rails.style.removeProperty("width");
+      rails.style.removeProperty("height");
+      rails.removeAttribute("viewBox");
+    }
     paths.forEach(function (path) {
       path.removeAttribute("d");
     });
@@ -87,7 +97,17 @@
     var lower = disclosure.querySelector(".paper-readout__rail--lower");
     var upperJunction = disclosure.querySelector(".paper-readout__junction--upper");
     var lowerJunction = disclosure.querySelector(".paper-readout__junction--lower");
-    if (!item || !signal || !panel || !upper || !lower || !upperJunction || !lowerJunction) return;
+    var rails = disclosure.querySelector(".paper-readout__rails");
+    if (
+      !item ||
+      !signal ||
+      !panel ||
+      !rails ||
+      !upper ||
+      !lower ||
+      !upperJunction ||
+      !lowerJunction
+    ) return;
 
     if (!connectedLayout.matches) {
       clearConnector(disclosure);
@@ -95,35 +115,73 @@
     }
 
     var signalBox = layoutBox(signal, item);
-    if (!signalBox.width || !panel.offsetWidth || !panel.offsetHeight) return;
+    var panelWidth = panel.offsetWidth;
+    var panelHeight = panel.offsetHeight;
+    if (!signalBox.width || !panelWidth || !panelHeight) return;
 
     var center = {
       x: signalBox.x + signalBox.width / 2,
       y: signalBox.y + signalBox.height / 2
     };
-    var centeredTop = (center.y - panel.offsetHeight / 2).toFixed(2) + "px";
+    var panelTop = center.y - panelHeight / 2;
+    var centeredTop = panelTop.toFixed(2) + "px";
     if (panel.style.getPropertyValue("--readout-panel-top") !== centeredTop) {
       panel.style.setProperty("--readout-panel-top", centeredTop);
     }
 
-    var panelBox = layoutBox(panel, item);
-    if (!panelBox.width || !panelBox.height) return;
+    // `top` was just written above. Re-reading offsetTop here can return the
+    // fallback position for one frame in Chrome and Safari, leaving the rails
+    // attached to an imaginary copy of the panel. Use the centered value as the
+    // one source of truth and read only the unchanged horizontal position.
+    var panelLeft = parseFloat(window.getComputedStyle(panel).left);
+    if (!Number.isFinite(panelLeft)) return;
 
     var radius = Math.min(signalBox.width, signalBox.height) * 8.65 / 24;
-    var panelLeft = panelBox.x;
-    var panelTop = panelBox.y;
-    var panelBottom = panelBox.y + panelBox.height;
+    var panelBottom = panelTop + panelHeight;
     var upperTarget = { x: panelLeft, y: panelTop };
     var lowerTarget = { x: panelLeft, y: panelBottom };
     var upperSource = pointOnOrbit(center, upperTarget, radius);
     var lowerSource = pointOnOrbit(center, lowerTarget, radius);
 
-    upper.setAttribute("d", "M " + pathPoint(upperSource) + " L " + pathPoint(upperTarget));
-    lower.setAttribute("d", "M " + pathPoint(lowerSource) + " L " + pathPoint(lowerTarget));
-    upperJunction.setAttribute("cx", upperSource.x.toFixed(2));
-    upperJunction.setAttribute("cy", upperSource.y.toFixed(2));
-    lowerJunction.setAttribute("cx", lowerSource.x.toFixed(2));
-    lowerJunction.setAttribute("cy", lowerSource.y.toFixed(2));
+    // Give the SVG a real canvas covering only the connector envelope. This
+    // avoids relying on root-SVG overflow outside the publication row, whose
+    // behavior differs at zoom and across browser engines.
+    var railPadding = 2;
+    var railBox = {
+      x: Math.min(upperSource.x, lowerSource.x, panelLeft) - railPadding,
+      y: Math.min(upperSource.y, lowerSource.y, panelTop) - railPadding
+    };
+    var railRight = Math.max(upperSource.x, lowerSource.x, panelLeft) + railPadding;
+    var railBottom = Math.max(upperSource.y, lowerSource.y, panelBottom) + railPadding;
+    railBox.width = railRight - railBox.x;
+    railBox.height = railBottom - railBox.y;
+
+    rails.style.left = railBox.x.toFixed(2) + "px";
+    rails.style.top = railBox.y.toFixed(2) + "px";
+    rails.style.width = railBox.width.toFixed(2) + "px";
+    rails.style.height = railBox.height.toFixed(2) + "px";
+    rails.setAttribute(
+      "viewBox",
+      "0 0 " + railBox.width.toFixed(2) + " " + railBox.height.toFixed(2)
+    );
+
+    var upperSourceLocal = pointInRail(upperSource, railBox);
+    var lowerSourceLocal = pointInRail(lowerSource, railBox);
+    var upperTargetLocal = pointInRail(upperTarget, railBox);
+    var lowerTargetLocal = pointInRail(lowerTarget, railBox);
+
+    upper.setAttribute(
+      "d",
+      "M " + pathPoint(upperSourceLocal) + " L " + pathPoint(upperTargetLocal)
+    );
+    lower.setAttribute(
+      "d",
+      "M " + pathPoint(lowerSourceLocal) + " L " + pathPoint(lowerTargetLocal)
+    );
+    upperJunction.setAttribute("cx", upperSourceLocal.x.toFixed(2));
+    upperJunction.setAttribute("cy", upperSourceLocal.y.toFixed(2));
+    lowerJunction.setAttribute("cx", lowerSourceLocal.x.toFixed(2));
+    lowerJunction.setAttribute("cy", lowerSourceLocal.y.toFixed(2));
     disclosure.setAttribute("data-readout-route", "symmetric");
     disclosure.setAttribute("data-readout-connector", "left");
   }
@@ -167,6 +225,7 @@
 
   function closeDisclosure(disclosure, restoreFocus) {
     if (!disclosure) return;
+    clearConnector(disclosure);
     disclosure.open = false;
     setItemState(disclosure, false);
     if (active === disclosure) active = null;

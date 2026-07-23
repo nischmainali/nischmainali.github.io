@@ -183,9 +183,9 @@ html[data-ink] body.is-home .home .publications .publication-item.has-readout:is
 
 .publication-inspect:focus-visible {
   border-radius: 50%;
-  outline: 1px solid var(--site-focus, #173f51);
-  outline-offset: -0.16rem;
-  box-shadow: 0 0 0 2px var(--site-focus-accent, rgba(23, 63, 81, 0.22));
+  outline: 1px dotted currentColor;
+  outline-offset: -0.12rem;
+  box-shadow: 0 0 0 1px var(--site-focus-accent, rgba(23, 63, 81, 0.22));
 }
 
 .paper-readout-frame {
@@ -197,14 +197,20 @@ html[data-ink] body.is-home .home .publications .publication-item.has-readout:is
 .paper-readout__rails {
   position: absolute;
   z-index: 2;
-  inset: 0;
+  top: 0;
+  left: 0;
   display: none;
-  width: 100%;
-  height: 100%;
+  width: 0;
+  height: 0;
   color: color-mix(in srgb, var(--site-accent, #6f3b3f) 68%, var(--palette-bg-main, #fbf7f0));
-  opacity: 0.68;
+  opacity: 0.56;
   overflow: visible;
   pointer-events: none;
+  visibility: hidden;
+}
+
+.paper-readout-shell[data-readout-route="symmetric"] .paper-readout__rails {
+  visibility: visible;
 }
 
 .paper-readout__rail {
@@ -216,11 +222,11 @@ html[data-ink] body.is-home .home .publications .publication-item.has-readout:is
   stroke-linejoin: round;
   stroke-width: 1;
   vector-effect: non-scaling-stroke;
-  animation: paper-readout-rail-enter 135ms cubic-bezier(0.2, 0.76, 0.24, 1) forwards;
+  stroke-dashoffset: 1;
 }
 
-.paper-readout__rail--lower {
-  animation-delay: 0ms;
+.paper-readout-shell[open][data-readout-route="symmetric"] .paper-readout__rail {
+  animation: paper-readout-rail-enter 135ms cubic-bezier(0.2, 0.76, 0.24, 1) forwards;
 }
 
 .paper-readout__junction {
@@ -243,7 +249,7 @@ html[data-ink] body.is-home .home .publications .publication-item.has-readout:is
     var(--sunlit-paper-near, var(--palette-bg-main, #fbf7f0)) 64%,
     var(--sunlit-paper-far, var(--palette-bg-main, #fbf7f0))
   );
-  --readout-surface: color-mix(in srgb, var(--readout-sheet) 78%, transparent);
+  --readout-surface: color-mix(in srgb, var(--readout-sheet) 72%, transparent);
   --readout-highlight: color-mix(
     in srgb,
     var(--sunlit-paper-light, var(--palette-bg-main, #fbf7f0)) 18%,
@@ -280,7 +286,7 @@ body.sunset .paper-readout {
     var(--palette-bg-main, #fbf7f0) 64%,
     var(--sunlit-sunset-amber, #e4b68a)
   );
-  --readout-surface: color-mix(in srgb, var(--readout-sheet) 74%, transparent);
+  --readout-surface: color-mix(in srgb, var(--readout-sheet) 70%, transparent);
   --readout-highlight: color-mix(
     in srgb,
     var(--sunlit-sunset-amber, #e4b68a) 16%,
@@ -389,7 +395,7 @@ body.sunset .paper-readout {
   margin: 0 2.25rem 0.5rem 0;
   color: var(--site-muted, rgba(24, 56, 47, 0.63));
   font-family: Jost, sans-serif;
-  font-size: 0.59rem;
+  font-size: 0.625rem;
   font-weight: 500;
   letter-spacing: 0.1em;
   line-height: 1;
@@ -493,7 +499,7 @@ body.sunset .paper-readout {
   gap: 0.32rem 0.82rem;
   margin-top: 0.54rem;
   font-family: Jost, sans-serif;
-  font-size: 0.59rem;
+  font-size: 0.625rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -568,64 +574,91 @@ body.sunset .paper-readout {
   }
 }
 
-@property --readout-drift-x {
-  syntax: "<length>";
-  inherits: false;
-  initial-value: 0px;
-}
-
-@property --readout-drift-y {
-  syntax: "<length>";
-  inherits: false;
-  initial-value: 0px;
-}
-
-@keyframes paper-readout-drift-x {
-  from {
-    --readout-drift-x: -6px;
+@keyframes paper-readout-drift {
+  0%,
+  100% {
+    translate: 0.65px 1.21px;
   }
-  to {
-    --readout-drift-x: 6px;
+  4.167% {
+    translate: 2.27px 1.81px;
   }
-}
-
-@keyframes paper-readout-drift-y {
-  from {
-    --readout-drift-y: -0.975px;
+  8.333% {
+    translate: 3.53px 1.85px;
   }
-  to {
-    --readout-drift-y: 0.975px;
+  12.5% {
+    translate: 4.34px 1.22px;
   }
-}
-
-@keyframes paper-readout-drift-x-under {
-  from {
-    --readout-drift-x: -4.5px;
+  16.667% {
+    translate: 4.68px 0.08px;
   }
-  to {
-    --readout-drift-x: 4.5px;
+  20.833% {
+    translate: 4.62px -1.16px;
   }
-}
-
-@keyframes paper-readout-drift-y-under {
-  from {
-    --readout-drift-y: -0.675px;
+  25% {
+    translate: 4.27px -2.01px;
   }
-  to {
-    --readout-drift-y: 0.675px;
+  29.167% {
+    translate: 3.76px -2.15px;
+  }
+  33.333% {
+    translate: 3.19px -1.52px;
+  }
+  37.5% {
+    translate: 2.62px -0.42px;
+  }
+  41.667% {
+    translate: 2.04px 0.73px;
+  }
+  45.833% {
+    translate: 1.41px 1.5px;
+  }
+  50% {
+    translate: 0.65px 1.69px;
+  }
+  54.167% {
+    translate: -0.28px 1.34px;
+  }
+  58.333% {
+    translate: -1.39px 0.72px;
+  }
+  62.5% {
+    translate: -2.62px 0.08px;
+  }
+  66.667% {
+    translate: -3.84px -0.4px;
+  }
+  70.833% {
+    translate: -4.89px -0.7px;
+  }
+  75% {
+    translate: -5.57px -0.88px;
+  }
+  79.167% {
+    translate: -5.75px -1px;
+  }
+  83.333% {
+    translate: -5.33px -1.04px;
+  }
+  87.5% {
+    translate: -4.34px -0.88px;
+  }
+  91.667% {
+    translate: -2.88px -0.4px;
+  }
+  95.833% {
+    translate: -1.14px 0.36px;
   }
 }
 
 .paper-readout-shell[open] .paper-readout {
-  translate: var(--readout-drift-x) var(--readout-drift-y);
   animation:
     paper-readout-enter 185ms cubic-bezier(0.2, 0.78, 0.22, 1) both,
-    paper-readout-drift-x-under 6.3s -2.35s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate,
-    paper-readout-drift-y-under 4.7s -0.95s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
+    paper-readout-drift 21s -7s linear infinite;
+  will-change: translate;
 }
 
 .paper-readout-shell:has(.paper-readout :focus-visible) .paper-readout {
-  animation-play-state: running, paused, paused;
+  animation-play-state: running, paused;
 }
 
 @media screen and (min-width: 1520px) {
@@ -635,7 +668,7 @@ body.sunset .paper-readout {
 
   .paper-readout__rails {
     display: block;
-    opacity: 0.7;
+    opacity: 0.56;
   }
 
   .paper-readout {
@@ -658,7 +691,7 @@ body.sunset .paper-readout {
   }
 
   .paper-readout::before {
-    left: 0.86rem;
+    left: 1.35rem;
   }
 
   .paper-readout__figure {
@@ -677,35 +710,25 @@ body.sunset .paper-readout {
 
   .paper-readout-shell[open] :is(
     .publication-inspect__signal,
-    .paper-readout__rails,
-    .paper-readout
-  ) {
-    translate: var(--readout-drift-x) var(--readout-drift-y);
-  }
-
-  .paper-readout-shell[open] :is(
-    .publication-inspect__signal,
     .paper-readout__rails
   ) {
-    animation:
-      paper-readout-drift-x 6.3s -2.35s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate,
-      paper-readout-drift-y 4.7s -0.95s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
+    animation: paper-readout-drift 21s -7s linear infinite;
+    will-change: translate;
   }
 
   .paper-readout-shell[open] .paper-readout {
     animation:
       paper-readout-enter 185ms cubic-bezier(0.2, 0.78, 0.22, 1) both,
-      paper-readout-drift-x 6.3s -2.35s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate,
-      paper-readout-drift-y 4.7s -0.95s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
+      paper-readout-drift 21s -7s linear infinite;
   }
 
   .paper-readout-shell:has(.paper-readout :focus-visible)
     :is(.publication-inspect__signal, .paper-readout__rails) {
-    animation-play-state: paused, paused;
+    animation-play-state: paused;
   }
 
   .paper-readout-shell:has(.paper-readout :focus-visible) .paper-readout {
-    animation-play-state: running, paused, paused;
+    animation-play-state: running, paused;
   }
 }
 
@@ -785,13 +808,10 @@ body.sunset .paper-readout {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html:not([data-readout-motion="full"]) :is(
-    .paper-readout,
+  :is(
     .publication-inspect,
-    .publication-inspect__signal,
     .publication-inspect__dial,
     .paper-readout__close,
-    .paper-readout__rails,
     .paper-readout__rail,
     .paper-readout__junction,
     .paper-readout__corners,
@@ -804,7 +824,7 @@ body.sunset .paper-readout {
     transition-duration: 0.01ms !important;
   }
 
-  html:not([data-readout-motion="full"]) .paper-readout__rail {
+  .paper-readout__rail {
     stroke-dashoffset: 0;
   }
 }

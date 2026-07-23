@@ -540,6 +540,24 @@ missing column. Rows remain close together and invert as a whole on hover or
 keyboard focus, using the active ink palette rather than fixed colors. They
 should read like bibliography entries, never product tiles or cards.
 
+Some records may include one dotted preview control when there is useful
+material to show. It opens only by click or keyboard action. Hover does not open
+it. On wide screens, two thin lines connect the control to a narrow preview on
+the right. At narrower widths, the preview appears below the row and the lines
+are removed. The preview may contain a source label, one figure, one exact
+contribution sentence, and a few links. It should not become a modal, tooltip,
+or second publication database.
+
+All moving parts use the same animation. The control, lines, and preview follow
+a 21-second closed path that stays under six horizontal pixels and about two
+vertical pixels. The uneven path prevents an obvious reversal. Motion runs
+whenever the preview is open and does not need a URL flag. JavaScript calculates
+the line endpoints from the same panel position and creates a small SVG that
+covers only those lines. It removes the line paths as soon as the preview
+closes. Do not give these parts separate animation clocks or place the lines in
+an overflowing SVG tied to the publication row, because either choice makes the
+parts separate on screen.
+
 At narrow widths the source order becomes the composition: identity first,
 portrait second, bibliography third. The portrait remains in normal flow at
 every width, the ornament stays attached to its heading, and neither element may
