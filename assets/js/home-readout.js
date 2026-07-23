@@ -12,7 +12,7 @@
   if (!disclosures.length) return;
 
   var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
-  var connectedLayout = window.matchMedia("(min-width: 1480px)");
+  var connectedLayout = window.matchMedia("(min-width: 1520px)");
   var active = null;
   var connectorFrame = 0;
 

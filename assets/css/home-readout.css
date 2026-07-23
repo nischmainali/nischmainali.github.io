@@ -253,7 +253,7 @@ html[data-ink] body.is-home .home .publications .publication-item.has-readout:is
   display: block;
   width: min(31rem, calc(100% - 1.5rem));
   margin: 0.86rem auto 1.02rem;
-  padding: 1.72rem 1.9rem 1.82rem;
+  padding: 0.9rem 0.95rem 0.98rem;
   border: 1px solid color-mix(in srgb, var(--site-rule-strong, rgba(24, 56, 47, 0.34)) 82%, transparent);
   background:
     linear-gradient(
@@ -582,37 +582,37 @@ body.sunset .paper-readout {
 
 @keyframes paper-readout-drift-x {
   from {
-    --readout-drift-x: -4px;
+    --readout-drift-x: -6px;
   }
   to {
-    --readout-drift-x: 4px;
+    --readout-drift-x: 6px;
   }
 }
 
 @keyframes paper-readout-drift-y {
   from {
-    --readout-drift-y: -0.65px;
+    --readout-drift-y: -0.975px;
   }
   to {
-    --readout-drift-y: 0.65px;
+    --readout-drift-y: 0.975px;
   }
 }
 
 @keyframes paper-readout-drift-x-under {
   from {
-    --readout-drift-x: -3px;
+    --readout-drift-x: -4.5px;
   }
   to {
-    --readout-drift-x: 3px;
+    --readout-drift-x: 4.5px;
   }
 }
 
 @keyframes paper-readout-drift-y-under {
   from {
-    --readout-drift-y: -0.45px;
+    --readout-drift-y: -0.675px;
   }
   to {
-    --readout-drift-y: 0.45px;
+    --readout-drift-y: 0.675px;
   }
 }
 
@@ -620,15 +620,15 @@ body.sunset .paper-readout {
   translate: var(--readout-drift-x) var(--readout-drift-y);
   animation:
     paper-readout-enter 185ms cubic-bezier(0.2, 0.78, 0.22, 1) both,
-    paper-readout-drift-x-under 12.6s -4.7s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate,
-    paper-readout-drift-y-under 9.4s -1.9s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
+    paper-readout-drift-x-under 6.3s -2.35s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate,
+    paper-readout-drift-y-under 4.7s -0.95s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
 }
 
 .paper-readout-shell:has(.paper-readout :focus-visible) .paper-readout {
   animation-play-state: running, paused, paused;
 }
 
-@media screen and (min-width: 1480px) {
+@media screen and (min-width: 1520px) {
   .paper-readout-frame {
     position: static;
   }
@@ -642,11 +642,11 @@ body.sunset .paper-readout {
     position: absolute;
     z-index: 2;
     top: var(--readout-panel-top, calc(var(--paper-row-height, 2.95rem) - 0.28rem));
-    left: calc(100% + 1.35rem);
+    left: calc(100% + 2.7rem);
     display: block;
     width: clamp(16.25rem, 16vw, 17.25rem);
     margin: 0;
-    padding: 1.72rem 1.9rem 1.82rem;
+    padding: 0.9rem 0.95rem 0.98rem;
     box-shadow:
       0 0.32rem 0.96rem color-mix(in srgb, var(--site-ink, #1d1b19) 5%, transparent),
       inset 0 1px 0 color-mix(
@@ -688,15 +688,15 @@ body.sunset .paper-readout {
     .paper-readout__rails
   ) {
     animation:
-      paper-readout-drift-x 12.6s -4.7s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate,
-      paper-readout-drift-y 9.4s -1.9s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
+      paper-readout-drift-x 6.3s -2.35s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate,
+      paper-readout-drift-y 4.7s -0.95s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
   }
 
   .paper-readout-shell[open] .paper-readout {
     animation:
       paper-readout-enter 185ms cubic-bezier(0.2, 0.78, 0.22, 1) both,
-      paper-readout-drift-x 12.6s -4.7s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate,
-      paper-readout-drift-y 9.4s -1.9s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
+      paper-readout-drift-x 6.3s -2.35s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate,
+      paper-readout-drift-y 4.7s -0.95s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
   }
 
   .paper-readout-shell:has(.paper-readout :focus-visible)
@@ -736,7 +736,7 @@ body.sunset .paper-readout {
     display: block;
     width: min(31rem, calc(100% - 1.5rem));
     margin: 0.78rem auto 0.96rem;
-    padding: 1.55rem 1.65rem 1.62rem;
+    padding: 0.84rem 0.9rem 0.92rem;
   }
 
   .paper-readout__figure {
