@@ -661,7 +661,10 @@ body.sunset .paper-readout {
   animation-play-state: running, paused;
 }
 
-@media screen and (min-width: 1520px) {
+/* At the ordinary 1440 px desktop class, the 51 rem ledger leaves enough
+ * exterior field for the panel, its 2.7 rem interval, and the full drift. A
+ * rem breakpoint also becomes more conservative when browser text is enlarged. */
+@media screen and (min-width: 90rem) {
   .paper-readout-frame {
     position: static;
   }

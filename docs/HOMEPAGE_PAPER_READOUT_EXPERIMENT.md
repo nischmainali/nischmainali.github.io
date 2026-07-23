@@ -26,11 +26,11 @@ Publication data now lives in `data/selected_works.toml`. The homepage shortcode
 
 ## Behaviour
 
-- On screens at least 1480 pixels wide, the preview sits in the outer right margin. Two short lines connect its upper left edge to the circular control.
-- On a medium screen, the preview opens below the selected row as a compact two-column sheet. The same two lines cross the empty space between the control and the preview's upper right edge.
-- On a phone, the preview becomes a single-column sheet inside the page measure. The connector reduces to a short pair of lines below the control.
+- At 90rem and wider, normally 1440 pixels, the preview sits in the outer right margin. Two lines run from the circular control to the preview's upper-left and lower-left corners.
+- On a medium screen, the preview opens below the selected row without connector lines.
+- On a phone, the preview becomes a single-column sheet inside the page measure, also without connector lines.
 - The dotted circular control is the only way to open a preview. Hover changes the control's colour but does not open anything.
-- The active row changes colour, and the dotted circle rotates while the preview is open. The preview's text and paper surface stay still.
+- The active row changes colour, and the dotted circle rotates while the preview is open. The control, connector, and preview share one slow closed drift path.
 - Clicking the same control closes its preview. Escape and the close control also close it and return focus to the circular control.
 - Only one note can be open at a time.
 
@@ -40,7 +40,7 @@ The title remains a normal link. The inspect control has its own hit area so ope
 
 The figures and connector lines use inline SVG. There are no preview image downloads, remote data calls, canvas renders, or scroll handlers. The small stylesheet and script load only on the homepage. The content is present in the built HTML before the script runs, and the native `details` element remains usable without JavaScript.
 
-The opening sequence uses opacity and transforms. The circular control, connector, and outer registration corners provide the continuing movement, while the readable content stays fixed. Reduced motion keeps the complete static shape and removes the rotation and entrance movement. The note uses the active ink palette and both lighting modes. It is hidden in print because the ledger already contains the durable record.
+The opening sequence uses opacity and transforms. The circular control, connector, and preview share one movement clock, so the assembly cannot pull apart. The note uses the active ink palette and both lighting modes. It is hidden in print because the ledger already contains the durable record.
 
 ## Decision rule
 

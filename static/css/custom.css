@@ -317,6 +317,10 @@ body.sunset .profile-burn::after {
 }
 
 .publications {
+  /* Leave a deliberate instrument margin at the ledger's right edge. The
+   * frontispiece keeps its wider portrait composition; only the element that
+   * launches the exterior readout gives that readout the room it needs. */
+  max-width: 51rem;
   margin-top: 2.9rem;
 }
 

@@ -539,15 +539,18 @@ omitted. The text measure stops a little before the right edge and the horizonta
 rules taper into the paper, so the open space reads as margin rather than a
 missing column. Rows remain close together and invert as a whole on hover or
 keyboard focus, using the active ink palette rather than fixed colors. They
-should read like bibliography entries, never product tiles or cards.
+should read like bibliography entries, never product tiles or cards. The ledger
+caps at `51rem` while the frontispiece keeps its wider portrait composition.
+This is an intentional instrument margin, not a global narrowing of Home.
 
 Some records may include one dotted preview control when there is useful
 material to show. It opens only by click or keyboard action. Hover does not open
-it. On wide screens, two thin lines connect the control to a narrow preview on
-the right. At narrower widths, the preview appears below the row and the lines
-are removed. The preview may contain a source label, one figure, one exact
-contribution sentence, and a few links. It should not become a modal, tooltip,
-or second publication database.
+it. At `90rem` and wider, two thin lines connect the control to a narrow preview
+on the right. That threshold leaves room for the `2.7rem` interval and the
+preview's full drift at the ordinary 1440 px desktop class. At narrower widths,
+the preview appears below the row and the lines are removed. The preview may
+contain a source label, one figure, one exact contribution sentence, and a few
+links. It should not become a modal, tooltip, or second publication database.
 
 All moving parts use the same animation. The control, lines, and preview follow
 a 14-second closed path that stays under six horizontal pixels and about two
