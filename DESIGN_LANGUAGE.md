@@ -549,7 +549,7 @@ contribution sentence, and a few links. It should not become a modal, tooltip,
 or second publication database.
 
 All moving parts use the same animation. The control, lines, and preview follow
-a 21-second closed path that stays under six horizontal pixels and about two
+a 14-second closed path that stays under six horizontal pixels and about two
 vertical pixels. The uneven path prevents an obvious reversal. Motion runs
 whenever the preview is open and does not need a URL flag. JavaScript calculates
 the line endpoints from the same panel position and creates a small SVG that
