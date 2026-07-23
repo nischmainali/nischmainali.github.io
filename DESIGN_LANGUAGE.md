@@ -1085,9 +1085,11 @@ fast jump through the long specimen all remained operative without a blank
 content frame or console error.
 
 That pass also established the current performance and accessibility contract.
-Reduced motion now holds the complete rendered endpoint as a still sheet, while
-the ordinary ambient loop sleeps between its twenty authored grain states
-instead of waking at display refresh rate. Visible desktop sidenotes no longer
+Reduced motion holds the complete rendered endpoint still between interactions.
+A deliberate shade or sunset change still runs the five authored transition
+channels before returning to the still endpoint. The ordinary ambient loop
+sleeps between its twenty authored grain states instead of waking at display
+refresh rate. Visible desktop sidenotes no longer
 expose a misleading hidden checkbox, modified browser shortcuts pass through a
 focused equation, and no-script visitors see the complete static poster without
 a dead mode button. Per-letter ornament subsets reduce the present `T` drop-cap

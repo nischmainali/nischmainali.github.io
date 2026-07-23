@@ -828,7 +828,7 @@
   };
 
   Renderer.prototype._setInitialTransition = function(initial) {
-    if (!initial || initial.immediate === true || this.reducedMotion) return;
+    if (!initial || initial.immediate === true) return;
     var fromTheme = normalizeTheme(initial.from);
     var toTheme = normalizeTheme(initial.to || this.theme);
     var startMs = Number(initial.startTimeMs);
@@ -943,7 +943,7 @@
     var current = this._sampleTransition(nowMs);
     this.theme = targetTheme;
 
-    if (options.immediate === true || this.reducedMotion) {
+    if (options.immediate === true) {
       this.transition = null;
       this.channels = endpointChannels(targetTheme);
     } else {
@@ -986,11 +986,10 @@
     nowMs = Number(nowMs) || this._now();
     this.reducedMotion = Boolean(reduced);
     if (this.reducedMotion) {
-      /* Keep the complete material, blur, shutter, and fern composition, but
-       * settle it at its authored endpoint. Reduced motion is a still living
-       * sheet, not a stripped-down fallback or a slower perpetual animation. */
-      this.transition = null;
-      this.channels = endpointChannels(this.theme);
+      /* Keep ambient motion still, but let a deliberate light change finish
+       * through the authored shutter, diffusion, color, and paper channels.
+       * Sunlit treats the mode change itself as part of the control response. */
+      if (!this.transition) this.channels = endpointChannels(this.theme);
       if (this.routeTransition) {
         this.routeCurrent = this.routeTransition.target.slice();
         this.routeTransition = null;
