@@ -524,7 +524,10 @@ The home page is a compact field-desk frontispiece, not a hero landing page. Its
 existing paper shell, crop marks, navigation clearances, and environmental light
 remain the frame. Inside that frame, one structural grid registers the italic
 name and research proposition with a portrait plate; selected work spans below
-as a compact bibliography.
+as a compact bibliography. On desktop, the frontispiece and ledger share a
+`51rem` register. The `17.25rem` portrait's right edge meets the tapered
+ledger's right edge, while its smaller scale leaves a clear interval from the
+identity column.
 
 The opening has four facts only: the name, one exact research proposition, one
 quiet affiliation sentence, and a curriculum-vitae link. A large but faint `❧`

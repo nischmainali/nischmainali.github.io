@@ -170,11 +170,15 @@
 }
 
 /* === Home Page === */
+.home {
+  --home-ledger-width: 51rem;
+}
+
 .home-frontispiece {
   display: grid;
-  width: calc(100% + 0.95rem);
+  width: min(100%, var(--home-ledger-width));
   margin-top: 2.2rem;
-  grid-template-columns: minmax(0, 31rem) clamp(2.5rem, 6vw, 4.75rem) minmax(15rem, 18.2rem);
+  grid-template-columns: minmax(0, 31rem) 2.75rem minmax(15rem, 17.25rem);
   align-items: start;
   hyphens: none;
 }
@@ -255,7 +259,6 @@
 @media screen and (min-width: 768px) {
   .profile-burn {
     margin-top: 0;
-    inset-inline-start: -0.5rem;
   }
 }
 
@@ -320,7 +323,7 @@ body.sunset .profile-burn::after {
   /* Leave a deliberate instrument margin at the ledger's right edge. The
    * frontispiece keeps its wider portrait composition; only the element that
    * launches the exterior readout gives that readout the room it needs. */
-  max-width: 51rem;
+  max-width: var(--home-ledger-width);
   margin-top: 2.9rem;
 }
 

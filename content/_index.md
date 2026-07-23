@@ -19,7 +19,7 @@ title = 'Home'
       <source
         type="image/webp"
         srcset="/nisch-480.webp 480w, /nisch-800.webp 800w"
-        sizes="(max-width: 480px) 290px, (max-width: 767px) 18.2rem, 291px">
+        sizes="(max-width: 480px) 290px, (max-width: 767px) 18.2rem, 276px">
       <img
         src="/nisch.jpg"
         alt="Portrait of Nischal Mainali in a garden"
