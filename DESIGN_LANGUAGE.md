@@ -471,10 +471,10 @@ links remain understated.
 The theme toggle is the reference's tiny 18 px sun/moon control at half opacity.
 Whenever the crop-mark frame is present, it occupies the open upper-left corner:
 its center sits two pixels inward from the implied intersection of the two crop
-strokes. At wide viewports its fixed coordinates follow the centered 992 px
-sheet, so the alignment does not drift as exterior margins grow. Below the crop
-system it returns to the original 20 px viewport inset. It should remain a nearly
-ambient utility, not become a prominent call-to-action.
+strokes. Both are positioned by the same paper body, so the alignment does not
+drift as exterior margins grow and the control leaves the viewport with the top
+crop marks. Below the crop system it keeps the original 20 px paper inset. It
+should remain a nearly ambient utility, not become a prominent call-to-action.
 
 Interaction vocabulary should stay small: underline, ink-color shift, subtle
 background fill, and atmospheric theme transition. Avoid pill buttons, glowing
@@ -496,8 +496,9 @@ restrained optical cast in the Lokta sheet. Selection redraws the cached paper
 once, but never restarts the WebGL worker or changes the grain and transition
 clocks. The source paper swatch stays exact in the proof slip; the larger living
 surface uses a lighter adaptation so fibres, relief, ray contrast, and the
-Sunlit choreography remain legible. Opened articles let both instruments leave
-with the masthead so neither can cover the contents rail or marginalia.
+Sunlit choreography remain legible. Both instruments are part of the paper
+frame on every route and leave with its top crop marks, so neither can linger
+over home content, the contents rail, or marginalia.
 
 Lokta Hybrid remains the canonical HTML, no-JavaScript, print, and
 storage-failure impression. On a first capable visit, the browser assigns one

@@ -57,15 +57,6 @@
   --article-focus-backdrop: rgba(28, 31, 24, 0.58);
 }
 
-/* The light control belongs to the crop corner, not to the reading viewport.
- * Let it leave with the masthead so it can never cover marginalia or prose. */
-.single.blog #theme-toggle {
-  position: absolute;
-  left: 20px;
-}
-
-.single.blog #theme-toggle { top: 20px; }
-
 /* The environmental sheet and the reading matter must be sibling paint
  * planes. With the scene at a negative z-index behind a transparent root,
  * Chromium can fold both into one large raster surface and checkerboard the

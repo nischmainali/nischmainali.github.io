@@ -714,7 +714,9 @@ html[data-ink] body.single.blog :is(.article-citation a, .article-end-link) {
   --ink-mark-a: var(--site-link, #005077);
   --ink-mark-b: var(--site-heading, #184034);
   --ink-mark-c: var(--site-accent, #6f3b3f);
-  position: fixed;
+  /* Share the body's containing block with the crop marks. This preserves the
+   * optical corner alignment while the complete paper frame scrolls away. */
+  position: absolute;
   top: 20px;
   right: 20px;
   z-index: 1200;
@@ -1007,21 +1009,6 @@ body.no-js .ink-register {
   clip-path: inset(50%);
   overflow: hidden;
   white-space: nowrap;
-}
-
-/* Follow the 992px paper's upper-right crop corner as exterior margins grow. */
-@media (min-width: 992px) {
-  .ink-register {
-    top: calc(2rem + 20px);
-    right: calc(50vw - 476px);
-  }
-}
-
-/* Opened articles let every crop utility leave with the masthead. */
-.single.blog .ink-register {
-  position: absolute;
-  top: 20px;
-  right: 20px;
 }
 
 @media (max-width: 767px) {
