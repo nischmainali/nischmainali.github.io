@@ -34,8 +34,5 @@
       <span aria-hidden="true">←</span>
       Back to {{ .CurrentSection.Title }}
     </a>
-    {{- if .Page.Store.Get "hasMath" }}
-    <a class="article-end-link" href="{{ "statements/" | relURL }}">Index of statements</a>
-    {{- end }}
   </nav>
 </footer>

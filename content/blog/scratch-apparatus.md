@@ -1,6 +1,5 @@
 +++
 title = "level sets of a smooth field"
-register = "notes"
 short_title = "Level sets of a smooth field"
 draft = true
 author = "Nisch"
@@ -10,13 +9,10 @@ description = "Standard facts about excursion sets of a stationary Gaussian fiel
 +++
 
 {{< dropcap "T" >}}his second specimen exists so the cross-note apparatus has a
-real far side. It carries sections, a notation register, numbered equations, and
-numbered statements, and it is deliberately made of standard textbook material
+real far side. It carries sections, numbered equations, and numbered statements, and it is deliberately made of standard textbook material
 rather than authored claims. The companion specimen references it, and it
 references the companion back, which is the point: neither page is rendered
 before the other.
-
-{{< notation group="processes" >}}
 
 ## The excursion set
 
@@ -41,8 +37,6 @@ where $\Phi$ is the standard normal distribution function. The kernel enters
 only through the geometry of the set, never through {{< eqref "volume-fraction" >}}.
 
 ## Crossings in one dimension
-
-{{< notation group="level-sets" >}}
 
 On the line the boundary of the excursion set is a point process, and its
 intensity has a classical closed form.

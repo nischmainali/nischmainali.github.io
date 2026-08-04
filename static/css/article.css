@@ -725,45 +725,6 @@
   margin: 0.2rem 0 0.75rem 1.45rem;
 }
 
-/* The notation register is the ordinary definition list with its term column
-   held to one measure, so a column of symbols reads as a register rather than a
-   ragged list. No fill, rule, or panel: the paper is the table. */
-.single.blog .article-body .notation-register {
-  margin: 1.6rem 0;
-}
-
-.single.blog .article-body .notation-symbol {
-  margin-top: 0.7rem;
-  color: var(--article-ink);
-  font-style: normal;
-}
-
-.single.blog .article-body .notation-gloss {
-  margin: 0.05rem 0 0.6rem 1.45rem;
-  color: var(--article-muted);
-}
-
-/* The authoring macro is documentation, not reading matter. It belongs to the
-   published register at /notation/, not beside a symbol in prose. */
-.single.blog .notation-macro {
-  display: none;
-}
-
-@media (min-width: 34rem) {
-  .single.blog .article-body .notation-register {
-    display: grid;
-    grid-template-columns: 7.5rem 1fr;
-    column-gap: 1.1rem;
-    row-gap: 0.34rem;
-    align-items: baseline;
-  }
-
-  .single.blog .article-body .notation-symbol,
-  .single.blog .article-body .notation-gloss {
-    margin: 0;
-  }
-}
-
 .single.blog .article-body blockquote {
   margin: 1.8rem 0 1.8rem 0.2rem;
   padding: 0.18rem 0 0.18rem 1.25rem;

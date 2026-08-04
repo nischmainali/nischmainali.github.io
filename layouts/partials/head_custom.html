@@ -36,7 +36,7 @@
 {{- $homeReadoutStyles := resources.Get "css/home-readout.css" | minify | fingerprint "md5" -}}
 <link rel="stylesheet" href="{{ $homeReadoutStyles.RelPermalink }}">
 {{- end -}}
-{{- if or (in (slice "statements" "notation" "colophon") .Layout) (eq .Kind "404") -}}
+{{- if or (eq .Layout "colophon") (eq .Kind "404") -}}
 {{- $registerStyles := resources.Get "css/register.css" | minify | fingerprint "md5" -}}
 <link rel="stylesheet" href="{{ $registerStyles.RelPermalink }}">
 {{- end -}}

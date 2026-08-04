@@ -6,7 +6,6 @@ description = 'Notes on Gaussian processes as models of neural representation, f
 subtitle = 'With focus on phenomenology and function'
 tags = ['Gaussian Process', 'Place cells']
 title = 'Notes on properties of Gaussian process neural code'
-register = "notes"
 +++
 
 {{< dropcap "T" >}}hese are notes on properties of Gaussian processes relevant to their study as models of neural representations in the brain. These ideas and techniques were used in our

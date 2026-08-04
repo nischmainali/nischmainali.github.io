@@ -62,69 +62,10 @@
   hyphens: none;
 }
 
-.writing-intro {
-  max-width: 34rem;
-  margin-top: 1.5rem;
-  color: var(--site-muted, rgba(24, 56, 47, 0.63));
-  font-size: 0.99rem;
-  line-height: 1.5;
-}
-
-.writing-intro p {
-  margin: 0 0 0.7rem;
-}
-
-/* The register may run in named groups. The label is a quiet Jost register in
-   the manner of a running head, never a tab or a filter control. */
-.writing-group {
-  margin-top: 2.35rem;
-}
-
-.writing-group + .writing-group {
-  margin-top: 2.1rem;
-}
-
-.writing-group-label {
-  margin: 0;
-  color: var(--site-muted, rgba(24, 56, 47, 0.63));
-  font-family: Jost, sans-serif;
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-}
-
-.writing-group-label::before {
-  content: none;
-}
-
-.writing-group-label + .writing-register {
-  margin-top: 1.15rem;
-}
-
 .writing-register {
-  margin: 0;
+  margin: 2.35rem 0 0;
   padding: 0;
   list-style: none;
-}
-
-.writing-entry-dates {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 0.85rem;
-  margin-top: 0.58rem;
-}
-
-.writing-entry-dates .writing-date {
-  margin-top: 0;
-}
-
-/* A revision is the more informative date on a note that keeps being corrected,
-   so it sits beside the publication date rather than replacing it. */
-.writing-date--revised {
-  font-style: italic;
-  letter-spacing: 0.055em;
-  opacity: 0.82;
 }
 
 .writing-entry {

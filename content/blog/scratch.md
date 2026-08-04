@@ -1,6 +1,5 @@
 +++
 title = "trying things out"
-register = "notes"
 short_title = "Trying things out"
 draft = true
 author = "Nisch"

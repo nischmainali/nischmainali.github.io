@@ -111,14 +111,12 @@ drop capitals, statements, proofs, and numbered equations. Keep the prose
 column readable and preserve the outside table of contents and right margin
 notes at wide widths.
 
-### Apparatus pages
+### Colophon and missing page
 
-Three registers report on the corpus rather than adding to it. `/statements/`
-collects every numbered result across the notes, `/notation/` publishes the
-shared symbol register from `data/notation.toml`, and `/colophon/` states what
-the site is made of. Their templates are `layouts/_default/statements.html`,
-`notation.html`, and `colophon.html`, sharing `assets/css/register.css`. The
-authored missing page is `layouts/404.html`.
+`/colophon/` states what the site is made of, reading its ink facts from
+`data/inks.toml` so they cannot drift. Its template is
+`layouts/_default/colophon.html`, and the authored missing page is
+`layouts/404.html`; both use `assets/css/register.css`.
 
 ### Mathematics
 
@@ -141,10 +139,9 @@ name a result in another note by writing its content path and identifier:
 See {{< statement-ref "/blog/level-sets#rice" >}}.
 ```
 
-Set `register = "notes"` or `register = "essays"` in front matter to place an
-entry in a named group on the Writing page, and `short_title` when a long title
-needs a shorter form for references. Read [`MATHEMATICS.md`](MATHEMATICS.md) for
-the numbering spine, cross-note references, and the notation register.
+Set `short_title` in front matter when a long title needs a shorter form for
+references. Read [`MATHEMATICS.md`](MATHEMATICS.md) for the numbering spine and
+cross-note references.
 
 Use the explicit drop capital shortcode at the first textual position when an
 article needs an initial.
@@ -176,8 +173,7 @@ published file.
 - `assets/` contains files that Hugo processes and fingerprints.
 - `static/` contains files that require stable public URLs.
 - `layouts/` contains site templates and render hooks.
-- `data/` contains ink, mathematics, notation, citation, and selected work
-  records.
+- `data/` contains ink, mathematics, citation, and selected work records.
 - `scripts/` contains local preview and validation commands.
 - `docs/` contains current design references and completed studies.
 - `themes/hugo-paged/` is the locally modified base theme.

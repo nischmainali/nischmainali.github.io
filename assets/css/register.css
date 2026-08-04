@@ -1,11 +1,11 @@
-/* === Apparatus registers: index of statements, notation, colophon ===
+/* === Register pages: the colophon and the missing page ===
  *
- * These pages borrow the Writing index's grammar rather than inventing a third
- * one: the same measure, the same faint title ornament, the same Jost register
- * for small labels and Linden Hill for names. Nothing here gets a card, a fill,
- * or a badge. Where the Writing index separates entries with a registration
- * corner, these registers separate groups with a single fading hairline, so the
- * family resemblance is obvious without the two being confused.
+ * These borrow the Writing index's grammar rather than inventing a second one:
+ * the same measure, the same faint title ornament, the same division of a Jost
+ * register for small labels against Linden Hill for prose. Nothing here gets a
+ * card, a fill, or a badge. Where the Writing index separates entries with a
+ * registration corner, these separate sections with a single hairline fading
+ * into the open right margin.
  */
 
 .register-shell {
@@ -61,13 +61,6 @@
   user-select: none;
 }
 
-.register-subtitle {
-  margin: 0.55rem 0 0;
-  color: var(--site-muted, rgba(24, 56, 47, 0.63));
-  font-size: 1.02rem;
-  font-style: italic;
-}
-
 .register-intro {
   max-width: 34rem;
   margin-top: 1.5rem;
@@ -78,188 +71,6 @@
 
 .register-intro p {
   margin: 0 0 0.7rem;
-}
-
-.register-empty {
-  margin-top: 2.2rem;
-  color: var(--site-muted, rgba(24, 56, 47, 0.63));
-  font-size: 0.99rem;
-  font-style: italic;
-}
-
-/* === Index of statements === */
-
-.statement-index {
-  margin-top: 2.35rem;
-}
-
-.statement-index-note + .statement-index-note {
-  margin-top: 1.9rem;
-  padding-top: 1.6rem;
-  /* The group rule loses strength toward the open right margin, as the Writing
-     index's separator does. */
-  background: linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--site-rule-strong, #294c41) 50%, transparent) 0%,
-      color-mix(in srgb, var(--site-rule-strong, #294c41) 26%, transparent) 62%,
-      transparent 100%
-    )
-    0 0 / 100% 1px no-repeat;
-}
-
-.statement-index-source {
-  margin: 0;
-  color: var(--site-heading, #173d31);
-  font-size: 1.16rem;
-  font-style: italic;
-  font-weight: 400;
-  line-height: 1.2;
-}
-
-.statement-index-source::before {
-  content: none;
-}
-
-.statement-index-source a {
-  border: 0;
-  color: inherit;
-  text-decoration: none;
-}
-
-.statement-index-source a:is(:hover, :focus-visible) {
-  color: var(--site-ink, #1d1b19);
-}
-
-.statement-index-entries {
-  margin: 0.75rem 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.statement-index-entry a {
-  display: grid;
-  grid-template-columns: 9.5rem 1fr;
-  column-gap: 1rem;
-  align-items: baseline;
-  padding: 0.24rem 0;
-  border: 0;
-  color: var(--site-ink, #1d1b19);
-  text-decoration: none;
-}
-
-.statement-index-entry a:focus-visible {
-  outline: 1px solid color-mix(in srgb, var(--site-focus, #173f51) 52%, transparent);
-  outline-offset: 0.24rem;
-}
-
-.statement-index-label {
-  color: var(--site-muted, rgba(24, 56, 47, 0.63));
-  font-family: Jost, sans-serif;
-  font-size: 0.72rem;
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.055em;
-  text-transform: uppercase;
-  transition: color 140ms ease;
-}
-
-.statement-index-name {
-  color: var(--site-ink, #1d1b19);
-  font-size: 1.02rem;
-  line-height: 1.35;
-  transition: color 140ms ease;
-}
-
-/* A result with no title of its own is placed by the section it lives in. */
-.statement-index-name--section {
-  color: var(--site-muted, rgba(24, 56, 47, 0.63));
-  font-style: italic;
-}
-
-.statement-index-entry a:is(:hover, :focus-visible) .statement-index-label,
-.statement-index-entry a:is(:hover, :focus-visible) .statement-index-name {
-  color: var(--site-link, #005077);
-}
-
-/* === Notation register === */
-
-.notation-index {
-  margin-top: 2.3rem;
-}
-
-.notation-index-group + .notation-index-group {
-  margin-top: 1.85rem;
-  padding-top: 1.55rem;
-  background: linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--site-rule-strong, #294c41) 50%, transparent) 0%,
-      color-mix(in srgb, var(--site-rule-strong, #294c41) 26%, transparent) 62%,
-      transparent 100%
-    )
-    0 0 / 100% 1px no-repeat;
-}
-
-.notation-index-title {
-  margin: 0;
-  color: var(--site-muted, rgba(24, 56, 47, 0.63));
-  font-family: Jost, sans-serif;
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-}
-
-.notation-index-title::before {
-  content: none;
-}
-
-.register-shell .notation-register {
-  margin: 0.95rem 0 0;
-}
-
-.register-shell .notation-symbol {
-  margin-top: 0.62rem;
-  color: var(--site-ink, #1d1b19);
-  font-style: normal;
-}
-
-.register-shell .notation-gloss {
-  margin: 0.05rem 0 0.55rem 1.45rem;
-  color: var(--site-muted, rgba(24, 56, 47, 0.63));
-  font-size: 0.99rem;
-  line-height: 1.45;
-}
-
-/* The authoring macro is a quiet marginal fact, set in the metadata face without
-   the wash or hairline that ordinary inline code carries. */
-.register-shell .notation-macro {
-  margin-left: 0.45rem;
-  white-space: nowrap;
-}
-
-.register-shell .notation-macro code {
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--site-muted, rgba(24, 56, 47, 0.63));
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.8em;
-  opacity: 0.78;
-}
-
-@media (min-width: 34rem) {
-  .register-shell .notation-register {
-    display: grid;
-    grid-template-columns: 9.5rem 1fr;
-    column-gap: 1rem;
-    row-gap: 0.4rem;
-    align-items: baseline;
-  }
-
-  .register-shell .notation-symbol,
-  .register-shell .notation-gloss {
-    margin: 0;
-  }
 }
 
 /* === Not found === */
@@ -372,26 +183,10 @@
     left: -0.75rem;
     font-size: 8rem;
   }
-
-  .statement-index,
-  .notation-index {
-    margin-top: 1.95rem;
-  }
-
-  .statement-index-entry a {
-    display: block;
-    padding: 0.34rem 0;
-  }
-
-  .statement-index-label {
-    display: block;
-    margin-bottom: 0.16rem;
-  }
 }
 
 @media print {
-  .statement-index-note + .statement-index-note,
-  .notation-index-group + .notation-index-group {
+  .colophon-entry {
     background: none;
     border-top: 1px solid #999;
   }

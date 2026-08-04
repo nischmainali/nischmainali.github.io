@@ -115,9 +115,6 @@ remark. The first five share one sequence within each section. Remarks and proof
 are unnumbered. Theorem-family bodies are italic; definitions, remarks, and
 proofs are upright. These are typographic passages on the Lokta sheet, not cards.
 
-Every numbered statement across every note is collected at `/statements/`. That
-page is generated from the same registry, so it cannot disagree with the notes.
-
 ## Referring to another note
 
 A reference argument is either a bare identifier, which stays inside the note, or
@@ -140,23 +137,6 @@ Both directions resolve because labels come from raw source rather than rendered
 output, so two notes may reference each other with no ordering problem. A missing
 note or a dangling identifier fails the build with its source position. A
 published note cannot reference a draft, and the build will say so.
-
-## Shared notation
-
-`data/notation.toml` records symbols that recur across notes: the printed TeX,
-the gloss, the group, and the local macro when one exists. It keeps the macro
-table and the words a reader needs from drifting apart.
-
-Print part of the register inside a note, either by identifier or by group:
-
-~~~
-{{< notation "field" "kernel" "threshold" >}}
-{{< notation group="level-sets" >}}
-~~~
-
-Symbols print in register order rather than call order, so repeated calls agree.
-The whole register is published at `/notation/`. Add a symbol only after it
-repeats in real writing, on the same rule the macro table follows.
 
 ## Shared macros
 
@@ -191,9 +171,8 @@ HUGO_BIN=/path/to/hugo ./scripts/check_math.py
 The command checks every content Markdown file while ignoring inline and fenced
 code, validates same-page helper targets and the shape of cross-note references,
 then builds drafts in a temporary directory. It never writes generated output
-into public. Existence of a cross-note target, and of a notation identifier, is
-Hugo's to check: it knows the content tree and the registry, and duplicating
-those lookups here would only let the two disagree.
+into public. Existence of a cross-note target is Hugo's to check: it knows the
+content tree, and duplicating that lookup here would only let the two disagree.
 
 ## Org and ox-hugo
 
