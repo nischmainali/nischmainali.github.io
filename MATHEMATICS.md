@@ -56,6 +56,23 @@ deployment default until Chromium, Safari, Firefox, VoiceOver, NVDA, overflow,
 and print checks pass. This switch changes emitted markup only; both modes use
 the same strict build-time renderer and Asana Math face.
 
+## The numbering spine
+
+`layouts/partials/math-registry.html` reads a page's raw source once and assigns
+every equation and statement its label. It is the single source of truth: the
+build writes final numbers into the HTML, so a reader sees them with JavaScript
+disabled, and `assets/js/article.js` only verifies them. There is no CSS counter
+and no client-side renumbering.
+
+Labels are scoped to the enclosing level-two section. An object in the third
+section reads `3.1`, `3.2`; an object before the first section, or anywhere on a
+note with no sections, keeps a bare `1`, `2`. A short note therefore stays
+simple while a long one agrees with the numbered outline in its contents rail.
+
+The registry skips fenced code, so a note may quote the shortcodes it documents.
+A shortcode that renders but was found inside a fence fails the build and tells
+you to escape the example instead.
+
 ## Numbered equations
 
 Numbering restarts in every article. Contents are raw TeX without delimiters:
@@ -70,10 +87,7 @@ Equation {{< eqref "posterior" >}} gives the posterior.
 ~~~
 
 Identifiers are lowercase slug-like values and must be unique on the page.
-Forward and backward references are both valid. References are same-page only.
-Hugo writes the equation and reference numbers into static HTML; article
-JavaScript verifies them and adds overflow behavior without repairing
-placeholders after load.
+Forward and backward references are both valid.
 If a deliberately unbreakable display is wider than the printed reading
 measure, add `wide="true"` to its `equation` shortcode. The screen version keeps
 the normal optical size and transparent overflow cues; print scales that one
@@ -97,9 +111,52 @@ See {{< statement-ref "consistency" >}}.
 ~~~
 
 Supported kinds are theorem, lemma, proposition, corollary, definition, and
-remark. The first five share one article-local sequence. Remarks and proofs are
-unnumbered. Theorem-family bodies are italic; definitions, remarks, and proofs
-are upright. These are typographic passages on the Lokta sheet, not cards.
+remark. The first five share one sequence within each section. Remarks and proofs
+are unnumbered. Theorem-family bodies are italic; definitions, remarks, and
+proofs are upright. These are typographic passages on the Lokta sheet, not cards.
+
+Every numbered statement across every note is collected at `/statements/`. That
+page is generated from the same registry, so it cannot disagree with the notes.
+
+## Referring to another note
+
+A reference argument is either a bare identifier, which stays inside the note, or
+a content path and an identifier joined by `#`, which reaches another note:
+
+~~~
+See {{< statement-ref "consistency" >}}.
+See {{< statement-ref "/blog/level-sets#rice" >}}.
+Compare {{< eqref "/blog/level-sets#rice-intensity" >}}.
+~~~
+
+A cross-note reference is bibliographic: it prints the target's kind, its
+section-scoped label, and the target's title, and links to it. It is not a
+transclusion, a preview, or a popup, and it adds no runtime request.
+
+Set `short_title` in a note's front matter when its full title is too long to
+name inside a sentence; references prefer it.
+
+Both directions resolve because labels come from raw source rather than rendered
+output, so two notes may reference each other with no ordering problem. A missing
+note or a dangling identifier fails the build with its source position. A
+published note cannot reference a draft, and the build will say so.
+
+## Shared notation
+
+`data/notation.toml` records symbols that recur across notes: the printed TeX,
+the gloss, the group, and the local macro when one exists. It keeps the macro
+table and the words a reader needs from drifting apart.
+
+Print part of the register inside a note, either by identifier or by group:
+
+~~~
+{{< notation "field" "kernel" "threshold" >}}
+{{< notation group="level-sets" >}}
+~~~
+
+Symbols print in register order rather than call order, so repeated calls agree.
+The whole register is published at `/notation/`. Add a symbol only after it
+repeats in real writing, on the same rule the macro table follows.
 
 ## Shared macros
 
@@ -132,8 +189,11 @@ HUGO_BIN=/path/to/hugo ./scripts/check_math.py
 ~~~
 
 The command checks every content Markdown file while ignoring inline and fenced
-code, validates same-page helper targets, then builds drafts in a temporary
-directory. It never writes generated output into public.
+code, validates same-page helper targets and the shape of cross-note references,
+then builds drafts in a temporary directory. It never writes generated output
+into public. Existence of a cross-note target, and of a notation identifier, is
+Hugo's to check: it knows the content tree and the registry, and duplicating
+those lookups here would only let the two disagree.
 
 ## Org and ox-hugo
 

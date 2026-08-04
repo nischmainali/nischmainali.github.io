@@ -1,18 +1,14 @@
+{{- /*
+  statement-meta.html — resolve one statement's kind and section-scoped label.
+
+  Takes a dict of "page" and "id" and returns a dict of kind, label, and title.
+  The kind is "" when that page declares no such statement, and the label is ""
+  for an unnumbered remark. Values come from the cached math-registry pass.
+*/ -}}
 {{- $page := .page -}}
-{{- $target := .id -}}
-{{- $counter := 0 -}}
-{{- $result := dict "number" 0 "kind" "statement" -}}
-{{- $openings := findRE `\{\{<\s*statement\b[^>]*>\}\}` $page.RawContent -}}
-{{- range $opening := $openings -}}
-  {{- $idMatch := findRESubmatch `\bid\s*=\s*"([a-z][a-z0-9-]*)"` $opening -}}
-  {{- $kindMatch := findRESubmatch `\bkind\s*=\s*"(theorem|lemma|proposition|corollary|definition|remark)"` $opening -}}
-  {{- if and $idMatch $kindMatch -}}
-    {{- $id := index (index $idMatch 0) 1 -}}
-    {{- $kind := index (index $kindMatch 0) 1 -}}
-    {{- if ne $kind "remark" -}}{{- $counter = add $counter 1 -}}{{- end -}}
-    {{- if eq $id $target -}}
-      {{- $result = dict "number" (cond (eq $kind "remark") 0 $counter) "kind" $kind -}}
-    {{- end -}}
-  {{- end -}}
+{{- $registry := partialCached "math-registry.html" $page $page.RelPermalink -}}
+{{- $entry := index $registry.statements .id -}}
+{{- if not $entry -}}
+  {{- $entry = dict "id" .id "kind" "" "label" "" "title" "" -}}
 {{- end -}}
-{{- return $result -}}
+{{- return $entry -}}

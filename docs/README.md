@@ -7,7 +7,8 @@ The root documents define the current site.
 - [`../MATHEMATICS.md`](../MATHEMATICS.md) contains the mathematical authoring
   and rendering rules.
 - [`INK_SYSTEM.md`](INK_SYSTEM.md) contains the current ink scheme mapping,
-  control behavior, persistence, and review process.
+  control behavior, persistence, and review process. Its header still names the
+  branch it was written on; the system itself is on `main`.
 
 The following documents record studies that informed accepted work. They are
 useful references, but they do not override the current design rules.

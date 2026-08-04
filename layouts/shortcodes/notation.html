@@ -1,0 +1,60 @@
+{{- /*
+  notation.html — print a chosen part of the notation register.
+
+  Call it with positional identifiers to print those symbols in register order,
+  or with one group= argument to print every symbol in that group. See
+  MATHEMATICS.md for the authoring form.
+
+  The result is an ordinary definition list on the paper, not a boxed legend:
+  the symbol stands in the term position and its gloss follows, so the passage
+  reads like the front matter of a book.
+*/ -}}
+{{- $symbols := hugo.Data.notation.symbols -}}
+{{- if not $symbols -}}
+  {{- errorf "data/notation.toml contains no symbols" -}}
+{{- end -}}
+
+{{- $group := "" -}}
+{{- $wanted := slice -}}
+{{- if .IsNamedParams -}}
+  {{- $group = default "" (.Get "group") -}}
+  {{- if not $group -}}
+    {{- errorf "notation accepts only a group= argument by name: see %s" .Position -}}
+  {{- end -}}
+{{- else -}}
+  {{- range .Params -}}{{- $wanted = $wanted | append (string .) -}}{{- end -}}
+{{- end -}}
+
+{{- if not (or $group $wanted) -}}
+  {{- errorf "notation requires identifiers or a group: see %s" .Position -}}
+{{- end -}}
+
+{{- $selected := slice -}}
+{{- if $group -}}
+  {{- range $symbols -}}
+    {{- if eq .group $group -}}{{- $selected = $selected | append . -}}{{- end -}}
+  {{- end -}}
+  {{- if not $selected -}}
+    {{- errorf "notation group %q has no symbols: see %s" $group .Position -}}
+  {{- end -}}
+{{- else -}}
+  {{- $known := dict -}}
+  {{- range $symbols -}}{{- $known = merge $known (dict .id .) -}}{{- end -}}
+  {{- range $wanted -}}
+    {{- $entry := index $known . -}}
+    {{- if not $entry -}}
+      {{- errorf "notation identifier %q is not in data/notation.toml: see %s" . $.Position -}}
+    {{- end -}}
+  {{- end -}}
+  {{- /* Register order, not call order, so repeated calls agree. */ -}}
+  {{- range $symbols -}}
+    {{- if in $wanted .id -}}{{- $selected = $selected | append . -}}{{- end -}}
+  {{- end -}}
+{{- end -}}
+
+<dl class="notation-register">
+  {{- range $selected }}
+  <dt class="notation-symbol" id="notation-{{ .id }}">{{ partial "render-math.html" (dict "tex" .tex "display" false "page" $.Page "position" $.Position) }}</dt>
+  <dd class="notation-gloss">{{ $.Page.RenderString .gloss }}{{ with .macro }} <span class="notation-macro" title="Local macro"><code>{{ . }}</code></span>{{ end }}</dd>
+  {{- end }}
+</dl>

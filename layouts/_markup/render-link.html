@@ -44,3 +44,6 @@
   {{- with $kind }} class="article-link article-link--{{ . }}" data-article-link="{{ . }}"{{ end -}}
   {{- if $isExternal }} rel="external"{{ end -}}
 >{{ .Text | safeHTML }}{{ with $mark }}<span class="article-link-mark" aria-hidden="true">{{ . }}</span>{{ end }}{{ with $accessibleMark }}<span class="article-link-kind-sr"> ({{ . }})</span>{{ end }}</a>
+{{- /* This template's output is inline. It must not end in whitespace, or the
+      renderer puts a space between the mark and the punctuation that follows
+      it in the sentence. */ -}}

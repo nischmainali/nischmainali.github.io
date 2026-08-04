@@ -170,7 +170,10 @@
   margin-right: auto;
   margin-left: auto;
   padding-top: 0;
-  counter-reset: equation statement sidenote;
+  /* Sidenotes are numbered by their rendered order, so they keep a CSS counter
+     that works before and without JavaScript. Equations and statements take
+     their section-scoped labels from the build and need no counter. */
+  counter-reset: sidenote;
   font-size: 1.055rem;
   line-height: 1.61;
 }
@@ -720,6 +723,45 @@
 
 .single.blog .article-body dd {
   margin: 0.2rem 0 0.75rem 1.45rem;
+}
+
+/* The notation register is the ordinary definition list with its term column
+   held to one measure, so a column of symbols reads as a register rather than a
+   ragged list. No fill, rule, or panel: the paper is the table. */
+.single.blog .article-body .notation-register {
+  margin: 1.6rem 0;
+}
+
+.single.blog .article-body .notation-symbol {
+  margin-top: 0.7rem;
+  color: var(--article-ink);
+  font-style: normal;
+}
+
+.single.blog .article-body .notation-gloss {
+  margin: 0.05rem 0 0.6rem 1.45rem;
+  color: var(--article-muted);
+}
+
+/* The authoring macro is documentation, not reading matter. It belongs to the
+   published register at /notation/, not beside a symbol in prose. */
+.single.blog .notation-macro {
+  display: none;
+}
+
+@media (min-width: 34rem) {
+  .single.blog .article-body .notation-register {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr;
+    column-gap: 1.1rem;
+    row-gap: 0.34rem;
+    align-items: baseline;
+  }
+
+  .single.blog .article-body .notation-symbol,
+  .single.blog .article-body .notation-gloss {
+    margin: 0;
+  }
 }
 
 .single.blog .article-body blockquote {
@@ -1331,7 +1373,6 @@ html.article-figure-is-open {
 .single.blog .article-body .math-equation {
   min-height: 2.05rem;
   padding-bottom: 1.45rem;
-  counter-increment: equation;
 }
 
 .single.blog .equation-number {
@@ -1349,20 +1390,26 @@ html.article-figure-is-open {
   text-align: right;
 }
 
-.single.blog .equation-number-value::before {
-  content: "(" counter(equation) ")";
-}
-
-.single.blog .equation-number-value[data-number-ready="true"]::before {
-  content: none;
-}
-
 .single.blog .equation-ref,
 .single.blog .statement-ref {
   border-bottom: 1px dotted rgba(23, 63, 81, 0.36);
   color: var(--article-blue);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+}
+
+/* A reference into another note carries its title, so it must be allowed to
+   break across lines like ordinary prose. */
+.single.blog .reference--external {
+  white-space: normal;
+}
+
+.single.blog .reference-source {
+  font-variant-numeric: normal;
+}
+
+.single.blog .reference-source cite {
+  font-style: italic;
 }
 
 .single.blog .equation-ref:hover,
@@ -1389,9 +1436,6 @@ html.article-figure-is-open {
   break-inside: avoid;
 }
 
-.single.blog .math-statement[data-statement-numbered="true"] {
-  counter-increment: statement;
-}
 
 .single.blog .article-body .statement-heading {
   margin: 0 0 0.26rem;
@@ -1408,14 +1452,6 @@ html.article-figure-is-open {
 .single.blog .statement-permalink {
   border: 0;
   color: inherit;
-}
-
-.single.blog .statement-number::before {
-  content: counter(statement);
-}
-
-.single.blog .statement-number[data-number-ready="true"]::before {
-  content: none;
 }
 
 .single.blog .statement-title {
@@ -1609,6 +1645,54 @@ html.article-figure-is-open {
   font-size: 0.76rem;
   letter-spacing: 0.035em;
   text-align: left;
+}
+
+/* The record is two lines of quiet type in the ending's Jost register: a
+   labelled revision date and a bibliographic self-citation. No fill, no button,
+   no clipboard control. */
+.single.blog .article-record {
+  display: grid;
+  grid-template-columns: 4.6rem 1fr;
+  column-gap: 1rem;
+  row-gap: 0.24rem;
+  margin: 0 0 1.05rem;
+  color: var(--article-faint);
+}
+
+.single.blog .article-record dt {
+  margin: 0;
+  color: var(--article-faint);
+  font-family: Jost, sans-serif;
+  font-size: 0.68rem;
+  font-style: normal;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.single.blog .article-record dd {
+  margin: 0;
+  color: var(--article-muted);
+}
+
+.single.blog .article-citation {
+  font-family: "Linden Hill", Palatino, serif;
+  font-size: 0.94rem;
+  letter-spacing: 0;
+  line-height: 1.4;
+}
+
+.single.blog .article-citation-locator {
+  color: var(--article-faint);
+  font-family: Jost, sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  word-break: break-word;
+}
+
+.single.blog .article-end-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.6rem;
 }
 
 .single.blog .article-end-link {
@@ -2107,8 +2191,25 @@ html.article-figure-is-open {
   .single.blog .article-contents-return,
   .single.blog .article-code-tools,
   .single.blog .article-figure-focus,
-  .single.blog .article-end {
+  .single.blog .article-end-nav {
     display: none !important;
+  }
+
+  /* An offprint keeps its record. Screen navigation goes, but the revision date
+     and the citation are exactly what a printed note should carry. */
+  .single.blog .article-end {
+    margin-top: 2.4rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid #999;
+  }
+
+  .single.blog .article-record {
+    color: #333;
+  }
+
+  .single.blog .article-record dd,
+  .single.blog .article-citation-locator {
+    color: #333;
   }
 
   .single.blog .article-header.article-meta,

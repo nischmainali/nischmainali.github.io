@@ -5,11 +5,21 @@ theme = "hugo-paged"
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_cache$"]
 footnotereturnlinkcontents = "↩"
 
+# The editorial vocabulary has no badges, chips, or topic registers, so the
+# taxonomy list and term pages have nothing to present. The index of statements
+# at /statements/ is the site's real cross-note index. Front-matter categories
+# and tags remain inert records for the author.
+disableKinds = ["taxonomy", "term"]
+
 [outputs]
 home = ["html", "rss", "json"]
 
 [params]
 description = "Nischal's address on the web"
+# The formal name used where the site speaks bibliographically, as in a note's
+# "Cite as" line. Page-level author fields stay informal. This is deliberately
+# not `author`, which the vendored theme reads as a section-keyed table.
+citation_author = "Nischal Mainali"
 mathOutput = "htmlAndMathml"
 logo = {}
 

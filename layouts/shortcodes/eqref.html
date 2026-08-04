@@ -1,7 +1,17 @@
-{{- $id := default "" (.Get 0) -}}
-{{- if eq (len (findRE `^[a-z][a-z0-9-]*$` $id)) 0 -}}
-  {{- errorf "The eqref shortcode requires a slug-like equation id: see %s" .Position -}}
+{{- $resolved := partial "reference-target.html" (dict
+    "page" .Page "ref" (.Get 0) "shortcode" "eqref" "position" .Position) -}}
+{{- $target := $resolved.page -}}
+{{- $id := $resolved.id -}}
+{{- $label := partial "equation-number.html" (dict "page" $target "id" $id) -}}
+{{- if not $label -}}
+  {{- if $resolved.external -}}
+    {{- errorf "Unknown equation %q in %s: see %s" $id $target.RelPermalink .Position -}}
+  {{- else -}}
+    {{- errorf "Unknown equation reference %q: see %s" $id .Position -}}
+  {{- end -}}
 {{- end -}}
-{{- $number := partial "equation-number.html" (dict "page" .Page "id" $id) -}}
-{{- if eq $number 0 -}}{{- errorf "Unknown equation reference %q: see %s" $id .Position -}}{{- end -}}
-<a class="equation-ref" href="#equation-{{ $id }}" data-equation-ref="{{ $id }}" aria-label="Equation {{ $number }}"><span class="equation-ref-value" aria-hidden="true">({{ $number }})</span></a>
+{{- $href := cond $resolved.external (printf "%s#equation-%s" $target.RelPermalink $id) (printf "#equation-%s" $id) -}}
+<a class="equation-ref{{ if $resolved.external }} reference--external{{ end }}" href="{{ $href }}" data-equation-ref="{{ $id }}"{{ if $resolved.external }} data-reference-scope="external"{{ end }} aria-label="Equation {{ $label }}{{ with $resolved.source }} in {{ . }}{{ end }}"><span class="equation-ref-value" aria-hidden="true">({{ $label }})</span>{{ with $resolved.source }}<span class="reference-source" aria-hidden="true"> in <cite>{{ . }}</cite></span>{{ end }}</a>
+{{- /* This template's output is inline. It must not end in whitespace, or the
+      renderer puts a space between the mark and the punctuation that follows
+      it in the sentence. */ -}}

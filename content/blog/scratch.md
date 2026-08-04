@@ -1,5 +1,7 @@
 +++
 title = "trying things out"
+register = "notes"
+short_title = "Trying things out"
 draft = true
 author = "Nisch"
 date = 2026-07-10
@@ -172,10 +174,12 @@ If the model is identifiable and the prior assigns positive mass to every neighb
 Fix $\varepsilon>0$. Identifiability separates the complement of the $\varepsilon$-ball from $\theta_0$, while the prior supplies positive local mass. The likelihood ratio then vanishes on that complement, which gives the claim.
 {{< /proof >}}
 
-The sequence is visible in {{< statement-ref "posterior-concentration" >}} and {{< statement-ref "consistency" >}}.
+The sequence is visible in {{< statement-ref "posterior-concentration" >}} and {{< statement-ref "consistency" >}}. Numbers are scoped to the enclosing section, so this material sits in the fifth section and reads 5.1, 5.2 against the numbered outline in the contents rail.
+
+A reference may also leave the note. {{< statement-ref "/blog/scratch-apparatus#rice" >}} and {{< eqref "/blog/scratch-apparatus#rice-intensity" >}} name their target, carry its section-scoped number, and link into the other note without any preview, popup, or transcluded body.
 
 {{< statement kind="remark" id="same-page-references" title="Scope" >}}
-Equation and statement references remain article-local. Scholarly citations use the central build-time registry and resolve into the bibliography below.
+An unqualified reference stays inside the note. A reference written as a path and identifier reaches another note and prints its title, which is bibliographic rather than a transclusion. Scholarly citations continue to use the central build-time registry and resolve into the bibliography below.
 {{< /statement >}}
 
 ## References {#references}

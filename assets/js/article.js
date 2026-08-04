@@ -476,31 +476,31 @@
     }
   }
 
+  // Hugo owns the numbering spine: it assigns every equation and statement a
+  // section-scoped label at build time and writes it into the document. The
+  // reader therefore sees final numbers with JavaScript disabled, and this pass
+  // only verifies the build's work and marks references for styling. It must
+  // never renumber anything, because a client-side counter cannot know which
+  // section an object sits in or which note a reference points at.
   var equationsById = Object.create(null);
-  document.querySelectorAll("[data-equation]").forEach(function (equation, index) {
+  document.querySelectorAll("[data-equation]").forEach(function (equation) {
     var id = equation.dataset.equation;
     if (equationsById[id]) {
       articleWarning('Duplicate equation target "' + id + '".');
       return;
     }
-
-    var number = index + 1;
-    equationsById[id] = { element: equation, number: number };
-    equation.dataset.equationNumber = String(number);
-
-    var value = equation.querySelector(".equation-number-value");
-    if (value) {
-      value.textContent = "(" + number + ")";
-      value.dataset.numberReady = "true";
-    }
-
-    var permalink = equation.querySelector(".equation-number");
-    if (permalink) {
-      permalink.setAttribute("aria-label", "Equation " + number);
+    equationsById[id] = { element: equation, label: equation.dataset.equationNumber || "" };
+    if (!equationsById[id].label) {
+      articleWarning('Equation "' + id + '" carries no build-time number.');
     }
   });
 
   document.querySelectorAll("[data-equation-ref]").forEach(function (reference) {
+    if (reference.dataset.referenceScope === "external") {
+      reference.dataset.referenceState = "external";
+      return;
+    }
+
     var id = reference.dataset.equationRef;
     var target = equationsById[id];
     if (!target) {
@@ -509,15 +509,17 @@
       return;
     }
 
-    var text = "(" + target.number + ")";
     var value = reference.querySelector(".equation-ref-value");
-    if (value) value.textContent = text;
-    reference.setAttribute("aria-label", "Equation " + target.number);
+    var printed = value ? value.textContent.replace(/[()\s]/g, "") : "";
+    if (printed && target.label && printed !== target.label) {
+      articleWarning(
+        'Equation reference "' + id + '" prints ' + printed + " but its target is " + target.label + "."
+      );
+    }
     reference.dataset.referenceState = "resolved";
   });
 
   var statementsById = Object.create(null);
-  var statementNumber = 0;
   document.querySelectorAll("[data-statement]").forEach(function (statement) {
     var id = statement.dataset.statement;
     if (statementsById[id]) {
@@ -526,30 +528,23 @@
     }
 
     var numbered = statement.dataset.statementNumbered === "true";
-    if (numbered) statementNumber += 1;
     var kind = statement.dataset.statementKind || "statement";
-    var label = kind.charAt(0).toUpperCase() + kind.slice(1);
     statementsById[id] = {
       element: statement,
-      kind: label,
-      number: numbered ? statementNumber : null
+      kind: kind.charAt(0).toUpperCase() + kind.slice(1),
+      label: numbered ? statement.dataset.statementNumber || "" : ""
     };
-
-    if (numbered) {
-      statement.dataset.statementNumber = String(statementNumber);
-      var value = statement.querySelector(".statement-number");
-      if (value) {
-        value.textContent = String(statementNumber);
-        value.dataset.numberReady = "true";
-      }
-      var permalink = statement.querySelector(".statement-permalink");
-      if (permalink) {
-        permalink.setAttribute("aria-label", "Link to " + label + " " + statementNumber);
-      }
+    if (numbered && !statementsById[id].label) {
+      articleWarning('Statement "' + id + '" carries no build-time number.');
     }
   });
 
   document.querySelectorAll("[data-statement-ref]").forEach(function (reference) {
+    if (reference.dataset.referenceScope === "external") {
+      reference.dataset.referenceState = "external";
+      return;
+    }
+
     var id = reference.dataset.statementRef;
     var target = statementsById[id];
     if (!target) {
@@ -558,18 +553,13 @@
       return;
     }
 
-    var label = target.kind + (target.number === null ? "" : " " + target.number);
-    var kind = reference.querySelector(".statement-ref-kind");
     var number = reference.querySelector(".statement-ref-number");
-    if (kind) kind.textContent = target.kind;
-    if (number) {
-      if (target.number === null) {
-        number.remove();
-      } else {
-        number.textContent = String(target.number);
-      }
+    var printed = number ? number.textContent.trim() : "";
+    if (printed !== target.label) {
+      articleWarning(
+        'Statement reference "' + id + '" prints "' + printed + '" but its target is "' + target.label + '".'
+      );
     }
-    reference.setAttribute("aria-label", label);
     reference.dataset.referenceState = "resolved";
   });
 

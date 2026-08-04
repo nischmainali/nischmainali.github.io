@@ -1,10 +1,20 @@
-{{- $id := default "" (.Get 0) -}}
-{{- if eq (len (findRE `^[a-z][a-z0-9-]*$` $id)) 0 -}}
-  {{- errorf "The statement-ref shortcode requires a slug-like statement id: see %s" .Position -}}
-{{- end -}}
-{{- $meta := partial "statement-meta.html" (dict "page" .Page "id" $id) -}}
-{{- $number := index $meta "number" -}}
+{{- $resolved := partial "reference-target.html" (dict
+    "page" .Page "ref" (.Get 0) "shortcode" "statement-ref" "position" .Position) -}}
+{{- $target := $resolved.page -}}
+{{- $id := $resolved.id -}}
+{{- $meta := partial "statement-meta.html" (dict "page" $target "id" $id) -}}
 {{- $kind := index $meta "kind" -}}
-{{- if eq $kind "statement" -}}{{- errorf "Unknown statement reference %q: see %s" $id .Position -}}{{- end -}}
+{{- $number := index $meta "label" -}}
+{{- if not $kind -}}
+  {{- if $resolved.external -}}
+    {{- errorf "Unknown statement %q in %s: see %s" $id $target.RelPermalink .Position -}}
+  {{- else -}}
+    {{- errorf "Unknown statement reference %q: see %s" $id .Position -}}
+  {{- end -}}
+{{- end -}}
 {{- $label := $kind | title -}}
-<a class="statement-ref" href="#statement-{{ $id }}" data-statement-ref="{{ $id }}" aria-label="{{ $label }}{{ with $number }} {{ . }}{{ end }}"><span class="statement-ref-kind">{{ $label }}</span>{{ if gt $number 0 }} <span class="statement-ref-number">{{ $number }}</span>{{ end }}</a>
+{{- $href := cond $resolved.external (printf "%s#statement-%s" $target.RelPermalink $id) (printf "#statement-%s" $id) -}}
+<a class="statement-ref{{ if $resolved.external }} reference--external{{ end }}" href="{{ $href }}" data-statement-ref="{{ $id }}"{{ if $resolved.external }} data-reference-scope="external"{{ end }} aria-label="{{ $label }}{{ with $number }} {{ . }}{{ end }}{{ with $resolved.source }} in {{ . }}{{ end }}"><span class="statement-ref-kind">{{ $label }}</span>{{ with $number }} <span class="statement-ref-number">{{ . }}</span>{{ end }}{{ with $resolved.source }}<span class="reference-source" aria-hidden="true"> in <cite>{{ . }}</cite></span>{{ end }}</a>
+{{- /* This template's output is inline. It must not end in whitespace, or the
+      renderer puts a space between the mark and the punctuation that follows
+      it in the sentence. */ -}}

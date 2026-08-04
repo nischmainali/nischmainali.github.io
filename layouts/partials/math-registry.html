@@ -1,0 +1,116 @@
+{{- /*
+  math-registry.html — one pass over a page's raw source that yields the whole
+  numbering spine for its equations and statements.
+
+  Numbering is section-scoped. An object inside the page's Nth level-two section
+  is labelled "N.k"; an object standing before the first section, or living on a
+  note with no sections at all, keeps a bare "k". A short note therefore reads
+  (1), (2), (3) while a long one reads (2.1), (2.2) against the same numbered
+  outline the contents rail already prints.
+
+  Equations carry their own counter. Theorem, lemma, proposition, corollary, and
+  definition share one counter, as MATHEMATICS.md specifies. Remarks stay
+  unnumbered.
+
+  Fenced code is skipped, so a note may quote the shortcodes it documents
+  without disturbing its own numbers.
+
+  Because the spine is derived from raw source rather than rendered output, this
+  partial resolves any page at any time. Nothing here depends on render order,
+  so a reference may point into another note without a generated registry.
+
+  Always reach it through partialCached keyed on the page: a long note then
+  scans its source once instead of once per equation, statement, and reference.
+
+  Returns:
+    equations   map id -> label
+    statements  map id -> entry
+    ordered     entries in source order, for /statements/
+    sections    level-two sections in source order
+  where an entry is a dict of id, kind, label, title, section, sectionTitle.
+*/ -}}
+{{- $page := . -}}
+{{- $kinds := slice "theorem" "lemma" "proposition" "corollary" "definition" "remark" -}}
+{{- $equations := dict -}}
+{{- $statements := dict -}}
+{{- $ordered := slice -}}
+{{- $sections := slice -}}
+{{- $section := 0 -}}
+{{- $sectionTitle := "" -}}
+{{- $equationSeq := 0 -}}
+{{- $statementSeq := 0 -}}
+{{- $fence := "" -}}
+
+{{- range $line := split $page.RawContent "\n" -}}
+  {{- $trimmed := strings.TrimSpace $line -}}
+  {{- $delimiter := "" -}}
+  {{- if hasPrefix $trimmed "```" -}}
+    {{- $delimiter = "`" -}}
+  {{- else if hasPrefix $trimmed "~~~" -}}
+    {{- $delimiter = "~" -}}
+  {{- end -}}
+
+  {{- if $delimiter -}}
+    {{- /* A fence of one character cannot close a fence of the other. */ -}}
+    {{- if eq $fence "" -}}
+      {{- $fence = $delimiter -}}
+    {{- else if eq $fence $delimiter -}}
+      {{- $fence = "" -}}
+    {{- end -}}
+  {{- else if eq $fence "" -}}
+
+    {{- with findRESubmatch `^##[ \t]+(.+?)[ \t]*$` $line -}}
+      {{- $heading := index (index . 0) 1 -}}
+      {{- $heading = replaceRE `\{#[^}]*\}[ \t]*$` "" $heading -}}
+      {{- $heading = replaceRE `[ \t]*#+[ \t]*$` "" $heading -}}
+      {{- $heading = strings.TrimSpace $heading -}}
+      {{- $section = add $section 1 -}}
+      {{- $sectionTitle = $heading -}}
+      {{- $equationSeq = 0 -}}
+      {{- $statementSeq = 0 -}}
+      {{- $sections = $sections | append (dict "number" $section "title" $heading) -}}
+    {{- end -}}
+
+    {{- range $match := findRESubmatch `\{\{<\s*equation\b[^>]*\bid\s*=\s*"([a-z][a-z0-9-]*)"` $line -}}
+      {{- $equationSeq = add $equationSeq 1 -}}
+      {{- $label := cond (gt $section 0) (printf "%d.%d" $section $equationSeq) (printf "%d" $equationSeq) -}}
+      {{- $equations = merge $equations (dict (index $match 1) $label) -}}
+    {{- end -}}
+
+    {{- range $tag := findRE `\{\{<\s*statement\b[^>]*>\}\}` $line -}}
+      {{- $idMatch := findRESubmatch `\bid\s*=\s*"([a-z][a-z0-9-]*)"` $tag -}}
+      {{- $kindMatch := findRESubmatch `\bkind\s*=\s*"([a-z]+)"` $tag -}}
+      {{- if and $idMatch $kindMatch -}}
+        {{- $id := index (index $idMatch 0) 1 -}}
+        {{- $kind := index (index $kindMatch 0) 1 -}}
+        {{- if in $kinds $kind -}}
+          {{- $title := "" -}}
+          {{- with findRESubmatch `\btitle\s*=\s*"([^"]*)"` $tag -}}
+            {{- $title = index (index . 0) 1 -}}
+          {{- end -}}
+          {{- $label := "" -}}
+          {{- if ne $kind "remark" -}}
+            {{- $statementSeq = add $statementSeq 1 -}}
+            {{- $label = cond (gt $section 0) (printf "%d.%d" $section $statementSeq) (printf "%d" $statementSeq) -}}
+          {{- end -}}
+          {{- $entry := dict
+              "id" $id
+              "kind" $kind
+              "label" $label
+              "title" $title
+              "section" $section
+              "sectionTitle" $sectionTitle -}}
+          {{- $statements = merge $statements (dict $id $entry) -}}
+          {{- $ordered = $ordered | append $entry -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+
+  {{- end -}}
+{{- end -}}
+
+{{- return dict
+    "equations" $equations
+    "statements" $statements
+    "ordered" $ordered
+    "sections" $sections -}}

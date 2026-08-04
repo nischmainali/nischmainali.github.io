@@ -1,0 +1,46 @@
+{{ partial "header.html" . }}
+
+{{- /*
+  The notation register printed whole, grouped as data/notation.toml groups it.
+  Notes print subsets of the same records through the notation shortcode, so the
+  symbols a reader meets in prose and the symbols listed here cannot diverge.
+*/ -}}
+{{- $symbols := hugo.Data.notation.symbols -}}
+{{- if not $symbols -}}
+  {{- errorf "data/notation.toml contains no symbols" -}}
+{{- end -}}
+{{- $groups := slice -}}
+{{- range $symbols -}}
+  {{- if not (in $groups .group) -}}{{- $groups = $groups | append .group -}}{{- end -}}
+{{- end -}}
+
+<main class="register-shell" aria-labelledby="register-title">
+  <header class="register-opening">
+    <h1 class="title register-title" id="register-title">
+      <span class="register-title-ornament" aria-hidden="true">❧</span>
+      <span>{{ .Title | markdownify }}</span>
+    </h1>
+  </header>
+
+  {{- with .Content }}
+  <div class="register-intro">{{ . }}</div>
+  {{- end }}
+
+  <div class="notation-index">
+    {{- range $group := $groups }}
+    <section class="notation-index-group">
+      <h2 class="notation-index-title">{{ replace $group "-" " " | humanize }}</h2>
+      <dl class="notation-register">
+        {{- range $symbols }}
+        {{- if eq .group $group }}
+        <dt class="notation-symbol" id="notation-{{ .id }}">{{ partial "render-math.html" (dict "tex" .tex "display" false "page" $ "position" "data/notation.toml") }}</dt>
+        <dd class="notation-gloss">{{ $.RenderString .gloss }}{{ with .macro }} <span class="notation-macro"><code>{{ . }}</code></span>{{ end }}</dd>
+        {{- end }}
+        {{- end }}
+      </dl>
+    </section>
+    {{- end }}
+  </div>
+</main>
+
+{{ partial "footer.html" . }}

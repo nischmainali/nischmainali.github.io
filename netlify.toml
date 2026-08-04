@@ -80,3 +80,9 @@
   for = "/vendor/fonts/eb-garamond-initials/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# Hugo fingerprints the apparatus register stylesheet into this path.
+[[headers]]
+  for = "/css/register.min.*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

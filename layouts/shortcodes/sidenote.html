@@ -4,3 +4,6 @@
 <input class="sidenote-toggle" type="checkbox" id="{{ $id }}" aria-controls="{{ $noteID }}" aria-label="Toggle sidenote">
 <label class="sidenote-ref" for="{{ $id }}" data-sidenote-reference><span class="sidenote-ref-number" aria-hidden="true"></span></label>
 <span class="sidenote" id="{{ $noteID }}" role="note" aria-label="Sidenote" data-sidenote-note><span class="sidenote-number" aria-hidden="true"></span>{{ .Inner | markdownify }}</span>
+{{- /* This template's output is inline. It must not end in whitespace, or the
+      renderer puts a space between the mark and the punctuation that follows
+      it in the sentence. */ -}}

@@ -1,6 +1,41 @@
-<footer class="article-end" aria-label="Article navigation">
-  <a class="article-end-link" href="{{ .CurrentSection.RelPermalink }}">
-    <span aria-hidden="true">←</span>
-    Back to {{ .CurrentSection.Title }}
-  </a>
+{{- /*
+  The ending stays a rule and a text link, and gains only the two facts a reader
+  of a technical note actually needs there: when it was last revised, and how to
+  cite it. Both are plain lines of type. The self-citation is a bibliographic
+  sentence rather than a copy-to-clipboard control, so it prints and reads the
+  same way the References section does.
+
+  Revision belongs here rather than in the title field, where an earlier
+  specimen proved author, revision, and reading-time registers to be
+  unnecessary complication.
+*/ -}}
+{{- $revised := "" -}}
+{{- if and (not .Lastmod.IsZero) (not .Date.IsZero) -}}
+  {{- if gt (.Lastmod.Format "2006-01-02") (.Date.Format "2006-01-02") -}}
+    {{- $revised = .Lastmod -}}
+  {{- end -}}
+{{- end -}}
+{{- /* A citation is a formal act, so it uses the site's bibliographic name
+      rather than the loose per-page author field. */ -}}
+{{- $author := default "Nischal Mainali" site.Params.citation_author -}}
+<footer class="article-end" aria-label="Article end matter">
+  {{- if not .Date.IsZero }}
+  <dl class="article-record">
+    {{- with $revised }}
+    <dt>Revised</dt>
+    <dd><time datetime="{{ .Format "2006-01-02" }}">{{ .Format "2 January 2006" }}</time></dd>
+    {{- end }}
+    <dt>Cite as</dt>
+    <dd class="article-citation">{{ $author }}, “{{ .Title }}”, {{ .Date.Format "2006" }}. <span class="article-citation-locator">{{ .Permalink }}</span></dd>
+  </dl>
+  {{- end }}
+  <nav class="article-end-nav" aria-label="Article navigation">
+    <a class="article-end-link" href="{{ .CurrentSection.RelPermalink }}">
+      <span aria-hidden="true">←</span>
+      Back to {{ .CurrentSection.Title }}
+    </a>
+    {{- if .Page.Store.Get "hasMath" }}
+    <a class="article-end-link" href="{{ "statements/" | relURL }}">Index of statements</a>
+    {{- end }}
+  </nav>
 </footer>

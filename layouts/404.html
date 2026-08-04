@@ -1,0 +1,30 @@
+{{ partial "header.html" . }}
+
+{{- /*
+  A missing page is still a page on this paper. It keeps the crop frame, the
+  light, and the ornament, states the fact plainly in the site's own voice, and
+  offers the two registers a reader is most likely to be looking for. The theme's
+  bare "404 NOT FOUND" heading is deliberately replaced.
+*/ -}}
+<main class="register-shell not-found" aria-labelledby="register-title">
+  <header class="register-opening">
+    <h1 class="title register-title" id="register-title">
+      <span class="register-title-ornament" aria-hidden="true">❧</span>
+      <span>Not on this sheet</span>
+    </h1>
+  </header>
+
+  <div class="register-intro">
+    <p>Nothing is printed at this address. The light is the same; the page is
+    not here.</p>
+  </div>
+
+  <nav class="not-found-register" aria-label="Where to go instead">
+    <a href="{{ "" | relURL }}">Home</a>
+    <a href="{{ "blog/" | relURL }}">Writing</a>
+    <a href="{{ "statements/" | relURL }}">Index of statements</a>
+    <a href="{{ "search/" | relURL }}">Search</a>
+  </nav>
+</main>
+
+{{ partial "footer.html" . }}

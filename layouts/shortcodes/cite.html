@@ -50,3 +50,6 @@
     <a id="{{ $occurrenceID }}" href="#ref-{{ $key }}" role="doc-biblioref" data-citation-key="{{ $key }}">{{ $entry.label }}</a>
   {{- end -}}
 )</span>
+{{- /* This template's output is inline. It must not end in whitespace, or the
+      renderer puts a space between the mark and the punctuation that follows
+      it in the sentence. */ -}}

@@ -1,0 +1,141 @@
+{{ partial "header.html" . }}
+
+{{- /*
+  The colophon is authored prose in the template rather than in Markdown because
+  it reports on the site's own machinery: the ink names come from the ink
+  registry, and the type and vendor facts sit beside the files they describe. A
+  fact stated here should be a fact the build can vouch for.
+*/ -}}
+{{- $inks := hugo.Data.inks.inks -}}
+{{- $default := hugo.Data.inks.default -}}
+{{- $pool := hugo.Data.inks.random_pool -}}
+{{- /* Counts are read from the registry but spelled out, because these are
+      sentences rather than a specification. */ -}}
+{{- $words := slice "no" "one" "two" "three" "four" "five" "six" "seven" "eight" "nine" "ten" -}}
+
+<main class="register-shell colophon" aria-labelledby="register-title">
+  <header class="register-opening">
+    <h1 class="title register-title" id="register-title">
+      <span class="register-title-ornament" aria-hidden="true">❧</span>
+      <span>{{ .Title | markdownify }}</span>
+    </h1>
+  </header>
+
+  {{- with .Content }}
+  <div class="register-intro">{{ . }}</div>
+  {{- end }}
+
+  <section class="colophon-entry" id="paper-and-light">
+    <h2 class="colophon-label">Paper and light</h2>
+    <div class="colophon-body">
+      <p>The surface is a Lokta-like pulp drawn in the browser: one opaque WebGL2
+      canvas, owned by a worker where the browser allows it, carrying a projected
+      shutter field, fine moving grain, and a sparse raking relief that only
+      resolves under low sun.</p>
+      <p>The light has two positions rather than two themes. <em>Shade</em> is a
+      covered sheet near a clearer window side; <em>sunset</em> multiplies a warm
+      apricot field across the same geometry and opens the slats. The ink stays
+      daylight in both. The optics are a reconstruction of
+      <a href="https://www.sunlit.place/">sunlit.place</a>, re-derived on this
+      paper rather than copied: the shutter is a projective fan with the source's
+      periods, depths, and progressive diffusion, and its one botanical
+      signature is a single niuro frond that enters only at sunset.</p>
+      <p>A small copy of the live surface is kept for the length of a visit, so a
+      link, a refresh, or a step back through history lands in the same patch of
+      light on the same clock instead of replaying an entrance.</p>
+    </div>
+  </section>
+
+  <section class="colophon-entry" id="type">
+    <h2 class="colophon-label">Type</h2>
+    <div class="colophon-body">
+      <dl class="colophon-list">
+        <dt>Linden Hill</dt>
+        <dd>Prose and titles. A revival of Frederic Goudy's Deepdene, which gives
+        the page its old-style, slightly hand-shaped texture.</dd>
+        <dt>Jost</dt>
+        <dd>Navigation, metadata, marginal numbers, and register labels — every
+        place the site is speaking about itself rather than to you.</dd>
+        <dt>Asana Math</dt>
+        <dd>Mathematics, through its OpenType MATH table. Its Palatino lineage
+        keeps open counters and a calligraphic italic beside Linden Hill, where
+        Times-derived math reads institutional and Computer Modern reads like
+        default TeX.</dd>
+        <dt>EB Garamond Initials</dt>
+        <dd>The optional opening capital, in two layers: a readable letter and an
+        ornamental ground. The ornament is cut into one file per capital, so a
+        note downloads only the initial it prints.</dd>
+      </dl>
+      <p>Every face is served from this site under its own license, with the
+      upstream revision recorded beside it. Nothing is fetched from a font
+      network at read time.</p>
+    </div>
+  </section>
+
+  <section class="colophon-entry" id="ink">
+    <h2 class="colophon-label">Ink</h2>
+    <div class="colophon-body">
+      <p>The registration mark in the upper-right crop corner changes the
+      editorial ink and a restrained cast in the paper, while typography,
+      geometry, measure, and the light's choreography stay fixed. There are
+      {{ index $words (len $inks) }} impressions, drawn from the
+      <a href="https://github.com/protesilaos/ef-themes">Ef</a> and
+      <a href="https://github.com/protesilaos/modus-themes">Modus</a> families
+      and mapped by role rather than by copied hex value, because this text sits
+      on a moving translucent field rather than a flat editor background.</p>
+      <dl class="colophon-list colophon-inks">
+        {{- range $inks }}
+        <dt>
+          <span class="colophon-ink-name">{{ .name }}</span>
+          <span class="colophon-swatches" aria-hidden="true">
+            {{- range .swatches }}<span class="colophon-swatch" style="background: {{ . }}"></span>{{ end -}}
+          </span>
+        </dt>
+        <dd>{{ .description }}{{ if eq .id $default }} · the canonical impression, and the one you get without JavaScript, in print, or when storage fails{{ else if in $pool .id }} · in the first-visit pool{{ end }}</dd>
+        {{- end }}
+      </dl>
+      <p>On a first capable visit the browser is assigned one of
+      {{ index $words (len $pool) }} inks and remembers it on the device. Treat that as printing
+      variation: it uses no cookie, account, request, or server record, and
+      choosing an ink replaces the assignment.</p>
+    </div>
+  </section>
+
+  <section class="colophon-entry" id="mathematics">
+    <h2 class="colophon-label">Mathematics</h2>
+    <div class="colophon-body">
+      <p>Mathematics is typeset during the build and shipped as finished markup.
+      There is no renderer in the page and no request to a mathematics network.
+      Invalid or unsupported TeX stops the build at its source position rather
+      than reaching a reader as raw source.</p>
+      <p>Numbering is built once from each note's source and scoped to its
+      sections, so a result carries the same label wherever it is named. Every
+      numbered result is collected in the
+      <a href="{{ "statements/" | relURL }}">index of statements</a>; recurring
+      symbols live in the <a href="{{ "notation/" | relURL }}">notation
+      register</a>. A reference may cross from one note into another, and prints
+      the label and title of what it points at.</p>
+      <p>Citations come from a small hand-verified registry, and a page's
+      bibliography is assembled at build time from the works it actually cites.</p>
+    </div>
+  </section>
+
+  <section class="colophon-entry" id="making">
+    <h2 class="colophon-label">Making</h2>
+    <div class="colophon-body">
+      <p>Hugo {{ hugo.Version }} builds the site as static HTML. The visual
+      foundation is a locally modified copy of
+      <a href="https://github.com/yihui/hugo-paged">hugo-paged</a>, whose crop
+      marks were the beginning of everything here; almost none of its original
+      appearance survives. Nothing on the page depends on a framework, a client
+      router, or a third-party script.</p>
+      <p>The
+      <a href="{{ "search/" | relURL }}">search page</a> reads an index built
+      with the site. Notes print as offprints: the light, the controls, and the
+      marginal positioning drop away, and the hierarchy, mathematics, figures,
+      and citation record remain.</p>
+    </div>
+  </section>
+</main>
+
+{{ partial "footer.html" . }}

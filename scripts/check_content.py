@@ -37,6 +37,15 @@ EQREF_RE = re.compile(r'\{\{<\s*eqref\s+"(?P<id>[^"]+)"\s*>\}\}')
 STATEMENT_REF_RE = re.compile(
     r'\{\{<\s*statement-ref\s+"(?P<id>[^"]+)"\s*>\}\}'
 )
+# A reference argument is either a bare identifier, which must resolve on this
+# page, or a note path and identifier joined by "#", which Hugo resolves against
+# another page during the build. This checker validates the shape of the second
+# form and leaves existence to Hugo, which knows the content tree and fails with
+# a source position of its own. Duplicating that lookup here would only let the
+# two disagree.
+CROSS_NOTE_REF_RE = re.compile(
+    r"^(?P<path>/[A-Za-z0-9][A-Za-z0-9._/-]*)#(?P<id>[^#]*)$"
+)
 EQUATION_CLOSE = "{{< /equation >}}"
 
 SHORTCODE_RE = re.compile(
@@ -646,16 +655,39 @@ def scan_mathematics(
             Diagnostic(path, line, column, "unclosed equation shortcode")
         )
 
-    for identifier, line, column in equation_refs:
-        if identifier not in equation_targets:
-            issues.append(
-                Diagnostic(path, line, column, f'missing same-page equation "{identifier}"')
-            )
-    for identifier, line, column in statement_refs:
-        if identifier not in statement_targets:
-            issues.append(
-                Diagnostic(path, line, column, f'missing same-page statement "{identifier}"')
-            )
+    for kind, references, targets in (
+        ("equation", equation_refs, equation_targets),
+        ("statement", statement_refs, statement_targets),
+    ):
+        for identifier, line, column in references:
+            if "#" in identifier:
+                cross = CROSS_NOTE_REF_RE.fullmatch(identifier)
+                if cross is None:
+                    issues.append(
+                        Diagnostic(
+                            path,
+                            line,
+                            column,
+                            f'{kind} reference "{identifier}" is not a note path and '
+                            "identifier, as /blog/note#identifier",
+                        )
+                    )
+                elif not SLUG_RE.fullmatch(cross.group("id")):
+                    issues.append(
+                        Diagnostic(
+                            path,
+                            line,
+                            column,
+                            f'cross-note {kind} id "{cross.group("id")}" is not slug-like',
+                        )
+                    )
+                continue
+            if identifier not in targets:
+                issues.append(
+                    Diagnostic(
+                        path, line, column, f'missing same-page {kind} "{identifier}"'
+                    )
+                )
 
     return issues
 

@@ -3,7 +3,13 @@
 - Last baseline study: 2026-07-21
 - Accepted production direction: **Lokta Sunlight reader + Lokta Field Note**
 - Production branch: `main`
-- Accepted implementation lineage: `experiment/toc-outside-sheet`
+- Accepted implementation lineage: `experiment/toc-outside-sheet`, promoted to
+  `main` together with the homepage paper readout and the Writing page
+  (`45c3ed6`, 4 August 2026)
+- In review: `experiment/scholarly-apparatus` — section-scoped numbering,
+  cross-note references, `/statements/`, `/notation/`, `/colophon/`, an authored
+  404, article end matter, and the removal of the vendored theme's published
+  fixtures
 - Pre-promotion main archive: `archive/pre-field-note-main-2026-07-20`
   (`d37a896`)
 - Earlier article checkpoint: `c26729b`
@@ -591,6 +597,61 @@ disturb the global crop-mark geometry. If future home sections are proposed,
 first ask whether the content has earned another editorial passage. Default
 answer: do not add a dashboard-like section.
 
+#### Scholarly apparatus (experimental, `experiment/scholarly-apparatus`)
+
+The register grammar extends to three apparatus pages that report on the corpus
+rather than adding to it. They share one measure, one faint title ornament, and
+the Writing index's division of Jost register labels against Linden Hill names.
+Groups are separated by a single hairline fading into the open right margin,
+which is the crop system's vocabulary rather than a second one. None of them may
+acquire a card, a fill, a badge, a tab, or a filter control.
+
+- `/statements/` lists every numbered result across the notes, generated from
+  the same numbering spine the notes print, so it cannot disagree with them.
+  Unnumbered remarks are omitted because they are not results. A result with no
+  title of its own is placed by the section it lives in, set in muted italic.
+- `/notation/` prints the shared notation register whole, grouped as
+  `data/notation.toml` groups it. A note prints the subset it needs through the
+  `notation` shortcode. The authoring macro appears only on this page: inside
+  prose it is documentation, not reading matter, and it is hidden there.
+- `/colophon/` states what the page is made of — paper, light, type, ink,
+  mathematics, making — and reads its facts from the build where it can, so the
+  ink names and counts cannot drift from `data/inks.toml`. It is a printer's
+  colophon, not an about page, and it is where the two crop instruments are
+  explained. Its sections are deep-linkable.
+
+The 404 is authored on the same paper: the crop frame, the light, and the
+ornament remain, with one plain line and the registers a reader is likely to
+want. The vendored theme's bare heading is deliberately replaced.
+
+Numbering is now section-scoped and built once per note. Equations read `(2.1)`
+and statements read `Theorem 2.1` against the numbered outline the contents rail
+already prints; a note with no sections keeps bare numbers. The build is the only
+source of truth. The former CSS counters and the client-side renumbering pass are
+gone, because three systems for one number meant a reader without JavaScript saw
+each equation number twice. Sidenotes keep their counter, which is correct: their
+numbering follows rendered order.
+
+A reference may leave its note, written as a content path and an identifier
+joined by `#`. It prints the target's kind, its section-scoped label, and the
+target's title, and links to it. This is bibliographic, in the same spirit as the
+citation registry, and explicitly not transclusion: no preview, no popup, no
+backlink graph, no runtime request. Because labels come from raw source rather
+than rendered output, two notes may reference each other with no ordering
+problem.
+
+The article ending gains the two facts a technical reader needs and nothing else:
+a revision date when one exists, and a bibliographic self-citation. Both are
+plain lines in the ending's Jost register — never a copy-to-clipboard control —
+and both survive into print, where the screen navigation drops away. Revision
+stays out of the title field, where an earlier specimen proved such registers to
+be unnecessary complication.
+
+The Writing register may run in named groups (`register = "notes" | "essays"` in
+front matter), labelled with a quiet Jost running head. Writing that has not
+declared a register stays in one unlabelled run, so the page is never wrong about
+older entries. A note that has been revised shows both dates.
+
 ### Writing list
 
 The public `Writing` page keeps the stable Hugo `/blog/` route. It is a compact
@@ -968,6 +1029,16 @@ The site is intentionally small:
 - `layouts/partials/render-math.html` — the one strict build-time KaTeX entry
   point shared by Markdown and numbered equations;
 - `data/math.toml` — the deliberately small central macro table;
+- `data/notation.toml` — the shared notation register, paired with the macro
+  table so symbols and their glosses cannot drift apart;
+- `layouts/partials/math-registry.html` — one cached, fence-aware pass over a
+  note's raw source that assigns every equation and statement its section-scoped
+  label. The single source of truth for numbering;
+- `layouts/partials/reference-target.html` — resolves a reference to a page and
+  an identifier, so a reference may name a result in another note;
+- `layouts/_default/statements.html`, `notation.html`, and `colophon.html` with
+  `assets/css/register.css` — the apparatus registers;
+- `layouts/404.html` — the authored missing page;
 - `layouts/partials/foot_custom.html` — article-specific removal of legacy
   runtime helpers and conditional local article behavior;
 - `layouts/shortcodes/` — figures, epigraphs, sidenotes, small caps, numbered
@@ -1156,6 +1227,22 @@ while doing so.
 - The vendored theme keeps its older layout structure even though deployment now
   uses Hugo 0.164.0. Site-owned templates bridge the current section lists;
   syncing or fully migrating the theme remains a separate task.
+- `hugo.toml` sets `baseurl = "/"`, so `.Permalink` is relative. The canonical
+  link in the vendored header and the article's "Cite as" locator are therefore
+  both relative. Setting a real canonical URL fixes both at once; it was left
+  alone because the deployed domain is not recorded in this repository.
+- The five large stylesheets under `static/css/` are still served unminified
+  through the deterministic `?v=` scheme, while `assets/css/` stylesheets are
+  minified and fingerprinted. Unifying on `assets/` would need an edit to the
+  vendored header's stylesheet loop, and after compression the saving is small,
+  so it was deliberately not attempted alongside the apparatus work.
+- The home portrait remains hand-made WebP in `static/` rather than going
+  through Hugo's image pipeline. Its crop-sheet geometry is pinned to exact
+  measurements above, so changing that markup deserves its own pass.
+- MathML-only output remains gated on the browser and assistive-technology
+  matrix. On the current specimen the dual output measures 124 KB of HTML and
+  additionally requests the 24 KB KaTeX stylesheet and several of its twenty
+  font files, so the switch is the largest single saving still available.
 
 ## Change protocol for future visual work
 

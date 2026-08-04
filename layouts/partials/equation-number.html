@@ -1,11 +1,11 @@
+{{- /*
+  equation-number.html — resolve one equation's section-scoped label.
+
+  Takes a dict of "page" and "id" and returns the label as a string, or "" when
+  that page declares no such equation. The label comes from the cached
+  math-registry pass, so a note with many equations and references scans its
+  own source once for all of them.
+*/ -}}
 {{- $page := .page -}}
-{{- $target := .id -}}
-{{- $number := 0 -}}
-{{- $openings := findRESubmatch `\{\{<\s*equation\b[^>]*>\}\}` $page.RawContent -}}
-{{- range $index, $opening := $openings -}}
-  {{- $idMatch := findRESubmatch `\bid\s*=\s*"([a-z][a-z0-9-]*)"` (index $opening 0) -}}
-  {{- if and $idMatch (eq (index (index $idMatch 0) 1) $target) -}}
-    {{- $number = add $index 1 -}}
-  {{- end -}}
-{{- end -}}
-{{- return $number -}}
+{{- $registry := partialCached "math-registry.html" $page $page.RelPermalink -}}
+{{- return default "" (index $registry.equations .id) -}}

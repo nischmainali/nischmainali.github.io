@@ -1,0 +1,55 @@
+{{- /*
+  reference-target.html — resolve one mathematical reference to a page and id.
+
+  Takes a dict of "page" (the citing page), "ref" (the shortcode's single
+  argument), "shortcode", and "position".
+
+  The argument is either a bare identifier, which stays inside the note, or a
+  content path and identifier joined by "#", which reaches another note:
+
+      consistency
+      /blog/scratch-apparatus#rice
+
+  A cross-note reference is bibliographic, not a transclusion: it prints the
+  target's label and title and links to it. The source name prefers the target's
+  short_title so a long note can be named inside a sentence.
+
+  Returns a dict of page, id, external, and source.
+*/ -}}
+{{- $page := .page -}}
+{{- $shortcode := .shortcode -}}
+{{- $position := .position -}}
+{{- $raw := default "" .ref -}}
+{{- $id := $raw -}}
+{{- $target := $page -}}
+{{- $external := false -}}
+
+{{- if strings.Contains $raw "#" -}}
+  {{- $parts := split $raw "#" -}}
+  {{- if ne (len $parts) 2 -}}
+    {{- errorf "%s expects one path and one identifier, as /blog/note#identifier, but received %q: see %s" $shortcode $raw $position -}}
+  {{- end -}}
+  {{- $path := index $parts 0 -}}
+  {{- $id = index $parts 1 -}}
+  {{- if not $path -}}
+    {{- errorf "%s received %q with no note path: see %s" $shortcode $raw $position -}}
+  {{- end -}}
+  {{- $found := site.GetPage $path -}}
+  {{- if not $found -}}
+    {{- errorf "%s cannot find the note %q. Use a content path such as /blog/gp-code-notes, and remember that a published note cannot reference a draft: see %s" $shortcode $path $position -}}
+  {{- end -}}
+  {{- if ne $found.RelPermalink $page.RelPermalink -}}
+    {{- $target = $found -}}
+    {{- $external = true -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if eq (len (findRE `^[a-z][a-z0-9-]*$` $id)) 0 -}}
+  {{- errorf "%s requires a slug-like identifier but received %q: see %s" $shortcode $id $position -}}
+{{- end -}}
+
+{{- return dict
+    "page" $target
+    "id" $id
+    "external" $external
+    "source" (cond $external (default $target.Title $target.Params.short_title) "") -}}

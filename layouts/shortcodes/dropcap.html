@@ -10,3 +10,6 @@
 {{- end -}}
 {{- .Page.Store.Set "hasDropcap" true -}}
 <span class="article-dropcap"><span class="article-dropcap-ornament" data-letter="{{ $letter }}" aria-hidden="true"></span><span class="article-dropcap-letter">{{ $letter }}</span></span>{{- "" -}}
+{{- /* This template's output is inline. It must not end in whitespace, or the
+      renderer puts a space between the mark and the punctuation that follows
+      it in the sentence. */ -}}
