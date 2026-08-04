@@ -21,4 +21,4 @@ node --check assets/js/search.js
 node --check assets/js/sunlit-renderer.js
 node --check assets/js/sunlit-worker.js
 node --check assets/js/sunlit.js
-hugo --minify --destination "$BUILD_DIR" --cacheDir "$CACHE_DIR"
+hugo --minify --noBuildLock --destination "$BUILD_DIR" --cacheDir "$CACHE_DIR"

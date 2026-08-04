@@ -1269,6 +1269,7 @@ def run_hugo(hugo: str) -> int:
         command = [
             hugo,
             "--buildDrafts",
+            "--noBuildLock",
             "--cacheDir",
             str(temporary_path / "cache"),
             "--destination",

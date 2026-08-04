@@ -10,6 +10,7 @@ cd "$ROOT"
 
 exec hugo server \
   --buildDrafts \
+  --noBuildLock \
   --renderToMemory \
   --disableFastRender \
   --bind "$BIND" \
