@@ -29,3 +29,11 @@
 </button>
 
 {{ partial "ink-register.html" . }}
+
+<!--
+  Every node used by the controller now exists, so its worker can start while
+  the rest of a long static document is still parsing. Keeping this synchronous
+  controller small makes the first live environmental frame arrive earlier
+  without waiting for DOMContentLoaded or introducing a client-side router.
+-->
+<script src="{{ partialCached "js-asset-url.html" "js/sunlit.js" "js/sunlit.js" }}"></script>

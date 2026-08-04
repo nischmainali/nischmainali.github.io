@@ -148,11 +148,30 @@ shade and resolves under raking sunset light. Keep the local tonal difference
 around three to five percent. The fibres should register as paper thickness on a
 second look. Cursor parallax and drifting ray phases do not belong here.
 
-Home, Documents, and articles share the field. Route attenuation protects the
+Home, Writing, and articles share the field. Route attenuation protects the
 article measure while the outer sheet retains the full projection. Check all
 three before changing shadow strength. Page navigation preserves the mode,
 grain clock, seed, and any active transition. The next page must enter the same
 patch of light without a loading veil or replay.
+
+Page navigation does not use the browser's document transition API. Its incoming
+snapshot could expose the root paper color before the saved frame had decoded.
+Links use normal static document navigation, so the browser replaces titles and
+prose once without another compositing layer.
+
+The site saves a small WebP copy of the live canvas in session storage. The
+worker limits the copy to 600,000 pixels and produces it after the first frame,
+after a color change, during a shade or sunset transition, and every 1.6 seconds
+while the page is visible. The rolling copy stays close to the live optical
+clock without doing image work on the main thread. A script in the head checks
+its age, color scheme, ink scheme, and aspect ratio before using it. The saved
+frame is therefore present before the body is painted on a link, refresh, or
+history traversal. The shade or sunset gradient remains beneath the WebP while
+the browser decodes it, so the root color cannot show through. The new opaque
+canvas removes the saved frame after its first frame and compositor fade are
+complete. The sunlight controller starts near the top of the body, so it does
+not wait for a long article to finish parsing. The CSS poster now appears only
+on the first visit or when the browser cannot render or save a live frame.
 
 The worker renders one opaque canvas and caches the paper and shutter pass.
 Ambient frames copy that surface, add grain, and apply the sunset multiplier.
@@ -462,7 +481,7 @@ or a heavily filtered cutout.
 
 ### 6. Sparse navigation and quiet interaction
 
-The visible primary navigation is only `HOME` and `DOCS`, aligned to the upper
+The visible primary navigation is only `HOME` and `WRITING`, aligned to the upper
 right above a one-pixel rule. The active item is indicated by a short, dark wine
 underline. Links use a dark teal-blue (`#005077`) and usually a fine dashed or
 dotted underline. Publication links invert to white on teal on hover; most other
@@ -572,16 +591,28 @@ disturb the global crop-mark geometry. If future home sections are proposed,
 first ask whether the content has earned another editorial passage. Default
 answer: do not add a dashboard-like section.
 
-### Documents list
+### Writing list
 
-The `Docs` page is technically the Hugo `blog` section but is presented as a
-documents shelf. Each entry uses an italic title, quiet date, and a short preview
-with a thin vertical rule. The local design intentionally removed the base
-theme's dotted leaders and auto-numbered page counts.
+The public `Writing` page keeps the stable Hugo `/blog/` route. It is a compact
+paper register, not a feed, card grid, or documents shelf. A faint `❧` belongs
+to the page title. Entries have no repeated dingbat. Their identity comes from
+the exact order of title, description, date, and registration rule.
 
-New listing treatments should preserve the feeling of an annotated contents
-page. Do not convert this into a card grid with thumbnails, tags, read-time badges,
-and rounded metadata chips.
+The register uses a `44rem` measure. Each entry is one large link with an
+italic title, one short description when the article supplies it, and a very
+small date placed last. It has no box, fill, thumbnail, tag, reading time
+label, or metadata column. A small right angle registration corner begins the
+separator. The line then loses strength toward the open right margin. This
+detail belongs to the crop mark system and must not be replaced by a Unicode
+ornament.
+
+Hover and keyboard focus shift the title ink, raise the description contrast,
+and strengthen the separator without changing the entry's geometry. Compact
+screens keep the same source order and do not create an empty marker column.
+Hugo decides whether drafts are part of the page, so an explicit draft build
+must show them while production continues to omit them. This list system was
+introduced on `experiment/docs-page` and accepted in its clean editorial form
+on 23 July 2026.
 
 ### Article
 
@@ -911,7 +942,7 @@ The site is intentionally small:
 
 - `hugo.toml` — site identity, menus, theme selection, output formats;
 - `content/_index.md` — home structure and selected works;
-- `content/blog/` — documents and draft test pages;
+- `content/blog/` — Writing entries and private draft test pages;
 - `static/css/custom.css` — local page/layout refinements and portrait treatment;
 - `static/css/sunlit.css` — shade/sunset poster, paper handoff, and controls;
 - `static/textures/lokta-fibres.svg` — the repeating pulp-scale paper field;
@@ -925,10 +956,11 @@ The site is intentionally small:
   relief, and procedural grain;
 - `layouts/blog/single.html` — site-owned opened-article structure scoped to
   Blog posts, leaving generic pages and the vendored theme template untouched;
-- `layouts/baseof.html`, `layouts/blog/section.html`, and
-  `layouts/docs/section.html` — the Hugo 0.164 list-template bridge. It preserves
-  the vendored theme's existing Documents and Notes markup while keeping its
-  legacy layout files untouched;
+- `layouts/baseof.html` and `layouts/_default/list-baseof.html` — the Hugo 0.164
+  site-owned list-template bridge, kept outside the vendored theme;
+- `layouts/_default/blog.html` — the public Writing register at the stable
+  `/blog/` route, including its title ornament, optional description, compact
+  date, fading registration corner, and stable responsive source order;
 - `layouts/_markup/` — Hugo 0.164 site-owned heading, link, image, code, and
   mathematical passthrough hooks;
 - `layouts/partials/article-meta.html` and `article-end.html` — article opening

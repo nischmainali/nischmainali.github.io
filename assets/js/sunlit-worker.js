@@ -3,7 +3,9 @@
   'use strict';
 
   var renderer = null;
+  var surface = null;
   var initialized = false;
+  var snapshotInFlight = false;
 
   function serializeError(error) {
     return {
@@ -42,6 +44,7 @@
     if (!message.canvas) throw new Error('The Sunlit worker init message requires an OffscreenCanvas');
     requireRenderer(message.engineUrl);
     initialized = true;
+    surface = message.canvas;
 
     var options = message.options || {};
     options.onReady = function(detail) {
@@ -58,7 +61,67 @@
     };
     options.autoStart = options.autoStart !== false;
 
-    renderer = scope.SunlitRenderer.create(message.canvas, options);
+    renderer = scope.SunlitRenderer.create(surface, options);
+  }
+
+  function captureSnapshot(message) {
+    if (snapshotInFlight || !surface || !renderer ||
+        typeof scope.OffscreenCanvas !== 'function') {
+      post('snapshot-failed', { requestId: message.requestId });
+      return;
+    }
+
+    snapshotInFlight = true;
+    var sourceWidth = Math.max(1, Number(surface.width) || 1);
+    var sourceHeight = Math.max(1, Number(surface.height) || 1);
+    var maximumPixels = Math.max(160000, Number(message.maximumPixels) || 600000);
+    var scale = Math.min(1, Math.sqrt(maximumPixels / (sourceWidth * sourceHeight)));
+    var width = Math.max(1, Math.round(sourceWidth * scale));
+    var height = Math.max(1, Math.round(sourceHeight * scale));
+    var snapshot = new scope.OffscreenCanvas(width, height);
+    var context = snapshot.getContext('2d', { alpha: false });
+
+    if (!context) {
+      snapshotInFlight = false;
+      post('snapshot-failed', { requestId: message.requestId });
+      return;
+    }
+
+    try {
+      renderer.renderFrame(Number(message.nowMs) || Date.now());
+      context.imageSmoothingEnabled = true;
+      context.imageSmoothingQuality = 'medium';
+      context.drawImage(surface, 0, 0, width, height);
+    } catch (error) {
+      snapshotInFlight = false;
+      post('snapshot-failed', { requestId: message.requestId });
+      return;
+    }
+
+    if (typeof snapshot.convertToBlob !== 'function') {
+      snapshotInFlight = false;
+      post('snapshot-failed', { requestId: message.requestId });
+      return;
+    }
+
+    snapshot.convertToBlob({
+      type: 'image/webp',
+      quality: Math.max(0.4, Math.min(0.82, Number(message.quality) || 0.64))
+    }).then(function(blob) {
+      post('snapshot', {
+        requestId: message.requestId,
+        blob: blob,
+        width: width,
+        height: height,
+        sourceWidth: sourceWidth,
+        sourceHeight: sourceHeight
+      });
+    }).catch(function() {
+      // A failed continuity frame never affects the live renderer or poster.
+      post('snapshot-failed', { requestId: message.requestId });
+    }).then(function() {
+      snapshotInFlight = false;
+    });
   }
 
   scope.onmessage = function(event) {
@@ -107,6 +170,9 @@
             state: renderer.getState(message.nowMs)
           });
           break;
+        case 'snapshot':
+          captureSnapshot(message);
+          break;
         case 'start':
           renderer.start();
           break;
@@ -116,7 +182,9 @@
         case 'dispose':
           renderer.dispose();
           renderer = null;
+          surface = null;
           initialized = false;
+          snapshotInFlight = false;
           post('disposed');
           break;
         default:

@@ -1,158 +1,189 @@
 # Nisch's homepage
 
-Source for Nischal Mainali's Hugo website. The deployed site is built by Netlify
-with Hugo 0.164.0; generated output is not stored in Git.
+This repository contains Nischal Mainali's personal website. Hugo builds the
+site as static HTML. The visual system combines a Lokta paper surface, changing
+sunlight, book typography, mathematical publishing tools, and small technical
+details that belong to this site.
 
-## Canonical state
+## Current state
 
-The canonical checkout is `/Users/nisch/code/site/nisch-hugo-site`. Temporary
-preview checkouts may exist elsewhere as Git worktrees; they share this
-repository rather than forming separate copies. The accepted visual
-implementation entered the history at `861a22d` through
-`experiment/toc-outside-sheet`. The pre-reader mainline remains available at
-`archive/pre-field-note-main-2026-07-20` (`d37a896`). Do not delete named
-checkpoints merely because their physical worktrees have been removed.
+`main` is the accepted site. The canonical checkout is
+`/Users/nisch/code/site/nisch-hugo-site`. Other local folders may be Git
+worktrees for experiments. Worktrees share the same repository history and do
+not form separate copies of the project.
 
-Local `main` and the preview branch may advance through documentation or
-maintenance commits after that accepted visual checkpoint. Nothing in the local
-workflow pushes or deploys automatically.
+The branch `archive/pre-writing-main-2026-08-04` preserves the exact main state
+from before the accepted Writing page and background continuity work. Older
+named archive branches preserve earlier design stages. Do not delete archive
+branches during routine cleanup.
 
-## Local development
+Local Git commands do not push or deploy the site. Netlify deploys from the
+remote repository after a separate push.
 
-```sh
-hugo server --buildDrafts --renderToMemory --disableFastRender --bind 127.0.0.1 --port 1315
-```
+## Quick start
 
-Open <http://127.0.0.1:1315/>. Hugo may create a local `.hugo_build.lock`; it is
-ignored by Git. The mathematics pipeline requires Hugo 0.164.0 Extended; check
-`hugo version` before diagnosing template errors from an older local binary.
-
-The current experimental branch promotes the palette proof into a public Ink
-control. Lokta remains the canonical fallback, while a first visit receives one
-remembered impression from the approved pool. See
-[`docs/INK_SYSTEM.md`](docs/INK_SYSTEM.md) for persistence, semantic mapping,
-interaction, and the review protocol.
-
-For a production-style build:
+The project requires Hugo 0.164.0 Extended. It also uses Python 3 for source
+checks and Node for JavaScript syntax checks.
 
 ```sh
-HUGO_ENV=production hugo --cleanDestinationDir
+hugo version
+./scripts/dev.sh
 ```
 
-This writes the generated site to `public/`. That directory is intentionally
-ignored: source files are authoritative, and Netlify builds `public/` during
-deployment.
+The preview opens at <http://127.0.0.1:1315/> and includes draft content. Set a
+different port when another preview already uses 1315.
 
-For drafts, run the source checks and a strict draft build:
+```sh
+HUGO_PORT=1320 ./scripts/dev.sh
+```
 
-~~~sh
-./scripts/check_content.py
-~~~
+The preview renders into memory. It does not create or update `public/`.
 
-The former `scripts/check_math.py` command remains as a compatibility entry
-point. See `MATHEMATICS.md` for delimiters, numbered equations, statements,
-shared macros, and ox-hugo guidance.
+## Checks
 
-## Article initials, epigraphs, and figures
+Run the full local check before committing a design or template change.
 
-An article may open with one explicit two-ink initial:
+```sh
+./scripts/qa.sh
+```
+
+The command checks content, draft rendering, JavaScript syntax, and a minified
+production build. Netlify runs the source checks and production build again.
+
+## Before changing the design
+
+Read these files before editing layout, color, type, motion, or interaction.
+
+1. [`AGENTS.md`](AGENTS.md) contains the working rules for coding agents.
+2. [`DESIGN_LANGUAGE.md`](DESIGN_LANGUAGE.md) defines the accepted visual
+   system and records its sources.
+3. [`docs/README.md`](docs/README.md) separates current design documents from
+   completed studies.
+4. [`MATHEMATICS.md`](MATHEMATICS.md) defines the mathematical authoring tools.
+
+The site has been designed in small passes. Change one page system at a time,
+and compare the result with the accepted version before broadening the change.
+Avoid generic cards, badges, dashboard layouts, large metadata blocks, and
+decoration that has no function.
+
+## Main site systems
+
+### Background and paper
+
+`assets/js/sunlit-renderer.js` draws the paper, light, shutter shadows, grain,
+and sunset state on one canvas. `assets/js/sunlit-worker.js` runs that renderer
+away from the main browser thread when the browser allows it.
+
+`assets/js/sunlit.js` manages state, motion, resizing, and navigation
+continuity. It saves a small copy of the live surface in session storage.
+`layouts/partials/sunlit-handoff-head.html` restores that copy before the body
+is painted, and `static/css/sunlit.css` supplies a complete static fallback.
+
+Do not attach the background clock to scrolling. Do not add a second animation
+system for page changes. Any performance change must keep the paper opaque and
+must preserve the light position across links and refreshes.
+
+### Ink schemes
+
+`data/inks.toml` contains the approved Modus and Ef based ink schemes.
+`assets/css/ink-register.css` maps their semantic colors into the site, while
+`assets/js/ink-register.js` manages selection and persistence. Lokta Hybrid is
+the canonical fallback. Read [`docs/INK_SYSTEM.md`](docs/INK_SYSTEM.md) before
+changing the palette control or its storage rules.
+
+### Homepage
+
+The homepage is a compact frontispiece with an introduction, portrait, selected
+works, and optional research previews. The selected works data lives in
+`data/selected_works.toml`. The template and interaction are in
+`layouts/shortcodes/selected-works.html`, `assets/css/home-readout.css`, and
+`assets/js/home-readout.js`.
+
+### Writing page and articles
+
+The public Writing index stays at `/blog/`. Its template is
+`layouts/_default/blog.html`. Article structure is owned by
+`layouts/blog/single.html`, `static/css/article.css`, and
+`assets/js/article.js`.
+
+Articles support a table of contents, sidenotes, citations, epigraphs, figures,
+drop capitals, statements, proofs, and numbered equations. Keep the prose
+column readable and preserve the outside table of contents and right margin
+notes at wide widths.
+
+### Mathematics
+
+Hugo renders mathematics during the build with KaTeX 0.17.0 and Asana Math.
+Mathematical pages do not depend on a browser typesetting library or a content
+delivery network. Invalid mathematics should fail the build. Read
+[`MATHEMATICS.md`](MATHEMATICS.md) before changing delimiters, macros,
+statements, equation references, or math assets.
+
+## Content authoring
+
+Published writing belongs in `content/blog/`. The private specimen
+`content/blog/scratch.md` stays a draft and exercises the complete article
+system. A new article should include a title, date, and a short description.
+
+Use the explicit drop capital shortcode at the first textual position when an
+article needs an initial.
 
 ```markdown
 {{< dropcap "T" >}}his paragraph begins the article.
 ```
 
-Keep the shortcode at the first textual position in a prose paragraph. The
-explicit letter lets headings, quotations, links, emphasis, and mathematics
-remain ordinary Markdown instead of relying on fragile first-letter rewriting.
-In ox-hugo source, an inline macro can emit the same shortcode; `org/content.org`
-contains the local example.
-
-An epigraph is an opening quotation with authored attribution rather than a
-decorated blockquote panel:
-
-```markdown
-{{< epigraph attribution="Rabindranath Tagore" source="Stray Birds" >}}
-The butterfly counts not months but moments, and has time enough.
-{{< /epigraph >}}
-```
-
-`attribution` or `source` is required. An optional `link` associates the source
-with its canonical page. Epigraph contents are Markdown and may include the
-same build-time mathematics as article prose.
-
-The figure shortcode accepts three placements and two surface treatments:
+Use the figure shortcode when Hugo should control placement, responsive images,
+captions, and the local image viewer.
 
 ```markdown
 {{< figure
   src="images/article-specimens/gp-threshold-crossings.svg"
-  alt="Gaussian-process field crossings"
+  alt="Gaussian process field crossings"
   caption="Threshold crossings across the sampled field."
   placement="margin"
   treatment="ink"
 >}}
 ```
 
-- `placement="measure"` is the default. `wide` uses the shallow technical
-  breakout, while `margin` enters the right marginal field on wide screens and
-  returns to the reading measure below it.
-- `treatment="natural"` preserves photographs and screenshots. `ink` lets
-  diagrams take on the Lokta sheet and its shade/sunset ink calibration.
-- Hugo derives dimensions and responsive sources for page resources and files
-  under `assets/`. Static and remote paths remain compatibility fallbacks.
-- `priority="true"` is reserved for one image that appears above the fold. All
-  other figures use lazy loading.
-- Informative figures link to their full-resolution source and use the local
-  paper viewer when JavaScript is available. Set `zoom="false"` for a figure
-  that should remain static; decorative figures and figures with author-supplied
-  links do not acquire the viewer.
-- Supply useful `alt` text. Use `decorative="true"` only when the image adds no
-  information. Marginal figures require a caption.
+The optional Org source lives in `org/`. Hugo reads the Markdown under
+`content/`, so read [`org/README.md`](org/README.md) before exporting over a
+published file.
 
 ## Repository map
 
-- `content/` — authored pages and posts. Some theme examples remain as drafts or
-  unlinked reference pages.
-- `assets/` — Hugo-processed article images and minified, fingerprinted CSS and
-  JavaScript sources.
-- `static/` — files copied to stable public URLs, including images, PDFs, CSS,
-  local fonts, and licensed surface textures.
-- `layouts/` — site-level Hugo template overrides.
-- `data/` — build-time registries for shared mathematics, citations, and the
-  editorial ink set.
-- `scripts/` — source validation. `check_content.py` is the maintained entry
-  point; `check_math.py` is its compatibility wrapper.
-- `themes/hugo-paged/` — vendored and locally modified base theme. Do not replace
-  it wholesale from the separate upstream checkout.
-- `archetypes/` — defaults for new Hugo content.
-- `org/` — optional Emacs Org authoring source. Hugo does not read it directly;
-  read `org/README.md` before exporting over Markdown.
-- `docs/history/` — completed plans retained as implementation provenance, not
-  current instructions.
-- `hugo.toml` — site configuration and navigation.
-- `netlify.toml` — deployment build configuration.
-- `DESIGN_LANGUAGE.md` — the site's design principles, provenance, and visual QA
-  baseline.
-- `MATHEMATICS.md` — the mathematical authoring and validation interface.
-- `AGENTS.md` — working rules for future coding agents.
+- `content/` contains pages and articles.
+- `assets/` contains files that Hugo processes and fingerprints.
+- `static/` contains files that require stable public URLs.
+- `layouts/` contains site templates and render hooks.
+- `data/` contains ink, mathematics, citation, and selected work records.
+- `scripts/` contains local preview and validation commands.
+- `docs/` contains current design references and completed studies.
+- `themes/hugo-paged/` is the locally modified base theme.
+- `org/` contains optional Org authoring source.
+- `hugo.toml` contains site configuration and navigation.
+- `netlify.toml` contains the deployment build and cache rules.
 
-## Where new files belong
+The copy of `hugo-paged` under `themes/` contains intentional local changes. Do
+not replace it wholesale from `/Users/nisch/code/site/hugo-paged`.
 
-Put authored Markdown and page bundles in `content/`. Put images that Hugo should
-resize or fingerprint in a page bundle or `assets/`; put files that require a
-stable public URL in `static/`. Site JavaScript belongs in `assets/js/`. Keep
-build-time records in `data/`, validation in `scripts/`, and durable design
-decisions in `DESIGN_LANGUAGE.md`.
+## Generated files and cleanup
 
-`public/`, `resources/`, `.hugo_build.lock`, Python bytecode, browser-test output,
-and visual-audit screenshots are generated material. Do not commit them. Keep a
-small review record outside the repository when visual comparison still has
-value.
+Hugo may create `public/`, `resources/`, and `.hugo_build.lock`. Python may
+create `__pycache__/`. Browser tests may create local report folders. Git
+ignores all of them, and you may remove them when no build is using them.
 
-## Editing boundaries
+Do not edit `public/` by hand. Source files are authoritative, and Netlify
+builds the deployed copy from source.
 
-Read `AGENTS.md` and `DESIGN_LANGUAGE.md` before visual or structural work. Treat
-`content/`, `static/`, `layouts/`, configuration, and the intentional theme fork
-as source. Do not hand-edit `public/`.
+## Git workflow
 
-The site is developed incrementally. Repository maintenance must preserve the
-rendered output unless a visible change is explicitly requested.
+Use a branch or worktree for an experiment. Keep the accepted `main` checkout
+clean, and preserve unrelated changes when a worktree is already dirty. Commit
+an accepted design before starting the next large direction.
+
+Create a named archive branch before replacing an accepted design. A useful
+name includes the previous state and the date, such as
+`archive/pre-writing-main-2026-08-04`.
+
+Do not force push, delete archive branches, or rewrite shared history unless
+Nisch asks for that exact operation.

@@ -96,7 +96,7 @@
     results.append(fragment);
     status.textContent = matches.length ?
       matches.length + (matches.length === 1 ? ' result.' : ' results.') :
-      'No matching documents.';
+      'No matching entries.';
   }
 
   input.addEventListener('input', function() {

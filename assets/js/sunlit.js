@@ -12,6 +12,8 @@
   var EPOCH_KEY = 'sunlit-motion-epoch';
   var SEED_KEY = 'sunlit-scene-seed';
   var TRANSITION_KEY = 'sunlit-transition-v2';
+  var HANDOFF_FRAME_KEY = 'sunlit-handoff-frame-v1';
+  var HANDOFF_FRAME_VERSION = 1;
   var TRANSITION_CHANNEL_COUNT = 5;
   /* Channel order: shutter aperture, plane, optical diffusion, sunset,
    * paper relief. The diffusion channel remains serialized so transitions
@@ -42,11 +44,18 @@
   var fallbackPromise = null;
   var stateRequestId = 0;
   var pendingState = Object.create(null);
+  var pendingSnapshots = Object.create(null);
   var disposed = false;
   var themeGeneration = 0;
   var lastWidth = 0;
   var lastHeight = 0;
   var lastDpr = 0;
+  var snapshotRequestId = 0;
+  var snapshotInFlight = false;
+  var snapshotQueued = false;
+  var snapshotTimers = [];
+  var snapshotHeartbeatTimer = 0;
+  var latestHandoffFrame = null;
 
   function storageGet(storage, key) {
     try {
@@ -177,6 +186,158 @@
   var reducedQuery = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
   var reducedMotion = Boolean(reducedQuery && reducedQuery.matches);
 
+  function releaseHandoffFrame() {
+    var root = document.documentElement;
+    root.classList.remove('sunlit-has-handoff');
+    root.removeAttribute('data-sunlit-handoff');
+    root.removeAttribute('data-sunlit-handoff-theme');
+    root.style.removeProperty('--sunlit-handoff-frame');
+  }
+
+  function snapshotMetadata() {
+    var viewport = getViewport();
+    return {
+      version: HANDOFF_FRAME_VERSION,
+      theme: theme,
+      ink: document.documentElement.getAttribute('data-ink') || 'lokta-hybrid',
+      route: route,
+      cssWidth: viewport.width,
+      cssHeight: viewport.height,
+      capturedAt: Date.now()
+    };
+  }
+
+  function finishSnapshotCapture() {
+    snapshotInFlight = false;
+    if (!snapshotQueued || disposed) return;
+    snapshotQueued = false;
+    window.setTimeout(requestHandoffSnapshot, 40);
+  }
+
+  function acceptSnapshot(message) {
+    var metadata = pendingSnapshots[message.requestId];
+    delete pendingSnapshots[message.requestId];
+    if (!metadata || !message.blob || message.blob.size <= 0 ||
+        message.blob.size > 900000 || typeof window.FileReader !== 'function') {
+      finishSnapshotCapture();
+      return;
+    }
+
+    var reader = new window.FileReader();
+    reader.onload = function() {
+      var dataUrl = typeof reader.result === 'string' ? reader.result : '';
+      if (dataUrl.indexOf('data:image/') === 0 && dataUrl.length <= 1200000) {
+        metadata.dataUrl = dataUrl;
+        metadata.pixelWidth = Number(message.width) || 0;
+        metadata.pixelHeight = Number(message.height) || 0;
+        latestHandoffFrame = metadata;
+        persistHandoffFrame();
+      }
+      finishSnapshotCapture();
+    };
+    reader.onerror = finishSnapshotCapture;
+    reader.readAsDataURL(message.blob);
+  }
+
+  function rejectSnapshot(message) {
+    delete pendingSnapshots[message.requestId];
+    finishSnapshotCapture();
+  }
+
+  function captureMainThreadSnapshot(requestId, metadata) {
+    if (!renderer || !canvas || typeof canvas.toDataURL !== 'function') {
+      delete pendingSnapshots[requestId];
+      finishSnapshotCapture();
+      return;
+    }
+
+    try {
+      renderer.renderFrame(Date.now());
+      var sourceWidth = Math.max(1, canvas.width || 1);
+      var sourceHeight = Math.max(1, canvas.height || 1);
+      var scale = Math.min(1, Math.sqrt(600000 / (sourceWidth * sourceHeight)));
+      var width = Math.max(1, Math.round(sourceWidth * scale));
+      var height = Math.max(1, Math.round(sourceHeight * scale));
+      var snapshot = document.createElement('canvas');
+      snapshot.width = width;
+      snapshot.height = height;
+      var context = snapshot.getContext('2d', { alpha: false });
+      if (!context || typeof snapshot.toBlob !== 'function') {
+        throw new Error('The continuity frame needs canvas encoding support');
+      }
+      context.imageSmoothingEnabled = true;
+      context.imageSmoothingQuality = 'medium';
+      context.drawImage(canvas, 0, 0, width, height);
+      snapshot.toBlob(function(blob) {
+        acceptSnapshot({
+          requestId: requestId,
+          blob: blob,
+          width: width,
+          height: height
+        });
+      }, 'image/webp', 0.64);
+    } catch (error) {
+      delete pendingSnapshots[requestId];
+      finishSnapshotCapture();
+    }
+  }
+
+  function requestHandoffSnapshot() {
+    if (disposed || (!worker && !renderer)) return;
+    if (snapshotInFlight) {
+      snapshotQueued = true;
+      return;
+    }
+
+    snapshotRequestId += 1;
+    var requestId = snapshotRequestId;
+    var metadata = snapshotMetadata();
+    pendingSnapshots[requestId] = metadata;
+    snapshotInFlight = true;
+
+    if (worker) {
+      worker.postMessage({
+        type: 'snapshot',
+        requestId: requestId,
+        nowMs: metadata.capturedAt,
+        maximumPixels: 600000,
+        quality: 0.64
+      });
+    } else {
+      captureMainThreadSnapshot(requestId, metadata);
+    }
+  }
+
+  function scheduleHandoffSnapshot(delayMs) {
+    var timer = window.setTimeout(function() {
+      requestHandoffSnapshot();
+    }, Math.max(0, Number(delayMs) || 0));
+    snapshotTimers.push(timer);
+  }
+
+  function scheduleSnapshotHeartbeat() {
+    window.clearTimeout(snapshotHeartbeatTimer);
+    snapshotHeartbeatTimer = 0;
+    if (disposed || document.hidden) return;
+
+    /*
+     * Keep the saved surface close to the live optical clock. Encoding happens
+     * in the worker and the capped frame is small, so a later reload or Safari
+     * navigation never falls back to a frame captured minutes earlier.
+     */
+    snapshotHeartbeatTimer = window.setTimeout(function() {
+      snapshotHeartbeatTimer = 0;
+      requestHandoffSnapshot();
+      scheduleSnapshotHeartbeat();
+    }, 1600);
+  }
+
+  function persistHandoffFrame() {
+    if (!latestHandoffFrame) return;
+    latestHandoffFrame.storedAt = Date.now();
+    storageSet(sessionStorage, HANDOFF_FRAME_KEY, JSON.stringify(latestHandoffFrame));
+  }
+
   function activeTransition() {
     var saved = readJson(sessionStorage, TRANSITION_KEY);
     if (!saved) return null;
@@ -241,9 +402,12 @@
          * first exposes the target poster through that fade as a color pulse. */
         applyThemeVisual(theme);
         scene.classList.add('is-handoff-complete');
+        releaseHandoffFrame();
       }
     }, 220);
     scene.setAttribute('data-renderer-tier', tier);
+    scheduleHandoffSnapshot(60);
+    scheduleSnapshotHeartbeat();
     if (window.performance && typeof window.performance.mark === 'function') {
       window.performance.mark('lokta-sunlight-ready');
     }
@@ -360,6 +524,9 @@
     worker.terminate();
     worker = null;
     clearPendingState();
+    pendingSnapshots = Object.create(null);
+    snapshotInFlight = false;
+    snapshotQueued = false;
   }
 
   function failMainRenderer() {
@@ -416,6 +583,8 @@
         var message = event.data || {};
         if (message.type === 'ready') reveal();
         if (message.type === 'state') resolvePendingState(message);
+        if (message.type === 'snapshot') acceptSnapshot(message);
+        if (message.type === 'snapshot-failed') rejectSnapshot(message);
         if (message.type === 'context-lost') showPoster();
         if (message.type === 'context-restored') reveal();
         if (message.type === 'error') mainThreadFallback();
@@ -520,6 +689,7 @@
     } else if (renderer) {
       renderer.setInkPaper(inkPaper.color, inkPaper.strength);
     }
+    scheduleHandoffSnapshot(140);
   }
 
   function changeTheme() {
@@ -539,6 +709,7 @@
       endTimeMs: transitionEndTime(theme, startTimeMs, null)
     }));
     sendTheme(theme, startTimeMs, null);
+    [80, 520, 1300, 2300, 3400, 5200].forEach(scheduleHandoffSnapshot);
 
     statePromise.then(function(state) {
       if (generation !== themeGeneration) return;
@@ -565,6 +736,12 @@
     window.clearTimeout(readyTimer);
     window.clearTimeout(handoffTimer);
     window.clearTimeout(resizeSettleTimer);
+    snapshotTimers.forEach(function(timer) {
+      window.clearTimeout(timer);
+    });
+    snapshotTimers = [];
+    window.clearTimeout(snapshotHeartbeatTimer);
+    snapshotHeartbeatTimer = 0;
     if (resizeFrame) window.cancelAnimationFrame(resizeFrame);
     clearPendingState();
     if (worker) {
@@ -588,8 +765,17 @@
   window.addEventListener('orientationchange', function() { scheduleResize(true); });
   document.addEventListener('visibilitychange', function() {
     sendVisibility(!document.hidden);
+    if (document.hidden) {
+      window.clearTimeout(snapshotHeartbeatTimer);
+      snapshotHeartbeatTimer = 0;
+      persistHandoffFrame();
+    } else {
+      scheduleHandoffSnapshot(80);
+      scheduleSnapshotHeartbeat();
+    }
   });
   window.addEventListener('pagehide', function(event) {
+    persistHandoffFrame();
     if (!event.persisted) dispose();
     else sendVisibility(false);
   });

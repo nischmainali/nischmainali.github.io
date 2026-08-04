@@ -5,10 +5,14 @@
 {{ .Content }}
 </main>
 {{ else }}
+{{ block "section-heading" . }}
 <h1 class="title">{{ .Title | markdownify }}{{ if eq .Kind "term" }}<span class="small subtitle"> | <a href="{{ urlize .Type | relURL }}/">{{ .Type }}</a></span>{{ end }}</h1>
+{{ end }}
 {{ with .Params.subtitle }}<h2 class="subtitle">{{ . | markdownify }}</h2>{{ end }}
 <main class="main{{ if not .Content }} archive{{ end }}">
+{{ block "section-content" . }}
 {{ .Content }}
+{{ end }}
 {{ block "page-list" . }}
 {{ $pages := .RegularPages }}
 {{ if eq .Section "blog" }}

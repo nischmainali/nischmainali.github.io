@@ -1,0 +1,54 @@
+<script>
+  (function () {
+    "use strict";
+
+    var key = "sunlit-handoff-frame-v1";
+    var maximumAge = 12 * 60 * 60 * 1000;
+    var root = document.documentElement;
+
+    function discard() {
+      try { sessionStorage.removeItem(key); } catch (error) {}
+    }
+
+    try {
+      var source = sessionStorage.getItem(key);
+      if (!source) return;
+      var frame = JSON.parse(source);
+      var storedTheme = localStorage.getItem("sunlit-theme");
+      var theme = storedTheme === "sunset" || storedTheme === "dark" ?
+        "sunset" : "shade";
+      var ink = root.getAttribute("data-ink") || "lokta-hybrid";
+      var width = Math.max(1, window.innerWidth || 1);
+      var height = Math.max(1, window.innerHeight || 1);
+      var frameWidth = Number(frame && frame.cssWidth);
+      var frameHeight = Number(frame && frame.cssHeight);
+      var age = Date.now() - Number(frame && (frame.storedAt || frame.capturedAt));
+      var dataUrl = frame && typeof frame.dataUrl === "string" ? frame.dataUrl : "";
+      var aspectDelta = Math.abs(
+        Math.log((width / height) / (frameWidth / frameHeight))
+      );
+
+      if (!frame || frame.version !== 1 ||
+          frame.theme !== theme || frame.ink !== ink ||
+          !(frameWidth > 0) || !(frameHeight > 0) ||
+          !(age >= 0 && age <= maximumAge) ||
+          aspectDelta > 0.28 ||
+          dataUrl.length > 1200000 ||
+          dataUrl.indexOf("data:image/") !== 0 ||
+          dataUrl.indexOf("\"") !== -1) {
+        discard();
+        return;
+      }
+
+      root.style.setProperty(
+        "--sunlit-handoff-frame",
+        "url(\"" + dataUrl + "\")"
+      );
+      root.classList.add("sunlit-has-handoff");
+      root.setAttribute("data-sunlit-handoff", "snapshot");
+      root.setAttribute("data-sunlit-handoff-theme", theme);
+    } catch (error) {
+      discard();
+    }
+  }());
+</script>

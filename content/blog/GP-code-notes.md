@@ -2,6 +2,7 @@
 author = ''
 categories = ['Notes', 'pdf']
 date = '2024-11-15'
+description = 'Notes on Gaussian processes as models of neural representation, from place field statistics to coding function.'
 subtitle = 'With focus on phenomenology and function'
 tags = ['Gaussian Process', 'Place cells']
 title = 'Notes on properties of Gaussian process neural code'

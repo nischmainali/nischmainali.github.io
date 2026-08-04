@@ -564,13 +564,46 @@ html[data-ink] body .home h2 {
   color: var(--site-heading);
 }
 
-html[data-ink] body .blog:not(.single) .toc-line a:is(:hover, :focus-visible),
+html[data-ink] body .writing-title,
 html[data-ink] body .site-search label {
   color: var(--site-heading);
 }
 
-html[data-ink] body .blog:not(.single) .toc-line a:is(:hover, :focus-visible) {
-  text-decoration-color: color-mix(in srgb, var(--site-accent) 58%, transparent);
+html[data-ink] body .writing-title-ornament {
+  color: var(--site-ornament);
+}
+
+html[data-ink] body :is(.writing-date, .writing-entry-description) {
+  color: var(--site-muted);
+}
+
+html[data-ink] body .writing-entry-title {
+  color: var(--site-heading);
+}
+
+html[data-ink] body .writing-entry-link,
+html[data-ink] body .writing-entry-link:visited {
+  color: var(--site-ink);
+}
+
+html[data-ink] body .writing-entry-link:is(:hover, :focus-visible) {
+  color: var(--site-ink);
+}
+
+html[data-ink] body .writing-entry-link:is(:hover, :focus-visible) .writing-entry-title {
+  color: color-mix(in srgb, var(--site-heading) 76%, var(--site-ink) 24%);
+}
+
+html[data-ink] body .writing-entry-link:is(:hover, :focus-visible) .writing-entry-description {
+  color: color-mix(in srgb, var(--site-muted) 72%, var(--site-ink) 28%);
+}
+
+html[data-ink] body .writing-entry-registration {
+  color: color-mix(in srgb, var(--site-rule-strong) 56%, transparent);
+}
+
+html[data-ink] body .writing-entry-link:is(:hover, :focus-visible) .writing-entry-registration {
+  color: color-mix(in srgb, var(--site-rule-strong) 68%, transparent);
 }
 
 html[data-ink] body .site-search input {
