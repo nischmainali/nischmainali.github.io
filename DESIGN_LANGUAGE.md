@@ -646,6 +646,16 @@ The space was reserved underneath rather than beside. The number now takes the
 same 2.6rem optical gutter on the right that the marginal notes keep, and sits on
 the formula's centre. Above 860px it continues to hang outside the measure.
 
+**A footnote reference was opening the leading of its own line.** Markdown
+footnotes render as `sup` with `vertical-align: super`, which raises the whole
+inline box so that its line-height pushes that line away from its neighbours: a
+paragraph carrying one footnote measured 30.2px between baselines where the rest
+of the page measured 27.5px. The sidenote markers already avoided this with a zero
+line-height; ordinary footnotes did not. `sup` and `sub` now take
+`line-height: 0` and an explicit offset. This is what made the opening's
+three-line grid uneven, and therefore what defeated the first attempts to align
+the initial to it.
+
 **Notes were spaced by leaked prose margins.** Goldmark wraps each note in a
 paragraph, which inherited the body margin and opened about 29px between two
 20px lines — more air between notes than inside them. The interval is set on the
@@ -666,16 +676,22 @@ TurnTrout reference does use one size for both, but its ground is a much paler
 tint blended toward the page, which is why the clash never appears there.
 
 The accepted arrangement, chosen from a four-way comparison on 4 August 2026:
-the ground's ink spans the three-line text block exactly, from the first line's
-**ascender** top to the third line's baseline, and its left edge registers with
-the measure — a hard-edged square cannot hang into the gutter the way a letter's
-side bearings allow. The letter's ink is 0.77 of that square and centred in it.
+the ground's ink spans the three-line block from the **top of the first line
+box** to the third line's baseline, and its left edge registers with the measure —
+a hard-edged square cannot hang into the gutter the way a letter's side bearings
+allow. The letter's ink is 0.77 of that square and centred in it. Aligning the
+square's top to the ascender line instead leaves visible slack above and below and
+makes the square read as too small; the correct size lands within a hair of the
+4.65rem the original construction used, which was evidently the intent before the
+offsets drifted.
 
-All four numbers are derived from font metrics measured in the browser, with the
-arithmetic written out beside the rule in `article.css`. Verified in place: the
-square's edges land on the ascender line, the third baseline, and the measure to
-within a hundredth of a pixel. Re-derive them if the opening's size or leading
-changes; never nudge them by eye.
+Two lessons from getting this wrong repeatedly. First, **measure the laid-out
+page, do not assume a grid**: the numbers must come from Range rectangles over
+real prose, because deriving them from the same model used to place the element
+only confirms itself. Second, the three-line grid is only even because `sup` and
+`sub` are kept out of the line box — see the correction below. All four values are
+written out with their arithmetic beside the rule in `article.css`. Re-derive them
+if the opening's size or leading changes; never nudge them by eye.
 
 The general lesson is worth keeping: several of these were numbers set by eye
 that happened to look close. Where a value can be derived from the type, derive

@@ -195,51 +195,49 @@
 
 /* The opening initial is the EB Garamond Initials pair used as designed: F1 is a
  * floral ground with no letter in it, F2 is the letter. The ground is sized to
- * the three-line text block and the letter nests inside it, so the floral reads
- * as a frame rather than as texture behind the ink. Giving both layers one em
- * square, as an earlier version did, left the ground showing as a narrow band
- * with the crossbar reaching past its edges.
+ * the three-line block and the letter nests inside it, so the floral reads as a
+ * frame rather than as texture behind the ink.
  *
- * Every number below is derived from font metrics measured in the browser, not
- * set by eye. At the opening's 1.08rem size and 1.59 leading (17.28px on a
- * 27.4752px line):
+ * The ground's ink spans the block from the TOP OF THE FIRST LINE BOX to the
+ * third line's baseline. A square must sit flush with the top of the text block:
+ * aligning it to the ascender line instead, as an earlier attempt did, left
+ * visible slack above and below and made the square read as too small. This also
+ * lands within a hair of the 4.65rem the original construction used, which was
+ * evidently the intent before the offsets drifted.
  *
- *   Linden Hill  ascent 15px, descent 5px, ascender ink 12.547px
- *   Initials F1  ink 0.990em tall, from 0.995em to 0.005em above its baseline,
- *                0.990em wide from +0.005em, advance 1.000em
- *   Initials F2  cap 0.895em, foot 0.080em above baseline, ink 0.815em tall and
- *                0.781em wide from +0.119em, advance 1.006em
- *   both faces   ascent 0.900em, descent 0.250em, so with line-height 1 the
- *                baseline sits 0.825em below the box top
+ * The numbers come from measuring the laid-out page — Range rectangles over
+ * plain prose text nodes — not from assuming a grid. Relative to the float's
+ * top edge, which coincides with the first line box's top:
  *
- * half-leading    (27.4752 - 20) / 2                  =  3.7376px
- * first baseline  3.7376 + 15                          = 18.7376px
- * ascender top    18.7376 - 12.547                     =  6.1906px
- * third baseline  18.7376 + 2 x 27.4752                = 73.6880px
+ *   third baseline  73.453px            (measured; 3 x 27.4752 leading)
+ *   square side     73.453 - 0          = 73.453px
+ *   F1 ink          0.990em tall, from 0.995em to 0.005em above its baseline,
+ *                   advance 1.000em, ink starting 0.005em in
+ *   F2 ink          0.815em tall, cap 0.895em, foot 0.080em above baseline,
+ *                   0.781em wide from +0.119em, advance 1.006em
+ *   both faces      baseline 0.825em below the box top at line-height 1
  *
- * The ground's ink spans the text block, ascender top to third baseline:
- * ink side        73.6880 - 6.1906                     = 67.4974px
- * ground em       67.4974 / 0.990                      = 68.1792px -> 4.2612rem
- * ground baseline 73.6880 + 0.005 x 68.1792            = 74.0289px
- * ground box top  74.0289 - 0.825 x 68.1792            = 17.7811px -> 1.1113rem
+ * ground em         73.453 / 0.990      = 74.1949px -> 4.6372rem
+ * ground baseline   73.453 + 0.005 x 74.1949        = 73.8241px
+ * ground box top    73.8241 - 0.825 x 74.1949       = 12.6131px -> 0.7883rem
+ * letter ink        0.77 x 73.453       = 56.5588px
+ * letter em         56.5588 / 0.815     = 69.3973px -> 4.3373rem
+ * letter ink top    (73.453 - 56.5588) / 2          =  8.4471px
+ * letter baseline   8.4471 + 0.895 x 69.3973        = 70.5577px
+ * letter box top    70.5577 - 0.825 x 69.3973       = 13.3049px -> 0.8316rem
  *
- * The letter's ink is 0.77 of that square and centred in it:
- * letter ink      0.77 x 67.4974                       = 51.9730px
- * letter em       51.9730 / 0.815                       = 63.7705px -> 3.9857rem
- * letter ink top  6.1906 + (67.4974 - 51.9730) / 2      = 13.9528px
- * letter baseline 13.9528 + 0.895 x 63.7705             = 71.0374px
- * letter box top  71.0374 - 0.825 x 63.7705             = 18.4167px -> 1.1511rem
- *
- * The ground's ink begins 0.341px inside the float, so the float takes no
+ * The ground's ink begins 0.371px inside the float, so the float takes no
  * negative left margin: a hard-edged square must register with the measure,
  * where a letter's side bearings would have absorbed a small hang.
  *
- * Re-derive all four numbers if the opening's size or leading changes. */
+ * Re-derive all four numbers if the opening's size or leading changes, and
+ * measure rather than assume — the leading is only even because sup and sub are
+ * kept out of the line box below. */
 .single.blog .article-dropcap {
-  --article-dropcap-size: 4.2612rem;
-  --article-dropcap-top: 1.1113rem;
-  --article-dropcap-letter-size: 3.9857rem;
-  --article-dropcap-letter-top: 1.1511rem;
+  --article-dropcap-size: 4.6372rem;
+  --article-dropcap-top: 0.7883rem;
+  --article-dropcap-letter-size: 4.3373rem;
+  --article-dropcap-letter-top: 0.8316rem;
   /* Three lines at the opening's 1.08rem size and 1.59 leading. */
   --article-dropcap-exclusion: 5.1516rem;
   position: relative;
@@ -254,12 +252,14 @@
   user-select: text;
 }
 
+/* Both layers hang from the float's top edge and centre in its width. Only their
+   size and offset differ, and each is derived above. */
 .single.blog .article-dropcap-ornament,
 .single.blog .article-dropcap-letter {
   position: absolute;
   left: 0;
   display: block;
-  width: var(--article-dropcap-size);
+  width: 100%;
   font-style: normal;
   font-variant: normal;
   font-weight: normal;
@@ -290,6 +290,26 @@
 .single.blog .article-body p {
   margin: 0.9em 0;
   text-wrap: pretty;
+}
+
+/* A reference mark must not open the leading of the line that carries it.
+ * `vertical-align: super` raises the whole inline box, and its line-height then
+ * pushes that line apart from its neighbours: a paragraph with one footnote was
+ * measuring 30.2px between two baselines where the rest of the page measured
+ * 27.5px. A zero line-height with an explicit offset keeps the grid even. The
+ * sidenote markers already worked this way; ordinary Markdown footnotes did not. */
+.single.blog .article-body :is(sup, sub) {
+  position: relative;
+  line-height: 0;
+  vertical-align: baseline;
+}
+
+.single.blog .article-body sup {
+  top: -0.435em;
+}
+
+.single.blog .article-body sub {
+  bottom: -0.2em;
 }
 
 .single.blog .article-body h2,
