@@ -8,6 +8,7 @@
 {{- $registry := hugo.Data.citations -}}
 {{- $position := .Position -}}
 {{- $keys := .Params -}}
+{{- $ordinal := .Ordinal -}}
 {{- if eq (len $keys) 0 -}}
   {{- errorf "cite at %s requires at least one citation key" $position -}}
 {{- end -}}
@@ -28,17 +29,22 @@
     {{- end -}}
 
     {{- $entry := index $registry $key -}}
-    {{- $countKey := printf "citationCount-%s" $key -}}
-    {{- $occurrenceNumber := add (default 0 ($page.Store.Get $countKey)) 1 -}}
-    {{- $page.Store.Set $countKey $occurrenceNumber -}}
-    {{- $occurrenceID := printf "cite-%s-%d" $key $occurrenceNumber -}}
+    {{- /* The occurrence identifier comes from the shortcode's ordinal, never
+           from a counter in Page.Store. A counter increments on every render of
+           the content, and Hugo renders a page's content several times — and in
+           `hugo server` the store survives rebuilds, so the count grew with
+           every edit and one work accumulated twenty-one backlinks in the
+           preview. The ordinal is the same on every pass, so repeated renders
+           produce identical identifiers and the deduplication below collapses
+           them. The sidenote shortcode already worked this way. */ -}}
+    {{- $occurrenceID := printf "cite-%s-%d" $key $ordinal -}}
     {{- $occurrences := default (slice) ($page.Store.Get "citationOccurrences") -}}
     {{- $knownOccurrence := false -}}
     {{- range $occurrences -}}
       {{- if eq .id $occurrenceID -}}{{- $knownOccurrence = true -}}{{- end -}}
     {{- end -}}
     {{- if not $knownOccurrence -}}
-      {{- $page.Store.Set "citationOccurrences" ($occurrences | append (dict "id" $occurrenceID "key" $key)) -}}
+      {{- $page.Store.Set "citationOccurrences" ($occurrences | append (dict "id" $occurrenceID "key" $key "ordinal" $ordinal)) -}}
     {{- end -}}
 
     {{- $order := default (slice) ($page.Store.Get "citationOrder") -}}

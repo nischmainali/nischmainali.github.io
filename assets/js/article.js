@@ -189,8 +189,16 @@
 
   function updateReadingProgress(readingLine) {
     if (!readingProgress || !tocArticle) return;
-    var distance = Math.max(1, tocArticleEnd - tocArticleTop - window.innerHeight * 0.38);
-    var value = (window.scrollY + readingLine - tocArticleTop) / distance;
+    // The reading line travels from the article's top to its end, but the page
+    // may stop scrolling before the line can get there — the end matter and the
+    // footer are shorter than a viewport. Clamping the span to the scroll the
+    // page can actually reach is what makes the rule read 100% at the bottom
+    // instead of stalling a few per cent short.
+    var start = tocArticleTop - readingLine;
+    var reachable = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    var finish = Math.min(tocArticleEnd - readingLine, reachable);
+    var distance = Math.max(1, finish - start);
+    var value = (window.scrollY - start) / distance;
     value = Math.max(0, Math.min(1, value));
     value = value.toFixed(4);
     if (value === readingProgressValue) return;
@@ -751,8 +759,6 @@
     document.querySelectorAll("[data-article-figure-focus-link]")
   );
 
-  var figureReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-
   if (figureDialog && figureFocusLinks.length && typeof figureDialog.showModal === "function") {
     var figureDialogImage = figureDialog.querySelector("[data-article-figure-focus-image]");
     var figureDialogCaption = figureDialog.querySelector("[data-article-figure-focus-caption]");
@@ -783,25 +789,10 @@
       link.setAttribute("aria-expanded", "true");
       document.documentElement.classList.add("article-figure-is-open");
 
-      // Registration runs on the figure before the viewer commits: the brackets
-      // snap to its bounds and the reticle draws itself, so opening reads as
-      // measuring something already on the page rather than as a modal
-      // appearing. Reduced motion skips the interval but keeps the marks.
-      var register = figure.querySelector(".article-figure-register");
-      var wait = register && !figureReducedMotion.matches ? 190 : 0;
-      if (register) {
-        figure.setAttribute("data-registering", "");
-        window.setTimeout(function () {
-          figure.removeAttribute("data-registering");
-        }, wait + 40);
-      }
-
-      window.setTimeout(function () {
-        figureDialog.showModal();
-        window.requestAnimationFrame(function () {
-          if (figureDialogClose) figureDialogClose.focus();
-        });
-      }, wait);
+      figureDialog.showModal();
+      window.requestAnimationFrame(function () {
+        if (figureDialogClose) figureDialogClose.focus();
+      });
     }
 
     function releaseFigureDialog() {

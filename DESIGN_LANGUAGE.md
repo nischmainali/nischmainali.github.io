@@ -772,10 +772,24 @@ instrument refuses to warm with the sun. Pushing that refusal further, to a full
 cool instrument layer indifferent to the weather, is the open experiment.
 
 Current assignment: Projection on the home ledger at 90rem and wider; Extension
-on the same ledger below that; Registration on the article figure viewer; Trace in
-the contents rail's reading rule and on a formula that genuinely overflows.
-Dilation is designed for the ink proof slip and deliberately unbuilt. One
-revealing gesture per context, Trace excepted. The register never appears in
+on the same ledger below that; Trace in the contents rail's reading rule and on a
+formula that genuinely overflows. One revealing gesture per context, Trace
+excepted.
+
+Registration was built for the article figure viewer and **rejected** on
+5 August 2026: brackets snapping to a figure's bounds before the viewer committed
+read as unclear rather than as measurement, and 190ms of pre-roll before a modal
+is a cost with no legible return. Do not rebuild it without a clearer proposal.
+Dilation is designed for the ink proof slip and deliberately unbuilt, because it
+would touch the accepted ink register.
+
+Two faults from the first build are worth remembering. A docked gesture and a
+projected one must not share a width rule: the drawer's full-slot width, written
+with two classes, silently outranked the projected panel's narrower measure and
+threw it off the right of the screen. And a retraction must run on the same clock
+as its aperture — a 135ms fade inside a 210ms collapse made the panel vanish and
+then leave empty space behind, which is exactly the abruptness the law of contact
+is meant to prevent. The register never appears in
 reading matter — not in prose, not in the Writing index, not in the colophon body,
 not on the missing page.
 

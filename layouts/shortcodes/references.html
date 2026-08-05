@@ -34,6 +34,9 @@
           {{- $entryOccurrences = $entryOccurrences | append . -}}
         {{- end -}}
       {{- end -}}
+      {{- /* Ordinals are document order, so the backlinks number the way the
+             reader met them. */ -}}
+      {{- $entryOccurrences = sort $entryOccurrences "ordinal" -}}
       {{- $occurrenceCount := len $entryOccurrences -}}
     <li id="ref-{{ $key }}" role="doc-biblioentry" data-citation-entry="{{ $key }}">
       <span class="article-reference-authors">{{ $entry.authors }}</span>

@@ -151,14 +151,5 @@
   {{- with $title }} title="{{ . }}"{{ end -}}
 >
 {{- if $focus -}}
-{{- /* Registration. The mark says this figure is measurable; the surrounding
-      link is still the trigger, so there is one affordance rather than two and
-      the no-JavaScript path is untouched. The overlay carries the brackets and
-      cross-hairs that snap to the figure's bounds before the viewer commits.
-      See assets/css/instrument.css. */ -}}
-<span class="article-figure-register" aria-hidden="true">
-  <span class="article-figure-register__frame"></span>
-  <span class="article-figure-register__mark instrument-mark">{{ partial "instrument-mark.html" . }}</span>
-</span>
 </a>
 {{- end -}}

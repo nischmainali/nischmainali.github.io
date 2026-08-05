@@ -568,14 +568,15 @@ body.sunset .paper-readout {
   }
 }
 
+/* One clock, and no fade: the drawer travels back up and the aperture clips it as
+   it goes, which is what makes it read as going behind the row rather than
+   disappearing. */
 @keyframes paper-readout-retract {
   from {
     translate: 0 0;
-    opacity: 1;
   }
   to {
     translate: 0 -42%;
-    opacity: 0;
   }
 }
 
@@ -719,7 +720,7 @@ body.sunset .paper-readout {
 }
 
 .paper-readout-shell[data-readout-closing] .paper-readout {
-  animation: paper-readout-retract var(--instrument-quick) var(--instrument-ease) both;
+  animation: paper-readout-retract var(--instrument-sweep) var(--instrument-ease) both;
 }
 
 .paper-readout-shell:has(.paper-readout :focus-visible) .paper-readout {
@@ -742,6 +743,14 @@ body.sunset .paper-readout {
 
   .paper-readout-clip {
     overflow: visible;
+  }
+
+  /* The projected panel keeps its own narrow measure. The docked rule that gives
+     the drawer the full width of its slot is written with two classes, so it must
+     be answered here at the same weight or the panel inherits it and runs off the
+     right of the screen. */
+  .paper-readout-clip > .paper-readout {
+    width: clamp(16.25rem, 16vw, 17.25rem);
   }
 
   .publication-item.has-readout .publication-row::after {
@@ -898,6 +907,8 @@ body.sunset .paper-readout {
 @media (prefers-reduced-motion: reduce) {
   :is(
     .publication-inspect,
+    .paper-readout,
+    .paper-readout-frame,
     .paper-readout__close,
     .paper-readout__rail,
     .paper-readout__junction,
@@ -909,6 +920,12 @@ body.sunset .paper-readout {
   ) {
     animation: none !important;
     transition-duration: 0.01ms !important;
+  }
+
+  /* The aperture and the row's slot edge arrive at their open state without
+     travelling, so the instrument is complete and simply still. */
+  .publication-item.has-readout .publication-row::after {
+    transition: none !important;
   }
 
   .paper-readout__rail {
