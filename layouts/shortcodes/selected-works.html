@@ -28,14 +28,8 @@
       {{- with .readout }}
       <details class="paper-readout-shell" data-paper-readout>
         <summary class="publication-inspect" role="button" aria-label="Open preview of {{ $work.title }}" aria-controls="paper-readout-{{ $work.id }}" aria-expanded="false" data-open-label="Open preview of {{ $work.title }}" data-close-label="Close preview of {{ $work.title }}">
-          <span class="publication-inspect__signal" aria-hidden="true">
-            <svg viewBox="0 0 24 24" focusable="false">
-              <g class="publication-inspect__dial">
-                <circle class="publication-inspect__orbit" cx="12" cy="12" r="8.65" pathLength="100"></circle>
-                <path class="publication-inspect__index" d="M12 1.75v3.1"></path>
-              </g>
-              <circle class="publication-inspect__core" cx="12" cy="12" r="1.15"></circle>
-            </svg>
+          <span class="publication-inspect__signal instrument-mark" aria-hidden="true">
+            {{ partial "instrument-mark.html" . }}
           </span>
         </summary>
         <svg class="paper-readout__rails" preserveAspectRatio="none" aria-hidden="true" focusable="false">
@@ -45,6 +39,10 @@
           <circle class="paper-readout__junction paper-readout__junction--lower" r="1.15"></circle>
         </svg>
         <div class="paper-readout-frame" id="paper-readout-{{ $work.id }}">
+          {{- /* The aperture's grid item must be able to collapse to nothing, so
+                 the panel's padding and border live inside this clip rather than
+                 on the item itself. */ -}}
+          <div class="paper-readout-clip">
           <aside class="paper-readout" aria-label="Preview of {{ $work.title }}">
             <span class="paper-readout__corners" aria-hidden="true"></span>
             <button class="paper-readout__close" type="button" data-paper-readout-close aria-label="Close preview of {{ $work.title }}">
@@ -64,6 +62,7 @@
               {{- end }}
             </nav>
           </aside>
+          </div>
         </div>
       </details>
       {{- end }}

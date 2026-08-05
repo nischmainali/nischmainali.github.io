@@ -466,21 +466,15 @@
   display: none;
 }
 
+/* The reading rule is now the register's Trace: a graduated scale with a
+   travelling index and a figure in the machine voice. It reports and never
+   opens, which is why it carries no mark. */
 .single.blog .article-contents-progress {
   display: none;
-  height: 1px;
-  background: var(--article-rule);
-  overflow: hidden;
 }
 
-.single.blog .article-contents-progress > span {
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: var(--article-wine);
-  transform: scaleX(0);
-  transform-origin: left center;
-}
+.single.blog .article-contents-progress .instrument-trace__index {
+  background: var(--article-wine);}
 
 .single.blog .article-contents-trace {
   display: none;
@@ -1202,6 +1196,7 @@
 }
 
 .single.blog .article-figure-focus-link {
+  position: relative;
   display: block;
   border: 0;
   color: inherit;
@@ -1211,6 +1206,159 @@
 .single.blog .article-figure-focus-link:focus-visible {
   outline: 1px solid var(--article-blue);
   outline-offset: 0.35rem;
+}
+
+/* === Registration ===
+ *
+ * Nothing new appears here. The figure is already on the page, so the gesture
+ * marks it: four brackets snap to its bounds and two cross-hairs converge before
+ * the viewer commits. That is the whole reason this gesture is not Projection or
+ * Extension — there is nothing to reveal, only something to measure.
+ *
+ * The mark is an indicator, not a second control: the surrounding link remains
+ * the trigger. See assets/css/instrument.css for the register's invariants.
+ */
+.single.blog .article-figure-register {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.single.blog .article-figure-register__mark {
+  position: absolute;
+  top: 0.42rem;
+  right: 0.42rem;
+  color: var(--article-faint);
+  opacity: 0.55;
+  transition:
+    opacity var(--instrument-quick) var(--instrument-ease),
+    color var(--instrument-quick) var(--instrument-ease);
+}
+
+.single.blog .article-figure-focus-link:is(:hover, :focus-visible) .article-figure-register__mark {
+  color: var(--article-wine);
+  opacity: 1;
+}
+
+.single.blog .article-figure-focus-link:is(:hover, :focus-visible) .instrument-mark__dial {
+  transform: rotate(13deg);
+}
+
+/* The brackets and cross-hairs are one element: four corner gradients plus two
+   converging rules, so the whole apparatus shares a single clock. */
+.single.blog .article-figure-register__frame {
+  position: absolute;
+  inset: -0.42rem;
+  opacity: 0;
+  background:
+    linear-gradient(var(--article-wine), var(--article-wine)) left top / var(--instrument-corner) 1px no-repeat,
+    linear-gradient(var(--article-wine), var(--article-wine)) left top / 1px var(--instrument-corner) no-repeat,
+    linear-gradient(var(--article-wine), var(--article-wine)) right top / var(--instrument-corner) 1px no-repeat,
+    linear-gradient(var(--article-wine), var(--article-wine)) right top / 1px var(--instrument-corner) no-repeat,
+    linear-gradient(var(--article-wine), var(--article-wine)) left bottom / var(--instrument-corner) 1px no-repeat,
+    linear-gradient(var(--article-wine), var(--article-wine)) left bottom / 1px var(--instrument-corner) no-repeat,
+    linear-gradient(var(--article-wine), var(--article-wine)) right bottom / var(--instrument-corner) 1px no-repeat,
+    linear-gradient(var(--article-wine), var(--article-wine)) right bottom / 1px var(--instrument-corner) no-repeat;
+}
+
+.single.blog .article-figure-register__frame::before,
+.single.blog .article-figure-register__frame::after {
+  content: "";
+  position: absolute;
+  background: var(--article-wine);
+  opacity: 0.5;
+}
+
+/* The cross-hairs run the full span and are scaled to nothing until the gesture
+   runs, so they converge on the centre rather than fading in. */
+.single.blog .article-figure-register__frame::before {
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: 1px;
+  scale: 0 1;
+}
+
+.single.blog .article-figure-register__frame::after {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  scale: 1 0;
+}
+
+.single.blog .article-figure[data-registering] .article-figure-register__frame {
+  animation: article-register-snap 190ms var(--instrument-ease) both;
+}
+
+.single.blog .article-figure[data-registering] .article-figure-register__frame::before {
+  animation: article-register-hair-x 190ms var(--instrument-ease) both;
+}
+
+.single.blog .article-figure[data-registering] .article-figure-register__frame::after {
+  animation: article-register-hair-y 190ms var(--instrument-ease) both;
+}
+
+.single.blog .article-figure[data-registering] .instrument-mark__dial {
+  animation: article-register-lock 190ms var(--instrument-ease) both;
+}
+
+@keyframes article-register-snap {
+  from {
+    opacity: 0;
+    inset: -1.3rem;
+  }
+  to {
+    opacity: 0.9;
+    inset: -0.42rem;
+  }
+}
+
+/* The reticle draws itself out of the centre rather than fading in. */
+@keyframes article-register-hair-x {
+  from {
+    scale: 0 1;
+    opacity: 0;
+  }
+  to {
+    scale: 1 1;
+    opacity: 0.5;
+  }
+}
+
+@keyframes article-register-hair-y {
+  from {
+    scale: 1 0;
+    opacity: 0;
+  }
+  to {
+    scale: 1 1;
+    opacity: 0.5;
+  }
+}
+
+@keyframes article-register-lock {
+  from {
+    transform: rotate(13deg);
+  }
+  to {
+    transform: rotate(135deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .single.blog .article-figure[data-registering] .article-figure-register__frame,
+  .single.blog .article-figure[data-registering] .article-figure-register__frame::before,
+  .single.blog .article-figure[data-registering] .article-figure-register__frame::after,
+  .single.blog .article-figure[data-registering] .instrument-mark__dial {
+    animation-duration: 1ms;
+  }
+}
+
+@media print {
+  .single.blog .article-figure-register {
+    display: none;
+  }
 }
 
 .single.blog .article-figure figcaption {
@@ -1390,6 +1538,28 @@ html.article-figure-is-open {
 .single.blog .article-body .math-display .katex,
 .single.blog .article-body .math-equation .katex {
   font-size: 1.005em;
+}
+
+/* Trace, mounted on an overflowing formula. Hidden until the formula is actually
+   scrollable and the reader is engaged with it: an ambient readout should report,
+   not decorate. */
+.single.blog .math-scroll-trace {
+  position: absolute;
+  right: 2.6rem;
+  bottom: 0.1rem;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--instrument-quick) var(--instrument-ease);
+}
+
+.single.blog .math-equation:has(.math-scroll.is-scrollable):is(:hover, :focus-within)
+  .math-scroll-trace {
+  opacity: 1;
+}
+
+.single.blog .math-scroll-trace .instrument-trace__index {
+  background: var(--article-wine);
 }
 
 .single.blog .article-body .math-scroll {

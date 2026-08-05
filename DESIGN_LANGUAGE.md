@@ -725,6 +725,60 @@ remain, with one plain line and two links. Both use `assets/css/register.css`,
 which borrows the Writing index's measure, ornament, and Jost/Linden Hill
 division rather than inventing a second grammar.
 
+#### The instrument register (experimental)
+
+The site is a warm scholarly sheet under changing light. Laid over it is a
+measuring device. That juxtaposition — paper against instrument — is a deliberate
+second register, and it is the one place the site is allowed to feel like a
+terminal rather than a book.
+
+It is a **vocabulary, not an effect**. Before this pass the idea existed once, as
+the home ledger's projected panel, and the temptation was to copy that panel into
+every other place it might fit. Repeating one gesture is what would make the idea
+read as decoration. Instead the register has one crest, one easing family, and
+several distinct mechanisms, each with its own meaning and its own axis of
+movement. `assets/css/instrument.css` holds the invariants and the full
+vocabulary; read it before adding anything to the register.
+
+The invariants, in short: one small geometric mark from
+`layouts/partials/instrument-mark.html`; emission from a precise point rather
+than a box edge; one clock per assembly; registration corners on whichever edge
+the output arrives from; reader-initiated, reversible, and singular; it holds
+still while in use; and no easings or durations outside the tokens.
+
+**The law of contact.** What touches the sheet does not drift; what is suspended
+beside it does. Drift belongs to Projection alone, because Projection is the only
+gesture that leaves the page. This is what distinguishes Extension from a box
+that merely wobbles, and it was the fault in the first narrow-width state.
+
+The mechanisms, and how to choose between them: ask whether the evidence lives
+elsewhere (**Projection**, thrown into free margin, drifting), is folded inside
+the row (**Extension**, emerging from behind an edge and retracting behind it),
+is already on the page (**Registration**, brackets snapping to its bounds and a
+reticle drawing itself before the viewer commits), or whether the mark itself is
+the display (**Dilation**, radial, designed but not built). **Trace** is the
+ambient member: a graduated scale, a travelling index, and a figure in the
+machine voice. It reports and never opens, which is why it carries no mark and is
+the only member allowed to coexist with another gesture.
+
+The crest differentiates with the mechanism at no cost: surveying open margin the
+needle sweeps continuously; docked, it throws a single quarter-turn and stops,
+like a latch.
+
+The machine voice is the platform's own monospace, never a downloaded face, and it
+appears only on instrument labels — scales, counts, indices, source tags. Never in
+prose. It also stays a cool neutral in both lights, which is the one place the
+instrument refuses to warm with the sun. Pushing that refusal further, to a fully
+cool instrument layer indifferent to the weather, is the open experiment.
+
+Current assignment: Projection on the home ledger at 90rem and wider; Extension
+on the same ledger below that; Registration on the article figure viewer; Trace in
+the contents rail's reading rule and on a formula that genuinely overflows.
+Dilation is designed for the ink proof slip and deliberately unbuilt. One
+revealing gesture per context, Trace excepted. The register never appears in
+reading matter — not in prose, not in the Writing index, not in the colophon body,
+not on the missing page.
+
 ### Writing list
 
 The public `Writing` page keeps the stable Hugo `/blog/` route. It is a compact

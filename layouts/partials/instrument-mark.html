@@ -1,0 +1,21 @@
+{{- /*
+  instrument-mark.html — the one crest of the instrument register.
+
+  Emits only the inner SVG so a caller can supply its own wrapper and keep
+  whatever class its own JavaScript already measures. Every gesture in the
+  register uses this same mark; see assets/css/instrument.css for the rules that
+  make the family cohere.
+
+  The geometry is fixed: a dashed orbit of radius 8.65 in a 24-unit box, an index
+  tick at twelve o'clock, and a solid core. `pathLength="100"` lets a caller
+  animate the orbit by dash offset without knowing its circumference, and the
+  radius is what the connector geometry reads to find the emission point on the
+  circumference rather than on a bounding box.
+*/ -}}
+<svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+  <g class="instrument-mark__dial">
+    <circle class="instrument-mark__orbit" cx="12" cy="12" r="8.65" pathLength="100"></circle>
+    <path class="instrument-mark__index" d="M12 1.75v3.1"></path>
+  </g>
+  <circle class="instrument-mark__core" cx="12" cy="12" r="1.15"></circle>
+</svg>

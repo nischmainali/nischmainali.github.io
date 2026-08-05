@@ -108,55 +108,12 @@ html[data-ink] body.is-home .home .publications .publication-item.has-readout:is
   content: "";
 }
 
-.publication-inspect__signal {
-  position: relative;
-  display: block;
-  width: 1.38rem;
-  height: 1.38rem;
-}
-
-.publication-inspect__signal svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-
-.publication-inspect__dial {
-  transform-box: fill-box;
-  transform-origin: center;
-  transition: transform 130ms cubic-bezier(0.2, 0.72, 0.24, 1);
-}
-
-.publication-inspect__orbit,
-.publication-inspect__index {
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-}
-
-.publication-inspect__orbit {
-  stroke-width: 1.15;
-  stroke-dasharray: 2.35 5.98;
-  opacity: 0.82;
-}
-
-.publication-inspect__index {
-  stroke-width: 1.1;
-  opacity: 0.9;
-}
-
-.publication-inspect__core {
-  fill: currentColor;
-  opacity: 0.78;
-}
-
 .publication-inspect:is(:hover, :focus-visible) {
   color: var(--site-accent, #6f3b3f);
   opacity: 1;
 }
 
-.publication-inspect:is(:hover, :focus-visible) .publication-inspect__dial {
+.publication-inspect:is(:hover, :focus-visible) .instrument-mark__dial {
   transform: rotate(13deg);
 }
 
@@ -177,8 +134,13 @@ html[data-ink] body.is-home .home .publications .publication-item.has-readout:is
   }
 }
 
-.paper-readout-shell[open] .publication-inspect__dial {
-  animation: publication-orbit-turn 10.5s linear infinite;
+/* A latch thrown, not a needle sweeping: the docked gesture is mechanical. */
+.paper-readout-shell[open] .instrument-mark__dial {
+  transform: rotate(90deg);
+}
+
+.paper-readout-shell[data-readout-closing] .instrument-mark__dial {
+  transform: rotate(0deg);
 }
 
 .publication-inspect:focus-visible {
@@ -188,10 +150,83 @@ html[data-ink] body.is-home .home .publications .publication-item.has-readout:is
   box-shadow: 0 0 0 1px var(--site-focus-accent, rgba(23, 63, 81, 0.22));
 }
 
+/* === Extension ===
+ *
+ * Below the projection breakpoint there is no free margin to throw a panel into,
+ * so the record unfolds in place instead: the frame is an aperture that opens
+ * downward, and the readout slides out from behind the row's lower edge and
+ * retracts behind it again. See the vocabulary note in instrument.css.
+ *
+ * The occlusion is the whole point. The panel must be clipped by the aperture
+ * while it moves, or this is just a box appearing below a row. And it does not
+ * drift: it is in contact with the sheet, and drift belongs to Projection alone.
+ */
 .paper-readout-frame {
   position: relative;
   z-index: 3;
-  display: flow-root;
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: clip;
+  transition: grid-template-rows var(--instrument-sweep) var(--instrument-ease);
+}
+
+.paper-readout-shell[open] .paper-readout-frame {
+  grid-template-rows: 1fr;
+}
+
+/* The retraction needs the panel to still exist while it travels, so the shell
+   stays open and carries data-readout-closing until the transition ends. */
+.paper-readout-shell[data-readout-closing] .paper-readout-frame {
+  grid-template-rows: 0fr;
+}
+
+/* The collapsed aperture must contribute nothing. Padding and a border cannot
+   shrink below themselves, so the grid item is this bare clip and the panel's
+   own padding sits inside it. Without the wrapper every row reserved 30px of
+   dead space beneath it while closed. */
+.paper-readout-clip {
+  min-height: 0;
+  overflow: clip;
+}
+
+.paper-readout-clip > .paper-readout {
+  width: 100%;
+  margin: 0;
+}
+
+/* The row's own lower edge is the aperture. It brightens and sweeps its width as
+   the drawer runs out, so the row reads as a slot rather than a heading with
+   something stacked under it. */
+.publication-item.has-readout .publication-row::after {
+  content: "";
+  position: absolute;
+  z-index: 5;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: currentColor;
+  opacity: 0;
+  scale: 0 1;
+  transform-origin: left center;
+  pointer-events: none;
+}
+
+.publication-item.has-readout:is([data-readout-active], :has(.paper-readout-shell[open]))
+  .publication-row::after {
+  opacity: 0.7;
+  scale: 1 1;
+  transition:
+    scale var(--instrument-sweep) var(--instrument-ease),
+    opacity var(--instrument-quick) var(--instrument-ease);
+}
+
+.paper-readout-shell[data-readout-closing] ~ * .publication-row::after,
+.publication-item.has-readout:has(.paper-readout-shell[data-readout-closing])
+  .publication-row::after {
+  opacity: 0;
+  scale: 1 1;
+  transition: opacity var(--instrument-quick) var(--instrument-ease);
 }
 
 .paper-readout__rails {
@@ -309,26 +344,30 @@ body.sunset .paper-readout {
   content: none;
 }
 
+/* Registration marks stamp whichever edge the output arrived from. Docked that
+   is the bottom, because the drawer came down out of the aperture; projected it
+   is the connector side, set below. */
 .paper-readout__corners {
+  --corner-ink: var(--instrument-accent);
   position: absolute;
   z-index: 1;
   inset: -1px;
   pointer-events: none;
   background:
-    linear-gradient(var(--site-accent, #6f3b3f), var(--site-accent, #6f3b3f)) right -1px top -1px / 1.05rem 1px no-repeat,
-    linear-gradient(var(--site-accent, #6f3b3f), var(--site-accent, #6f3b3f)) right -1px top -1px / 1px 1.05rem no-repeat,
-    linear-gradient(var(--site-accent, #6f3b3f), var(--site-accent, #6f3b3f)) right -1px bottom -1px / 1.05rem 1px no-repeat,
-    linear-gradient(var(--site-accent, #6f3b3f), var(--site-accent, #6f3b3f)) right -1px bottom -1px / 1px 1.05rem no-repeat;
+    linear-gradient(var(--corner-ink), var(--corner-ink)) left -1px bottom -1px / var(--instrument-corner) 1px no-repeat,
+    linear-gradient(var(--corner-ink), var(--corner-ink)) left -1px bottom -1px / 1px var(--instrument-corner) no-repeat,
+    linear-gradient(var(--corner-ink), var(--corner-ink)) right -1px bottom -1px / var(--instrument-corner) 1px no-repeat,
+    linear-gradient(var(--corner-ink), var(--corner-ink)) right -1px bottom -1px / 1px var(--instrument-corner) no-repeat;
   opacity: 0.82;
-  animation: paper-readout-frame-enter 150ms 32ms cubic-bezier(0.2, 0.76, 0.24, 1) both;
+  animation: paper-readout-frame-enter 150ms 32ms var(--instrument-ease) both;
 }
 
 .paper-readout-shell[data-readout-connector="left"] .paper-readout__corners {
   background:
-    linear-gradient(var(--site-accent, #6f3b3f), var(--site-accent, #6f3b3f)) left -1px top -1px / 1.05rem 1px no-repeat,
-    linear-gradient(var(--site-accent, #6f3b3f), var(--site-accent, #6f3b3f)) left -1px top -1px / 1px 1.05rem no-repeat,
-    linear-gradient(var(--site-accent, #6f3b3f), var(--site-accent, #6f3b3f)) left -1px bottom -1px / 1.05rem 1px no-repeat,
-    linear-gradient(var(--site-accent, #6f3b3f), var(--site-accent, #6f3b3f)) left -1px bottom -1px / 1px 1.05rem no-repeat;
+    linear-gradient(var(--corner-ink), var(--corner-ink)) left -1px top -1px / var(--instrument-corner) 1px no-repeat,
+    linear-gradient(var(--corner-ink), var(--corner-ink)) left -1px top -1px / 1px var(--instrument-corner) no-repeat,
+    linear-gradient(var(--corner-ink), var(--corner-ink)) left -1px bottom -1px / var(--instrument-corner) 1px no-repeat,
+    linear-gradient(var(--corner-ink), var(--corner-ink)) left -1px bottom -1px / 1px var(--instrument-corner) no-repeat;
 }
 
 .paper-readout__close {
@@ -518,6 +557,28 @@ body.sunset .paper-readout {
   outline-offset: 0.18rem;
 }
 
+@keyframes paper-readout-extend {
+  from {
+    translate: 0 -42%;
+    opacity: 0.2;
+  }
+  to {
+    translate: 0 0;
+    opacity: 1;
+  }
+}
+
+@keyframes paper-readout-retract {
+  from {
+    translate: 0 0;
+    opacity: 1;
+  }
+  to {
+    translate: 0 -42%;
+    opacity: 0;
+  }
+}
+
 @keyframes paper-readout-enter {
   from {
     opacity: 0;
@@ -650,11 +711,15 @@ body.sunset .paper-readout {
   }
 }
 
+/* Docked, so it slides out of the aperture and stays in contact with the sheet.
+   Drift is added back only in the projected state below. */
 .paper-readout-shell[open] .paper-readout {
-  animation:
-    paper-readout-enter 185ms cubic-bezier(0.2, 0.78, 0.22, 1) both,
-    paper-readout-drift 14s linear infinite;
+  animation: paper-readout-extend var(--instrument-sweep) var(--instrument-ease) both;
   will-change: translate;
+}
+
+.paper-readout-shell[data-readout-closing] .paper-readout {
+  animation: paper-readout-retract var(--instrument-quick) var(--instrument-ease) both;
 }
 
 .paper-readout-shell:has(.paper-readout :focus-visible) .paper-readout {
@@ -665,8 +730,28 @@ body.sunset .paper-readout {
  * exterior field for the panel, its 2.7 rem interval, and the full drift. A
  * rem breakpoint also becomes more conservative when browser text is enlarged. */
 @media screen and (min-width: 90rem) {
+  /* Projection throws the panel clear of the page, so the aperture is dismissed
+     entirely: no clip, no grid, no slide. */
   .paper-readout-frame {
     position: static;
+    display: flow-root;
+    grid-template-rows: none;
+    overflow: visible;
+    transition: none;
+  }
+
+  .paper-readout-clip {
+    overflow: visible;
+  }
+
+  .publication-item.has-readout .publication-row::after {
+    content: none;
+  }
+
+  /* Surveying open space, so the needle sweeps instead of latching. */
+  .paper-readout-shell[open] .instrument-mark__dial {
+    transform: none;
+    animation: publication-orbit-turn 10.5s linear infinite;
   }
 
   .paper-readout__rails {
@@ -793,12 +878,12 @@ body.sunset .paper-readout {
     color: CanvasText;
   }
 
-  .publication-inspect__orbit,
-  .publication-inspect__index {
+  .instrument-mark__orbit,
+  .instrument-mark__index {
     stroke: ButtonText;
   }
 
-  .publication-inspect__core {
+  .instrument-mark__core {
     fill: ButtonText;
   }
 

@@ -1,0 +1,255 @@
+/* === The instrument register ===
+ *
+ * The sheet is warm, hand-shaped, and lit by weather the reader does not
+ * control. Laid over it is a measuring device. That juxtaposition is the idea,
+ * and this file holds the part of it that every gesture shares, so the family
+ * stays a vocabulary instead of one effect repeated in four places.
+ *
+ * INVARIANTS. A gesture belongs to this register only if it keeps all of these:
+ *
+ *   1. One small geometric mark — thin strokes, circles and ticks, no fill and
+ *      no pictogram. Emitted by layouts/partials/instrument-mark.html.
+ *   2. Emission from a precise point, never from a box edge.
+ *   3. One clock per assembly: every moving part of one gesture shares an
+ *      animation, never separate ones.
+ *   4. Registration marks on the leading edge — whichever edge the output
+ *      arrives from carries the corner pair.
+ *   5. Reader-initiated, reversible, and singular. Click or keyboard, never
+ *      hover. Escape closes. One open at a time.
+ *   6. It holds still while it is being used.
+ *   7. Timings and easings come from the tokens below. No new curves.
+ *
+ * THE LAW OF CONTACT. What touches the sheet does not drift; what is suspended
+ * beside it does. Drift is the exclusive signature of Projection, which is the
+ * only gesture that leaves the page. Everything docked moves on a mechanical
+ * axis instead. This is what separates Extension from a box that merely wobbles.
+ *
+ * THE VOCABULARY. One ambient register and four revealing gestures, each with a
+ * distinct meaning and its own axis of movement:
+ *
+ *   Trace        ambient, no open or close.   Axis: none, it reads.
+ *                "this is a live measurement of where you are"
+ *   Projection   thrown into free margin.     Axis: outward, horizontal.
+ *                "the evidence lives elsewhere; here it is, beside the page"
+ *   Extension    emerges from behind an edge. Axis: vertical, occluded.
+ *                "this was folded inside the row; it unfolds in place"
+ *   Registration marks what is already there. Axis: none; it snaps.
+ *                "this existing thing is now under measurement"
+ *   Dilation     the mark becomes the display. Axis: radial from a point.
+ *                "the instrument is the readout"
+ *
+ * Choosing between them is not a matter of taste. Ask: does the evidence live
+ * elsewhere, is it folded inside, is it already on the page, or is the mark
+ * itself the display? That picks the gesture. One revealing gesture per context;
+ * Trace is exempt because it is ambient.
+ *
+ * The register never appears in reading matter — not in prose, not in the
+ * Writing index, not in the colophon body, not on the missing page.
+ */
+
+:root {
+  /* The crest's geometry, shared so every mark is the same instrument. */
+  --instrument-mark-size: 1.38rem;
+  --instrument-orbit-dash: 2.35 5.98;
+  --instrument-corner: 1.05rem;
+
+  /* One easing family and three durations. A gesture picks from these. */
+  --instrument-ease: cubic-bezier(0.2, 0.76, 0.24, 1);
+  --instrument-ease-out: cubic-bezier(0.2, 0.78, 0.22, 1);
+  --instrument-quick: 135ms;
+  --instrument-open: 185ms;
+  --instrument-sweep: 210ms;
+  --instrument-drift: 14s;
+
+  /* The machine voice. Deliberately the platform's own monospace: the terminal
+     half of the contrast should cost nothing to download. Used only for
+     instrument labels — scales, counts, indices, source tags — and never for
+     prose. */
+  --instrument-voice: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", monospace;
+
+  /* Registration ink follows the site's accent, so the device is stamped in the
+     same ink as the crop marks and belongs to the paper.
+
+     The machine voice does not. It stays a cool neutral in both lights, which is
+     the one place the instrument refuses to warm with the sun. Pushing that
+     refusal further — a fully cool instrument layer, indifferent to the
+     weather — is the open experiment; it would mean overriding
+     --instrument-accent here and nowhere else. */
+  --instrument-accent: var(--site-accent, #6f3b3f);
+  --instrument-cool: #4a565c;
+  --instrument-cool-quiet: rgba(74, 86, 92, 0.62);
+}
+
+/* === The crest === */
+
+.instrument-mark {
+  position: relative;
+  display: block;
+  width: var(--instrument-mark-size);
+  height: var(--instrument-mark-size);
+}
+
+.instrument-mark svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.instrument-mark__dial {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 130ms var(--instrument-ease);
+}
+
+.instrument-mark__orbit,
+.instrument-mark__index {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+}
+
+.instrument-mark__orbit {
+  stroke-width: 1.15;
+  stroke-dasharray: var(--instrument-orbit-dash);
+  opacity: 0.82;
+}
+
+.instrument-mark__index {
+  stroke-width: 1.1;
+  opacity: 0.9;
+}
+
+.instrument-mark__core {
+  fill: currentColor;
+  opacity: 0.78;
+}
+
+/* === The machine voice === */
+
+.instrument-voice {
+  font-family: var(--instrument-voice);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+/* === Trace: the ambient register ===
+ *
+ * A graduated scale with a travelling index. It reports and never opens, so it
+ * needs no mark, no corners, and no clock — its only movement is the index
+ * following the reader. The scale is drawn with a repeating gradient rather than
+ * elements, so a hundred graduations cost nothing.
+ */
+
+.instrument-trace {
+  --trace-value: 0;
+  position: relative;
+  display: block;
+  height: 0.62rem;
+}
+
+/* The scale stops short of the readout so the two never collide. */
+.instrument-trace__scale {
+  position: absolute;
+  right: 2.7rem;
+  bottom: 0;
+  left: 0;
+  height: 0.34rem;
+  background:
+    repeating-linear-gradient(
+        to right,
+        var(--instrument-cool-quiet) 0 1px,
+        transparent 1px 0.5rem
+      )
+      left bottom / 100% 0.17rem no-repeat,
+    linear-gradient(var(--instrument-cool-quiet), var(--instrument-cool-quiet))
+      left bottom / 100% 1px no-repeat;
+  opacity: 0.5;
+}
+
+/* Every fifth graduation is taller, so the scale reads as measured rather than
+   as texture. */
+.instrument-trace__scale::before {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 0.34rem;
+  background: repeating-linear-gradient(
+      to right,
+      var(--instrument-cool-quiet) 0 1px,
+      transparent 1px 2.5rem
+    )
+    left bottom / 100% 0.34rem no-repeat;
+}
+
+/* The index is placed by a pixel offset the caller writes, not by a percentage:
+   it moves on every scroll frame, so it must translate rather than reflow. */
+.instrument-trace__index {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  height: 0.62rem;
+  background: var(--instrument-accent);
+  opacity: 0.85;
+  translate: var(--trace-x, 0px) 0;
+  will-change: translate;
+}
+
+/* The measured figure, in the machine voice. It reads the same width at every
+   value, so the scale does not jitter as the reader moves. */
+.instrument-trace__value {
+  position: absolute;
+  right: 0;
+  bottom: -0.08rem;
+  color: var(--instrument-cool-quiet);
+  font-family: var(--instrument-voice);
+  font-size: 0.58rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .instrument-trace__index {
+    transition: translate 120ms linear;
+  }
+}
+
+/* Reduced motion keeps the complete instrument — its marks, scales, rails, and
+ * translucency — and holds only the movement still, exactly as the
+ * environmental renderer does. It must never collapse a gesture into a plain
+ * box. */
+@media (prefers-reduced-motion: reduce) {
+  .instrument-mark__dial {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .instrument-mark__orbit,
+  .instrument-mark__index {
+    stroke: ButtonText;
+  }
+
+  .instrument-mark__core {
+    fill: ButtonText;
+  }
+
+  .instrument-trace__scale {
+    background: none;
+    border-bottom: 1px solid CanvasText;
+  }
+
+  .instrument-trace__index {
+    background: Highlight;
+  }
+}
+
+@media print {
+  .instrument-mark,
+  .instrument-trace {
+    display: none !important;
+  }
+}

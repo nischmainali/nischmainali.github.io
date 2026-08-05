@@ -87,6 +87,9 @@
   var tocPageHeight = 0;
   var tocHeadingPositions = [];
   var readingProgressValue = null;
+  var readingProgressReadout = contents && contents.querySelector("[data-article-reading-value]");
+  var readingProgressReadoutValue = null;
+  var readingProgressTrack = 0;
 
   function keepCurrentTocLinkVisible(link) {
     if (!link || !contentsList || !railQuery.matches) return;
@@ -192,7 +195,20 @@
     value = value.toFixed(4);
     if (value === readingProgressValue) return;
     readingProgressValue = value;
-    readingProgress.style.transform = "scaleX(" + value + ")";
+    // The index travels along the scale by a pixel offset rather than reflowing,
+    // because this runs on every scroll frame. The track width is cached with the
+    // rest of the outline's geometry.
+    readingProgress.style.setProperty(
+      "--trace-x",
+      (value * readingProgressTrack).toFixed(2) + "px"
+    );
+    if (readingProgressReadout) {
+      var reading = Math.round(value * 100);
+      if (reading !== readingProgressReadoutValue) {
+        readingProgressReadoutValue = reading;
+        readingProgressReadout.textContent = reading + "%";
+      }
+    }
   }
 
   function refreshTocGeometry() {
@@ -203,6 +219,12 @@
     tocArticleTop = tocArticle.getBoundingClientRect().top + scrollY;
     tocArticleEnd = tocArticleTop + tocArticle.offsetHeight;
     tocPageHeight = document.documentElement.scrollHeight;
+    if (readingProgress) {
+      var scale = readingProgress.parentElement
+        && readingProgress.parentElement.querySelector(".instrument-trace__scale");
+      var trackWidth = scale ? scale.clientWidth : 0;
+      readingProgressTrack = Math.max(0, trackWidth - readingProgress.offsetWidth);
+    }
     tocHeadingPositions = tocSections.map(function (section) {
       return section.heading.getBoundingClientRect().top + scrollY;
     });
@@ -598,9 +620,25 @@
     };
   }
 
+  // The ambient reading for a formula that genuinely overflows. The same Trace
+  // component as the outline's, mounted a second time; it shows only while the
+  // reader is engaged with the overflow, so it never becomes permanent clutter.
+  function updateMathTrace(scroller) {
+    var equation = scroller.closest(".math-equation");
+    var index = equation && equation.querySelector("[data-math-scroll-index]");
+    if (!index || !index.parentElement) return;
+    var scale = index.parentElement.querySelector(".instrument-trace__scale");
+    var maxScroll = scroller.scrollWidth - scroller.clientWidth;
+    if (!scale || maxScroll <= 1) return;
+    var value = Math.max(0, Math.min(1, scroller.scrollLeft / maxScroll));
+    var track = Math.max(0, scale.clientWidth - index.offsetWidth);
+    index.style.setProperty("--trace-x", (value * track).toFixed(2) + "px");
+  }
+
   function applyMathOverflow(measurement) {
     var scroller = measurement.scroller;
     var state = mathOverflowState(scroller);
+    updateMathTrace(scroller);
     var scrollable = measurement.scrollable;
     var canScrollLeft = measurement.canScrollLeft;
     var canScrollRight = measurement.canScrollRight;
@@ -713,6 +751,8 @@
     document.querySelectorAll("[data-article-figure-focus-link]")
   );
 
+  var figureReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
   if (figureDialog && figureFocusLinks.length && typeof figureDialog.showModal === "function") {
     var figureDialogImage = figureDialog.querySelector("[data-article-figure-focus-image]");
     var figureDialogCaption = figureDialog.querySelector("[data-article-figure-focus-caption]");
@@ -742,10 +782,26 @@
       );
       link.setAttribute("aria-expanded", "true");
       document.documentElement.classList.add("article-figure-is-open");
-      figureDialog.showModal();
-      window.requestAnimationFrame(function () {
-        if (figureDialogClose) figureDialogClose.focus();
-      });
+
+      // Registration runs on the figure before the viewer commits: the brackets
+      // snap to its bounds and the reticle draws itself, so opening reads as
+      // measuring something already on the page rather than as a modal
+      // appearing. Reduced motion skips the interval but keeps the marks.
+      var register = figure.querySelector(".article-figure-register");
+      var wait = register && !figureReducedMotion.matches ? 190 : 0;
+      if (register) {
+        figure.setAttribute("data-registering", "");
+        window.setTimeout(function () {
+          figure.removeAttribute("data-registering");
+        }, wait + 40);
+      }
+
+      window.setTimeout(function () {
+        figureDialog.showModal();
+        window.requestAnimationFrame(function () {
+          if (figureDialogClose) figureDialogClose.focus();
+        });
+      }, wait);
     }
 
     function releaseFigureDialog() {

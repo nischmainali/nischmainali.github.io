@@ -32,6 +32,12 @@
 <link rel="preload" href="{{ "vendor/fonts/eb-garamond-initials/EBGaramond-InitialsF2-LatinCaps.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
 {{ end }}
 {{ partial "ink-head.html" . }}
+{{- /* The instrument register is shared by every gesture, so it loads wherever
+      one of them can appear: the home ledger and an opened article. */ -}}
+{{- if or .IsHome (and .IsPage (eq .Section "blog")) -}}
+{{- $instrumentStyles := resources.Get "css/instrument.css" | minify | fingerprint "md5" -}}
+<link rel="stylesheet" href="{{ $instrumentStyles.RelPermalink }}">
+{{- end -}}
 {{- if .IsHome -}}
 {{- $homeReadoutStyles := resources.Get "css/home-readout.css" | minify | fingerprint "md5" -}}
 <link rel="stylesheet" href="{{ $homeReadoutStyles.RelPermalink }}">

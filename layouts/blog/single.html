@@ -29,8 +29,13 @@
             <span class="article-contents-disclosure" aria-hidden="true"></span>
           </summary>
           <a class="article-contents-return" href="#article-title" aria-label="Return to article opening"><span aria-hidden="true">top</span></a>
-          <div class="article-contents-progress" aria-hidden="true">
-            <span data-article-reading-progress></span>
+          {{- /* Trace: the ambient member of the instrument register. It reports
+                 where the reader is and never opens anything, so it carries no
+                 mark and no corners. See assets/css/instrument.css. */ -}}
+          <div class="article-contents-progress instrument-trace" aria-hidden="true">
+            <span class="instrument-trace__scale"></span>
+            <span class="instrument-trace__value" data-article-reading-value></span>
+            <span class="instrument-trace__index" data-article-reading-progress></span>
           </div>
           <div class="article-contents-trace" aria-hidden="true">
             <span class="article-contents-trace-current" data-article-current-section>Opening</span>

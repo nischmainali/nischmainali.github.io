@@ -223,8 +223,19 @@
     item.toggleAttribute("data-readout-active", isOpen);
   }
 
-  function closeDisclosure(disclosure, restoreFocus) {
-    if (!disclosure) return;
+  // A native disclosure hides its content the instant `open` flips, so the
+  // retraction has nothing left to animate. Extension therefore keeps the shell
+  // open and marks it closing until the drawer has travelled back behind the
+  // row, then flips `open`. Projection needs none of this: it is thrown clear of
+  // the page and simply leaves.
+  var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  function finishClose(disclosure, restoreFocus) {
+    if (disclosure.retractTimer) {
+      window.clearTimeout(disclosure.retractTimer);
+      disclosure.retractTimer = 0;
+    }
+    disclosure.removeAttribute("data-readout-closing");
     clearConnector(disclosure);
     disclosure.open = false;
     setItemState(disclosure, false);
@@ -233,6 +244,35 @@
       var summary = disclosure.querySelector("summary");
       if (summary) summary.focus({ preventScroll: true });
     }
+  }
+
+  function retractDuration(disclosure) {
+    var frame = disclosure.querySelector(".paper-readout-frame");
+    if (!frame) return 0;
+    var declared = window.getComputedStyle(frame).transitionDuration || "0s";
+    var first = parseFloat(declared);
+    if (!Number.isFinite(first) || first <= 0) return 0;
+    return declared.indexOf("ms") > -1 && declared.indexOf("s") === declared.indexOf("ms") + 1
+      ? first
+      : first * 1000;
+  }
+
+  function closeDisclosure(disclosure, restoreFocus) {
+    if (!disclosure) return;
+    if (disclosure.hasAttribute("data-readout-closing")) return;
+
+    var docked = !connectedLayout.matches;
+    var duration = docked && !reducedMotion.matches ? retractDuration(disclosure) : 0;
+    if (!docked || duration <= 0) {
+      finishClose(disclosure, restoreFocus);
+      return;
+    }
+
+    disclosure.setAttribute("data-readout-closing", "");
+    if (active === disclosure) active = null;
+    disclosure.retractTimer = window.setTimeout(function () {
+      finishClose(disclosure, restoreFocus);
+    }, duration);
   }
 
   function syncDisclosure(disclosure) {
@@ -244,6 +284,11 @@
     }
 
     if (disclosure.open) {
+      if (disclosure.retractTimer) {
+        window.clearTimeout(disclosure.retractTimer);
+        disclosure.retractTimer = 0;
+      }
+      disclosure.removeAttribute("data-readout-closing");
       if (active && active !== disclosure) closeDisclosure(active, false);
       active = disclosure;
       setItemState(disclosure, true);

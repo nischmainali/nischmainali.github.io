@@ -15,6 +15,10 @@
   <div class="math-scroll" data-math-scroll>
     {{- partial "render-math.html" (dict "tex" $tex "display" true "page" .Page "position" .Position) -}}
   </div>
+  <span class="math-scroll-trace instrument-trace" aria-hidden="true">
+    <span class="instrument-trace__scale"></span>
+    <span class="instrument-trace__index" data-math-scroll-index></span>
+  </span>
   <a class="equation-number" href="#equation-{{ $id }}" aria-label="Equation {{ $label }}">
     <span class="equation-number-value" aria-hidden="true">({{ $label }})</span>
   </a>
