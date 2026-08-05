@@ -676,8 +676,8 @@ TurnTrout reference does use one size for both, but its ground is a much paler
 tint blended toward the page, which is why the clash never appears there.
 
 The accepted arrangement, chosen from a four-way comparison on 4 August 2026:
-the ground's ink spans the three-line block from the **top of the first line
-box** to the third line's baseline, and its left edge registers with the measure —
+the ground's ink spans from the **top of the tallest ink on the first line** to
+the third line's baseline, and its left edge registers with the measure —
 a hard-edged square cannot hang into the gutter the way a letter's side bearings
 allow. The letter's ink is 0.77 of that square and centred in it. Aligning the
 square's top to the ascender line instead leaves visible slack above and below and
@@ -685,13 +685,24 @@ makes the square read as too small; the correct size lands within a hair of the
 4.65rem the original construction used, which was evidently the intent before the
 offsets drifted.
 
-Two lessons from getting this wrong repeatedly. First, **measure the laid-out
-page, do not assume a grid**: the numbers must come from Range rectangles over
-real prose, because deriving them from the same model used to place the element
-only confirms itself. Second, the three-line grid is only even because `sup` and
-`sub` are kept out of the line box — see the correction below. All four values are
-written out with their arithmetic beside the rule in `article.css`. Re-derive them
-if the opening's size or leading changes; never nudge them by eye.
+Three lessons from getting this wrong repeatedly, and they generalise beyond the
+initial.
+
+**Measure the laid-out page; do not assume a grid.** The three-line grid was not
+even until `sup` and `sub` were kept out of the line box, and deriving the
+element's position from the same model used to place it only confirms itself.
+
+**Take glyph extents from the font binary, not from canvas.** `fontTools` reads
+F1's `T` as ink 0.0050–0.9950 on a 1000 em; `TextMetrics.fontBoundingBox*`
+reports ascent/descent 0.900/0.250 for the same face, which matches neither its
+`hhea` (1.000/−0.014) nor its `OS/2` typo metrics.
+
+**Where the baseline sits inside a `line-height: 1` box is not predictable for
+these faces, so calibrate it.** The three candidate metrics above imply 0.825em
+and 0.993em; a metric-free strut probe in the live page measures 0.810em. Only
+the last is what the browser does. The two SIZES in `article.css` are therefore
+derived, and the two TOP offsets are calibrated against the rendered page and
+carry a comment saying so. Do not "fix" them by recomputing from metrics.
 
 The general lesson is worth keeping: several of these were numbers set by eye
 that happened to look close. Where a value can be derived from the type, derive
