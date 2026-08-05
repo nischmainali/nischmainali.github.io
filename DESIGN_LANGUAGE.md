@@ -621,6 +621,50 @@ and both survive into print, where the screen navigation drops away. Revision
 stays out of the title field, where an earlier specimen proved such registers to
 be unnecessary complication.
 
+#### Typographic corrections found in review (4 August 2026)
+
+Four defects came out of looking closely at an opened note. Each was a case of a
+value set by eye, or of a browser assumption that had quietly stopped holding.
+
+**Blackboard and calligraphic letters were printing as ordinary italics.** KaTeX
+writes `\mathbb`, `\mathcal`, `\mathfrak`, and `\mathsf` as a legacy
+`mathvariant` attribute on a Latin letter. MathML Core kept only
+`mathvariant="normal"`, so Chromium ignores those attributes: every `\RR` on the
+site was printing as an italic *R*, and `\GP` as *GP*. Firefox still honours
+them, which is why it was easy to miss. `render-math.html` now substitutes the
+Mathematical Alphanumeric Symbols codepoint from `data/mathml.toml`, which every
+engine draws. Do not reintroduce a dependency on legacy `mathvariant`.
+
+**Display mathematics was flush left, not centred.** The formula carried
+`min-width: 100%`, which left its auto margins no free space to distribute. The
+scroll box keeps the full measure so its overflow cues stay correct, and the
+formula itself now shrinks to its content and centres; one wider than the column
+exhausts that space and scrolls from its left edge, as before.
+
+**Equation numbers below 860px were dropped a full line clear of the formula.**
+The space was reserved underneath rather than beside. The number now takes the
+same 2.6rem optical gutter on the right that the marginal notes keep, and sits on
+the formula's centre. Above 860px it continues to hang outside the measure.
+
+**Notes were spaced by leaked prose margins.** Goldmark wraps each note in a
+paragraph, which inherited the body margin and opened about 29px between two
+20px lines — more air between notes than inside them. The interval is set on the
+item now, deliberately a little under one line.
+
+The opening initial was also rebuilt. It had been two glyphs, the plain F2 letter
+over an F1 "ornament", and the two printed a doubled, misregistered letter: F1 is
+not an ornamental ground but a complete decorated capital, and its letter is not
+legible at three-line size. Since the design's own requirement is a readable
+initial, the initial is now the plain face alone and the madder ornament is gone.
+Restoring ornament means using F1 by itself, never layering the two. Its size and
+inset are derived from measured font metrics in a comment beside the rule, so the
+cap meets the first line's cap height and the foot the third line's baseline
+within a pixel, rather than being nudged by a magic offset.
+
+The general lesson is worth keeping: several of these were numbers set by eye
+that happened to look close. Where a value can be derived from the type, derive
+it and leave the derivation in the file.
+
 Nisch reviewed a first version of this pass on 4 August 2026 and rejected the
 apparatus it had grown around the mathematics. An index of statements, a
 published notation register, a `notation` shortcode, an authored introduction on

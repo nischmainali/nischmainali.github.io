@@ -1,0 +1,28 @@
+# MathML alphabet substitutions.
+#
+# KaTeX writes \mathbb, \mathcal, \mathfrak, and \mathsf as a legacy
+# `mathvariant` attribute on an ordinary Latin letter, for example
+# `<mi mathvariant="double-struck">R</mi>`. MathML Core removed every
+# mathvariant value except "normal", so Chromium ignores those attributes and
+# prints a plain italic R where the author wrote \RR. Firefox still honours
+# them, which is why the fault is easy to miss.
+#
+# The renderer therefore substitutes the Mathematical Alphanumeric Symbols
+# codepoint, which every MathML engine draws correctly, and marks the element
+# "normal" so it is not italicised a second time. The KaTeX HTML fallback layer
+# is untouched: it draws these letters from its own fonts and was always right.
+#
+# Each string lists the substitutes for A–Z, or a–z, in order. Keep them in that
+# order; the renderer indexes them positionally.
+
+[uppercase]
+double-struck = "𝔸𝔹ℂ𝔻𝔼𝔽𝔾ℍ𝕀𝕁𝕂𝕃𝕄ℕ𝕆ℙℚℝ𝕊𝕋𝕌𝕍𝕎𝕏𝕐ℤ"
+script = "𝒜ℬ𝒞𝒟ℰℱ𝒢ℋℐ𝒥𝒦ℒℳ𝒩𝒪𝒫𝒬ℛ𝒮𝒯𝒰𝒱𝒲𝒳𝒴𝒵"
+fraktur = "𝔄𝔅ℭ𝔇𝔈𝔉𝔊ℌℑ𝔍𝔎𝔏𝔐𝔑𝔒𝔓𝔔ℜ𝔖𝔗𝔘𝔙𝔚𝔛𝔜ℨ"
+sans-serif = "𝖠𝖡𝖢𝖣𝖤𝖥𝖦𝖧𝖨𝖩𝖪𝖫𝖬𝖭𝖮𝖯𝖰𝖱𝖲𝖳𝖴𝖵𝖶𝖷𝖸𝖹"
+
+[lowercase]
+double-struck = "𝕒𝕓𝕔𝕕𝕖𝕗𝕘𝕙𝕚𝕛𝕜𝕝𝕞𝕟𝕠𝕡𝕢𝕣𝕤𝕥𝕦𝕧𝕨𝕩𝕪𝕫"
+script = "𝒶𝒷𝒸𝒹ℯ𝒻ℊ𝒽𝒾𝒿𝓀𝓁𝓂𝓃ℴ𝓅𝓆𝓇𝓈𝓉𝓊𝓋𝓌𝓍𝓎𝓏"
+fraktur = "𝔞𝔟𝔠𝔡𝔢𝔣𝔤𝔥𝔦𝔧𝔨𝔩𝔪𝔫𝔬𝔭𝔮𝔯𝔰𝔱𝔲𝔳𝔴𝔵𝔶𝔷"
+sans-serif = "𝖺𝖻𝖼𝖽𝖾𝖿𝗀𝗁𝗂𝗃𝗄𝗅𝗆𝗇𝗈𝗉𝗊𝗋𝗌𝗍𝗎𝗏𝗐𝗑𝗒𝗓"

@@ -652,7 +652,6 @@ html[data-ink] body.single.blog {
   --article-block-strong: var(--site-wash-strong);
   --article-code-ink: var(--site-ink);
   --article-dropcap-ink: var(--site-heading);
-  --article-dropcap-ornament: color-mix(in srgb, var(--site-ornament) 32%, transparent);
   --article-focus-paper: color-mix(in srgb, var(--palette-bg-main) 96%, white);
   --article-focus-backdrop: color-mix(in srgb, var(--site-ink) 56%, transparent);
 }
@@ -661,7 +660,6 @@ html[data-ink] body.sunset.single.blog {
   --article-muted: var(--site-muted);
   --article-faint: var(--site-muted);
   --article-quiet-ink: color-mix(in oklch, var(--site-muted) 72%, var(--site-ink));
-  --article-dropcap-ornament: color-mix(in srgb, var(--site-ornament) 25%, transparent);
   --article-focus-paper: color-mix(in srgb, var(--palette-bg-main) 83%, #dfb183);
   --article-focus-backdrop: color-mix(in srgb, var(--site-ink) 58%, transparent);
 }

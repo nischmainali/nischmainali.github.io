@@ -24,13 +24,38 @@
     {{- errorf "Unable to render mathematical markup: %s: see %s" . $position -}}
   {{- else -}}
     {{- $page.Store.Set "hasMath" true -}}
-    {{- $rendered := .Value -}}
+    {{- $markup := string .Value -}}
+
+    {{- /* MathML Core kept only mathvariant="normal". Chromium therefore ignores
+          the legacy values KaTeX writes for \mathbb, \mathcal, \mathfrak, and
+          \mathsf, and prints a plain italic letter where the author asked for a
+          blackboard or calligraphic one. Substitute the Mathematical
+          Alphanumeric Symbols codepoint, which every engine draws, and mark the
+          element normal so it is not italicised on top of that. See
+          data/mathml.toml. The KaTeX HTML fallback layer needs no repair. */ -}}
+    {{- $letters := dict
+      "uppercase" (split "ABCDEFGHIJKLMNOPQRSTUVWXYZ" "")
+      "lowercase" (split "abcdefghijklmnopqrstuvwxyz" "") -}}
+    {{- range $case, $alphabet := $letters -}}
+      {{- range $variant, $substitutes := (index hugo.Data.mathml $case) -}}
+        {{- $marker := printf "<mi mathvariant=%q>" $variant -}}
+        {{- if strings.Contains $markup $marker -}}
+          {{- $glyphs := split $substitutes "" -}}
+          {{- range $index, $letter := $alphabet -}}
+            {{- $markup = replace $markup
+                (printf "%s%s</mi>" $marker $letter)
+                (printf "<mi mathvariant=\"normal\">%s</mi>" (index $glyphs $index)) -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+
     {{- /* MathML-only output has a different root shape from KaTeX's dual
           output. Mark that root so the shared stylesheet can size it without
           runtime detection or a second rendering tree. */ -}}
     {{- if eq $mathOutput "mathml" -}}
-      {{- $rendered = replaceRE `class="katex"` `class="katex math-output-mathml"` (string $rendered) 1 | safeHTML -}}
+      {{- $markup = replaceRE `class="katex"` `class="katex math-output-mathml"` $markup 1 -}}
     {{- end -}}
-    {{- $rendered -}}
+    {{- $markup | safeHTML -}}
   {{- end -}}
 {{- end -}}

@@ -22,7 +22,7 @@ kernel $K$ and unit variance.
 {{< statement kind="definition" id="excursion-set" title="Excursion set" >}}
 For a threshold $u$, the excursion set of $f$ is
 {{< equation id="excursion" >}}
-A_u(f) = \{\, x \in \RR^d : f(x) \geq u \,\}.
+A_u(f) = \{ x \in \RR^d : f(x) \geq u \}.
 {{< /equation >}}
 {{< /statement >}}
 
@@ -30,7 +30,9 @@ Because $f$ is stationary, the expected volume fraction of {{< eqref "excursion"
 depends on the threshold alone:
 
 {{< equation id="volume-fraction" >}}
-\EE\!\left[\, \abs{A_u(f) \cap [0,1]^d} \,\right] = \PP\big(f(0) \geq u\big) = 1 - \Phi(u),
+\EE \,\lvert A_u(f) \cap [0,1]^d \rvert
+= \PP( f(0) \geq u )
+= 1 - \Phi(u),
 {{< /equation >}}
 
 where $\Phi$ is the standard normal distribution function. The kernel enters
@@ -46,7 +48,7 @@ Let $f$ be a centred stationary Gaussian process on $\RR$ with unit variance and
 $\Var(f'(0)) = \lambda_2 < \infty$. The expected number of upcrossings of the
 level $u$ per unit length is
 {{< equation id="rice-intensity" >}}
-\EE\big[N_u^{+}(0,1)\big] = \frac{1}{2\pi}\sqrt{\lambda_2}\; e^{-u^{2}/2}.
+\EE \, N_u^{+}(0,1) = \frac{\sqrt{\lambda_2}}{2\pi}\, e^{-u^{2}/2}.
 {{< /equation >}}
 {{< /statement >}}
 

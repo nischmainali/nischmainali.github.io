@@ -33,7 +33,6 @@
   --article-block-strong: rgba(224, 208, 194, 0.48);
   --article-code-ink: #23322d;
   --article-dropcap-ink: #173d31;
-  --article-dropcap-ornament: rgba(111, 59, 63, 0.32);
   --article-focus-paper: rgba(245, 242, 232, 0.965);
   --article-focus-backdrop: rgba(24, 31, 27, 0.56);
 }
@@ -52,7 +51,6 @@
   --article-block-strong: rgba(202, 174, 139, 0.34);
   --article-code-ink: #292d26;
   --article-dropcap-ink: #263d30;
-  --article-dropcap-ornament: rgba(112, 64, 68, 0.22);
   --article-focus-paper: rgba(231, 211, 178, 0.955);
   --article-focus-backdrop: rgba(28, 31, 24, 0.58);
 }
@@ -193,17 +191,45 @@
   margin-top: 0;
 }
 
+/* The initial is one glyph set from measured metrics rather than by eye, so its
+ * ink meets the text block exactly: the cap sits on the first line's cap height
+ * and its foot on the third line's baseline.
+ *
+ * It used to be two glyphs — the plain F2 letter over the F1 "ornament" — but
+ * F1 is not an ornamental ground, it is a complete decorated capital. Laying two
+ * different letterforms over each other printed a doubled, misregistered letter,
+ * and the F1 letter alone is not legible at three-line size. The design's own
+ * requirement is a readable initial, so the plain face wins and the ornament is
+ * gone. Restoring ornament means using F1 by itself, not layering.
+ *
+ * Derivation, at the opening's 1.08rem size and 1.59 leading (17.28px on a
+ * 27.4752px line), from font metrics measured in the browser:
+ *   Linden Hill  ascent 0.868em, descent 0.289em, cap height 0.667em
+ *   Initials F2  ascent 0.9005em, descent 0.2554em, cap 0.895em, foot 0.080em
+ *                above its own baseline
+ * half-leading      (27.4752 - 1.157 x 17.28) / 2   =  3.74px
+ * first baseline    3.74 + 0.868 x 17.28            = 18.74px
+ * first cap top     18.74 - 0.667 x 17.28           =  7.21px
+ * third baseline    18.74 + 2 x 27.4752             = 73.69px
+ * ink height        73.69 - 7.21                    = 66.48px
+ * glyph em          66.48 / (0.895 - 0.080)         = 81.56px -> 5.0975rem
+ * own baseline      73.69 + 0.080 x 81.56           = 80.21px
+ * baseline in box   ((1 - 1.1559) / 2 + 0.9005) x 81.56       = 67.08px
+ * box top           80.21 - 67.08                   = 13.13px -> 0.821rem
+ *
+ * Re-derive these two numbers if the opening's size or leading changes. The
+ * float itself still reserves exactly three lines and carries no transform. */
 .single.blog .article-dropcap {
-  --article-dropcap-size: 4.65rem;
+  --article-dropcap-size: 5.0975rem;
   /* Three lines at the opening's 1.08rem size and 1.59 leading. */
   --article-dropcap-exclusion: 5.1516rem;
-  --article-dropcap-ink-shift: 1.055rem;
+  --article-dropcap-inset: 0.821rem;
   position: relative;
   float: left;
   display: block;
   width: var(--article-dropcap-size);
   height: var(--article-dropcap-exclusion);
-  margin: 0 0.2rem 0 -0.55rem;
+  margin: 0 0.44rem 0 -0.5rem;
   color: var(--article-dropcap-ink);
   font-size: var(--article-dropcap-size);
   line-height: 1;
@@ -211,38 +237,20 @@
   user-select: text;
 }
 
-.single.blog .article-dropcap-ornament,
 .single.blog .article-dropcap-letter {
   position: absolute;
-  top: 0;
+  top: var(--article-dropcap-inset);
   left: 0;
-  display: grid;
-  place-items: center;
+  display: block;
   width: var(--article-dropcap-size);
-  height: var(--article-dropcap-size);
+  color: inherit;
+  font-family: "EB Garamond Initials F2", "Linden Hill", Palatino, serif;
   font-size: inherit;
   font-style: normal;
   font-variant: normal;
   font-weight: normal;
   line-height: 1;
   text-transform: uppercase;
-  transform: translateY(var(--article-dropcap-ink-shift));
-}
-
-.single.blog .article-dropcap-ornament {
-  color: var(--article-dropcap-ornament);
-  font-family: "EB Garamond Initials F1", serif;
-  pointer-events: none;
-  user-select: none;
-}
-
-.single.blog .article-dropcap-ornament::before {
-  content: attr(data-letter);
-}
-
-.single.blog .article-dropcap-letter {
-  color: inherit;
-  font-family: "EB Garamond Initials F2", "Linden Hill", Palatino, serif;
 }
 
 .single.blog .article-body p {
@@ -1331,16 +1339,21 @@ html.article-figure-is-open {
   margin: 0;
 }
 
+/* The number takes a narrow optical gutter on the right, so a centred formula
+ * and its number share one line as they do in a book. Reserving the space below
+ * instead dropped every number a full line clear of its formula. The gutter
+ * matches the interval the marginal notes keep from the measure. */
 .single.blog .article-body .math-equation {
   min-height: 2.05rem;
-  padding-bottom: 1.45rem;
+  padding-right: 2.6rem;
 }
 
 .single.blog .equation-number {
   position: absolute;
-  right: 0.08rem;
-  bottom: 0.08rem;
+  top: 50%;
+  right: 0;
   min-width: 2.4ch;
+  transform: translateY(-50%);
   border: 0;
   color: var(--article-muted);
   font-family: Jost, sans-serif;
@@ -1585,8 +1598,25 @@ html.article-figure-is-open {
   padding-left: 1.35rem;
 }
 
+/* A note is one short passage, not a body paragraph. Goldmark wraps each note in
+ * a <p>, which was inheriting the prose margin and opening ~29px between two
+ * 20px lines — more air between the notes than inside them. The interval is now
+ * set on the item, deliberately a little under one line, and a note that really
+ * runs to two paragraphs still separates them. */
 .single.blog .article-body .footnotes li {
   padding: 0.12rem 0.25rem;
+}
+
+.single.blog .article-body .footnotes li + li {
+  margin-top: 0.42rem;
+}
+
+.single.blog .article-body .footnotes li > p {
+  margin: 0;
+}
+
+.single.blog .article-body .footnotes li > p + p {
+  margin-top: 0.5rem;
 }
 
 .single.blog .article-body .footnotes li:target {
@@ -1683,8 +1713,12 @@ html.article-figure-is-open {
   }
 }
 
+/* Once the page is wide enough to have a real gutter, the number leaves the
+ * measure and hangs beside it, so the formula gets the whole column back and no
+ * interior padding is reserved for it. */
 @media (min-width: 860px) {
   .single.blog .article-body .math-equation {
+    padding-right: 0;
     padding-bottom: 0.3rem;
   }
 
@@ -2199,10 +2233,6 @@ html.article-figure-is-open {
     color: #111;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
-  }
-
-  .single.blog .article-dropcap-ornament {
-    color: #777;
   }
 
   .single.blog .article-contents:not([open]) > :not(summary) {
