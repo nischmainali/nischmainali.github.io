@@ -651,15 +651,20 @@ paragraph, which inherited the body margin and opened about 29px between two
 20px lines — more air between notes than inside them. The interval is set on the
 item now, deliberately a little under one line.
 
-The opening initial was also rebuilt. It had been two glyphs, the plain F2 letter
-over an F1 "ornament", and the two printed a doubled, misregistered letter: F1 is
-not an ornamental ground but a complete decorated capital, and its letter is not
-legible at three-line size. Since the design's own requirement is a readable
-initial, the initial is now the plain face alone and the madder ornament is gone.
-Restoring ornament means using F1 by itself, never layering the two. Its size and
-inset are derived from measured font metrics in a comment beside the rule, so the
-cap meets the first line's cap height and the foot the third line's baseline
-within a pixel, rather than being nudged by a magic offset.
+The opening initial keeps both layers. Its size and inset are now derived from
+measured font metrics in a comment beside the rule, so the foreground letter's cap
+meets the first line's cap height and its foot the third line's baseline within a
+pixel, instead of being nudged there by a magic offset. The whole composite sat a
+little low before, which is what made it look wrong.
+
+The two layers must share an identical box. Reviewing this pass I mistook the F1
+filigree showing around the F2 letter for a misregistration and removed the
+ornament; Nisch rejected that on 4 August 2026. The floral initial is not
+decoration that can be dropped — it is one of the site's few signature gestures.
+The overlay is also how the EB Garamond Initials pair is meant to be used, and it
+is what the TurnTrout reference does with the same two faces. If the pair ever
+looks doubled again, the fault is in the box, the size, or the ornament's
+strength, never in the idea.
 
 The general lesson is worth keeping: several of these were numbers set by eye
 that happened to look close. Where a value can be derived from the type, derive

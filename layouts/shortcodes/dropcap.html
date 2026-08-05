@@ -9,11 +9,12 @@
   {{- errorf "The dropcap shortcode requires one Latin letter: see %s" .Position -}}
 {{- end -}}
 {{- .Page.Store.Set "hasDropcap" true -}}
-{{- /* One glyph, not two. The ornamental F1 face was laid behind this letter
-      until it turned out to be a complete decorated capital rather than a
-      ground, so the two letterforms printed over each other. See the derivation
-      comment in article.css. */ -}}
-<span class="article-dropcap"><span class="article-dropcap-letter">{{ $letter }}</span></span>{{- "" -}}
+{{- /* Two layers on one em square, as the EB Garamond Initials pair is meant to
+      be used: the F1 filigree behind, the readable F2 letter in front. They must
+      share an identical box so they register exactly; see the derivation comment
+      in article.css. The ornament span is empty and hidden from assistive text,
+      so only the foreground letter is read and selected. */ -}}
+<span class="article-dropcap"><span class="article-dropcap-ornament" data-letter="{{ $letter }}" aria-hidden="true"></span><span class="article-dropcap-letter">{{ $letter }}</span></span>{{- "" -}}
 {{- /* This template's output is inline. It must not end in whitespace, or the
       renderer puts a space between the mark and the punctuation that follows
       it in the sentence. */ -}}

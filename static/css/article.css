@@ -33,6 +33,7 @@
   --article-block-strong: rgba(224, 208, 194, 0.48);
   --article-code-ink: #23322d;
   --article-dropcap-ink: #173d31;
+  --article-dropcap-ornament: rgba(111, 59, 63, 0.32);
   --article-focus-paper: rgba(245, 242, 232, 0.965);
   --article-focus-backdrop: rgba(24, 31, 27, 0.56);
 }
@@ -51,6 +52,7 @@
   --article-block-strong: rgba(202, 174, 139, 0.34);
   --article-code-ink: #292d26;
   --article-dropcap-ink: #263d30;
+  --article-dropcap-ornament: rgba(112, 64, 68, 0.22);
   --article-focus-paper: rgba(231, 211, 178, 0.955);
   --article-focus-backdrop: rgba(28, 31, 24, 0.58);
 }
@@ -191,16 +193,14 @@
   margin-top: 0;
 }
 
-/* The initial is one glyph set from measured metrics rather than by eye, so its
- * ink meets the text block exactly: the cap sits on the first line's cap height
- * and its foot on the third line's baseline.
+/* The opening initial is the EB Garamond Initials pair used as designed: the F1
+ * filigree behind, the readable F2 letter in front, on one em square. Both
+ * layers take the same size and the same inset, so they register exactly; the
+ * ornament's flourishes are meant to exceed the letter and do.
  *
- * It used to be two glyphs — the plain F2 letter over the F1 "ornament" — but
- * F1 is not an ornamental ground, it is a complete decorated capital. Laying two
- * different letterforms over each other printed a doubled, misregistered letter,
- * and the F1 letter alone is not legible at three-line size. The design's own
- * requirement is a readable initial, so the plain face wins and the ornament is
- * gone. Restoring ornament means using F1 by itself, not layering.
+ * Its size and inset are derived from measured font metrics rather than nudged
+ * by eye, so the foreground letter meets the text block: its cap sits on the
+ * first line's cap height and its foot on the third line's baseline.
  *
  * Derivation, at the opening's 1.08rem size and 1.59 leading (17.28px on a
  * 27.4752px line), from font metrics measured in the browser:
@@ -237,20 +237,37 @@
   user-select: text;
 }
 
+/* Identical boxes. Any difference here shows immediately as two misregistered
+   letterforms rather than one decorated initial. */
+.single.blog .article-dropcap-ornament,
 .single.blog .article-dropcap-letter {
   position: absolute;
   top: var(--article-dropcap-inset);
   left: 0;
   display: block;
   width: var(--article-dropcap-size);
-  color: inherit;
-  font-family: "EB Garamond Initials F2", "Linden Hill", Palatino, serif;
   font-size: inherit;
   font-style: normal;
   font-variant: normal;
   font-weight: normal;
   line-height: 1;
   text-transform: uppercase;
+}
+
+.single.blog .article-dropcap-ornament {
+  color: var(--article-dropcap-ornament);
+  font-family: "EB Garamond Initials F1", serif;
+  pointer-events: none;
+  user-select: none;
+}
+
+.single.blog .article-dropcap-ornament::before {
+  content: attr(data-letter);
+}
+
+.single.blog .article-dropcap-letter {
+  color: inherit;
+  font-family: "EB Garamond Initials F2", "Linden Hill", Palatino, serif;
 }
 
 .single.blog .article-body p {
@@ -2233,6 +2250,10 @@ html.article-figure-is-open {
     color: #111;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
+  }
+
+  .single.blog .article-dropcap-ornament {
+    color: #777;
   }
 
   .single.blog .article-contents:not([open]) > :not(summary) {
