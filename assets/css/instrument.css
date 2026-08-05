@@ -17,7 +17,7 @@
  *   5. Reader-initiated, reversible, and singular. Click or keyboard, never
  *      hover. Escape closes. One open at a time.
  *   6. It holds still while it is being used.
- *   7. Timings and easings come from the tokens below. No new curves.
+ *   7. A gesture's motion uses the durations and easings below. No new curves.
  *
  * THE LAW OF CONTACT. What touches the sheet does not drift; what is suspended
  * beside it does. Drift is the exclusive signature of Projection, which is the
@@ -60,6 +60,7 @@
   --instrument-open: 185ms;
   --instrument-sweep: 210ms;
   --instrument-drift: 14s;
+  --instrument-survey: 10.5s;
 
   /* The machine voice. Deliberately the platform's own monospace: the terminal
      half of the contrast should cost nothing to download. Used only for
@@ -124,15 +125,6 @@
 .instrument-mark__core {
   fill: currentColor;
   opacity: 0.78;
-}
-
-/* === The machine voice === */
-
-.instrument-voice {
-  font-family: var(--instrument-voice);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.02em;
-  text-transform: none;
 }
 
 /* === Trace: the ambient register ===

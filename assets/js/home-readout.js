@@ -246,15 +246,16 @@
     }
   }
 
+  // The aperture's own transition is the assembly's clock, so the retraction is
+  // held open for exactly as long as the CSS says it takes. Reading it back
+  // rather than repeating the number keeps the two from drifting apart.
   function retractDuration(disclosure) {
     var frame = disclosure.querySelector(".paper-readout-frame");
     if (!frame) return 0;
-    var declared = window.getComputedStyle(frame).transitionDuration || "0s";
-    var first = parseFloat(declared);
-    if (!Number.isFinite(first) || first <= 0) return 0;
-    return declared.indexOf("ms") > -1 && declared.indexOf("s") === declared.indexOf("ms") + 1
-      ? first
-      : first * 1000;
+    var declared = (window.getComputedStyle(frame).transitionDuration || "0s").split(",")[0].trim();
+    var amount = parseFloat(declared);
+    if (!Number.isFinite(amount) || amount <= 0) return 0;
+    return /ms$/.test(declared) ? amount : amount * 1000;
   }
 
   function closeDisclosure(disclosure, restoreFocus) {

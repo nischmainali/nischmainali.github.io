@@ -35,6 +35,13 @@ calligraphic forms sit closer to Linden Hill's old-style book face than KaTeX's
 Computer Modern-derived default. The site keeps KaTeX HTML as a fallback for
 browsers without MathML Core support.
 
+Blackboard, calligraphic, fraktur, and sans-serif letters are substituted for
+their Mathematical Alphanumeric Symbols codepoints during rendering, from
+`data/mathml.toml`. KaTeX writes them as a legacy `mathvariant` attribute, and
+MathML Core keeps only `mathvariant="normal"`, so Chromium ignores the attribute
+and would print `\RR` as an ordinary italic *R*. Do not reintroduce a dependency
+on legacy `mathvariant`.
+
 The repository contains a WOFF2 conversion of the official CTAN OpenType font
 and its SIL Open Font License under `static/vendor/asana-math/000.962`. The font
 loads only on pages that can contain mathematics. Do not replace KaTeX's HTML

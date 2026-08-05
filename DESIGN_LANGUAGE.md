@@ -1,16 +1,19 @@
 # Design language and long-term visual working note
 
-- Last baseline study: 2026-07-21
-- Accepted production direction: **Lokta Sunlight reader + Lokta Field Note**
+- Last baseline study: 2026-08-05
+- Accepted production direction: **Lokta Sunlight reader + Lokta Field Note**,
+  with a build-time mathematical apparatus and the instrument register
 - Production branch: `main`
-- Accepted implementation lineage: `experiment/toc-outside-sheet`, promoted to
-  `main` together with the homepage paper readout and the Writing page
-  (`45c3ed6`, 4 August 2026)
-- In review: `experiment/scholarly-apparatus` — section-scoped build-time
+- Accepted lineage: `experiment/toc-outside-sheet` promoted with the homepage
+  paper readout and the Writing page (`45c3ed6`, 4 August 2026), then
+  `experiment/scholarly-apparatus` promoted with section-scoped build-time
   numbering, cross-note references, article end matter, `/colophon/`, an authored
-  404, and the removal of the vendored theme's published fixtures
-- Pre-promotion main archive: `archive/pre-field-note-main-2026-07-20`
-  (`d37a896`)
+  404, the instrument register, and the removal of the vendored theme's published
+  fixtures (5 August 2026)
+- Pre-promotion main archives, never to be deleted:
+  `archive/pre-apparatus-main-2026-08-05`,
+  `archive/pre-writing-main-2026-08-04`,
+  `archive/pre-field-note-main-2026-07-20` (`d37a896`)
 - Earlier article checkpoint: `c26729b`
 - Hugo version: `v0.164.0+extended`
 - Reference theme checkout: `/Users/nisch/code/site/hugo-paged`
@@ -504,10 +507,9 @@ Interaction vocabulary should stay small: underline, ink-color shift, subtle
 background fill, and atmospheric theme transition. Avoid pill buttons, glowing
 outlines, springy transforms, moving links, and fleets of icon buttons.
 
-#### Editorial ink register candidate (accepted in branch, 21 July 2026)
+#### Editorial ink register (accepted 21 July 2026)
 
-The palette proof now has a public-candidate successor on
-`experiment/toc-outside-sheet`. A tiny printer's registration mark occupies the
+A tiny printer's registration mark occupies the
 upper-right crop corner as the exact spatial counterpart to the upper-left
 light control. It opens one square Lokta proof slip down and inward from the
 crop intersection. The slip preserves the successful comparison register's
@@ -527,7 +529,7 @@ over home content, the contents rail, or marginalia.
 Lokta Hybrid remains the canonical HTML, no-JavaScript, print, and
 storage-failure impression. On a first capable visit, the browser assigns one
 ink from Lokta Hybrid, Ef Arbutus, Ef Elea Light, and Ef Arcadia and stores that
-choice on the device. All six proof inks remain selectable in the experimental
+choice on the device. All six proof inks remain selectable in the
 register; Ef Cyprus and Modus Operandi Tinted do not enter the random pool. A
 manual choice replaces the assignment. A valid `?ink=` link applies only to the
 linked page until the visitor chooses an ink.
@@ -536,9 +538,8 @@ Treat the random choice as local printing variation, not visitor tracking. It
 uses no cookie, account, request, or server record. The accepted shade and
 sunset contrast corrections remain part of each ink, and the control must keep
 its keyboard, touch, forced-color, reduced-motion, and cross-tab behavior. Nisch
-accepted this register as part of the current successor on 21 July 2026. The
-branch still remains separate from `main` until an explicit promotion, and
-Lokta Hybrid remains the canonical failure-safe and the color baseline below.
+accepted this register on 21 July 2026, and Lokta Hybrid remains the canonical
+failure-safe and the colour baseline below.
 
 ## Page grammars
 
@@ -596,7 +597,7 @@ disturb the global crop-mark geometry. If future home sections are proposed,
 first ask whether the content has earned another editorial passage. Default
 answer: do not add a dashboard-like section.
 
-#### Build-time numbering and cross-note references (experimental)
+#### Build-time numbering and cross-note references
 
 Numbering is section-scoped and built once per note. Equations read `(2.1)` and
 statements read `Theorem 2.1` against the numbered outline the contents rail
@@ -725,12 +726,13 @@ remain, with one plain line and two links. Both use `assets/css/register.css`,
 which borrows the Writing index's measure, ornament, and Jost/Linden Hill
 division rather than inventing a second grammar.
 
-#### The instrument register (experimental)
+#### The instrument register
 
 The site is a warm scholarly sheet under changing light. Laid over it is a
-measuring device. That juxtaposition — paper against instrument — is a deliberate
+measuring device. That juxtaposition — paper against instrument — is an accepted
 second register, and it is the one place the site is allowed to feel like a
-terminal rather than a book.
+terminal rather than a book. It is deliberate contrast, not ornament: remove it
+and the page becomes merely tasteful.
 
 It is a **vocabulary, not an effect**. Before this pass the idea existed once, as
 the home ledger's projected panel, and the temptation was to copy that panel into

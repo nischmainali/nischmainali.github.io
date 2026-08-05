@@ -1,6 +1,6 @@
 # Homepage design study: the sunlit field-desk frontispiece
 
-Status: Direction A accepted and implemented on the experimental branch  
+Status: Direction A accepted and on `main`  
 Prepared: 21 July 2026  
 Implemented: 22 July 2026  
 Branch studied: `experiment/toc-outside-sheet`

@@ -111,6 +111,19 @@ drop capitals, statements, proofs, and numbered equations. Keep the prose
 column readable and preserve the outside table of contents and right margin
 notes at wide widths.
 
+### The instrument register
+
+The site carries a deliberate second register: a warm scholarly sheet with a
+measuring device laid over it. `assets/css/instrument.css` holds its invariants
+and its vocabulary, and `layouts/partials/instrument-mark.html` is the single
+crest every gesture shares.
+
+It is a vocabulary rather than one repeated effect. *Projection* throws a panel
+into free margin and drifts; *Extension* slides a drawer out from behind a row
+and retracts behind it; *Trace* is the ambient member, a graduated scale with a
+travelling index that reports and never opens. Read the invariants before adding
+to it, and never place it in reading matter.
+
 ### Colophon and missing page
 
 `/colophon/` states what the site is made of, reading its ink facts from
@@ -170,7 +183,8 @@ published file.
 ## Repository map
 
 - `content/` contains pages and articles.
-- `assets/` contains files that Hugo processes and fingerprints.
+- `assets/` contains files that Hugo processes and fingerprints, including the
+  instrument register and the ink register.
 - `static/` contains files that require stable public URLs.
 - `layouts/` contains site templates and render hooks.
 - `data/` contains ink, mathematics, citation, and selected work records.

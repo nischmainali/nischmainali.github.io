@@ -261,7 +261,7 @@ html[data-ink] body.is-home .home .publications .publication-item.has-readout:is
 }
 
 .paper-readout-shell[open][data-readout-route="symmetric"] .paper-readout__rail {
-  animation: paper-readout-rail-enter 135ms cubic-bezier(0.2, 0.76, 0.24, 1) forwards;
+  animation: paper-readout-rail-enter var(--instrument-quick) var(--instrument-ease) forwards;
 }
 
 .paper-readout__junction {
@@ -273,7 +273,7 @@ html[data-ink] body.is-home .home .publications .publication-item.has-readout:is
 
 .paper-readout-shell[data-readout-route="symmetric"] .paper-readout__junction {
   opacity: 0.86;
-  animation: paper-readout-junction-enter 105ms 28ms cubic-bezier(0.2, 0.76, 0.24, 1) both;
+  animation: paper-readout-junction-enter 105ms 28ms var(--instrument-ease) both;
 }
 
 .paper-readout {
@@ -310,7 +310,7 @@ html[data-ink] body.is-home .home .publications .publication-item.has-readout:is
     transparent
   );
   color: var(--site-ink, #1d1b19);
-  animation: paper-readout-enter 185ms cubic-bezier(0.2, 0.78, 0.22, 1) both;
+  animation: paper-readout-enter var(--instrument-open) var(--instrument-ease-out) both;
   isolation: isolate;
   transform-origin: top center;
 }
@@ -760,7 +760,7 @@ body.sunset .paper-readout {
   /* Surveying open space, so the needle sweeps instead of latching. */
   .paper-readout-shell[open] .instrument-mark__dial {
     transform: none;
-    animation: publication-orbit-turn 10.5s linear infinite;
+    animation: publication-orbit-turn var(--instrument-survey) linear infinite;
   }
 
   .paper-readout__rails {
@@ -809,14 +809,14 @@ body.sunset .paper-readout {
     .publication-inspect__signal,
     .paper-readout__rails
   ) {
-    animation: paper-readout-drift 14s linear infinite;
+    animation: paper-readout-drift var(--instrument-drift) linear infinite;
     will-change: translate;
   }
 
   .paper-readout-shell[open] .paper-readout {
     animation:
-      paper-readout-enter 185ms cubic-bezier(0.2, 0.78, 0.22, 1) both,
-      paper-readout-drift 14s linear infinite;
+      paper-readout-enter var(--instrument-open) var(--instrument-ease-out) both,
+      paper-readout-drift var(--instrument-drift) linear infinite;
   }
 
   .paper-readout-shell:has(.paper-readout :focus-visible)
@@ -885,6 +885,10 @@ body.sunset .paper-readout {
 
   .paper-readout__rails {
     color: CanvasText;
+  }
+
+  .publication-item.has-readout .publication-row::after {
+    background: Highlight;
   }
 
   .instrument-mark__orbit,

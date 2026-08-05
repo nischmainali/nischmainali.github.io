@@ -1,6 +1,6 @@
 # Editorial ink system
 
-Status: experimental public candidate · Branch: `experiment/toc-outside-sheet` · Prepared: 21 July 2026
+Status: accepted and on `main` · Prepared: 21 July 2026 · Promoted: 4 August 2026
 
 ## Purpose
 

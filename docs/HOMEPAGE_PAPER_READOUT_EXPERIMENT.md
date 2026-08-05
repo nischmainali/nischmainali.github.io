@@ -1,6 +1,6 @@
 # Homepage paper readout experiment
 
-Status: experimental
+Status: accepted and on `main` (4 August 2026); this document is the study that led there
 
 Branch: `experiment/home-paper-readout`
 
