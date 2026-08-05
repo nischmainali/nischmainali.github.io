@@ -1,5 +1,23 @@
 {{ partial "header.html" . }}
 
+{{- $articleContent := .Content -}}
+{{- /* The visual hierarchy should reflect the hierarchy the author used. A
+      note with only major sections gets a more generous h2; a note that needs
+      h3 or h4 keeps more room in reserve. This is decided at build time from
+      rendered headings, so authors do not manage another front-matter flag. */ -}}
+{{- $articleDepth := 1 -}}
+{{- if in $articleContent "<h6" -}}
+  {{- $articleDepth = 6 -}}
+{{- else if in $articleContent "<h5" -}}
+  {{- $articleDepth = 5 -}}
+{{- else if in $articleContent "<h4" -}}
+  {{- $articleDepth = 4 -}}
+{{- else if in $articleContent "<h3" -}}
+  {{- $articleDepth = 3 -}}
+{{- else if in $articleContent "<h2" -}}
+  {{- $articleDepth = 2 -}}
+{{- end -}}
+
 {{- $toc := partial "toc.html" . -}}
 {{- $tocItems := len (findRE `<li>` $toc) -}}
 {{- $tocThreshold := default 3 .Site.Params.toc_threshold -}}
@@ -9,7 +27,7 @@
 {{- end -}}
 
 <main class="article-shell" aria-labelledby="article-title">
-<article class="h-entry">
+<article class="h-entry article-depth-{{ $articleDepth }}">
   <header class="article-meta article-header">
     <h1 class="title article-title p-name" id="article-title">{{ .Title | markdownify }}</h1>
     {{ with .Params.subtitle }}
@@ -49,7 +67,7 @@
 
     <span class="article-prose-start" id="article-prose-start" tabindex="-1"></span>
 
-    {{- $articleContent := replace .Content `<section class="footnotes" role="doc-endnotes">` `<section class="footnotes" role="doc-endnotes" aria-label="Notes">` -}}
+    {{- $articleContent = replace $articleContent `<section class="footnotes" role="doc-endnotes">` `<section class="footnotes" role="doc-endnotes" aria-label="Notes">` -}}
     {{- $articleContent = replace $articleContent `<div class="footnotes" role="doc-endnotes">` `<div class="footnotes" role="doc-endnotes" aria-label="Notes">` -}}
 
     {{ if (and (eq (getenv "HUGO_BLOGDOWN_POST_RELREF") "") (and (and .Params.date (lt (now.AddDate 0 0 ($.Site.Params.holdDays | default -90)) .Date)) (in (string $articleContent) "<!--# ON_HOLD -->"))) }}

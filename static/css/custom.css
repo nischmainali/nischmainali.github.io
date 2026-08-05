@@ -14,6 +14,20 @@
   --writing-width: 44rem;
 }
 
+/* The homepage name is also the h-card's canonical URL. It remains the same
+ * piece of display type rather than acquiring link decoration or hover motion. */
+.home-self-link,
+.home-self-link:is(:hover, :focus-visible) {
+  border: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.home-self-link:focus-visible {
+  outline: 1px solid var(--site-focus, #173f51);
+  outline-offset: 0.16em;
+}
+
 .blog:not(.single) :is(.writing-opening, .main) {
   width: min(100%, var(--writing-width));
   margin-right: auto;

@@ -17,6 +17,9 @@ useful references, but they do not override the current design rules.
   research and candidate directions.
 - [`HOMEPAGE_PAPER_READOUT_EXPERIMENT.md`](HOMEPAGE_PAPER_READOUT_EXPERIMENT.md)
   records the research preview experiment that led to the accepted homepage.
+- [`PRIVATE_PRESS_FIELD_PLATE_EXPERIMENT.md`](PRIVATE_PRESS_FIELD_PLATE_EXPERIMENT.md)
+  records the private-press and interactive scientific-plate proposal on its
+  experimental branch. It does not define accepted site rules.
 
 The `history/` directory contains completed plans and implementation records.
 Read [`history/README.md`](history/README.md) before treating a historical plan

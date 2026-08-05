@@ -69,6 +69,7 @@ HTML_MEDIA_ATTRIBUTE_RE = re.compile(
 
 VALID_PLACEMENTS = {"measure", "wide", "margin"}
 VALID_TREATMENTS = {"natural", "ink"}
+FIELD_PLATE_ARGUMENTS = {"id", "title", "caption", "label", "threshold"}
 CITATION_TABLE_RE = re.compile(r"^\[(?P<key>[^\[\]]+)\]$")
 CITATION_FIELD_RE = re.compile(
     r"^(?P<field>[A-Za-z][A-Za-z0-9_-]*)\s*=\s*(?P<value>.+?)\s*$"
@@ -1242,6 +1243,89 @@ def scan_figures_and_media(
     return SourceScan(issues, warnings)
 
 
+def scan_field_plates(
+    path: Path, shortcodes: list[Shortcode]
+) -> list[Diagnostic]:
+    issues: list[Diagnostic] = []
+    targets: dict[str, tuple[int, int]] = {}
+
+    for shortcode in shortcodes:
+        if shortcode.name != "field-plate":
+            continue
+        parsed = parse_shortcode_arguments(shortcode, path, issues)
+        if parsed is None:
+            continue
+        positional, named = parsed
+        if positional:
+            issues.append(
+                Diagnostic(
+                    path,
+                    shortcode.line,
+                    shortcode.column,
+                    "field-plate accepts named arguments only",
+                )
+            )
+
+        for name in sorted(set(named).difference(FIELD_PLATE_ARGUMENTS)):
+            issues.append(
+                Diagnostic(
+                    path,
+                    shortcode.line,
+                    shortcode.column,
+                    f'field-plate argument "{name}" is not supported',
+                )
+            )
+
+        identifier = named.get("id", "").strip()
+        if not identifier:
+            issues.append(
+                Diagnostic(
+                    path,
+                    shortcode.line,
+                    shortcode.column,
+                    "field-plate requires an id",
+                )
+            )
+        else:
+            add_target(
+                issues,
+                targets,
+                identifier,
+                "field-plate",
+                path,
+                shortcode.line,
+                shortcode.column,
+            )
+
+        for required in ("title", "caption"):
+            if not named.get(required, "").strip():
+                issues.append(
+                    Diagnostic(
+                        path,
+                        shortcode.line,
+                        shortcode.column,
+                        f"field-plate requires a {required}",
+                    )
+                )
+
+        if "threshold" in named:
+            try:
+                threshold = float(named["threshold"])
+            except ValueError:
+                threshold = None
+            if threshold is None or not -0.8 <= threshold <= 0.8:
+                issues.append(
+                    Diagnostic(
+                        path,
+                        shortcode.line,
+                        shortcode.column,
+                        "field-plate threshold must be between -0.8 and 0.8",
+                    )
+                )
+
+    return issues
+
+
 def scan_file(path: Path, citation_keys: set[str]) -> SourceScan:
     lines = path.read_text(encoding="utf-8").splitlines()
     body_start = frontmatter_end(lines)
@@ -1255,6 +1339,7 @@ def scan_file(path: Path, citation_keys: set[str]) -> SourceScan:
         scan_dropcaps(path, clean_lines, body_start, text, shortcodes)
     )
     issues.extend(scan_citations(path, shortcodes, citation_keys))
+    issues.extend(scan_field_plates(path, shortcodes))
     media = scan_figures_and_media(path, draft, text, shortcodes)
     issues.extend(media.issues)
     return SourceScan(issues, media.warnings)
@@ -1318,7 +1403,7 @@ def content_files() -> list[Path]:
 def parse_arguments(argv: list[str] | None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Validate mathematics, citations, drop caps, figures, and remote media."
+            "Validate mathematics, citations, drop caps, figures, field plates, and remote media."
         )
     )
     parser.add_argument(

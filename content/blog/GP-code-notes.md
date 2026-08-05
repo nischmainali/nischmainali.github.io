@@ -12,4 +12,11 @@ title = 'Notes on properties of Gaussian process neural code'
 [work on statistics of place fields](https://www.biorxiv.org/content/10.1101/2024.06.11.597569v1)
 measured across a few different animal species, while they were navigating small and large environments of dimensions 1, 2, and 3. In the work, we showed the observed neural representations can be well explained in terms of threshold crossings of a Gaussian process, and these notes include how one can study structure of such threshold crossings of Gaussian process. These notes further include a discussion on functional benefit of such code, which (in simplified setting) shows an exponential suppression of error.
 
+{{< field-plate
+  id="gp-threshold-field"
+  title="Plate 1"
+  label="Threshold crossings of a smooth Gaussian field"
+  caption="A fixed sample path from a smooth Gaussian field. Move the threshold to inspect its crossings and connected excursion intervals."
+>}}
+
 You can find the notes for the talk [here](/pdfs/chalk_talk.pdf).

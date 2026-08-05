@@ -1,0 +1,34 @@
+{{- /* Full-text RSS is part of the publishing surface. Readers should not have
+      to leave their feed reader for an article whose HTML is already static and
+      self-contained. The page content stays inside CDATA so mathematical HTML,
+      figures, and footnotes survive intact. */ -}}
+{{- $pages := .RegularPages -}}
+{{- if .IsHome -}}
+  {{- $pages = where site.RegularPages "Section" "blog" -}}
+{{- end -}}
+{{- $pages = where $pages "Draft" false -}}
+{{- $lastBuildDate := (index $pages.ByLastmod.Reverse 0).Lastmod -}}
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>{{ cond .IsHome site.Title (printf "%s · %s" .Title site.Title) }}</title>
+    <link>{{ .Permalink }}</link>
+    <description>{{ default site.Params.description .Description }}</description>
+    <language>{{ site.Language.Locale }}</language>
+    <lastBuildDate>{{ $lastBuildDate.Format "Mon, 02 Jan 2006 15:04:05 -0700" }}</lastBuildDate>
+    <atom:link href="{{ .Permalink }}index.xml" rel="self" type="application/rss+xml" />
+    {{- range $pages.ByDate.Reverse }}
+    <item>
+      <title>{{ .Title }}</title>
+      <link>{{ .Permalink }}</link>
+      <guid isPermaLink="true">{{ .Permalink }}</guid>
+      <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" }}</pubDate>
+      {{- with .Description }}
+      <description>{{ . }}</description>
+      {{- end }}
+      {{- $content := replaceRE `(?s)<div class="field-plate-controls"[^>]*>.*?</div>` "" (string .Content) -}}
+      <content:encoded>{{ printf "<![CDATA[%s]]>" (replace $content "]]>" "]]]]><![CDATA[>") | safeHTML }}</content:encoded>
+    </item>
+    {{- end }}
+  </channel>
+</rss>

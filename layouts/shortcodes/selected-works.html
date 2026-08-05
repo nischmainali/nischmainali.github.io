@@ -16,12 +16,12 @@
       {{- end -}}
       {{- $seen = merge $seen (dict .id true) -}}
       {{- $hasReadout := isset . "readout" -}}
-    <li class="publication-item{{ if $hasReadout }} has-readout{{ end }}" data-publication="{{ .id }}">
-      <a class="publication-row" href="{{ .url | safeURL }}" id="publication-{{ .id }}">
-        <span class="publication-year">{{ .year }}</span>
+    <li class="publication-item h-cite{{ if $hasReadout }} has-readout{{ end }}" data-publication="{{ .id }}">
+      <a class="publication-row u-url" href="{{ .url | safeURL }}" id="publication-{{ .id }}">
+        <time class="publication-year dt-published" datetime="{{ .year }}">{{ .year }}</time>
         <span class="publication-mark" aria-hidden="true">❡</span>
         <span class="publication-body">
-          <span class="publication-title">{{ .title }}</span>
+          <span class="publication-title p-name">{{ .title }}</span>
           <span class="publication-collaborators">{{ .collaborators }}</span>
         </span>
       </a>

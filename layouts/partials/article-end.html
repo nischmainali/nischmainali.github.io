@@ -26,7 +26,7 @@
     <dd><time datetime="{{ .Format "2006-01-02" }}">{{ .Format "2 January 2006" }}</time></dd>
     {{- end }}
     <dt>Cite as</dt>
-    <dd class="article-citation">{{ $author }}, “{{ .Title }}”, {{ .Date.Format "2006" }}. <span class="article-citation-locator">{{ .Permalink }}</span></dd>
+    <dd class="article-citation"><span class="p-author h-card"><span class="p-name">{{ $author }}</span></span>, “{{ .Title }}”, {{ .Date.Format "2006" }}. <a class="article-citation-locator u-url" href="{{ .RelPermalink }}">{{ .Permalink }}</a></dd>
   </dl>
   {{- end }}
   <nav class="article-end-nav" aria-label="Article navigation">

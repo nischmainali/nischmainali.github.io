@@ -19,13 +19,13 @@
 {{ $pages := .RegularPages }}
 <ol class="writing-register" aria-label="Writing">
   {{ range $pages.ByDate.Reverse }}
-  <li class="writing-entry">
-    <a class="writing-entry-link" href="{{ .RelPermalink }}">
-      <span class="writing-entry-title">{{ .Title | markdownify }}</span>
+  <li class="writing-entry h-entry">
+    <a class="writing-entry-link u-url" href="{{ .RelPermalink }}">
+      <span class="writing-entry-title p-name">{{ .Title | markdownify }}</span>
       {{ with .Description }}
-      <span class="writing-entry-description">{{ . | plainify }}</span>
+      <span class="writing-entry-description p-summary">{{ . | plainify }}</span>
       {{ end }}
-      <time class="writing-date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02 January 2006" }}</time>
+      <time class="writing-date dt-published" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02 January 2006" }}</time>
       <span class="writing-entry-registration" aria-hidden="true"></span>
     </a>
   </li>
