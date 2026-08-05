@@ -193,60 +193,73 @@
   margin-top: 0;
 }
 
-/* The opening initial is the EB Garamond Initials pair used as designed: the F1
- * filigree behind, the readable F2 letter in front, on one em square. Both
- * layers take the same size and the same inset, so they register exactly; the
- * ornament's flourishes are meant to exceed the letter and do.
+/* The opening initial is the EB Garamond Initials pair used as designed: F1 is a
+ * floral ground with no letter in it, F2 is the letter. The ground is sized to
+ * the three-line text block and the letter nests inside it, so the floral reads
+ * as a frame rather than as texture behind the ink. Giving both layers one em
+ * square, as an earlier version did, left the ground showing as a narrow band
+ * with the crossbar reaching past its edges.
  *
- * Its size and inset are derived from measured font metrics rather than nudged
- * by eye, so the foreground letter meets the text block: its cap sits on the
- * first line's cap height and its foot on the third line's baseline.
+ * Every number below is derived from font metrics measured in the browser, not
+ * set by eye. At the opening's 1.08rem size and 1.59 leading (17.28px on a
+ * 27.4752px line):
  *
- * Derivation, at the opening's 1.08rem size and 1.59 leading (17.28px on a
- * 27.4752px line), from font metrics measured in the browser:
- *   Linden Hill  ascent 0.868em, descent 0.289em, cap height 0.667em
- *   Initials F2  ascent 0.9005em, descent 0.2554em, cap 0.895em, foot 0.080em
- *                above its own baseline
- * half-leading      (27.4752 - 1.157 x 17.28) / 2   =  3.74px
- * first baseline    3.74 + 0.868 x 17.28            = 18.74px
- * first cap top     18.74 - 0.667 x 17.28           =  7.21px
- * third baseline    18.74 + 2 x 27.4752             = 73.69px
- * ink height        73.69 - 7.21                    = 66.48px
- * glyph em          66.48 / (0.895 - 0.080)         = 81.56px -> 5.0975rem
- * own baseline      73.69 + 0.080 x 81.56           = 80.21px
- * baseline in box   ((1 - 1.1559) / 2 + 0.9005) x 81.56       = 67.08px
- * box top           80.21 - 67.08                   = 13.13px -> 0.821rem
+ *   Linden Hill  ascent 15px, descent 5px, ascender ink 12.547px
+ *   Initials F1  ink 0.990em tall, from 0.995em to 0.005em above its baseline,
+ *                0.990em wide from +0.005em, advance 1.000em
+ *   Initials F2  cap 0.895em, foot 0.080em above baseline, ink 0.815em tall and
+ *                0.781em wide from +0.119em, advance 1.006em
+ *   both faces   ascent 0.900em, descent 0.250em, so with line-height 1 the
+ *                baseline sits 0.825em below the box top
  *
- * Re-derive these two numbers if the opening's size or leading changes. The
- * float itself still reserves exactly three lines and carries no transform. */
+ * half-leading    (27.4752 - 20) / 2                  =  3.7376px
+ * first baseline  3.7376 + 15                          = 18.7376px
+ * ascender top    18.7376 - 12.547                     =  6.1906px
+ * third baseline  18.7376 + 2 x 27.4752                = 73.6880px
+ *
+ * The ground's ink spans the text block, ascender top to third baseline:
+ * ink side        73.6880 - 6.1906                     = 67.4974px
+ * ground em       67.4974 / 0.990                      = 68.1792px -> 4.2612rem
+ * ground baseline 73.6880 + 0.005 x 68.1792            = 74.0289px
+ * ground box top  74.0289 - 0.825 x 68.1792            = 17.7811px -> 1.1113rem
+ *
+ * The letter's ink is 0.77 of that square and centred in it:
+ * letter ink      0.77 x 67.4974                       = 51.9730px
+ * letter em       51.9730 / 0.815                       = 63.7705px -> 3.9857rem
+ * letter ink top  6.1906 + (67.4974 - 51.9730) / 2      = 13.9528px
+ * letter baseline 13.9528 + 0.895 x 63.7705             = 71.0374px
+ * letter box top  71.0374 - 0.825 x 63.7705             = 18.4167px -> 1.1511rem
+ *
+ * The ground's ink begins 0.341px inside the float, so the float takes no
+ * negative left margin: a hard-edged square must register with the measure,
+ * where a letter's side bearings would have absorbed a small hang.
+ *
+ * Re-derive all four numbers if the opening's size or leading changes. */
 .single.blog .article-dropcap {
-  --article-dropcap-size: 5.0975rem;
+  --article-dropcap-size: 4.2612rem;
+  --article-dropcap-top: 1.1113rem;
+  --article-dropcap-letter-size: 3.9857rem;
+  --article-dropcap-letter-top: 1.1511rem;
   /* Three lines at the opening's 1.08rem size and 1.59 leading. */
   --article-dropcap-exclusion: 5.1516rem;
-  --article-dropcap-inset: 0.821rem;
   position: relative;
   float: left;
   display: block;
   width: var(--article-dropcap-size);
   height: var(--article-dropcap-exclusion);
-  margin: 0 0.44rem 0 -0.5rem;
+  margin: 0 0.44rem 0 0;
   color: var(--article-dropcap-ink);
-  font-size: var(--article-dropcap-size);
   line-height: 1;
   text-align: center;
   user-select: text;
 }
 
-/* Identical boxes. Any difference here shows immediately as two misregistered
-   letterforms rather than one decorated initial. */
 .single.blog .article-dropcap-ornament,
 .single.blog .article-dropcap-letter {
   position: absolute;
-  top: var(--article-dropcap-inset);
   left: 0;
   display: block;
   width: var(--article-dropcap-size);
-  font-size: inherit;
   font-style: normal;
   font-variant: normal;
   font-weight: normal;
@@ -255,8 +268,10 @@
 }
 
 .single.blog .article-dropcap-ornament {
+  top: var(--article-dropcap-top);
   color: var(--article-dropcap-ornament);
   font-family: "EB Garamond Initials F1", serif;
+  font-size: var(--article-dropcap-size);
   pointer-events: none;
   user-select: none;
 }
@@ -266,8 +281,10 @@
 }
 
 .single.blog .article-dropcap-letter {
+  top: var(--article-dropcap-letter-top);
   color: inherit;
   font-family: "EB Garamond Initials F2", "Linden Hill", Palatino, serif;
+  font-size: var(--article-dropcap-letter-size);
 }
 
 .single.blog .article-body p {

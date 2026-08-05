@@ -651,20 +651,31 @@ paragraph, which inherited the body margin and opened about 29px between two
 20px lines — more air between notes than inside them. The interval is set on the
 item now, deliberately a little under one line.
 
-The opening initial keeps both layers. Its size and inset are now derived from
-measured font metrics in a comment beside the rule, so the foreground letter's cap
-meets the first line's cap height and its foot the third line's baseline within a
-pixel, instead of being nudged there by a magic offset. The whole composite sat a
-little low before, which is what made it look wrong.
+The opening initial was rebuilt around what the two faces actually are: **F1 is a
+floral ground with no letter in it, F2 is the letter.** They are not
+interchangeable styles and the overlay is not optional. The floral initial is one
+of the site's few signature gestures; it is not decoration that may be dropped.
+Reviewing this pass I first mistook the filigree showing around the letter for a
+misregistration and removed the ornament, which Nisch rejected on 4 August 2026.
 
-The two layers must share an identical box. Reviewing this pass I mistook the F1
-filigree showing around the F2 letter for a misregistration and removed the
-ornament; Nisch rejected that on 4 August 2026. The floral initial is not
-decoration that can be dropped — it is one of the site's few signature gestures.
-The overlay is also how the EB Garamond Initials pair is meant to be used, and it
-is what the TurnTrout reference does with the same two faces. If the pair ever
-looks doubled again, the fault is in the box, the size, or the ornament's
-strength, never in the idea.
+The two layers no longer share one em square. That was the real fault: at one
+size, F1's ink fills the square while F2's letter sits barely inside it, so the
+ground showed only as a narrow band and the crossbar reached past its edges — the
+filigree read as texture behind the ink rather than a frame around it. The
+TurnTrout reference does use one size for both, but its ground is a much paler
+tint blended toward the page, which is why the clash never appears there.
+
+The accepted arrangement, chosen from a four-way comparison on 4 August 2026:
+the ground's ink spans the three-line text block exactly, from the first line's
+**ascender** top to the third line's baseline, and its left edge registers with
+the measure — a hard-edged square cannot hang into the gutter the way a letter's
+side bearings allow. The letter's ink is 0.77 of that square and centred in it.
+
+All four numbers are derived from font metrics measured in the browser, with the
+arithmetic written out beside the rule in `article.css`. Verified in place: the
+square's edges land on the ascender line, the third baseline, and the measure to
+within a hundredth of a pixel. Re-derive them if the opening's size or leading
+changes; never nudge them by eye.
 
 The general lesson is worth keeping: several of these were numbers set by eye
 that happened to look close. Where a value can be derived from the type, derive
