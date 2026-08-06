@@ -1,0 +1,65 @@
+{{- $id := .id -}}
+<div class="scientific-plate-panels scientific-plate-panels--three">
+  <section class="scientific-plate-panel" aria-labelledby="{{ $id }}-inputs-label">
+    <p class="scientific-plate-panel-title" id="{{ $id }}-inputs-label">translated inputs</p>
+    <div class="scientific-plate-graphic">
+      <svg viewBox="0 0 220 166" role="img" aria-labelledby="{{ $id }}-inputs-title {{ $id }}-inputs-desc">
+        <title id="{{ $id }}-inputs-title">Translated presynaptic tuning curves</title>
+        <desc id="{{ $id }}-inputs-desc">Five compact tuning curves, denoted u sub i of x, tile position. Independent signed weights W sub i accompany them.</desc>
+        <path class="scientific-plate-axis" d="M18 138H207"></path>
+        <g class="scientific-plate-grid scientific-plate-grid--ticks" aria-hidden="true">
+          <path d="M49 134V142M89 134V142M129 134V142M169 134V142"></path>
+        </g>
+        <g class="scientific-plate-inputs" fill="none">
+          <path class="scientific-plate-line scientific-plate-line--quiet" d="M18 136C29 136 32 112 43 92C51 77 57 77 65 92C76 112 79 136 91 136"></path>
+          <path class="scientific-plate-line scientific-plate-line--secondary" d="M37 136C49 136 54 104 65 75C74 51 82 51 91 75C102 104 107 136 119 136"></path>
+          <path class="scientific-plate-line scientific-plate-line--primary" d="M70 136C82 136 87 96 99 64C108 39 117 39 126 64C138 96 143 136 155 136"></path>
+          <path class="scientific-plate-line scientific-plate-line--secondary" d="M105 136C117 136 122 106 133 80C142 59 150 59 159 80C170 106 175 136 187 136"></path>
+          <path class="scientific-plate-line scientific-plate-line--quiet" d="M137 136C149 136 153 115 164 96C173 80 180 80 188 96C199 115 202 136 210 136"></path>
+        </g>
+      </svg>
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `u_i(x)` "mode" "anchor" "x" "8.6" "y" "11.5" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `W_i` "mode" "anchor" "x" "68.6" "y" "14.5" "tone" "wine" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\text{position }x` "mode" "anchor" "x" "94.1" "y" "92.8" "align" "right" "size" "small" "position" .position) -}}
+    </div>
+  </section>
+
+  <section class="scientific-plate-panel" aria-labelledby="{{ $id }}-sum-label">
+    <p class="scientific-plate-panel-title" id="{{ $id }}-sum-label">weighted sum</p>
+    <div class="scientific-plate-graphic">
+      <svg viewBox="0 0 220 166" role="img" aria-labelledby="{{ $id }}-sum-title {{ $id }}-sum-desc">
+        <title id="{{ $id }}-sum-title">Weighted tuning curves sum to a Gaussian field</title>
+        <desc id="{{ $id }}-sum-desc">A smooth irregular field f of x fluctuates around zero after the weighted input curves are added.</desc>
+        <path class="scientific-plate-axis" d="M18 84H207"></path>
+        <path class="scientific-plate-line scientific-plate-line--primary scientific-plate-line--strong" d="M18 96C32 70 43 58 57 76C70 94 78 123 95 114C111 105 116 51 134 47C151 42 159 91 175 95C189 99 197 69 207 58"></path>
+        <line class="scientific-plate-event scientific-plate-event--quiet" x1="95" y1="114" x2="95" y2="132"></line>
+        <text class="scientific-plate-label scientific-plate-label--green" x="140" y="39">random field</text>
+      </svg>
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `f(x)=\sum_i W_i u_i(x)` "mode" "anchor" "x" "9.1" "y" "11.5" "size" "formula" "tone" "ink" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\text{position }x` "mode" "anchor" "x" "94.1" "y" "92.8" "align" "right" "size" "small" "position" .position) -}}
+    </div>
+  </section>
+
+  <section class="scientific-plate-panel" aria-labelledby="{{ $id }}-threshold-label">
+    <p class="scientific-plate-panel-title" id="{{ $id }}-threshold-label">cellular threshold</p>
+    <div class="scientific-plate-graphic">
+      <svg viewBox="0 0 220 166" role="img" aria-labelledby="{{ $id }}-threshold-title {{ $id }}-threshold-desc">
+        <title id="{{ $id }}-threshold-title">Thresholding retains connected place fields</title>
+        <desc id="{{ $id }}-threshold-desc">The same smooth field is compared with the threshold theta times the square root of r sub zero. Three intervals above it remain as place fields.</desc>
+        <path class="scientific-plate-axis" d="M18 138H207"></path>
+        <path class="scientific-plate-band" d="M31 112C38 90 46 72 57 76C65 80 70 96 74 112ZM114 112C118 82 123 51 134 47C146 43 153 81 160 112ZM183 112C193 96 200 69 207 58V112Z"></path>
+        <path class="scientific-plate-line scientific-plate-line--quiet" d="M18 128C32 102 43 90 57 108C70 126 78 155 95 146C111 137 116 83 134 79C151 74 159 123 175 127C189 131 197 101 207 90"></path>
+        <line class="scientific-plate-condition" x1="18" y1="112" x2="207" y2="112"></line>
+        <g class="scientific-plate-crossing-marks" aria-hidden="true">
+          <circle cx="31" cy="112" r="3"></circle><circle cx="74" cy="112" r="3"></circle>
+          <circle cx="114" cy="112" r="3"></circle><circle cx="160" cy="112" r="3"></circle>
+          <circle cx="183" cy="112" r="3"></circle>
+        </g>
+        <text class="scientific-plate-label scientific-plate-label--wine" x="109" y="26" text-anchor="middle">connected excursions</text>
+      </svg>
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\theta\sqrt{r_0}` "mode" "anchor" "x" "9.1" "y" "60.5" "tone" "blue" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\text{position }x` "mode" "anchor" "x" "94.1" "y" "92.8" "align" "right" "size" "small" "position" .position) -}}
+    </div>
+  </section>
+</div>
+<p class="scientific-plate-reading">A finite schematic population shows the mechanism, not an exact sampled sum. Randomly weighted inputs form a smooth field, and thresholding leaves the connected intervals in which the cell is active.</p>

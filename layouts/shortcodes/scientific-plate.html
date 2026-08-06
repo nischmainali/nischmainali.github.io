@@ -1,0 +1,94 @@
+{{- /*
+  Numbered scientific plate wrapper. A kind-specific partial supplies only the
+  plate body, while this shortcode owns stable ids, numbering, title, caption,
+  and the common semantic figure structure.
+*/ -}}
+{{- $allowedKinds := slice "construction" "field" "kac-rice" "spectrum" "excursion" "error" -}}
+{{- $allowedArguments := slice "kind" "id" "title" "caption" "threshold" "population" -}}
+{{- if not .IsNamedParams -}}
+  {{- errorf "scientific-plate accepts named arguments only: see %s" .Position -}}
+{{- end -}}
+{{- range $name, $_ := .Params -}}
+  {{- if not (in $allowedArguments $name) -}}
+    {{- errorf "scientific-plate does not support argument %q: see %s" $name $.Position -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $kind := strings.TrimSpace (lower (default "" (.Get "kind"))) -}}
+{{- $id := strings.TrimSpace (default "" (.Get "id")) -}}
+{{- $title := strings.TrimSpace (default "" (.Get "title")) -}}
+{{- $caption := strings.TrimSpace (default "" (.Get "caption")) -}}
+{{- $thresholdText := strings.TrimSpace (default "0.00" (.Get "threshold")) -}}
+{{- $populationText := strings.TrimSpace (default "16" (.Get "population")) -}}
+{{- if not (in $allowedKinds $kind) -}}
+  {{- errorf "Unsupported scientific plate kind %q; use construction, field, kac-rice, spectrum, excursion, or error: see %s" $kind .Position -}}
+{{- end -}}
+{{- if eq (len (findRE `^[a-z][a-z0-9-]*$` $id)) 0 -}}
+  {{- errorf "scientific-plate requires a slug-like id: see %s" .Position -}}
+{{- end -}}
+{{- if not $title -}}
+  {{- errorf "scientific-plate %q requires a title: see %s" $id .Position -}}
+{{- end -}}
+{{- if not $caption -}}
+  {{- errorf "scientific-plate %q requires a caption: see %s" $id .Position -}}
+{{- end -}}
+{{- if and (.Get "threshold") (ne $kind "field") -}}
+  {{- errorf "scientific-plate %q uses threshold outside the field kind: see %s" $id .Position -}}
+{{- end -}}
+{{- if eq (len (findRE `^-?([0-9]+(\.[0-9]+)?|\.[0-9]+)$` $thresholdText)) 0 -}}
+  {{- errorf "scientific-plate %q threshold must be a number from -0.80 to 0.80: see %s" $id .Position -}}
+{{- end -}}
+{{- $threshold := float $thresholdText -}}
+{{- if or (lt $threshold -0.8) (gt $threshold 0.8) -}}
+  {{- errorf "scientific-plate %q threshold must be from -0.80 to 0.80: see %s" $id .Position -}}
+{{- end -}}
+{{- $thresholdStep := mul $threshold 20 -}}
+{{- if gt (math.Abs (sub $thresholdStep (math.Round $thresholdStep))) 0.000000001 -}}
+  {{- errorf "scientific-plate %q threshold must use steps of 0.05: see %s" $id .Position -}}
+{{- end -}}
+{{- if and (.Get "population") (ne $kind "error") -}}
+  {{- errorf "scientific-plate %q uses population outside the error kind: see %s" $id .Position -}}
+{{- end -}}
+{{- if eq (len (findRE `^[0-9]+$` $populationText)) 0 -}}
+  {{- errorf "scientific-plate %q population must be an integer from 6 to 48: see %s" $id .Position -}}
+{{- end -}}
+{{- $population := int $populationText -}}
+{{- if or (lt $population 6) (gt $population 48) -}}
+  {{- errorf "scientific-plate %q population must be from 6 to 48: see %s" $id .Position -}}
+{{- end -}}
+
+{{- $meta := partial "plate-meta.html" (dict "page" .Page "id" $id) -}}
+{{- $number := index $meta "label" -}}
+{{- if not $number -}}
+  {{- errorf "Scientific plate %q is missing from the page numbering spine; keep the complete shortcode on one line and outside fenced code: see %s" $id .Position -}}
+{{- end -}}
+{{- if ne (index $meta "kind") $kind -}}
+  {{- errorf "Scientific plate %q has inconsistent kind metadata: see %s" $id .Position -}}
+{{- end -}}
+{{- .Page.Store.Set "hasScientificPlate" true -}}
+{{- if in (slice "field" "error") $kind -}}
+  {{- .Page.Store.Set "hasInteractiveScientificPlate" true -}}
+{{- end -}}
+{{- $renderer := printf "scientific-plates/%s.html" $kind -}}
+{{- $context := dict
+    "page" .Page
+    "id" $id
+    "kind" $kind
+    "title" $title
+    "caption" $caption
+    "label" $number
+    "threshold" $threshold
+    "population" $population
+    "section" (index $meta "section")
+    "sectionTitle" (index $meta "sectionTitle")
+    "position" .Position -}}
+<figure class="scientific-plate scientific-plate--{{ $kind }}" id="plate-{{ $id }}" data-scientific-plate="{{ $kind }}" data-plate-number="{{ $number }}">
+  <header class="scientific-plate-header">
+    <span class="scientific-plate-number">Plate {{ $number }}</span>
+    <span class="scientific-plate-title">{{ $title | markdownify }}</span>
+  </header>
+  <div class="scientific-plate-body">
+    {{- partial $renderer $context -}}
+  </div>
+  <figcaption class="scientific-plate-caption">{{ $caption | markdownify }}</figcaption>
+</figure>

@@ -1,0 +1,49 @@
+{{- $id := .id -}}
+<div class="scientific-plate-panels scientific-plate-panels--two">
+  <section class="scientific-plate-panel" aria-labelledby="{{ $id }}-conditioned-label">
+    <p class="scientific-plate-panel-title" id="{{ $id }}-conditioned-label">conditioned upcrossing</p>
+    <div class="scientific-plate-graphic">
+      <svg viewBox="0 0 330 202" role="img" aria-labelledby="{{ $id }}-conditioned-title {{ $id }}-conditioned-desc">
+        <title id="{{ $id }}-conditioned-title">Slepian decomposition after an upward crossing</title>
+        <desc id="{{ $id }}-conditioned-desc">A process is fixed at threshold theta at zero with positive Rayleigh slope zeta. Direct labels identify the threshold term, slope term, and residual kappa of x.</desc>
+        <path class="scientific-plate-axis" d="M24 151H308"></path>
+        <line class="scientific-plate-condition" x1="24" y1="115" x2="308" y2="115"></line>
+        <path class="scientific-plate-line scientific-plate-line--condition" d="M24 139C72 134 111 117 149 96C181 79 220 82 308 134"></path>
+        <path class="scientific-plate-line scientific-plate-line--event" d="M24 151C85 151 126 140 164 115C200 91 236 88 308 142"></path>
+        <path class="scientific-plate-line scientific-plate-line--quiet scientific-plate-line--residual" d="M24 146C49 152 70 137 95 145C121 153 139 122 164 115C189 108 205 119 229 109C253 99 277 137 308 131"></path>
+        <path class="scientific-plate-line scientific-plate-line--primary scientific-plate-line--strong" d="M24 134C49 137 71 122 96 128C122 134 140 106 164 92C189 78 206 91 230 84C256 77 280 119 308 122"></path>
+        <circle class="scientific-plate-event-dot" cx="164" cy="115" r="3.7"></circle>
+        <text class="scientific-plate-label scientific-plate-label--green" x="235" y="69">conditioned field</text>
+        <path class="scientific-plate-leader" d="M201 161L175 124"></path>
+        <path class="scientific-plate-leader" d="M96 37L104 121"></path>
+        <text class="scientific-plate-label" x="308" y="185" text-anchor="end">distance from crossing</text>
+      </svg>
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\text{threshold }\theta` "mode" "anchor" "x" "8.5" "y" "51.5" "tone" "blue" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\kappa(x),\ \text{residual}` "mode" "anchor" "x" "22.7" "y" "14.2" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\text{Rayleigh slope }\zeta` "mode" "anchor" "x" "59.7" "y" "82.2" "tone" "wine" "position" .position) -}}
+    </div>
+  </section>
+
+  <section class="scientific-plate-panel" aria-labelledby="{{ $id }}-high-label">
+    <p class="scientific-plate-panel-title" id="{{ $id }}-high-label">high threshold limit</p>
+    <div class="scientific-plate-graphic">
+      <svg viewBox="0 0 330 202" role="img" aria-labelledby="{{ $id }}-high-title {{ $id }}-high-desc">
+        <title id="{{ $id }}-high-title">A high excursion approaches a parabola</title>
+        <desc id="{{ $id }}-high-desc">Above a high threshold theta, the conditioned excursion narrows to a parabolic cap. Its length scales as zeta over theta and its height as zeta squared over theta.</desc>
+        <path class="scientific-plate-axis" d="M24 151H308"></path>
+        <line class="scientific-plate-condition" x1="24" y1="124" x2="308" y2="124"></line>
+        <path class="scientific-plate-area scientific-plate-area--wine" d="M97 124C117 69 139 43 164 43C189 43 211 69 231 124Z"></path>
+        <path class="scientific-plate-line scientific-plate-line--event scientific-plate-line--strong" d="M97 124C117 69 139 43 164 43C189 43 211 69 231 124"></path>
+        <path class="scientific-plate-dimension" d="M97 145V134M97 139H231M231 145V134"></path>
+        <path class="scientific-plate-dimension" d="M247 124H257M252 124V43M247 43H257"></path>
+        <text class="scientific-plate-label scientific-plate-label--wine" x="164" y="31" text-anchor="middle">parabolic cap</text>
+        <text class="scientific-plate-label" x="261" y="88">height</text>
+        <text class="scientific-plate-label" x="308" y="185" text-anchor="end">rescaled distance</text>
+      </svg>
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\text{high }\theta` "mode" "anchor" "x" "8.5" "y" "56" "tone" "blue" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\text{length}\propto\zeta/\theta` "mode" "anchor" "x" "49.7" "y" "77.5" "align" "center" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\propto\zeta^2/\theta` "mode" "anchor" "x" "79.1" "y" "49.5" "position" .position) -}}
+    </div>
+  </section>
+</div>
+<p class="scientific-plate-reading">Conditioning fixes the crossing height and draws the slope from a Rayleigh law. At high thresholds the residual shrinks, leaving a narrow parabolic excursion.</p>

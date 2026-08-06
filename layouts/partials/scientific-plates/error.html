@@ -1,0 +1,97 @@
+{{- $id := .id -}}
+{{- $population := default "16" .population -}}
+<div class="scientific-plate-live-reading" data-error-status aria-live="polite">
+  {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `N` "position" .position) -}}
+  <span aria-hidden="true"> = </span><span data-error-status-population>{{ $population }}</span>
+  <span aria-hidden="true"> / </span><span>formal minimum at </span>
+  {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\omega_2` "position" .position) -}}
+  <span aria-hidden="true"> = </span><span data-error-status-optimum>4.90</span>
+</div>
+<div class="scientific-plate-panels scientific-plate-panels--two scientific-plate-panels--error">
+  <section class="scientific-plate-panel" aria-labelledby="{{ $id }}-decomposition-label">
+    <p class="scientific-plate-panel-title" id="{{ $id }}-decomposition-label">decomposition, independent segments</p>
+    <div class="scientific-plate-graphic">
+    <svg viewBox="0 0 340 250" role="img" aria-labelledby="{{ $id }}-decomposition-title {{ $id }}-decomposition-desc" focusable="false">
+      <title id="{{ $id }}-decomposition-title">Local, global, and total coding loss</title>
+      <desc id="{{ $id }}-decomposition-desc">For sixteen neurons, local error falls and the independent-segment approximation to global error rises as omega two increases. Their sum has a minimum near omega two equals 4.90. Both axes are logarithmic.</desc>
+      <g class="scientific-plate-grid" aria-hidden="true">
+        <path d="M42 28V210M136.7 28V210M231.3 28V210M326 28V210"></path>
+      </g>
+      <g class="scientific-plate-grid" data-error-y-grid aria-hidden="true">
+        <path d="M42 41.7H326M42 87.2H326M42 132.7H326M42 178.3H326"></path>
+      </g>
+      <path class="scientific-plate-line scientific-plate-line--condition" data-error-local d="M42.0 44.3L51.5 48.9L60.9 53.4L70.4 58.0L79.9 62.5L89.3 67.1L98.8 71.6L108.3 76.2L117.7 80.7L127.2 85.3L136.7 89.8L146.1 94.4L155.6 98.9L165.1 103.5L174.5 108.0L184.0 112.6L193.5 117.1L202.9 121.7L212.4 126.2L221.9 130.8L231.3 135.3L240.8 139.9L250.3 144.4L259.7 149.0L269.2 153.5L278.7 158.1L288.1 162.6L297.6 167.2L307.1 171.7L316.5 176.3L326.0 180.8"></path>
+      <path class="scientific-plate-line scientific-plate-line--event" data-error-global d="M42.0 198.1L51.5 193.6L60.9 189.0L70.4 184.5L79.9 179.9L89.3 175.4L98.8 170.8L108.3 166.3L117.7 161.7L127.2 157.2L136.7 152.6L146.1 148.1L155.6 143.5L165.1 139.0L174.5 134.4L184.0 129.9L193.5 125.3L202.9 120.8L212.4 116.2L221.9 111.7L231.3 107.1L240.8 102.6L250.3 98.0L259.7 93.5L269.2 88.9L278.7 84.4L288.1 79.8L297.6 75.3L307.1 70.7L316.5 66.2L326.0 61.6"></path>
+      <path class="scientific-plate-line scientific-plate-line--primary scientific-plate-line--strong" data-error-total d="M42.0 44.3L51.5 48.9L60.9 53.4L70.4 58.0L79.9 62.5L89.3 67.0L98.8 71.5L108.3 76.0L117.7 80.4L127.2 84.8L136.7 89.0L146.1 93.1L155.6 97.0L165.1 100.4L174.5 103.4L184.0 105.7L193.5 107.1L202.9 107.5L212.4 106.9L221.9 105.3L231.3 102.9L240.8 99.8L250.3 96.2L259.7 92.3L269.2 88.2L278.7 83.9L288.1 79.5L297.6 75.1L307.1 70.6L316.5 66.1L326.0 61.6"></path>
+      <circle class="scientific-plate-minimum" data-error-minimum cx="202" cy="107.5" r="3.6"></circle>
+      <path class="scientific-plate-leader" data-error-minimum-leader d="M202 112V151"></path>
+      <text class="scientific-plate-label scientific-plate-label--blue" data-error-local-label x="106.8" y="68.1">local error</text>
+      <text class="scientific-plate-label scientific-plate-label--wine" data-error-global-label x="219" y="83">global error</text>
+      <text class="scientific-plate-label scientific-plate-label--green" data-error-total-label x="221.7" y="100.3">total</text>
+      <text class="scientific-plate-label" data-error-minimum-label x="209" y="149">minimum 4.90</text>
+      <g aria-hidden="true">
+        <path class="scientific-plate-axis" d="M42 210H326M42 28V210"></path>
+        <text class="scientific-plate-label" x="42" y="225" text-anchor="middle">0.1</text>
+        <text class="scientific-plate-label" x="136.7" y="225" text-anchor="middle">1</text>
+        <text class="scientific-plate-label" x="231.3" y="225" text-anchor="middle">10</text>
+        <text class="scientific-plate-label" x="326" y="225" text-anchor="middle">100</text>
+        <text class="scientific-plate-label" x="42" y="18">expected loss (log scale)</text>
+      </g>
+    </svg>
+    {{- $initialTicks := dict "-1" "16.7" "-2" "34.9" "-3" "53.1" "-4" "71.3" -}}
+    {{- range $exponent := seq -16 3 -}}
+      {{- $tickTex := cond (eq $exponent 0) `1` (printf `10^{%d}` $exponent) -}}
+      {{- $initialY := index $initialTicks (string $exponent) -}}
+      <span class="scientific-plate-math scientific-plate-math--muted scientific-plate-math--right scientific-plate-math--small scientific-plate-math--anchor scientific-plate-math-anchor-shell math-inline" data-error-y-tick="{{ $exponent }}"{{ if not $initialY }} hidden{{ end }} style="--plate-math-x:10%;--plate-math-y:{{ default "0" $initialY }}%">
+        {{- partial "scientific-plates/math.html" (dict "page" $.page "tex" $tickTex "size" "small" "position" $.position) -}}
+      </span>
+    {{- end -}}
+    {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\omega_2\ \text{(log scale)}` "mode" "anchor" "x" "95.9" "y" "95.2" "align" "right" "size" "small" "position" .position) -}}
+    </div>
+  </section>
+
+  <section class="scientific-plate-panel" aria-labelledby="{{ $id }}-comparison-label">
+    <p class="scientific-plate-panel-title" id="{{ $id }}-comparison-label">total loss across population size</p>
+    <div class="scientific-plate-graphic">
+    <svg viewBox="0 0 340 250" role="img" aria-labelledby="{{ $id }}-comparison-title {{ $id }}-comparison-desc" focusable="false">
+      <title id="{{ $id }}-comparison-title">Total coding loss for three population sizes</title>
+      <desc id="{{ $id }}-comparison-desc">Directly labelled total-loss curves compare eight, sixteen, and twenty-four neurons. Larger populations move the formal optimum toward higher omega two and rougher fields. Both axes are logarithmic.</desc>
+      <g class="scientific-plate-grid" aria-hidden="true">
+        <path d="M42 28V210M136.7 28V210M231.3 28V210M326 28V210"></path>
+        <path d="M42 42.5H326M42 71.9H326M42 130.8H326M42 189.7H326"></path>
+      </g>
+      <path class="scientific-plate-line scientific-plate-line--event" data-error-comparison="8" d="M42.0 90.4L51.5 92.6L60.9 94.4L70.4 95.7L79.9 96.5L89.3 96.6L98.8 96.0L108.3 94.8L117.7 93.1L127.2 91.0L136.7 88.6L146.1 86.0L155.6 83.3L165.1 80.5L174.5 77.7L184.0 74.8L193.5 71.9L202.9 68.9L212.4 66.0L221.9 63.1L231.3 60.1L240.8 57.2L250.3 54.2L259.7 51.3L269.2 48.4L278.7 45.4L288.1 42.5L297.6 39.5L307.1 36.6L316.5 33.6L326.0 30.7"></path>
+      <path class="scientific-plate-line scientific-plate-line--primary scientific-plate-line--strong" data-error-comparison="16" d="M42.0 102.7L51.5 105.6L60.9 108.6L70.4 111.5L79.9 114.5L89.3 117.4L98.8 120.3L108.3 123.2L117.7 126.1L127.2 128.9L136.7 131.7L146.1 134.3L155.6 136.8L165.1 139.0L174.5 141.0L184.0 142.4L193.5 143.4L202.9 143.6L212.4 143.2L221.9 142.2L231.3 140.6L240.8 138.6L250.3 136.3L259.7 133.8L269.2 131.1L278.7 128.3L288.1 125.5L297.6 122.6L307.1 119.7L316.5 116.8L326.0 113.9"></path>
+      <path class="scientific-plate-line scientific-plate-line--condition" data-error-comparison="24" d="M42.0 108.5L51.5 111.4L60.9 114.4L70.4 117.3L79.9 120.3L89.3 123.2L98.8 126.2L108.3 129.1L117.7 132.1L127.2 135.0L136.7 138.0L146.1 140.9L155.6 143.8L165.1 146.8L174.5 149.7L184.0 152.7L193.5 155.6L202.9 158.6L212.4 161.5L221.9 164.4L231.3 167.3L240.8 170.2L250.3 173.0L259.7 175.8L269.2 178.4L278.7 181.0L288.1 183.3L297.6 185.2L307.1 186.8L316.5 187.8L326.0 188.1"></path>
+      <g aria-hidden="true">
+        <path class="scientific-plate-axis" d="M42 210H326M42 28V210"></path>
+        <text class="scientific-plate-label" x="42" y="225" text-anchor="middle">0.1</text>
+        <text class="scientific-plate-label" x="136.7" y="225" text-anchor="middle">1</text>
+        <text class="scientific-plate-label" x="231.3" y="225" text-anchor="middle">10</text>
+        <text class="scientific-plate-label" x="326" y="225" text-anchor="middle">100</text>
+        <text class="scientific-plate-label" x="42" y="18">expected loss (log scale)</text>
+      </g>
+    </svg>
+    {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `N=8` "mode" "anchor" "x" "57.9" "y" "26.2" "tone" "wine" "position" .position) -}}
+    {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `N=16` "mode" "anchor" "x" "73.8" "y" "52.2" "tone" "green" "position" .position) -}}
+    {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `N=24` "mode" "anchor" "x" "84.1" "y" "70.2" "tone" "blue" "position" .position) -}}
+    {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `10` "mode" "anchor" "x" "10" "y" "17.4" "align" "right" "size" "small" "position" .position) -}}
+    {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `1` "mode" "anchor" "x" "10" "y" "29.2" "align" "right" "size" "small" "position" .position) -}}
+    {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `10^{-2}` "mode" "anchor" "x" "10" "y" "52.6" "align" "right" "size" "small" "position" .position) -}}
+    {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `10^{-4}` "mode" "anchor" "x" "10" "y" "76.2" "align" "right" "size" "small" "position" .position) -}}
+    {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\omega_2\ \text{(log scale)}` "mode" "anchor" "x" "95.9" "y" "95.2" "align" "right" "size" "small" "position" .position) -}}
+    </div>
+  </section>
+</div>
+<div class="scientific-plate-controls" data-scientific-plate-controls data-error-controls hidden>
+  <label for="{{ $id }}-population">left panel&nbsp;{{- partial "scientific-plates/math.html" (dict "page" .page "tex" `N` "tone" "green" "position" .position) -}}</label>
+  <input id="{{ $id }}-population" data-error-input type="range" min="6" max="48" step="1" value="{{ $population }}">
+  <output for="{{ $id }}-population" data-error-output>{{ $population }}</output>
+</div>
+<p class="scientific-plate-reading" data-error-reading>
+  With&nbsp;{{- partial "scientific-plates/math.html" (dict "page" .page "tex" `L=12,\ r_0=1,\ \eta=0.35` "position" .position) -}} fixed, the left panel separates local error from the independent-segment approximation to global error.
+  For&nbsp;{{- partial "scientific-plates/math.html" (dict "page" .page "tex" `N` "position" .position) -}}<span aria-hidden="true"> = </span><span data-error-reading-population>{{ $population }}</span>,
+  <span data-error-reading-phrase>the two approximations balance near</span>
+  {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\omega_2` "position" .position) -}}<span aria-hidden="true"> = </span><span data-error-reading-optimum>4.90</span><span data-error-reading-range>.</span>
+  The comparison at right remains fixed at&nbsp;{{- partial "scientific-plates/math.html" (dict "page" .page "tex" `N\in\{8,16,24\}` "position" .position) -}}.
+</p>

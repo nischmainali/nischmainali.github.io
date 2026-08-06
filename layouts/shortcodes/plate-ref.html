@@ -1,0 +1,16 @@
+{{- $resolved := partial "reference-target.html" (dict
+    "page" .Page "ref" (.Get 0) "shortcode" "plate-ref" "position" .Position) -}}
+{{- $target := $resolved.page -}}
+{{- $id := $resolved.id -}}
+{{- $meta := partial "plate-meta.html" (dict "page" $target "id" $id) -}}
+{{- $number := index $meta "label" -}}
+{{- if not $number -}}
+  {{- if $resolved.external -}}
+    {{- errorf "Unknown scientific plate %q in %s: see %s" $id $target.RelPermalink .Position -}}
+  {{- else -}}
+    {{- errorf "Unknown scientific plate reference %q: see %s" $id .Position -}}
+  {{- end -}}
+{{- end -}}
+{{- $href := cond $resolved.external (printf "%s#plate-%s" $target.RelPermalink $id) (printf "#plate-%s" $id) -}}
+<a class="plate-ref{{ if $resolved.external }} reference--external{{ end }}" href="{{ $href }}" data-plate-ref="{{ $id }}"{{ if $resolved.external }} data-reference-scope="external"{{ end }} aria-label="Plate {{ $number }}{{ with $resolved.source }} in {{ . }}{{ end }}"><span class="plate-ref-kind">Plate</span> <span class="plate-ref-number">{{ $number }}</span>{{ with $resolved.source }}<span class="reference-source" aria-hidden="true"> in <cite>{{ . }}</cite></span>{{ end }}</a>
+{{- /* Inline output must not end in whitespace before sentence punctuation. */ -}}

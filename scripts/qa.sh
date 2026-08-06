@@ -15,7 +15,7 @@ cd "$ROOT"
 
 python3 scripts/check_content.py
 node --check assets/js/article.js
-node --check assets/js/field-plate.js
+node --check assets/js/scientific-plates.js
 node --check assets/js/home-readout.js
 node --check assets/js/ink-register.js
 node --check assets/js/search.js

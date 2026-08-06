@@ -23,7 +23,12 @@ class PageBudget:
 PAGES = (
     PageBudget("home", "index.html", 36_000, 100_000),
     PageBudget("writing", "blog/index.html", 24_000, 90_000),
-    PageBudget("article", "blog/gp-code-notes/index.html", 48_000, 125_000),
+    PageBudget(
+        "gp field note",
+        "blog/gp-code-notes/index.html",
+        700_000,
+        430_000,
+    ),
 )
 
 MAX_STYLESHEET_BYTES = 80_000

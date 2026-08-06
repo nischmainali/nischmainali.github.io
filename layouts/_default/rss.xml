@@ -26,7 +26,7 @@
       {{- with .Description }}
       <description>{{ . }}</description>
       {{- end }}
-      {{- $content := replaceRE `(?s)<div class="field-plate-controls"[^>]*>.*?</div>` "" (string .Content) -}}
+      {{- $content := replaceRE `(?s)<div class="[^"]*\bscientific-plate-controls\b[^"]*"[^>]*>.*?</div>` "" (string .Content) -}}
       <content:encoded>{{ printf "<![CDATA[%s]]>" (replace $content "]]>" "]]]]><![CDATA[>") | safeHTML }}</content:encoded>
     </item>
     {{- end }}

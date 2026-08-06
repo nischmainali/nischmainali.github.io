@@ -1,6 +1,6 @@
 {{- /*
   math-registry.html — one pass over a page's raw source that yields the whole
-  numbering spine for its equations and statements.
+  numbering spine for its equations, statements, and scientific plates.
 
   Numbering is section-scoped. An object inside the page's Nth level-two section
   is labelled "N.k"; an object standing before the first section, or living on a
@@ -10,7 +10,8 @@
 
   Equations carry their own counter. Theorem, lemma, proposition, corollary, and
   definition share one counter, as MATHEMATICS.md specifies. Remarks stay
-  unnumbered.
+  unnumbered. Scientific plates carry a third counter, so their labels remain
+  stable when an equation or statement is inserted nearby.
 
   Fenced code is skipped, so a note may quote the shortcodes it documents
   without disturbing its own numbers.
@@ -25,20 +26,26 @@
   Returns:
     equations   map id -> label
     statements  map id -> entry
+    plates      map id -> entry
     ordered     entries in source order, for /statements/
+    orderedPlates plate entries in source order
     sections    level-two sections in source order
   where an entry is a dict of id, kind, label, title, section, sectionTitle.
 */ -}}
 {{- $page := . -}}
-{{- $kinds := slice "theorem" "lemma" "proposition" "corollary" "definition" "remark" -}}
+{{- $kinds := slice "theorem" "lemma" "proposition" "corollary" "definition" "remark" "example" -}}
+{{- $plateKinds := slice "construction" "field" "kac-rice" "spectrum" "excursion" "error" -}}
 {{- $equations := dict -}}
 {{- $statements := dict -}}
+{{- $plates := dict -}}
 {{- $ordered := slice -}}
+{{- $orderedPlates := slice -}}
 {{- $sections := slice -}}
 {{- $section := 0 -}}
 {{- $sectionTitle := "" -}}
 {{- $equationSeq := 0 -}}
 {{- $statementSeq := 0 -}}
+{{- $plateSeq := 0 -}}
 {{- $fence := "" -}}
 
 {{- range $line := split $page.RawContent "\n" -}}
@@ -68,6 +75,7 @@
       {{- $sectionTitle = $heading -}}
       {{- $equationSeq = 0 -}}
       {{- $statementSeq = 0 -}}
+      {{- $plateSeq = 0 -}}
       {{- $sections = $sections | append (dict "number" $section "title" $heading) -}}
     {{- end -}}
 
@@ -89,7 +97,7 @@
             {{- $title = index (index . 0) 1 -}}
           {{- end -}}
           {{- $label := "" -}}
-          {{- if ne $kind "remark" -}}
+          {{- if not (in (slice "remark" "example") $kind) -}}
             {{- $statementSeq = add $statementSeq 1 -}}
             {{- $label = cond (gt $section 0) (printf "%d.%d" $section $statementSeq) (printf "%d" $statementSeq) -}}
           {{- end -}}
@@ -106,11 +114,48 @@
       {{- end -}}
     {{- end -}}
 
+    {{- range $tag := findRE `\{\{<\s*scientific-plate\b[^>]*>\}\}` $line -}}
+      {{- $idMatch := findRESubmatch `\bid\s*=\s*"([a-z][a-z0-9-]*)"` $tag -}}
+      {{- $kindMatch := findRESubmatch `\bkind\s*=\s*"([a-z][a-z0-9-]*)"` $tag -}}
+      {{- if and $idMatch $kindMatch -}}
+        {{- $id := index (index $idMatch 0) 1 -}}
+        {{- $kind := index (index $kindMatch 0) 1 -}}
+        {{- if not (in $plateKinds $kind) -}}
+          {{- errorf "Unsupported scientific plate kind %q in %s" $kind $page.File.Path -}}
+        {{- end -}}
+        {{- if isset $plates $id -}}
+          {{- errorf "Duplicate scientific plate id %q in %s" $id $page.File.Path -}}
+        {{- end -}}
+        {{- $title := "" -}}
+        {{- with findRESubmatch `\btitle\s*=\s*"([^"]+)"` $tag -}}
+          {{- $title = index (index . 0) 1 -}}
+        {{- end -}}
+        {{- $caption := "" -}}
+        {{- with findRESubmatch `\bcaption\s*=\s*"([^"]+)"` $tag -}}
+          {{- $caption = index (index . 0) 1 -}}
+        {{- end -}}
+        {{- $plateSeq = add $plateSeq 1 -}}
+        {{- $label := cond (gt $section 0) (printf "%d.%d" $section $plateSeq) (printf "%d" $plateSeq) -}}
+        {{- $entry := dict
+            "id" $id
+            "kind" $kind
+            "label" $label
+            "title" $title
+            "caption" $caption
+            "section" $section
+            "sectionTitle" $sectionTitle -}}
+        {{- $plates = merge $plates (dict $id $entry) -}}
+        {{- $orderedPlates = $orderedPlates | append $entry -}}
+      {{- end -}}
+    {{- end -}}
+
   {{- end -}}
 {{- end -}}
 
 {{- return dict
     "equations" $equations
     "statements" $statements
+    "plates" $plates
     "ordered" $ordered
+    "orderedPlates" $orderedPlates
     "sections" $sections -}}

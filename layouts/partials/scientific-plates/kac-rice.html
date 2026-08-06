@@ -1,0 +1,53 @@
+{{- $id := .id -}}
+<div class="scientific-plate-panels scientific-plate-panels--two">
+  <section class="scientific-plate-panel" aria-labelledby="{{ $id }}-window-label">
+    <p class="scientific-plate-panel-title" id="{{ $id }}-window-label">finite counting window</p>
+    <div class="scientific-plate-graphic">
+      <svg viewBox="0 0 330 190" role="img" aria-labelledby="{{ $id }}-window-title {{ $id }}-window-desc">
+        <title id="{{ $id }}-window-title">A narrow band isolates threshold crossings</title>
+        <desc id="{{ $id }}-window-desc">A smooth curve enters and leaves the epsilon band around level T at four locations. Short wine marks identify the portions counted by the approximate delta function.</desc>
+        <rect class="scientific-plate-window" x="30" y="91" width="276" height="20"></rect>
+        <line class="scientific-plate-condition" x1="30" y1="101" x2="306" y2="101"></line>
+        <path class="scientific-plate-line scientific-plate-line--primary scientific-plate-line--strong" d="M30 142C54 132 64 67 94 70C123 73 126 136 159 129C190 123 194 54 226 62C255 69 270 119 306 83"></path>
+        <g class="scientific-plate-event-windows" aria-hidden="true">
+          <path d="M61 91V111M119 91V111M171 91V111M272 91V111"></path>
+        </g>
+        <path class="scientific-plate-leader" d="M177 29L177 87"></path>
+      </svg>
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `T` "mode" "anchor" "x" "10.6" "y" "47.5" "tone" "blue" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\lvert f(x)-T\rvert<\varepsilon` "mode" "anchor" "x" "53.3" "y" "10.5" "align" "center" "tone" "wine" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\text{position }x` "mode" "anchor" "x" "92.7" "y" "94.2" "align" "right" "size" "small" "position" .position) -}}
+    </div>
+  </section>
+
+  <section class="scientific-plate-panel" aria-labelledby="{{ $id }}-limit-label">
+    <p class="scientific-plate-panel-title" id="{{ $id }}-limit-label">slope compensation</p>
+    <div class="scientific-plate-graphic">
+      <svg viewBox="0 0 330 190" role="img" aria-labelledby="{{ $id }}-limit-title {{ $id }}-limit-desc">
+        <title id="{{ $id }}-limit-title">Shallow and steep crossings each contribute one</title>
+        <desc id="{{ $id }}-limit-desc">A shallow crossing occupies a wide spatial interval inside the epsilon band, while a steep crossing occupies a narrow interval. In each case the integral of eta sub epsilon times absolute slope equals one.</desc>
+        <g transform="translate(20 31)">
+          <rect class="scientific-plate-window" x="0" y="44" width="134" height="18"></rect>
+          <path class="scientific-plate-axis" d="M0 53H134"></path>
+          <path class="scientific-plate-line scientific-plate-line--primary scientific-plate-line--strong" d="M7 76L127 30"></path>
+          <path class="scientific-plate-dimension" d="M48 71V66M48 68H95M95 71V66"></path>
+          <circle class="scientific-plate-event-dot" cx="67" cy="53" r="3"></circle>
+        </g>
+        <g transform="translate(176 31)">
+          <rect class="scientific-plate-window" x="0" y="44" width="134" height="18"></rect>
+          <path class="scientific-plate-axis" d="M0 53H134"></path>
+          <path class="scientific-plate-line scientific-plate-line--primary scientific-plate-line--strong" d="M54 89L79 17"></path>
+          <path class="scientific-plate-dimension" d="M63 71V66M63 68H70M70 71V66"></path>
+          <circle class="scientific-plate-event-dot" cx="67" cy="53" r="3"></circle>
+        </g>
+        <text class="scientific-plate-label scientific-plate-label--wine" x="165" y="178" text-anchor="middle">different slopes, equal counts</text>
+      </svg>
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\text{shallow }\lvert f'\rvert` "mode" "anchor" "x" "26.4" "y" "21.5" "align" "center" "tone" "green" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\text{wide }\Delta x` "mode" "anchor" "x" "27.9" "y" "59.2" "align" "center" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\text{steep }\lvert f'\rvert` "mode" "anchor" "x" "73.6" "y" "21.5" "align" "center" "tone" "green" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\text{narrow }\Delta x` "mode" "anchor" "x" "73.6" "y" "59.2" "align" "center" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\int \eta_\varepsilon(f(x)-T)\lvert f'(x)\rvert\,\dd x=1` "mode" "anchor" "x" "50" "y" "75.3" "align" "center" "size" "formula" "tone" "ink" "position" .position) -}}
+    </div>
+  </section>
+</div>
+<p class="scientific-plate-reading">The narrow band selects only the neighbourhood of each crossing. The derivative changes spatial width into field height, so every simple crossing contributes one.</p>

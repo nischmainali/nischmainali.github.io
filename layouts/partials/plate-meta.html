@@ -1,0 +1,21 @@
+{{- /*
+  plate-meta.html resolves one scientific plate's section-scoped label and
+  authored metadata from the cached source registry.
+
+  It takes a dict of "page" and "id". An unknown id returns an entry with an
+  empty kind and label so the calling shortcode can report the source position.
+*/ -}}
+{{- $page := .page -}}
+{{- $registry := partialCached "math-registry.html" $page $page.RelPermalink -}}
+{{- $entry := index $registry.plates .id -}}
+{{- if not $entry -}}
+  {{- $entry = dict
+      "id" .id
+      "kind" ""
+      "label" ""
+      "title" ""
+      "caption" ""
+      "section" 0
+      "sectionTitle" "" -}}
+{{- end -}}
+{{- return $entry -}}

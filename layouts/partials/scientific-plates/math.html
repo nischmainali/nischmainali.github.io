@@ -1,0 +1,49 @@
+{{- /*
+  Build-time mathematics for scientific plates. Inline formulas stay in normal
+  HTML, while anchored formulas sit in a positioned HTML layer over an SVG.
+  Both routes use the site's one render-math partial and therefore retain its
+  MathML, strict parsing, macro table, and page-level asset flag.
+*/ -}}
+{{- $page := .page -}}
+{{- $tex := strings.TrimSpace (default "" .tex) -}}
+{{- $mode := strings.TrimSpace (lower (default "inline" .mode)) -}}
+{{- $tone := strings.TrimSpace (lower (default "muted" .tone)) -}}
+{{- $align := strings.TrimSpace (lower (default "left" .align)) -}}
+{{- $size := strings.TrimSpace (lower (default "label" .size)) -}}
+{{- $position := default "scientific plate" .position -}}
+{{- $allowedModes := slice "inline" "anchor" "strip" -}}
+{{- $allowedTones := slice "muted" "ink" "green" "blue" "wine" -}}
+{{- $allowedAlignments := slice "left" "center" "right" -}}
+{{- $allowedSizes := slice "label" "formula" "small" -}}
+{{- if not $page -}}
+  {{- errorf "scientific plate math requires a page context" -}}
+{{- end -}}
+{{- if not $tex -}}
+  {{- errorf "scientific plate math is empty: see %s" $position -}}
+{{- end -}}
+{{- if not (in $allowedModes $mode) -}}
+  {{- errorf "scientific plate math mode %q is unsupported: see %s" $mode $position -}}
+{{- end -}}
+{{- if not (in $allowedTones $tone) -}}
+  {{- errorf "scientific plate math tone %q is unsupported: see %s" $tone $position -}}
+{{- end -}}
+{{- if not (in $allowedAlignments $align) -}}
+  {{- errorf "scientific plate math alignment %q is unsupported: see %s" $align $position -}}
+{{- end -}}
+{{- if not (in $allowedSizes $size) -}}
+  {{- errorf "scientific plate math size %q is unsupported: see %s" $size $position -}}
+{{- end -}}
+{{- $class := printf "scientific-plate-math scientific-plate-math--%s scientific-plate-math--%s scientific-plate-math--%s" $tone $align $size -}}
+{{- if eq $mode "anchor" -}}
+  {{- $x := strings.TrimSpace (default "0" .x) -}}
+  {{- $y := strings.TrimSpace (default "0" .y) -}}
+  {{- if or (eq (len (findRE `^-?[0-9]+(\.[0-9]+)?$` $x)) 0) (eq (len (findRE `^-?[0-9]+(\.[0-9]+)?$` $y)) 0) -}}
+    {{- errorf "scientific plate math anchors require numeric x and y percentages: see %s" $position -}}
+  {{- end -}}
+  {{- $style := printf "--plate-math-x:%s%%;--plate-math-y:%s%%" $x $y | safeCSS -}}
+  <span class="{{ $class }} scientific-plate-math--anchor math-inline" style="{{ $style }}">{{- partial "render-math.html" (dict "tex" $tex "display" false "page" $page "position" $position "output" "mathml") -}}</span>
+{{- else if eq $mode "strip" -}}
+  <div class="{{ $class }} scientific-plate-math--strip math-inline">{{- partial "render-math.html" (dict "tex" $tex "display" false "page" $page "position" $position "output" "mathml") -}}</div>
+{{- else -}}
+  <span class="{{ $class }} scientific-plate-math--inline math-inline">{{- partial "render-math.html" (dict "tex" $tex "display" false "page" $page "position" $position "output" "mathml") -}}</span>
+{{- end -}}

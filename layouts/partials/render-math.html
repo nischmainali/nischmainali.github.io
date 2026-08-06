@@ -2,14 +2,15 @@
 {{- $display := default false .display -}}
 {{- $page := .page -}}
 {{- $position := default "unknown source" .position -}}
-{{- $mathOutputSetting := lower (string (default "htmlAndMathml" $page.Site.Params.mathOutput)) -}}
+{{- $requestedOutput := default $page.Site.Params.mathOutput .output -}}
+{{- $mathOutputSetting := lower (string (default "htmlAndMathml" $requestedOutput)) -}}
 {{- $mathOutput := "" -}}
 {{- if eq $mathOutputSetting "htmlandmathml" -}}
   {{- $mathOutput = "htmlAndMathml" -}}
 {{- else if eq $mathOutputSetting "mathml" -}}
   {{- $mathOutput = "mathml" -}}
 {{- else -}}
-  {{- errorf "Unsupported math output %q; use htmlAndMathml or mathml" $page.Site.Params.mathOutput -}}
+  {{- errorf "Unsupported math output %q; use htmlAndMathml or mathml" $requestedOutput -}}
 {{- end -}}
 {{- $options := dict
   "displayMode" $display

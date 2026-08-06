@@ -1,13 +1,13 @@
 {{- $kind := lower (default "" (.Get "kind")) -}}
-{{- $allowed := slice "theorem" "lemma" "proposition" "corollary" "definition" "remark" -}}
+{{- $allowed := slice "theorem" "lemma" "proposition" "corollary" "definition" "remark" "example" -}}
 {{- if not (in $allowed $kind) -}}
-  {{- errorf "Unsupported statement kind %q; use theorem, lemma, proposition, corollary, definition, or remark: see %s" $kind .Position -}}
+  {{- errorf "Unsupported statement kind %q; use theorem, lemma, proposition, corollary, definition, remark, or example: see %s" $kind .Position -}}
 {{- end -}}
 {{- $id := default "" (.Get "id") -}}
 {{- if eq (len (findRE `^[a-z][a-z0-9-]*$` $id)) 0 -}}
   {{- errorf "The statement shortcode requires a unique slug-like id: see %s" .Position -}}
 {{- end -}}
-{{- $numbered := ne $kind "remark" -}}
+{{- $numbered := not (in (slice "remark" "example") $kind) -}}
 {{- $title := default "" (.Get "title") -}}
 {{- $meta := partial "statement-meta.html" (dict "page" .Page "id" $id) -}}
 {{- $label := index $meta "label" -}}

@@ -20,3 +20,48 @@ title = "Gaussian Processes and Kernel Methods: A Review on Connections and Equi
 publication = "arXiv"
 identifier = "arXiv:1807.02582"
 url = "https://arxiv.org/abs/1807.02582"
+
+[vaart1998]
+label = "van der Vaart, 1998"
+authors = "A. W. van der Vaart"
+year = 1998
+title = "Asymptotic Statistics"
+publication = "Cambridge University Press"
+identifier = "doi:10.1017/CBO9780511802256"
+url = "https://doi.org/10.1017/CBO9780511802256"
+
+[lehmann1998]
+label = "Lehmann & Casella, 1998"
+authors = "E. L. Lehmann and George Casella"
+year = 1998
+title = "Theory of Point Estimation"
+publication = "Springer, second edition"
+identifier = "doi:10.1007/b98854"
+url = "https://doi.org/10.1007/b98854"
+
+[rice1944]
+label = "Rice, 1944"
+authors = "S. O. Rice"
+year = 1944
+title = "Mathematical Analysis of Random Noise"
+publication = "The Bell System Technical Journal 23(3), 282-332"
+identifier = "doi:10.1002/j.1538-7305.1944.tb00874.x"
+url = "https://doi.org/10.1002/j.1538-7305.1944.tb00874.x"
+
+[kac1959]
+label = "Kac & Slepian, 1959"
+authors = "Mark Kac and David Slepian"
+year = 1959
+title = "Large Excursions of Gaussian Processes"
+publication = "The Annals of Mathematical Statistics 30(4), 1215-1228"
+identifier = "JSTOR:2237465"
+url = "https://www.jstor.org/stable/2237465"
+
+[malerba2022]
+label = "Blanco Malerba et al., 2022"
+authors = "Simone Blanco Malerba, Mirko Pieropan, Yoram Burak, and Rava Azeredo da Silveira"
+year = 2022
+title = "Random Compressed Coding with Neurons"
+publication = "bioRxiv"
+identifier = "doi:10.1101/2022.01.06.475186"
+url = "https://doi.org/10.1101/2022.01.06.475186"

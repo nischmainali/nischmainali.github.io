@@ -16,8 +16,8 @@
 <script src="{{ partialCached "js-asset-url.html" "js/home-readout.js" "js/home-readout.js" }}" defer></script>
 {{- end -}}
 
-{{- if .Page.Store.Get "hasFieldPlate" -}}
-<script src="{{ partialCached "js-asset-url.html" "js/field-plate.js" "js/field-plate.js" }}" defer></script>
+{{- if .Page.Store.Get "hasInteractiveScientificPlate" -}}
+<script src="{{ partialCached "js-asset-url.html" "js/scientific-plates.js" "js/scientific-plates.js" }}" defer></script>
 {{- end -}}
 
 {{- partial "foot_extra.html" . -}}

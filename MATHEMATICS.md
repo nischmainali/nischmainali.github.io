@@ -117,10 +117,11 @@ The argument goes here.
 See {{< statement-ref "consistency" >}}.
 ~~~
 
-Supported kinds are theorem, lemma, proposition, corollary, definition, and
-remark. The first five share one sequence within each section. Remarks and proofs
-are unnumbered. Theorem-family bodies are italic; definitions, remarks, and
-proofs are upright. These are typographic passages on the Lokta sheet, not cards.
+Supported kinds are theorem, lemma, proposition, corollary, definition, remark,
+and example. The first five share one sequence within each section. Remarks,
+examples, and proofs are unnumbered. Theorem-family bodies are italic;
+definitions, remarks, examples, and proofs are upright. These are typographic
+passages on the Lokta sheet, not cards.
 
 ## Referring to another note
 
@@ -159,6 +160,35 @@ Extend this table only after an abbreviation repeats in real writing.
 Chemistry through \ce and \pu is available. KaTeX's simple CD environment and
 the existing SVG/figure path cover current diagrams; TikZ and general diagram
 compilation are deferred.
+
+## Scientific plates
+
+The Gaussian process field note adds a build-time numbered plate system. A
+declaration stays on one source line so the registry can assign a stable label:
+
+~~~markdown
+{{< scientific-plate kind="spectrum" id="spectral-moments" title="One spectrum, three readings" caption="The caption states the comparison and its assumptions." >}}
+~~~
+
+Supported kinds are construction, field, kac-rice, spectrum, excursion, and
+error. The field and error kinds have optional validated control defaults.
+Plates have a separate sequence that restarts in each level-two section.
+
+Refer to a plate without writing its number by hand:
+
+~~~markdown
+See {{< plate-ref "spectral-moments" >}}.
+~~~
+
+Every plate is semantic HTML and inline SVG before JavaScript runs. Its
+mathematical annotations use `layouts/partials/scientific-plates/math.html`,
+which calls the same strict build-time renderer as the article and asks for its
+MathML-only output. This keeps one semantic mathematical tree in the page and
+in full-text feeds. Do not imitate mathematics with Unicode characters or SVG
+text. Plain descriptive labels and changing numeric values can remain figure
+text. Keep the graphic close to the mathematical argument. Do not use the
+system as a general illustration gallery or add a control that does not reveal
+a comparison.
 
 ## Checking drafts
 

@@ -69,7 +69,22 @@ HTML_MEDIA_ATTRIBUTE_RE = re.compile(
 
 VALID_PLACEMENTS = {"measure", "wide", "margin"}
 VALID_TREATMENTS = {"natural", "ink"}
-FIELD_PLATE_ARGUMENTS = {"id", "title", "caption", "label", "threshold"}
+SCIENTIFIC_PLATE_ARGUMENTS = {
+    "kind",
+    "id",
+    "title",
+    "caption",
+    "threshold",
+    "population",
+}
+SCIENTIFIC_PLATE_KINDS = {
+    "construction",
+    "field",
+    "kac-rice",
+    "spectrum",
+    "excursion",
+    "error",
+}
 CITATION_TABLE_RE = re.compile(r"^\[(?P<key>[^\[\]]+)\]$")
 CITATION_FIELD_RE = re.compile(
     r"^(?P<field>[A-Za-z][A-Za-z0-9_-]*)\s*=\s*(?P<value>.+?)\s*$"
@@ -1243,36 +1258,64 @@ def scan_figures_and_media(
     return SourceScan(issues, warnings)
 
 
-def scan_field_plates(
+def scan_scientific_plates(
     path: Path, shortcodes: list[Shortcode]
 ) -> list[Diagnostic]:
+    """Validate numbered scientific plate declarations and references."""
+
     issues: list[Diagnostic] = []
     targets: dict[str, tuple[int, int]] = {}
+    references: list[tuple[str, int, int]] = []
 
     for shortcode in shortcodes:
-        if shortcode.name != "field-plate":
+        if shortcode.name not in {"scientific-plate", "plate-ref"}:
             continue
         parsed = parse_shortcode_arguments(shortcode, path, issues)
         if parsed is None:
             continue
         positional, named = parsed
+
+        if shortcode.name == "plate-ref":
+            if named or len(positional) != 1:
+                issues.append(
+                    Diagnostic(
+                        path,
+                        shortcode.line,
+                        shortcode.column,
+                        "plate-ref requires exactly one positional id or /note#id argument",
+                    )
+                )
+                continue
+            references.append(
+                (positional[0].strip(), shortcode.line, shortcode.column)
+            )
+            continue
+
+        if "\n" in shortcode.arguments:
+            issues.append(
+                Diagnostic(
+                    path,
+                    shortcode.line,
+                    shortcode.column,
+                    "scientific-plate must keep all arguments on one line",
+                )
+            )
         if positional:
             issues.append(
                 Diagnostic(
                     path,
                     shortcode.line,
                     shortcode.column,
-                    "field-plate accepts named arguments only",
+                    "scientific-plate accepts named arguments only",
                 )
             )
-
-        for name in sorted(set(named).difference(FIELD_PLATE_ARGUMENTS)):
+        for name in sorted(set(named).difference(SCIENTIFIC_PLATE_ARGUMENTS)):
             issues.append(
                 Diagnostic(
                     path,
                     shortcode.line,
                     shortcode.column,
-                    f'field-plate argument "{name}" is not supported',
+                    f'scientific-plate argument "{name}" is not supported',
                 )
             )
 
@@ -1283,7 +1326,7 @@ def scan_field_plates(
                     path,
                     shortcode.line,
                     shortcode.column,
-                    "field-plate requires an id",
+                    "scientific-plate requires an id",
                 )
             )
         else:
@@ -1291,10 +1334,31 @@ def scan_field_plates(
                 issues,
                 targets,
                 identifier,
-                "field-plate",
+                "scientific-plate",
                 path,
                 shortcode.line,
                 shortcode.column,
+            )
+
+        kind = named.get("kind", "").strip()
+        if not kind:
+            issues.append(
+                Diagnostic(
+                    path,
+                    shortcode.line,
+                    shortcode.column,
+                    "scientific-plate requires a kind",
+                )
+            )
+        elif kind not in SCIENTIFIC_PLATE_KINDS:
+            supported = ", ".join(sorted(SCIENTIFIC_PLATE_KINDS))
+            issues.append(
+                Diagnostic(
+                    path,
+                    shortcode.line,
+                    shortcode.column,
+                    f'scientific-plate kind "{kind}" is not supported; use {supported}',
+                )
             )
 
         for required in ("title", "caption"):
@@ -1304,24 +1368,106 @@ def scan_field_plates(
                         path,
                         shortcode.line,
                         shortcode.column,
-                        f"field-plate requires a {required}",
+                        f"scientific-plate requires a {required}",
                     )
                 )
 
         if "threshold" in named:
-            try:
-                threshold = float(named["threshold"])
-            except ValueError:
-                threshold = None
-            if threshold is None or not -0.8 <= threshold <= 0.8:
+            if kind and kind != "field":
                 issues.append(
                     Diagnostic(
                         path,
                         shortcode.line,
                         shortcode.column,
-                        "field-plate threshold must be between -0.8 and 0.8",
+                        "scientific-plate threshold is available only for the field kind",
                     )
                 )
+            try:
+                threshold = float(named["threshold"])
+            except ValueError:
+                threshold = None
+            if (
+                threshold is None
+                or not -0.8 <= threshold <= 0.8
+                or abs(threshold * 20 - round(threshold * 20)) > 1e-9
+            ):
+                issues.append(
+                    Diagnostic(
+                        path,
+                        shortcode.line,
+                        shortcode.column,
+                        "scientific-plate threshold must be from -0.80 to 0.80 "
+                        "in steps of 0.05",
+                    )
+                )
+
+        if "population" in named:
+            if kind and kind != "error":
+                issues.append(
+                    Diagnostic(
+                        path,
+                        shortcode.line,
+                        shortcode.column,
+                        "scientific-plate population is available only for the error kind",
+                    )
+                )
+            population_text = named["population"].strip()
+            if not re.fullmatch(r"[0-9]+", population_text):
+                population = None
+            else:
+                population = int(population_text)
+            if population is None or not 6 <= population <= 48:
+                issues.append(
+                    Diagnostic(
+                        path,
+                        shortcode.line,
+                        shortcode.column,
+                        "scientific-plate population must be an integer from 6 to 48",
+                    )
+                )
+
+    for identifier, line, column in references:
+        if "#" in identifier:
+            cross = CROSS_NOTE_REF_RE.fullmatch(identifier)
+            if cross is None:
+                issues.append(
+                    Diagnostic(
+                        path,
+                        line,
+                        column,
+                        f'plate reference "{identifier}" is not a note path and '
+                        "identifier, as /blog/note#identifier",
+                    )
+                )
+            elif not SLUG_RE.fullmatch(cross.group("id")):
+                issues.append(
+                    Diagnostic(
+                        path,
+                        line,
+                        column,
+                        f'cross-note scientific plate id "{cross.group("id")}" '
+                        "is not slug-like",
+                    )
+                )
+            continue
+        if not SLUG_RE.fullmatch(identifier):
+            issues.append(
+                Diagnostic(
+                    path,
+                    line,
+                    column,
+                    f'plate reference id "{identifier}" is not slug-like',
+                )
+            )
+        elif identifier not in targets:
+            issues.append(
+                Diagnostic(
+                    path,
+                    line,
+                    column,
+                    f'missing same-page scientific plate "{identifier}"',
+                )
+            )
 
     return issues
 
@@ -1339,7 +1485,7 @@ def scan_file(path: Path, citation_keys: set[str]) -> SourceScan:
         scan_dropcaps(path, clean_lines, body_start, text, shortcodes)
     )
     issues.extend(scan_citations(path, shortcodes, citation_keys))
-    issues.extend(scan_field_plates(path, shortcodes))
+    issues.extend(scan_scientific_plates(path, shortcodes))
     media = scan_figures_and_media(path, draft, text, shortcodes)
     issues.extend(media.issues)
     return SourceScan(issues, media.warnings)
@@ -1403,7 +1549,8 @@ def content_files() -> list[Path]:
 def parse_arguments(argv: list[str] | None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Validate mathematics, citations, drop caps, figures, field plates, and remote media."
+            "Validate mathematics, citations, drop caps, figures, scientific plates, "
+            "field plates, and remote media."
         )
     )
     parser.add_argument(

@@ -1,0 +1,49 @@
+{{- $id := .id -}}
+<div class="scientific-plate-panels scientific-plate-panels--three scientific-plate-panels--spectral">
+  <section class="scientific-plate-panel" aria-labelledby="{{ $id }}-omega-zero-label">
+    <p class="scientific-plate-panel-title" id="{{ $id }}-omega-zero-label">variance,&nbsp;{{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\omega_0=\int \dd\rho` "tone" "green" "position" .position) -}}</p>
+    <div class="scientific-plate-graphic">
+      <svg viewBox="0 0 220 174" role="img" aria-labelledby="{{ $id }}-omega-zero-title {{ $id }}-omega-zero-desc">
+        <title id="{{ $id }}-omega-zero-title">Unweighted spectral density determines field variance</title>
+        <desc id="{{ $id }}-omega-zero-desc">For the smooth example, S of omega is the density d rho over d omega of the spectral measure. Its normalized area is one, while omega zero is the unnormalized moment.</desc>
+        <path class="scientific-plate-axis" d="M18 126H204"></path>
+        <path class="scientific-plate-area scientific-plate-area--green" d="M18 126C36 125 48 117 62 98C79 76 91 53 110 50C129 53 141 76 158 98C172 117 186 125 204 126Z"></path>
+        <path class="scientific-plate-line scientific-plate-line--primary scientific-plate-line--strong" d="M18 126C36 125 48 117 62 98C79 76 91 53 110 50C129 53 141 76 158 98C172 117 186 125 204 126"></path>
+      </svg>
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `S(\omega)=\frac{\dd\rho}{\dd\omega}` "mode" "anchor" "x" "9.1" "y" "10.2" "size" "small" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\frac{S(\omega)}{\omega_0}` "mode" "anchor" "x" "50" "y" "20.5" "align" "center" "tone" "green" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\text{frequency }\omega` "mode" "anchor" "x" "92.7" "y" "83.6" "align" "right" "size" "small" "position" .position) -}}
+    </div>
+  </section>
+
+  <section class="scientific-plate-panel" aria-labelledby="{{ $id }}-omega-two-label">
+    <p class="scientific-plate-panel-title" id="{{ $id }}-omega-two-label">crossings,&nbsp;{{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\omega_2=\int \omega^2\,\dd\rho` "tone" "green" "position" .position) -}}</p>
+    <div class="scientific-plate-graphic">
+      <svg viewBox="0 0 220 174" role="img" aria-labelledby="{{ $id }}-omega-two-title {{ $id }}-omega-two-desc">
+        <title id="{{ $id }}-omega-two-title">Frequency squared weighting determines crossing density</title>
+        <desc id="{{ $id }}-omega-two-desc">The smooth density S of omega is weighted by omega squared and normalized by omega two, shifting contribution toward higher frequencies.</desc>
+        <path class="scientific-plate-axis" d="M18 126H204"></path>
+        <path class="scientific-plate-area scientific-plate-area--blue" d="M18 126C34 125 48 110 63 78C73 56 85 54 98 85C105 102 108 117 110 126C112 117 115 102 122 85C135 54 147 56 157 78C172 110 186 125 204 126Z"></path>
+        <path class="scientific-plate-line scientific-plate-line--condition scientific-plate-line--strong" d="M18 126C34 125 48 110 63 78C73 56 85 54 98 85C105 102 108 117 110 126C112 117 115 102 122 85C135 54 147 56 157 78C172 110 186 125 204 126"></path>
+      </svg>
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\frac{\omega^2S(\omega)}{\omega_2}` "mode" "anchor" "x" "50" "y" "20.5" "align" "center" "tone" "blue" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\text{frequency }\omega` "mode" "anchor" "x" "92.7" "y" "83.6" "align" "right" "size" "small" "position" .position) -}}
+    </div>
+  </section>
+
+  <section class="scientific-plate-panel" aria-labelledby="{{ $id }}-omega-four-label">
+    <p class="scientific-plate-panel-title" id="{{ $id }}-omega-four-label">extrema,&nbsp;{{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\omega_4=\int \omega^4\,\dd\rho` "tone" "green" "position" .position) -}}</p>
+    <div class="scientific-plate-graphic">
+      <svg viewBox="0 0 220 174" role="img" aria-labelledby="{{ $id }}-omega-four-title {{ $id }}-omega-four-desc">
+        <title id="{{ $id }}-omega-four-title">Frequency to the fourth weighting determines extrema density</title>
+        <desc id="{{ $id }}-omega-four-desc">The smooth density S of omega is weighted by omega to the fourth power and normalized by omega four, moving contribution farther from zero.</desc>
+        <path class="scientific-plate-axis" d="M18 126H204"></path>
+        <path class="scientific-plate-area scientific-plate-area--wine" d="M18 126C29 121 39 91 53 60C63 38 75 43 89 88C97 111 104 124 110 126C116 124 123 111 131 88C145 43 157 38 167 60C181 91 191 121 204 126Z"></path>
+        <path class="scientific-plate-line scientific-plate-line--event scientific-plate-line--strong" d="M18 126C29 121 39 91 53 60C63 38 75 43 89 88C97 111 104 124 110 126C116 124 123 111 131 88C145 43 157 38 167 60C181 91 191 121 204 126"></path>
+      </svg>
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\frac{\omega^4S(\omega)}{\omega_4}` "mode" "anchor" "x" "50" "y" "16.8" "align" "center" "tone" "wine" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\text{frequency }\omega` "mode" "anchor" "x" "92.7" "y" "83.6" "align" "right" "size" "small" "position" .position) -}}
+    </div>
+  </section>
+</div>
+<p class="scientific-plate-reading">For this smooth example,&nbsp;{{- partial "scientific-plates/math.html" (dict "page" .page "tex" `S(\omega)=\dd\rho/\dd\omega` "tone" "muted" "position" .position) -}}. All three panels use the same frequency and normalized contribution scales. Successive moments shift contribution toward high frequencies; the unnormalized moments set field variance, crossing density, and extrema density.</p>

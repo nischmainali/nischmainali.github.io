@@ -107,9 +107,10 @@ The public Writing index stays at `/blog/`. Its template is
 `assets/js/article.js`.
 
 Articles support a table of contents, sidenotes, citations, epigraphs, figures,
-drop capitals, statements, proofs, and numbered equations. Keep the prose
-column readable and preserve the outside table of contents and right margin
-notes at wide widths.
+drop capitals, statements, proofs, numbered equations, and numbered scientific
+plates. Keep the prose column readable and preserve the outside table of
+contents and right margin notes at wide widths. The full plate system is
+documented in [`docs/GAUSSIAN_FIELD_NOTE.md`](docs/GAUSSIAN_FIELD_NOTE.md).
 
 ### The instrument register
 

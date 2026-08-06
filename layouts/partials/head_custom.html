@@ -10,14 +10,6 @@
   {{- errorf "Unsupported math output %q; use htmlAndMathml or mathml" .Site.Params.mathOutput -}}
 {{- end -}}
 {{- $hasMath := .Page.Store.Get "hasMath" -}}
-{{- if and (not $hasMath) (and .IsNode (eq .Section "blog")) -}}
-  {{- range .RegularPages -}}
-    {{- $summary := string .Summary -}}
-    {{- if or (in $summary `class="katex"`) (in $summary `<math`) -}}
-      {{- $hasMath = true -}}
-    {{- end -}}
-  {{- end -}}
-{{- end -}}
 {{- if $hasMath }}
 {{- if eq $mathOutput "htmlAndMathml" }}
 <link rel="stylesheet" href="{{ partial "static-asset-url.html" "vendor/katex/0.17.0/katex.min.css" }}">
@@ -28,6 +20,10 @@
 {{ if and .IsPage (eq .Section "blog") }}
 <link rel="stylesheet" href="{{ partial "static-asset-url.html" "css/article.css" }}">
 {{ end }}
+{{- if .Page.Store.Get "hasScientificPlate" -}}
+{{- $scientificPlateStyles := resources.Get "css/scientific-plates.css" | minify | fingerprint "md5" -}}
+<link rel="stylesheet" href="{{ $scientificPlateStyles.RelPermalink }}">
+{{- end -}}
 {{ if .Page.Store.Get "hasDropcap" }}
 <link rel="preload" href="{{ "vendor/fonts/eb-garamond-initials/EBGaramond-InitialsF2-LatinCaps.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
 {{ end }}
