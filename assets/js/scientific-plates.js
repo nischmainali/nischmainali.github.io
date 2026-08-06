@@ -24,7 +24,6 @@
     var status = plate.querySelector("[data-field-status]");
     var statusValue = plate.querySelector("[data-field-status-value]");
     var statusCount = plate.querySelector("[data-field-status-count]");
-    var reading = plate.querySelector("[data-field-reading]");
     var controls = plate.querySelector("[data-field-controls]");
 
     if (
@@ -39,7 +38,6 @@
       !status ||
       !statusValue ||
       !statusCount ||
-      !reading ||
       !controls ||
       typeof curve.getTotalLength !== "function"
     ) {
@@ -106,20 +104,13 @@
         crossings.appendChild(circle);
       });
 
-      var startsAbove = firstPoint.y < thresholdY;
-      var intervals = startsAbove
-        ? 1 + Math.floor(points.length / 2)
-        : Math.ceil(points.length / 2);
       var crossingText =
         points.length + " " + plural(points.length, "crossing", "crossings");
-      var intervalText =
-        intervals + " connected " + plural(intervals, "excursion", "excursions");
 
       output.value = formatted;
       output.textContent = formatted;
       statusValue.textContent = formatted;
       statusCount.textContent = crossingText;
-      reading.textContent = crossingText + " divide the sampled interval into " + intervalText + ".";
     }
 
     function scheduleDraw() {
@@ -152,11 +143,6 @@
     var status = plate.querySelector("[data-error-status]");
     var statusPopulation = plate.querySelector("[data-error-status-population]");
     var statusOptimum = plate.querySelector("[data-error-status-optimum]");
-    var reading = plate.querySelector("[data-error-reading]");
-    var readingPopulation = plate.querySelector("[data-error-reading-population]");
-    var readingPhrase = plate.querySelector("[data-error-reading-phrase]");
-    var readingOptimum = plate.querySelector("[data-error-reading-optimum]");
-    var readingRange = plate.querySelector("[data-error-reading-range]");
     var controls = plate.querySelector("[data-error-controls]");
 
     if (
@@ -176,11 +162,6 @@
       !status ||
       !statusPopulation ||
       !statusOptimum ||
-      !reading ||
-      !readingPopulation ||
-      !readingPhrase ||
-      !readingOptimum ||
-      !readingRange ||
       !controls
     ) {
       return;
@@ -376,14 +357,6 @@
       output.textContent = String(population);
       statusPopulation.textContent = String(population);
       statusOptimum.textContent = optimumText;
-      readingPopulation.textContent = String(population);
-      readingOptimum.textContent = optimumText;
-      readingPhrase.textContent = minimumIsVisible
-        ? "the two approximations balance near"
-        : "the formal balance lies at";
-      readingRange.textContent = minimumIsVisible
-        ? "."
-        : ", beyond the plotted range.";
     }
 
     function scheduleDraw() {

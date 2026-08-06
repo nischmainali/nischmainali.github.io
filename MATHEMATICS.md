@@ -167,7 +167,7 @@ The Gaussian process field note adds a build-time numbered plate system. A
 declaration stays on one source line so the registry can assign a stable label:
 
 ~~~markdown
-{{< scientific-plate kind="spectrum" id="spectral-moments" title="One spectrum, three readings" caption="The caption states the comparison and its assumptions." >}}
+{{< scientific-plate kind="spectrum" id="spectral-moments" title="Spectral moments" caption="Higher spectral moments give more weight to high frequencies." >}}
 ~~~
 
 Supported kinds are construction, field, kac-rice, spectrum, excursion, and
@@ -186,9 +186,12 @@ which calls the same strict build-time renderer as the article and asks for its
 MathML-only output. This keeps one semantic mathematical tree in the page and
 in full-text feeds. Do not imitate mathematics with Unicode characters or SVG
 text. Plain descriptive labels and changing numeric values can remain figure
-text. Keep the graphic close to the mathematical argument. Do not use the
-system as a general illustration gallery or add a control that does not reveal
-a comparison.
+text. Give each plate a short literal title, and refer to it from the article
+where the comparison enters the argument. Place the serif caption in the right
+margin on wide screens and below the figure on narrower screens. Do not add a
+second explanatory line inside the plate body. Keep the graphic close to the
+mathematical argument. Do not use the system as a general illustration gallery
+or add a control that does not reveal a comparison.
 
 ## Checking drafts
 

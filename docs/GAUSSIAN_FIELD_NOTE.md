@@ -38,6 +38,12 @@ strict build-time renderer and its MathML-only output. This avoids duplicate
 fallback markup in full-text feeds. Plain descriptive labels remain SVG text.
 The plates stay readable in feeds and print as vector figures. Narrow screens
 stack their panels and keep mathematical labels at a stable reading size.
+Use a short literal title for each plate, and refer to each plate where the
+comparison enters the argument. Place the serif caption in the right margin on
+wide screens and below the figure on narrower screens. Do not add a second
+explanatory line inside the plate body. Keep the changing status of the two
+interactive plates available to screen readers while visible values remain in
+the plot and controls.
 
 The system follows a strict information design rule. Each plate makes one
 claim, provides an explicit comparison, and shows the mechanism that connects

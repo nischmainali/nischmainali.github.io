@@ -44,15 +44,16 @@
 }
 
 .single.blog .scientific-plate-live-reading {
-  min-height: 1.35rem;
-  padding: 0.38rem 0 0;
-  color: var(--article-faint);
-  font-family: var(--instrument-voice);
-  font-size: 0.58rem;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.018em;
-  line-height: 1.35;
-  text-align: right;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .single.blog .scientific-plate-panels {
@@ -439,17 +440,6 @@
   outline-offset: 0.12rem;
 }
 
-.single.blog .article-body .scientific-plate-reading {
-  margin: 0.48rem 0 0;
-  color: var(--article-faint);
-  font-family: var(--instrument-voice);
-  font-size: 0.59rem;
-  font-style: normal;
-  letter-spacing: 0.014em;
-  line-height: 1.42;
-  text-align: left;
-}
-
 .single.blog .scientific-plate-caption {
   margin: 0.56rem 0 0;
   color: var(--article-muted);
@@ -468,9 +458,34 @@
 
 @media (min-width: 1180px) {
   .single.blog .scientific-plate {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--article-marginal-gap) var(--article-note-width);
+    grid-template-rows: auto auto;
     clear: right;
-    width: min(var(--article-breakout), calc(100% + 6rem));
+    width: calc(100% + var(--article-note-offset));
     margin-left: 0;
+  }
+
+  .single.blog .scientific-plate-header,
+  .single.blog .scientific-plate-body {
+    grid-column: 1;
+  }
+
+  .single.blog .scientific-plate-header {
+    grid-row: 1;
+  }
+
+  .single.blog .scientific-plate-body {
+    grid-row: 2;
+    min-width: 0;
+  }
+
+  .single.blog .scientific-plate-caption {
+    grid-column: 3;
+    grid-row: 2;
+    align-self: start;
+    margin: 0.68rem 0 0;
+    font-size: 0.84rem;
   }
 }
 
@@ -521,11 +536,6 @@
 
   .single.blog .article-body .scientific-plate-math--anchor.scientific-plate-math--formula {
     font-size: 0.82rem;
-  }
-
-  .single.blog .scientific-plate-live-reading {
-    max-width: none;
-    text-align: left;
   }
 
   .single.blog .scientific-plate-controls {
@@ -579,6 +589,7 @@
 
 @media print {
   .single.blog .scientific-plate {
+    display: block;
     width: auto;
     margin: 1.4rem 0;
     break-inside: avoid;
@@ -626,8 +637,7 @@
     fill: #222;
   }
 
-  .single.blog .scientific-plate-caption,
-  .single.blog .article-body .scientific-plate-reading {
+  .single.blog .scientific-plate-caption {
     color: #333;
   }
 

@@ -130,7 +130,9 @@ $$
 
 Choosing $\Var(W)=L/N$ leaves a covariance $r(\Delta x)$ that does not grow with population size.
 
-{{< scientific-plate kind="construction" id="random-field-construction" title="From translated inputs to a random field" caption="Translated input fields are multiplied by independent weights and summed. A cellular threshold then converts the smooth subthreshold field into separated place fields. The curves are a schematic construction, not recorded neural data." >}}
+Compare the random weighted sum with the cellular threshold that selects its connected excursions in {{< plate-ref "random-field-construction" >}}.
+
+{{< scientific-plate kind="construction" id="random-field-construction" title="Random input sum and thresholding" caption="We sum translated input fields with independent weights to obtain a smooth random field. A cellular threshold keeps its connected excursions." >}}
 
 {{< statement kind="example" id="gaussian-input-fields" title="Gaussian input fields" >}}
 Suppose each input has a Gaussian tuning curve,
@@ -164,9 +166,9 @@ The neural response can be idealized by a rectified threshold,
 h(x)=\max\!\left(0,f(x)-\theta\sqrt{r_0}\right).
 {{< /equation >}}
 
-Its nonzero regions are the excursion sets of $f$ above $\theta\sqrt{r_0}$. Their number, length, separation, height, and boundary slopes expose much of the geometry of the code before any further output nonlinearity is chosen.
+Its nonzero regions are the excursion sets of $f$ above $\theta\sqrt{r_0}$. Their number, length, separation, height, and boundary slopes expose much of the geometry of the code before any further output nonlinearity is chosen. Use the fixed path in {{< plate-ref "gp-threshold-field" >}} to see how the threshold changes the crossings and connected excursions.
 
-{{< scientific-plate kind="field" id="gp-threshold-field" title="Threshold crossings of a smooth Gaussian field" caption="A fixed smooth sample path. Move the threshold to compare the number of crossings with the number and extent of connected excursions. The sample path remains fixed so the threshold is the only changing quantity." >}}
+{{< scientific-plate kind="field" id="gp-threshold-field" title="Threshold crossings" caption="Move the threshold to compare crossing count with the number and width of connected excursions. The sample path stays fixed." >}}
 
 ### The Kac-Rice formula {#kac-rice-formula}
 
@@ -208,7 +210,9 @@ $$
 Summing these unit contributions over the disjoint intervals gives the crossing count. The delta form is the $\varepsilon\to0$ limit.
 {{< /proof >}}
 
-{{< scientific-plate kind="kac-rice" id="kac-rice-counting-window" title="The counting window" caption="Each threshold crossing contributes one unit. As the vertical window narrows, its height rises so that the weighted area remains fixed. The derivative factor converts a vertical band into a count along position." >}}
+Compare shallow and steep crossings in {{< plate-ref "kac-rice-counting-window" >}}. Each contributes one to the count.
+
+{{< scientific-plate kind="kac-rice" id="kac-rice-counting-window" title="Kac-Rice crossing count" caption="Each simple crossing contributes one. The slope factor compensates for the width of the counting window in position." >}}
 
 #### Expected crossing count {#expected-crossing-count}
 
@@ -326,9 +330,9 @@ The ratio between turning points and mean-level crossings defines the scale-inva
 
 Values near one indicate a regular process with roughly one maximum and one minimum between mean-level upcrossings. Small values indicate additional high-frequency structure.
 
-For the continuous example below, write $S(\omega)=\dd\rho/\dd\omega$. Dividing each weighted spectrum by its own moment gives three contribution densities with unit area. Their shapes can therefore be compared on one honest vertical scale even though the unnormalized moments have different units.
+Compare the normalized densities for $\omega_0$, $\omega_2$, and $\omega_4$ in {{< plate-ref "spectral-moments" >}}. Dividing each weighted spectrum by its own moment gives unit area, so the three shapes share one vertical scale even though their unnormalized moments have different units.
 
-{{< scientific-plate kind="spectrum" id="spectral-moments" title="One spectrum, three geometric readings" caption="The same continuous spectrum is reweighted by frequency. Total area gives field variance, quadratic weighting controls mean-level crossings, and quartic weighting controls extrema. Shared axes and unit-area normalization make the change in shape directly comparable." >}}
+{{< scientific-plate kind="spectrum" id="spectral-moments" title="Spectral moments" caption="Field variance, crossing density, and extrema density depend on successive spectral moments. All panels use the same normalized scale." >}}
 
 ### Excursion shape {#excursion-shape}
 
@@ -436,7 +440,9 @@ After a typical upcrossing, a stationary Gaussian process has the representation
 where $\zeta$ has the Rayleigh density in {{< eqref "upcrossing-rayleigh" >}}, and $\kappa$ is an independent, mean-zero, nonstationary Gaussian process with covariance {{< eqref "conditional-excursion-covariance" >}}.
 {{< /statement >}}
 
-{{< scientific-plate kind="excursion" id="conditioned-excursion" title="A field seen from its upcrossing" caption="Conditioning fixes the threshold and positive slope at the origin. The deterministic conditional mean carries those constraints; the residual uncertainty is suppressed nearby and returns with distance. At high threshold, the local excursion approaches a parabola." >}}
+Compare the conditional mean and residual process with the high-threshold parabolic limit in {{< plate-ref "conditioned-excursion" >}}.
+
+{{< scientific-plate kind="excursion" id="conditioned-excursion" title="Conditioned excursion" caption="Conditioning fixes the height and slope at the origin. At high threshold, the local excursion approaches a parabola." >}}
 
 #### High excursions {#high-excursions}
 
@@ -630,7 +636,9 @@ Adding the local and global contributions gives
 \left(1+\frac{r_0}{2\eta^2}\right)^{-(N-1)/2}.
 {{< /equation >}}
 
-{{< scientific-plate kind="error" id="coding-error-balance" title="The roughness tradeoff" caption="Local error falls as field roughness increases, while the independent-segment approximation makes global error rise. Their sum has an interior minimum. Curves use the fixed constants stated alongside the plate on logarithmic axes; the comparison at right keeps three reference population sizes fixed." >}}
+Compare the two error terms and their minimum in {{< plate-ref "coding-error-balance" >}} as field roughness changes.
+
+{{< scientific-plate kind="error" id="coding-error-balance" title="Coding error and field roughness" caption="Local error falls with roughness, while the independent-segment estimate of global error rises. Their sum has an interior minimum." >}}
 
 The two terms assign opposite roles to $\omega_2$. More roughness improves local resolution but creates more independent opportunities for a distant confusion. Increasing $N$, by contrast, suppresses the global term exponentially {{< cite "malerba2022" >}}. The balance gives an optimal roughness within this simplified model.
 

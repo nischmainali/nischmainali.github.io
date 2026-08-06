@@ -88,10 +88,3 @@
   <input id="{{ $id }}-population" data-error-input type="range" min="6" max="48" step="1" value="{{ $population }}">
   <output for="{{ $id }}-population" data-error-output>{{ $population }}</output>
 </div>
-<p class="scientific-plate-reading" data-error-reading>
-  With&nbsp;{{- partial "scientific-plates/math.html" (dict "page" .page "tex" `L=12,\ r_0=1,\ \eta=0.35` "position" .position) -}} fixed, the left panel separates local error from the independent-segment approximation to global error.
-  For&nbsp;{{- partial "scientific-plates/math.html" (dict "page" .page "tex" `N` "position" .position) -}}<span aria-hidden="true"> = </span><span data-error-reading-population>{{ $population }}</span>,
-  <span data-error-reading-phrase>the two approximations balance near</span>
-  {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\omega_2` "position" .position) -}}<span aria-hidden="true"> = </span><span data-error-reading-optimum>4.90</span><span data-error-reading-range>.</span>
-  The comparison at right remains fixed at&nbsp;{{- partial "scientific-plates/math.html" (dict "page" .page "tex" `N\in\{8,16,24\}` "position" .position) -}}.
-</p>
