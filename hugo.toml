@@ -1,4 +1,4 @@
-baseurl = "/"
+baseurl = "https://nischmainali.github.io/"
 locale = "en-US"
 title = "Nisch's homepage"
 theme = "hugo-paged"
@@ -10,6 +10,10 @@ footnotereturnlinkcontents = "↩"
 # at /statements/ is the site's real cross-note index. Front-matter categories
 # and tags remain inert records for the author.
 disableKinds = ["taxonomy", "term"]
+
+[caches]
+[caches.images]
+dir = ':cacheDir/images'
 
 [outputs]
 home = ["html", "rss", "json"]

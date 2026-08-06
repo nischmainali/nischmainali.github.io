@@ -17,8 +17,8 @@ from before the accepted Writing page and background continuity work. Older
 named archive branches preserve earlier design stages. Do not delete archive
 branches during routine cleanup.
 
-Local Git commands do not push or deploy the site. Netlify deploys from the
-remote repository after a separate push.
+Local Git commands do not push or deploy the site. GitHub Actions builds the
+accepted `main` branch and publishes it at <https://nischmainali.github.io/>.
 
 ## Quick start
 
@@ -48,7 +48,18 @@ Run the full local check before committing a design or template change.
 ```
 
 The command checks content, draft rendering, JavaScript syntax, and a minified
-production build. Netlify runs the source checks and production build again.
+production build. GitHub Actions runs the same checks before every deployment.
+
+## Deployment
+
+The public repository is `nischmainali/nischmainali.github.io`. A push to
+`main` starts `.github/workflows/hugo.yaml`, which installs the pinned Hugo
+Extended release, runs the full local check, builds with the GitHub Pages base
+URL, and publishes the generated artifact. Do not commit `public/`.
+
+The Pages workflow is the production path. `netlify.toml` remains only as a
+record of the previous host and as an optional fallback; it does not define the
+canonical address.
 
 ## Before changing the design
 
@@ -194,7 +205,8 @@ published file.
 - `themes/hugo-paged/` is the locally modified base theme.
 - `org/` contains optional Org authoring source.
 - `hugo.toml` contains site configuration and navigation.
-- `netlify.toml` contains the deployment build and cache rules.
+- `.github/workflows/hugo.yaml` builds and deploys the production site.
+- `netlify.toml` preserves the previous host configuration as a fallback.
 
 The copy of `hugo-paged` under `themes/` contains intentional local changes. Do
 not replace it wholesale from `/Users/nisch/code/site/hugo-paged`.
@@ -205,7 +217,7 @@ Hugo may create `public/`, `resources/`, and `.hugo_build.lock`. Python may
 create `__pycache__/`. Browser tests may create local report folders. Git
 ignores all of them, and you may remove them when no build is using them.
 
-Do not edit `public/` by hand. Source files are authoritative, and Netlify
+Do not edit `public/` by hand. Source files are authoritative, and GitHub Pages
 builds the deployed copy from source.
 
 ## Git workflow
