@@ -16,7 +16,7 @@
 {{ end }}
 
 {{ define "page-list" }}
-{{ $pages := .RegularPages }}
+{{ $pages := where .RegularPages "Draft" false }}
 <ol class="writing-register" aria-label="Writing">
   {{ range $pages.ByDate.Reverse }}
   <li class="writing-entry h-entry">

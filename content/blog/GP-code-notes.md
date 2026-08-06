@@ -1,7 +1,7 @@
 +++
 author = "Nisch"
 categories = ["Notes"]
-date = 2024-11-18
+date = 2026-08-06
 description = "A mathematical field note on Gaussian process neural codes, excursion geometry, spectral structure, and coding error."
 short_title = "Gaussian process neural code"
 subtitle = "Excursion geometry, spectral structure, and coding error"
@@ -11,7 +11,7 @@ title = "Mathematical properties of Gaussian process neural code"
 
 {{< dropcap "T" >}}hese notes develop the mathematical properties of Gaussian processes that matter when they are used as models of neural representation. The motivating example is a population code for space. A smooth random field supplies the subthreshold response of each neuron, and a cellular threshold turns its excursions into place fields. This point of view explains much of the field structure seen across species and environments {{< cite "mainali2024" >}}. It also gives a tractable way to ask what such a code can represent and how accurately it can be read.
 
-The note began as a chalk talk at Janelia on 18 November 2024.{{< sidenote >}}This web edition reproduces the full talk note. It corrects spelling, inconsistent notation, and clear typesetting errors. The simplifying assumptions and the original line of argument are kept visible.{{< /sidenote >}} We begin with Gaussian variables and processes, pass through the geometry of threshold excursions, and finish with a simple calculation of local and global decoding error.
+The note began as a chalk talk at Janelia on 18 November 2024. We begin with Gaussian variables and processes, pass through the geometry of threshold excursions, and finish with a simple calculation of local and global decoding error.
 
 ## Background {#background}
 
@@ -115,7 +115,7 @@ with preferred positions $x_i$ that tile the environment densely and uniformly. 
 f(x)=\sum_{i=1}^{N}W_i u_i(x),
 {{< /equation >}}
 
-where the independent weights $W_i$ have zero mean and finite variance. For any finite set of locations $\{x_k\}$, the multidimensional central limit theorem gives a jointly Gaussian vector $(f(x_1),\ldots,f(x_k))$ as $N$ grows {{< cite "vaart1998" "lehmann1998" >}}. The limiting random function is therefore a Gaussian process.
+where the independent weights $W_i$ have zero mean and finite variance. For any finite set of locations $\{x_k\}$, the multidimensional central limit theorem gives a jointly Gaussian vector $(f(x_1),\ldots,f(x_k))$ as $N$ grows {{< cite "vaart1998" "lehmann1998" >}}. The limiting random function is therefore a Gaussian process.{{< sidenote >}}The central limit theorem supplies the Gaussian finite-dimensional distributions. The tuning curves and uniform tiling assumptions supply smoothness and stationarity.{{< /sidenote >}}
 
 Uniform tiling also makes the covariance translation invariant. With input density $\rho=N/L$,
 
@@ -332,7 +332,7 @@ For the continuous example below, write $S(\omega)=\dd\rho/\dd\omega$. Dividing 
 
 ### Excursion shape {#excursion-shape}
 
-Counting fields is only the first step. To describe a typical field, we condition on the event that the process crosses the threshold from below {{< cite "kac1959" >}}. This is Palm conditioning: the observation location is selected by the random process itself, not sampled uniformly in space.
+Counting fields is only the first step. To describe a typical field, we condition on the event that the process crosses the threshold from below {{< cite "kac1959" >}}.{{< sidenote >}}Palm conditioning selects the observation location from the crossings of the process. A location sampled uniformly in space follows a different distribution.{{< /sidenote >}}
 
 #### Slope at an upcrossing {#slope-at-an-upcrossing}
 
@@ -364,11 +364,9 @@ $$
 Differentiating gives {{< eqref "upcrossing-rayleigh" >}}.
 {{< /proof >}}
 
-Although $f'$ is Gaussian at a uniformly chosen point, it is not Gaussian at an upcrossing. Steep slopes create more crossings per unit length and are sampled more often. The derivative factor in the Kac-Rice formula expresses exactly this selection bias.
+Although $f'$ is Gaussian at a uniformly chosen point, it is not Gaussian at an upcrossing. Steep slopes create more crossings per unit length and are sampled more often. The derivative factor in the Kac-Rice formula expresses exactly this selection bias.{{< sidenote >}}From this point onward, $\theta$ denotes the threshold itself. Replace it with $\theta\sqrt{r_0}$ to restore the variance scale.{{< /sidenote >}}
 
 #### The Slepian process {#the-slepian-process}
-
-From here onward, write the threshold simply as $\theta$. The variance scale can be restored by replacing it with $\theta\sqrt{r_0}$.
 
 {{< statement kind="definition" id="slepian-model" title="Slepian model" >}}
 Let $f$ be stationary and have finitely many upcrossings in every bounded interval. A Slepian process $\{\xi_\theta(x)\}$ describes $f$ as seen from a typical upcrossing of level $\theta$. For a finite vector of locations,
@@ -554,7 +552,7 @@ $$
 \widetilde{\mathbf f}=\mathbf f(x)-\mathbf f(0).
 $$
 
-A global error occurs when the distant noisy code is closer to the observation than the true code,
+A global error occurs when the distant noisy code is closer to the observation than the true code.{{< sidenote >}}The noise is symmetric, so changing the sign of the cross term leaves the error probability unchanged.{{< /sidenote >}}
 
 $$
 \norm{\widetilde{\mathbf f}+\mathbf z}^2<\norm{\mathbf z}^2,
@@ -568,7 +566,7 @@ or equivalently when
 +2\widetilde{\mathbf f}^{\mathsf T}\mathbf z<0.
 {{< /equation >}}
 
-The sign of the cross term is immaterial because the noise is symmetric. Conditioned on $\widetilde{\mathbf f}$,
+Conditioned on $\widetilde{\mathbf f}$,
 
 $$
 \mathcal I\sim\mathcal N\!\left(

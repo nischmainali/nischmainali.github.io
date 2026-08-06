@@ -625,7 +625,6 @@
   .single.blog .article-contents-return,
   .single.blog .sidenote-ref,
   .single.blog .sidenote,
-  .single.blog .sidenote::before,
   .single.blog .article-link-mark {
     transition: none;
   }
@@ -2110,24 +2109,6 @@ html.article-figure-is-open {
     background: transparent;
     font-size: 0.84rem;
     line-height: 1.42;
-  }
-
-  .single.blog .sidenote::before {
-    position: absolute;
-    top: 0.58em;
-    left: -1.12rem;
-    width: 0.72rem;
-    border-top: 1px solid var(--article-wine);
-    content: "";
-    opacity: 0;
-    transform: scaleX(0.28);
-    transform-origin: right center;
-    transition: opacity 140ms ease, transform 140ms ease;
-  }
-
-  .single.blog .sidenote.is-corresponding::before {
-    opacity: 0.48;
-    transform: scaleX(1);
   }
 
   .single.blog .article-figure--margin {
