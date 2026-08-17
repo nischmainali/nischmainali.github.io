@@ -11,13 +11,15 @@ title = "A solvable model of feature learning in a nonlinear network"
 
 {{< dropcap "M" >}}any theoretical accounts attribute much of the success of deep neural networks to feature learning, in which training changes the features represented by a network's hidden layers. A theory of deep learning needs to explain which features a nonlinear network learns and how its weights represent them. We do not yet have a general theory that answers these questions.
 
+We study this question as part of [PIRAMID's Advancements in Learning Theory team](https://www.lesswrong.com/posts/nbSJhbLERTZFeNxY7/introducing-piramid-physics-informed-research-for-ambitious), which uses statistical physics to build foundations for mechanistic interpretability and AI safety. Our [progress and plans](https://www.lesswrong.com/posts/T2REsZneix3bmAKtL/piramid-progress-and-plans) describe a theory agenda centred on hidden weight distributions and covariances that can record learned structure. The [mean field sequence](https://www.lesswrong.com/posts/rduzFkTKx5pGKWKcL/mean-field-sequence-an-introduction) introduces this viewpoint by treating each neuron as one member of a population whose distribution must be self consistent. The model below gives a solvable example in which we can derive the hidden weight distribution and its covariance.
+
 Theorists have made progress by simplifying the task or the network. Rubin and collaborators give one of the clearest solvable examples in an equilibrium Bayesian model. They study a nonlinear network with two trainable layers in a teacher and student setting. They use statistical mechanics to derive the posterior over its weights. In that posterior, a hidden layer that starts isotropic acquires populations of weights aligned with one useful direction.
 
 In this model, explicit feature learning is a change in the weight posterior. At the transition, the posterior over one scalar overlap develops new wells at finite overlap, and the hidden weight covariance gains a rank one term along the teacher direction. Rubin and collaborators connect the representation change to a first order transition in generalization and to grokking. The network can transfer from an easy linear target component to a harder cubic component.
 
-I explain the feature learning result and work through its derivation. I begin with a cavity reduction and use it to isolate one neuron. The neuron's $D$ dimensional posterior depends on one scalar overlap. I close the calculation with a self consistency equation that connects the learned weight distribution to the network's prediction residual. Richer networks will need comparable order parameters and closure equations.
+We explain the feature learning result and work through its derivation. We begin with a cavity reduction, which isolates one neuron against the residual left by the others. The neuron's $D$ dimensional posterior depends on one scalar overlap. We close the calculation with a self consistency equation that connects the learned weight distribution to the network's prediction residual. We use the cavity calculation here because it exposes the population description in a simple model. We want to carry the representation and self consistency equations beyond the cavity construction.
 
-Noa Rubin, Inbar Seroussi, and Zohar Ringel use the model to study grokking as a first order feature learning transition {{< cite "rubin2024" >}}. A later paper by Rubin and collaborators extends the same mechanism across several network scaling regimes {{< cite "rubin2025" >}}. I follow the overlap transition from the first paper and use the adaptive kernel relation developed across both papers.
+Noa Rubin, Inbar Seroussi, and Zohar Ringel use the model to study grokking as a first order feature learning transition {{< cite "rubin2024" >}}. A later paper by Rubin and collaborators extends the same mechanism across several network scaling regimes {{< cite "rubin2025" >}}. We follow the overlap transition from the first paper and use the adaptive kernel relation developed across both papers.
 
 ## The target depends on one direction {#one-direction}
 
@@ -442,7 +444,7 @@ Projecting $\overline{\mathbf r}$ onto $H_1$ and $H_3$ gives new coefficients $(
 
 {{< scientific-plate kind="self-consistency" id="adaptive-loop" title="The learned features and residual must agree" caption="The residual sets the posterior over hidden directions. The posterior sets the adaptive kernel, and the kernel changes the residual. A self consistent solution satisfies all parts of the loop together." >}}
 
-The calculation for one neuron becomes a network theory only after solving this loop. The residual specifies what remains to be learned. The hidden weight distribution changes the kernel, and the new kernel produces a new residual. This link is what I find most useful: the representation and the prediction error must agree.
+The calculation for one neuron becomes a network theory only after solving this loop. The residual specifies what remains to be learned. The hidden weight distribution changes the kernel, and the new kernel produces a new residual. We want to carry the requirement that representation and prediction error agree beyond this model.
 
 ## A sample complexity corollary {#sample-complexity}
 
@@ -475,6 +477,14 @@ The linear target mode reveals $\mathbf e$ at $P=O(D)$. The adaptive network can
 {{< scientific-plate kind="sample-complexity" id="cubic-sample-gap" title="A learned direction changes the cubic sample scale" caption="For fixed features, cubic kernel power falls as the inverse cube of dimension, so the required sample count grows as the cube of dimension. The adaptive network uses the linear mode to identify the teacher direction with a sample count proportional to dimension. Finite overlap then gives the cubic mode order one strength along the same direction." >}}
 
 The later adaptive theory predicts learning of the nonlinear component at $P=O(D)$, while the NNGP and scalar rescaling descriptions retain the $O(D^3)$ requirement {{< cite "rubin2025" >}}. The earlier grokking paper observes the same change after the feature learning transition {{< cite "rubin2024" >}}.
+
+## What we are working on {#current-work}
+
+The calculation above tells us when a hidden layer learns a useful direction, but it leaves open how the layer distributes what it has learned. If $\rho_i$ is neuron $i$'s overlap with the teacher direction, then its contribution to a degree-$k$ feature is proportional to $a_i\rho_i^k$. The same total feature can come from a few strongly aligned neurons or from many neurons whose individual contributions are small. A small aligned population stores the feature in specialists. A broad population stores the feature across many units.
+
+Both populations can compute the same function while having different hidden covariance and unit selectivity. They can also respond differently when neurons are removed. A theory that predicts only the output cannot distinguish them. We want a theory that begins with the posterior over weights and predicts how many neurons participate and how strongly each contributes.
+
+Our current work asks what controls the division between distributed and specialized representations. We study simple models in which training can store the same function in different ways, and we use the posterior over weights to track how many neurons participate. A theory of representation is necessary for interpretability because a faithful account must describe the function a model computes and how its neurons represent that function.
 
 ## References {#references}
 
