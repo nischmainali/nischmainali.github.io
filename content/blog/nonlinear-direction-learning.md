@@ -11,13 +11,13 @@ title = "A solvable model of feature learning in a nonlinear network"
 
 {{< dropcap "M" >}}any theoretical accounts attribute much of the success of deep neural networks to feature learning, in which training changes the features represented by a network's hidden layers. A theory of deep learning needs to explain which features a nonlinear network learns and how its weights represent them. We do not yet have a general theory that answers these questions.
 
-Theorists have made progress by simplifying the task or the network. Rubin and collaborators developed one of the clearest solvable examples within an equilibrium Bayesian theory. They study a nonlinear network with two trainable layers in a teacher and student setting. With methods from statistical mechanics, they derive the posterior over its weights. In that posterior, a hidden layer that starts isotropic acquires populations of weights aligned with one useful direction.
+Theorists have made progress by simplifying the task or the network. Rubin and collaborators give one of the clearest solvable examples in an equilibrium Bayesian model. They study a nonlinear network with two trainable layers in a teacher and student setting. They use statistical mechanics to derive the posterior over its weights. In that posterior, a hidden layer that starts isotropic acquires populations of weights aligned with one useful direction.
 
 In this model, explicit feature learning is a change in the weight posterior. At the transition, the posterior over one scalar overlap develops new wells at finite overlap, and the hidden weight covariance gains a rank one term along the teacher direction. Rubin and collaborators connect the representation change to a first order transition in generalization and to grokking. The network can transfer from an easy linear target component to a harder cubic component.
 
-I explain the feature learning result and the methods used to derive it. I begin with a cavity reduction and use it to isolate one neuron. The neuron's $D$ dimensional posterior depends on one scalar overlap. I close the calculation with a self consistency equation that connects the learned weight distribution to the network's prediction residual. A broader theory will need comparable order parameters and closure equations for richer networks.
+I explain the feature learning result and work through its derivation. I begin with a cavity reduction and use it to isolate one neuron. The neuron's $D$ dimensional posterior depends on one scalar overlap. I close the calculation with a self consistency equation that connects the learned weight distribution to the network's prediction residual. Richer networks will need comparable order parameters and closure equations.
 
-Noa Rubin, Inbar Seroussi, and Zohar Ringel use the model to study grokking as a first order feature learning transition {{< cite "rubin2024" >}}. A later paper by Rubin and collaborators places the same mechanism inside a theory that covers several network scaling regimes {{< cite "rubin2025" >}}. I follow the overlap transition from the first paper and use the adaptive kernel relation developed across both papers.
+Noa Rubin, Inbar Seroussi, and Zohar Ringel use the model to study grokking as a first order feature learning transition {{< cite "rubin2024" >}}. A later paper by Rubin and collaborators extends the same mechanism across several network scaling regimes {{< cite "rubin2025" >}}. I follow the overlap transition from the first paper and use the adaptive kernel relation developed across both papers.
 
 ## The target depends on one direction {#one-direction}
 
@@ -410,7 +410,7 @@ The orthogonal directions remain equivalent. To leading order at large $D$,
 +R\,\mathbf e\mathbf e^{\mathsf T}.
 {{< /equation >}}
 
-The covariance therefore receives a rank one correction along $\mathbf e$. {{< plate-ref "weight-covariance" >}} shows why the second moment is the right measure. A symmetric pair of aligned populations can have zero mean while its covariance records the learned direction.
+The covariance receives a rank one correction along $\mathbf e$. {{< plate-ref "weight-covariance" >}} shows why the second moment is the right measure. A symmetric pair of aligned populations can have zero mean while its covariance records the learned direction.
 
 {{< scientific-plate kind="rank-one" id="weight-covariance" title="The covariance records direction learning" caption="The weight mean can remain zero because the two signs are equivalent. The second moment acquires an eigenvalue of order one along the teacher direction. Multiplying the original isotropic kernel by one scalar cannot represent this directional change." >}}
 
@@ -442,7 +442,7 @@ Projecting $\overline{\mathbf r}$ onto $H_1$ and $H_3$ gives new coefficients $(
 
 {{< scientific-plate kind="self-consistency" id="adaptive-loop" title="The learned features and residual must agree" caption="The residual sets the posterior over hidden directions. The posterior sets the adaptive kernel, and the kernel changes the residual. A self consistent solution satisfies all parts of the loop together." >}}
 
-Solving the closed loop extends the score for one neuron to the whole network. The residual specifies what remains to be learned. The hidden weight distribution changes the kernel, and the new kernel produces a new residual. A broader theory of feature learning will need an analogous link between representation changes and prediction errors.
+The calculation for one neuron becomes a network theory only after solving this loop. The residual specifies what remains to be learned. The hidden weight distribution changes the kernel, and the new kernel produces a new residual. This link is what I find most useful: the representation and the prediction error must agree.
 
 ## A sample complexity corollary {#sample-complexity}
 
@@ -475,24 +475,6 @@ The linear target mode reveals $\mathbf e$ at $P=O(D)$. The adaptive network can
 {{< scientific-plate kind="sample-complexity" id="cubic-sample-gap" title="A learned direction changes the cubic sample scale" caption="For fixed features, cubic kernel power falls as the inverse cube of dimension, so the required sample count grows as the cube of dimension. The adaptive network uses the linear mode to identify the teacher direction with a sample count proportional to dimension. Finite overlap then gives the cubic mode order one strength along the same direction." >}}
 
 The later adaptive theory predicts learning of the nonlinear component at $P=O(D)$, while the NNGP and scalar rescaling descriptions retain the $O(D^3)$ requirement {{< cite "rubin2025" >}}. The earlier grokking paper observes the same change after the feature learning transition {{< cite "rubin2024" >}}.
-
-## How the two papers fit together {#two-papers}
-
-The 2024 paper studies the phase structure of this teacher and student model and a model of modular addition. In the cubic task, the scalar overlap action has a centered state and a symmetric pair of states aligned with the teacher. A first order transition produces a mixture of hidden weight populations and a sharp change in generalization. The authors use the transition to connect feature learning with grokking {{< cite "rubin2024" >}}.
-
-The 2025 paper begins from a more general distribution over network outputs. Its multiscale adaptive theory covers several width scalings and explains when a scalar kernel rescaling can reproduce the mean prediction. The adaptive theory retains changes along target directions. In the nonlinear teacher example, those changes alter which target components can be learned at $P=O(D)$ {{< cite "rubin2025" >}}.
-
-The derivation for one neuron links the two accounts. It exposes the overlap variable and the rank one covariance update without reproducing the full variational Gaussian mixture calculation or the full expansion across scaling regimes.
-
-## What a broader theory must explain {#scope}
-
-The readout integral, the Gaussian Hermite identity, and the erf moments are exact. The reduction from sample sums to $m$ and $v$ uses concentration at large $P$. The scalar potential also uses norm concentration and restricts the cavity residual to two Hermite modes. The transition and covariance results hold to leading order in the large system limit.
-
-The $D^3$ and $D$ laws give scaling with dimension rather than constants at finite size. They rely on isotropic Gaussian inputs, one shared teacher direction, and proportional width. The equilibrium posterior identifies the preferred representations, but it does not give the time that a particular optimizer needs to reach them.
-
-Within these assumptions, the model gives a clear theoretical account of explicit feature learning. The posterior moves hidden neurons from random overlaps into populations aligned with the teacher, and the covariance records the change as a rank one term. The adaptive kernel then represents new functions along the learned direction. The change from $D^3$ to $D$ is one consequence of this representation change.
-
-This model suggests a broader research program. A theory of feature learning needs an order parameter that records the learned representation and a self consistent equation that links it to the prediction error. The present model completes both steps with one scalar overlap. More complex networks will require several order parameters and a separate account of training dynamics.
 
 ## References {#references}
 
