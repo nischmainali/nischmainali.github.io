@@ -65,3 +65,21 @@ title = "Random Compressed Coding with Neurons"
 publication = "bioRxiv"
 identifier = "doi:10.1101/2022.01.06.475186"
 url = "https://doi.org/10.1101/2022.01.06.475186"
+
+[rubin2024]
+label = "Rubin, Seroussi & Ringel, 2024"
+authors = "Noa Rubin, Inbar Seroussi, and Zohar Ringel"
+year = 2024
+title = "Grokking as a First Order Phase Transition in Two Layer Networks"
+publication = "International Conference on Learning Representations"
+identifier = "OpenReview:3ROGsTX3IR"
+url = "https://openreview.net/forum?id=3ROGsTX3IR"
+
+[rubin2025]
+label = "Rubin et al., 2025"
+authors = "Noa Rubin, Kirsten Fischer, Javed Lindner, Inbar Seroussi, Zohar Ringel, Michael Krämer, and Moritz Helias"
+year = 2025
+title = "From Kernels to Features: A Multi-Scale Adaptive Theory of Feature Learning"
+publication = "Proceedings of the 42nd International Conference on Machine Learning, PMLR 267, 52225-52257"
+identifier = "PMLR:v267/rubin25a"
+url = "https://proceedings.mlr.press/v267/rubin25a.html"

@@ -79,8 +79,13 @@ SCIENTIFIC_PLATE_ARGUMENTS = {
 }
 SCIENTIFIC_PLATE_KINDS = {
     "construction",
+    "direction",
     "field",
     "kac-rice",
+    "overlap",
+    "rank-one",
+    "sample-complexity",
+    "self-consistency",
     "spectrum",
     "excursion",
     "error",

@@ -1000,6 +1000,10 @@ Its governing choices are:
 - theorem, definition, remark, and proof helpers remain unboxed typographic
   passages. Small-cap labels, shared local numbering, italic theorem bodies,
   upright definitions, and a quiet proof square extend the old-book grammar;
+- optional `calculation` folds keep supporting algebra on the same sheet. A
+  small printer's corner opens into one fading rule and an inset derivation,
+  with no box, fill, shadow, or animated height. Definitions and results stay
+  in the main reading path, and print expands every fold;
 - fenced code is highlighted at build time with Chroma and receives a very small
   local copy control. Its shallow breakout is for long lines, not spectacle;
   article pages no longer depend on Prism or the theme's DOM mutation helpers;
@@ -1048,7 +1052,8 @@ Article authoring controls are intentionally few:
 - ordinary mathematics uses `$...$` and `$$...$$`, with the longer slash
   delimiters retained for compatibility. Numbered equations and restrained
   statements use the `equation`, `eqref`, `statement`, `statement-ref`, and
-  `proof` helpers documented in `MATHEMATICS.md`;
+  `proof` helpers documented in `MATHEMATICS.md`. The `calculation` helper holds
+  optional algebra that verifies a result already stated in the article;
 - headings, fenced code, tables, definition lists, blockquotes, unnumbered
   mathematics, and footnotes otherwise remain ordinary Markdown.
 

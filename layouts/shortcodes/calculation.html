@@ -1,0 +1,24 @@
+{{- $id := default "" (.Get "id") -}}
+{{- if eq (len (findRE `^[a-z][a-z0-9-]*$` $id)) 0 -}}
+  {{- errorf "The calculation shortcode requires a unique slug-like id: see %s" .Position -}}
+{{- end -}}
+{{- $title := default "" (.Get "title") -}}
+{{- if not $title -}}
+  {{- errorf "The calculation shortcode requires a short title: see %s" .Position -}}
+{{- end -}}
+{{- $storeKey := printf "articleCalculation:%s" $id -}}
+{{- if .Page.Store.Get $storeKey -}}
+  {{- errorf "Duplicate calculation id %q: see %s" $id .Position -}}
+{{- end -}}
+{{- .Page.Store.Set $storeKey true -}}
+<details class="article-calculation" id="calculation-{{ $id }}">
+  <summary class="article-calculation__summary">
+    <span class="article-calculation__fold" aria-hidden="true"></span>
+    <span class="article-calculation__label">Calculation</span>
+    <span class="article-calculation__title">{{ $title | plainify }}</span>
+    <span class="article-calculation__state" aria-hidden="true"></span>
+  </summary>
+  <div class="article-calculation__body">
+    {{- .Page.RenderString (dict "display" "block") .Inner -}}
+  </div>
+</details>

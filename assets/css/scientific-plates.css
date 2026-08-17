@@ -121,6 +121,102 @@
   padding: 0.12rem 0 0.08rem;
 }
 
+.single.blog .scientific-plate-plot--overlap {
+  padding-top: 0.34rem;
+}
+
+.single.blog .scientific-plate-overlap-assembly {
+  position: relative;
+}
+
+.single.blog .scientific-plate-overlap-population {
+  width: min(13.25rem, 72vw);
+  margin: 0.72rem auto 0.2rem;
+  color: var(--article-muted);
+}
+
+.single.blog .scientific-plate-overlap-population-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 0 0.18rem 0.16rem;
+  font-family: Jost, sans-serif;
+  font-size: 0.59rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.075em;
+  line-height: 1.2;
+}
+
+.single.blog .scientific-plate-overlap-population-header > :first-child {
+  color: var(--article-wine);
+  font-variant-caps: all-small-caps;
+}
+
+.single.blog .scientific-plate-overlap-moment {
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+}
+
+.single.blog .scientific-plate-overlap-moment output {
+  color: var(--article-muted);
+  font-family: var(--instrument-voice);
+  font-size: 0.95em;
+  font-variant-numeric: tabular-nums;
+}
+
+.single.blog .scientific-plate-overlap-population-graphic {
+  width: 100%;
+}
+
+.single.blog .scientific-plate-condition--population {
+  stroke-dasharray: 1.5 7;
+  opacity: 0.34;
+}
+
+.single.blog .scientific-plate-population-minima {
+  fill: none;
+  stroke: var(--article-wine);
+  stroke-width: 1.05;
+  opacity: 0.72;
+  vector-effect: non-scaling-stroke;
+}
+
+.single.blog .scientific-plate-population-points circle {
+  fill: color-mix(in srgb, var(--article-green) 68%, var(--article-focus-paper));
+  stroke: color-mix(in srgb, var(--article-focus-paper) 76%, transparent);
+  stroke-width: 0.85;
+  vector-effect: non-scaling-stroke;
+}
+
+.single.blog .scientific-plate-grid--overlap path:first-child {
+  opacity: 0.34;
+}
+
+.single.blog .scientific-plate-grid--overlap path:last-child {
+  opacity: 0.22;
+}
+
+.single.blog .scientific-plate-condition--overlap {
+  stroke-dasharray: 2 8;
+  opacity: 0.42;
+}
+
+.single.blog .scientific-plate-overlap-state {
+  position: absolute;
+  z-index: 2;
+  top: 0.35rem;
+  right: 0.42rem;
+  color: var(--article-wine);
+  font-family: Jost, sans-serif;
+  font-size: 0.57rem;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.085em;
+  line-height: 1.2;
+  pointer-events: none;
+}
+
 .single.blog .scientific-plate :is(
     .scientific-plate-axis,
     .scientific-plate-grid path,
@@ -138,6 +234,10 @@
 .single.blog .scientific-plate-axis {
   stroke: var(--article-rule-strong);
   stroke-width: 0.8;
+}
+
+.single.blog .scientific-plate-axis--quiet {
+  opacity: 0.48;
 }
 
 .single.blog .scientific-plate-grid path {
@@ -209,6 +309,112 @@
 .single.blog .scientific-plate-band {
   fill: var(--article-green);
   opacity: 0.07;
+}
+
+.single.blog :is(
+    .scientific-plate-projections path,
+    .scientific-plate-weight-rays path,
+    .scientific-plate-angle,
+    .scientific-plate-orbit,
+    .scientific-plate-covariance-outline,
+    .scientific-plate-lane,
+    .scientific-plate-loop
+  ) {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.single.blog .scientific-plate-projections path {
+  stroke: var(--article-rule-strong);
+  stroke-width: 0.72;
+  stroke-dasharray: 2 4;
+  opacity: 0.62;
+}
+
+.single.blog .scientific-plate-points circle {
+  fill: color-mix(in srgb, var(--article-green) 62%, var(--article-focus-paper));
+  stroke: var(--article-focus-paper);
+  stroke-width: 0.8;
+  vector-effect: non-scaling-stroke;
+}
+
+.single.blog .scientific-plate-points--quiet circle {
+  opacity: 0.55;
+}
+
+.single.blog .scientific-plate-points--learned circle {
+  fill: color-mix(in srgb, var(--article-wine) 58%, var(--article-focus-paper));
+  opacity: 0.72;
+}
+
+.single.blog .scientific-plate-weight-rays path {
+  stroke: var(--article-rule-strong);
+  stroke-width: 0.9;
+  opacity: 0.42;
+}
+
+.single.blog .scientific-plate-orbit {
+  stroke: var(--article-rule);
+  stroke-width: 0.8;
+  stroke-dasharray: 2 6;
+}
+
+.single.blog .scientific-plate-angle {
+  stroke: var(--article-wine);
+  stroke-width: 1;
+  stroke-dasharray: 1 3;
+  opacity: 0.72;
+}
+
+.single.blog .scientific-plate-covariance-outline {
+  stroke: var(--article-green);
+  stroke-width: 1;
+  stroke-dasharray: 2 5;
+  opacity: 0.38;
+}
+
+.single.blog .scientific-plate-covariance-outline--learned {
+  fill: color-mix(in srgb, var(--article-wine) 7%, transparent);
+  stroke: var(--article-wine);
+  opacity: 0.58;
+}
+
+.single.blog .scientific-plate-lane,
+.single.blog .scientific-plate-loop {
+  stroke: var(--article-rule-strong);
+  stroke-width: 1;
+}
+
+.single.blog .scientific-plate-lane--learned,
+.single.blog .scientific-plate-loop {
+  stroke: var(--article-green);
+  opacity: 0.66;
+}
+
+.single.blog .scientific-plate-stage-marks circle,
+.single.blog .scientific-plate-loop-nodes circle {
+  fill: var(--article-focus-paper);
+  stroke: var(--article-wine);
+  stroke-width: 1.35;
+  vector-effect: non-scaling-stroke;
+}
+
+.single.blog .scientific-plate-stage-marks circle:nth-child(n + 5),
+.single.blog .scientific-plate-loop-nodes circle {
+  stroke: var(--article-green);
+}
+
+.single.blog .scientific-plate-sample-mobile {
+  display: none;
+}
+
+.single.blog .scientific-plate-arrowheads path {
+  fill: none;
+  stroke: var(--article-rule-strong);
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
 }
 
 .single.blog .scientific-plate-area {
@@ -395,6 +601,22 @@
   text-align: right;
 }
 
+.single.blog .scientific-plate-control-hint {
+  display: none;
+  margin: 0.3rem 0 0;
+  color: var(--article-muted);
+  font-family: Jost, sans-serif;
+  font-size: 0.58rem;
+  font-style: normal;
+  letter-spacing: 0.035em;
+  line-height: 1.3;
+  text-align: right;
+}
+
+.single.blog .scientific-plate.is-ready .scientific-plate-control-hint {
+  display: block;
+}
+
 .single.blog .scientific-plate-controls input[type="range"] {
   width: 100%;
   min-height: 44px;
@@ -456,6 +678,20 @@
   }
 }
 
+@media (min-width: 768px) and (max-width: 1179px) {
+  .single.blog .scientific-plate-overlap-assembly {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 11.25rem;
+    align-items: start;
+    gap: 1.25rem;
+  }
+
+  .single.blog .scientific-plate-overlap-population {
+    width: auto;
+    margin: 0.82rem 0 0;
+  }
+}
+
 @media (min-width: 1180px) {
   .single.blog .scientific-plate {
     display: grid;
@@ -486,6 +722,18 @@
     align-self: start;
     margin: 0.68rem 0 0;
     font-size: 0.84rem;
+  }
+
+  .single.blog .scientific-plate-overlap-population {
+    position: absolute;
+    top: 0.58rem;
+    left: calc(100% + var(--article-marginal-gap));
+    width: var(--article-note-width);
+    margin: 0;
+  }
+
+  .single.blog .scientific-plate--overlap .scientific-plate-caption {
+    margin-top: calc(var(--article-note-width) - 1.25rem);
   }
 }
 
@@ -542,6 +790,73 @@
     grid-template-columns: auto minmax(5rem, 1fr) 2.8rem;
     gap: 0.48rem;
   }
+
+  .single.blog .scientific-plate--sample-complexity .scientific-plate-plot--sample-complexity {
+    display: none;
+  }
+
+  .single.blog .scientific-plate-sample-mobile {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.15rem;
+    padding: 0.88rem 0 0.15rem;
+  }
+
+  .single.blog .scientific-plate-sample-route {
+    min-width: 0;
+  }
+
+  .single.blog .article-body .scientific-plate-sample-route .scientific-plate-panel-title {
+    padding-left: 0;
+  }
+
+  .single.blog .article-body .scientific-plate-sample-steps {
+    position: relative;
+    display: grid;
+    gap: 0.78rem;
+    margin: 0.26rem 0 0;
+    padding: 0 0 0 1.1rem;
+    list-style: none;
+  }
+
+  .single.blog .article-body .scientific-plate-sample-steps::before {
+    position: absolute;
+    top: 0.45rem;
+    bottom: 0.45rem;
+    left: 0.22rem;
+    width: 1px;
+    background: var(--article-rule-strong);
+    content: "";
+  }
+
+  .single.blog .article-body .scientific-plate-sample-route--learned .scientific-plate-sample-steps::before {
+    background: color-mix(in srgb, var(--article-green) 58%, transparent);
+  }
+
+  .single.blog .article-body .scientific-plate-sample-steps li {
+    position: relative;
+    min-width: 0;
+    margin: 0;
+    font-size: 0.78rem;
+    line-height: 1.2;
+  }
+
+  .single.blog .article-body .scientific-plate-sample-steps li::before {
+    position: absolute;
+    top: 0.32rem;
+    left: -1.1rem;
+    width: 0.42rem;
+    height: 0.42rem;
+    border: 1px solid var(--article-wine);
+    border-radius: 50%;
+    background: var(--article-focus-paper);
+    box-sizing: border-box;
+    content: "";
+  }
+
+  .single.blog .article-body .scientific-plate-sample-route--learned .scientific-plate-sample-steps li::before {
+    border-color: var(--article-green);
+  }
 }
 
 @media (forced-colors: active) {
@@ -553,7 +868,16 @@
       .scientific-plate-event,
       .scientific-plate-leader,
       .scientific-plate-dimension,
-      .scientific-plate-event-windows path
+      .scientific-plate-event-windows path,
+      .scientific-plate-projections path,
+      .scientific-plate-weight-rays path,
+      .scientific-plate-angle,
+      .scientific-plate-orbit,
+      .scientific-plate-covariance-outline,
+      .scientific-plate-lane,
+      .scientific-plate-loop,
+      .scientific-plate-population-minima,
+      .scientific-plate-arrowheads path
     ) {
     stroke: CanvasText;
   }
@@ -569,7 +893,11 @@
   .single.blog .scientific-plate :is(
       .scientific-plate-crossing-marks circle,
       .scientific-plate-event-dot,
-      .scientific-plate-minimum
+      .scientific-plate-minimum,
+      .scientific-plate-stage-marks circle,
+      .scientific-plate-loop-nodes circle,
+      .scientific-plate-points circle,
+      .scientific-plate-population-points circle
     ) {
     fill: Canvas;
     stroke: Highlight;
@@ -596,7 +924,9 @@
   }
 
   .single.blog .scientific-plate-controls,
-  .single.blog .scientific-plate-live-reading {
+  .single.blog .scientific-plate-control-hint,
+  .single.blog .scientific-plate-live-reading,
+  .single.blog .scientific-plate-sample-mobile {
     display: none !important;
   }
 
@@ -608,7 +938,16 @@
       .scientific-plate-event,
       .scientific-plate-leader,
       .scientific-plate-dimension,
-      .scientific-plate-event-windows path
+      .scientific-plate-event-windows path,
+      .scientific-plate-projections path,
+      .scientific-plate-weight-rays path,
+      .scientific-plate-angle,
+      .scientific-plate-orbit,
+      .scientific-plate-covariance-outline,
+      .scientific-plate-lane,
+      .scientific-plate-loop,
+      .scientific-plate-population-minima,
+      .scientific-plate-arrowheads path
     ) {
     stroke: #333;
   }
@@ -624,7 +963,11 @@
   .single.blog .scientific-plate :is(
       .scientific-plate-crossing-marks circle,
       .scientific-plate-event-dot,
-      .scientific-plate-minimum
+      .scientific-plate-minimum,
+      .scientific-plate-stage-marks circle,
+      .scientific-plate-loop-nodes circle,
+      .scientific-plate-points circle,
+      .scientific-plate-population-points circle
     ) {
     fill: white;
     stroke: #111;
@@ -639,6 +982,23 @@
 
   .single.blog .scientific-plate-caption {
     color: #333;
+  }
+
+  .single.blog .scientific-plate-overlap-assembly {
+    display: grid;
+    grid-template-columns: minmax(0, 2.35fr) minmax(8rem, 1fr);
+    align-items: start;
+    gap: 1rem;
+  }
+
+  .single.blog .scientific-plate-overlap-population {
+    position: static;
+    width: auto;
+    margin: 0.45rem 0 0;
+  }
+
+  .single.blog .scientific-plate--overlap .scientific-plate-caption {
+    margin-top: 0.56rem;
   }
 
   .single.blog .scientific-plate-math {

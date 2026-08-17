@@ -26,8 +26,14 @@ PAGES = (
     PageBudget(
         "gp field note",
         "blog/gp-code-notes/index.html",
-        700_000,
-        430_000,
+        300_000,
+        410_000,
+    ),
+    PageBudget(
+        "direction note",
+        "blog/nonlinear-direction-learning/index.html",
+        180_000,
+        400_000,
     ),
 )
 

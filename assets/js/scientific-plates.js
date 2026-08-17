@@ -370,10 +370,360 @@
     plate.classList.add("is-ready");
   }
 
+  function mountOverlapPlate(plate) {
+    var curve = plate.querySelector("[data-overlap-curve]");
+    var minimaGroup = plate.querySelector("[data-overlap-minima]");
+    var stateLabel = plate.querySelector("[data-overlap-state]");
+    var input = plate.querySelector("[data-overlap-input]");
+    var output = plate.querySelector("[data-overlap-output]");
+    var statusLoad = plate.querySelector("[data-overlap-status-load]");
+    var statusState = plate.querySelector("[data-overlap-status-state]");
+    var statusPhase = plate.querySelector("[data-overlap-status-phase]");
+    var statusMoment = plate.querySelector("[data-overlap-status-moment]");
+    var populationPhase = plate.querySelector(
+      "[data-overlap-population-phase]"
+    );
+    var populationMoment = plate.querySelector(
+      "[data-overlap-population-moment]"
+    );
+    var populationMinima = plate.querySelector(
+      "[data-overlap-population-minima]"
+    );
+    var populationUnits = Array.prototype.slice.call(
+      plate.querySelectorAll("[data-overlap-unit]")
+    );
+    var controls = plate.querySelector("[data-overlap-controls]");
+
+    if (
+      !curve ||
+      !minimaGroup ||
+      !stateLabel ||
+      !input ||
+      !output ||
+      !statusLoad ||
+      !statusState ||
+      !statusPhase ||
+      !statusMoment ||
+      !populationPhase ||
+      !populationMoment ||
+      !populationMinima ||
+      populationUnits.length !== 40 ||
+      !controls
+    ) {
+      return;
+    }
+
+    var left = 52;
+    var right = 608;
+    var top = 28;
+    var bottom = 224;
+    var rhoExtent = 1.35;
+    var minimumActionExtent = 0.32;
+    var actionExtent = minimumActionExtent;
+    var sigmaWSquared = 0.5;
+    var linearResidual = 0.3;
+    var cubicResidual = -0.3;
+    var curveSamples = 180;
+    var minimumSamples = 1600;
+    var populationLeft = 12;
+    var populationRight = 218;
+    var populationPairCount = populationUnits.length / 2;
+    /* The fixed action slice supplies the well positions and its three event
+     * loads. The paper obtains the GMFL-I weights from self-consistency, which
+     * this local control does not solve. A smooth lever-rule guide therefore
+     * changes only the illustrative fraction of units assigned to each well. */
+    var sideWellBirthLoad = 28.3225;
+    var coexistenceLoad = 29.45;
+    var centreSpinodalLoad =
+      (Math.PI * (1 + 2 * sigmaWSquared)) /
+      (4 * sigmaWSquared * linearResidual * linearResidual);
+    var frame = 0;
+
+    function actionAt(rho, load) {
+      var rhoSquared = rho * rho;
+      var denominator = 1 + 2 * (sigmaWSquared + rhoSquared);
+      var residual =
+        linearResidual - (2 * cubicResidual * rhoSquared) / denominator;
+      return (
+        rhoSquared / (2 * sigmaWSquared) -
+        ((2 * load) / Math.PI) *
+          (rhoSquared / denominator) *
+          residual *
+          residual
+      );
+    }
+
+    function xPosition(rho) {
+      return (
+        left +
+        ((rho + rhoExtent) / (2 * rhoExtent)) * (right - left)
+      );
+    }
+
+    function populationXPosition(rho) {
+      return (
+        populationLeft +
+        ((rho + rhoExtent) / (2 * rhoExtent)) *
+          (populationRight - populationLeft)
+      );
+    }
+
+    function yPosition(action, minimumAction) {
+      var relative = Math.max(0, Math.min(actionExtent, action - minimumAction));
+      return bottom - (relative / actionExtent) * (bottom - top);
+    }
+
+    function refineMinimum(load, centre, halfWidth) {
+      var low = Math.max(-rhoExtent, centre - halfWidth);
+      var high = Math.min(rhoExtent, centre + halfWidth);
+
+      for (var index = 0; index < 28; index += 1) {
+        var first = low + (high - low) / 3;
+        var second = high - (high - low) / 3;
+        if (actionAt(first, load) < actionAt(second, load)) {
+          high = second;
+        } else {
+          low = first;
+        }
+      }
+
+      var rho = (low + high) / 2;
+      return { rho: rho, action: actionAt(rho, load) };
+    }
+
+    function findMinima(load) {
+      var step = (2 * rhoExtent) / minimumSamples;
+      var minima = [];
+      var previousAction = actionAt(-rhoExtent, load);
+      var currentAction = actionAt(-rhoExtent + step, load);
+
+      for (var index = 2; index <= minimumSamples; index += 1) {
+        var rho = -rhoExtent + index * step;
+        var nextAction = actionAt(rho, load);
+        if (currentAction <= previousAction && currentAction <= nextAction) {
+          minima.push(refineMinimum(load, rho - step, step));
+        }
+        previousAction = currentAction;
+        currentAction = nextAction;
+      }
+
+      return minima.filter(function (minimum, index) {
+        return (
+          index === 0 ||
+          Math.abs(minimum.rho - minima[index - 1].rho) > step * 2
+        );
+      });
+    }
+
+    function stateFor(minima) {
+      var centre = minima.find(function (minimum) {
+        return Math.abs(minimum.rho) < 0.02;
+      });
+      var side = minima.find(function (minimum) {
+        return minimum.rho > 0.08;
+      });
+
+      if (!side) return "one centred well";
+      if (!centre) return "centred well unstable";
+
+      var depthDifference = side.action - centre.action;
+      if (Math.abs(depthDifference) <= 0.0025) {
+        return "equal-depth coexistence";
+      }
+      if (depthDifference > 0) return "finite wells metastable";
+      return "finite wells dominate";
+    }
+
+    function smoothstep(low, high, value) {
+      var width = high - low;
+      var fraction = width === 0 ? 1 : (value - low) / width;
+      var bounded = Math.max(0, Math.min(1, fraction));
+      return bounded * bounded * (3 - 2 * bounded);
+    }
+
+    function curvatureAt(rho, load) {
+      var step = 0.001;
+      return (
+        (actionAt(rho + step, load) -
+          2 * actionAt(rho, load) +
+          actionAt(rho - step, load)) /
+        (step * step)
+      );
+    }
+
+    function mixtureFractionAt(load) {
+      if (load <= sideWellBirthLoad) return 0;
+      if (load <= coexistenceLoad) {
+        return (
+          0.28 *
+          smoothstep(sideWellBirthLoad, coexistenceLoad, load)
+        );
+      }
+      return (
+        0.28 +
+        0.72 * smoothstep(coexistenceLoad, centreSpinodalLoad, load)
+      );
+    }
+
+    function populationPhaseAt(load) {
+      if (load < coexistenceLoad) return "GFL";
+      if (load < centreSpinodalLoad) return "GMFL-I";
+      return "GMFL-II";
+    }
+
+    function drawPopulation(load, minima) {
+      var sideMinimum = minima.find(function (minimum) {
+        return minimum.rho > 0.08;
+      });
+      var centreCurvature = Math.max(
+        0.025,
+        1 / sigmaWSquared -
+          (4 * load * linearResidual * linearResidual) /
+            (Math.PI * (1 + 2 * sigmaWSquared))
+      );
+      var centreScale = Math.min(
+        0.21,
+        Math.sqrt(1 / (42 * centreCurvature))
+      );
+      var sideScale = sideMinimum
+        ? Math.min(
+            0.075,
+            Math.sqrt(
+              1 /
+                (180 *
+                  Math.max(0.05, curvatureAt(sideMinimum.rho, load)))
+            )
+          )
+        : 0;
+      var mixtureFraction = mixtureFractionAt(load);
+      var secondMoment = 0;
+
+      for (var pair = 0; pair < populationPairCount; pair += 1) {
+        var halfPairRange = (populationPairCount - 1) / 2;
+        var shape =
+          (((pair * 7) % populationPairCount) - halfPairRange) /
+          halfPairRange;
+        var centreMagnitude =
+          centreScale * (0.12 + 1.08 * Math.abs(shape));
+        var sideMagnitude = sideMinimum
+          ? Math.max(0.05, sideMinimum.rho + sideScale * shape)
+          : centreMagnitude;
+        var pairThreshold = (pair + 0.5) / populationPairCount;
+        var alignment = smoothstep(
+          pairThreshold - 0.045,
+          pairThreshold + 0.045,
+          mixtureFraction
+        );
+        var magnitude =
+          centreMagnitude + (sideMagnitude - centreMagnitude) * alignment;
+        var negative = -magnitude;
+        var positive = magnitude;
+
+        populationUnits[pair * 2].setAttribute(
+          "cx",
+          populationXPosition(negative).toFixed(2)
+        );
+        populationUnits[pair * 2 + 1].setAttribute(
+          "cx",
+          populationXPosition(positive).toFixed(2)
+        );
+        secondMoment += negative * negative + positive * positive;
+      }
+
+      var minimumCommands = minima.map(function (minimum) {
+        var position = populationXPosition(minimum.rho).toFixed(2);
+        return "M" + position + " 146V154";
+      });
+      populationMinima.setAttribute("d", minimumCommands.join(""));
+
+      var phase = populationPhaseAt(load);
+      var momentText = (secondMoment / populationUnits.length).toFixed(2);
+      populationPhase.textContent = phase;
+      populationMoment.value = momentText;
+      populationMoment.textContent = momentText;
+      statusPhase.textContent = phase + ".";
+      statusMoment.textContent = momentText;
+    }
+
+    function draw() {
+      frame = 0;
+      var load = Math.max(22, Math.min(38, Number(input.value)));
+      var loadText = load.toFixed(2);
+      var minima = findMinima(load);
+      var minimumAction = Math.min.apply(
+        null,
+        minima.map(function (minimum) {
+          return minimum.action;
+        })
+      );
+      var samples = [];
+      var maximumAction = minimumAction;
+      var commands = [];
+
+      for (var index = 0; index <= curveSamples; index += 1) {
+        var rho = -rhoExtent + (2 * rhoExtent * index) / curveSamples;
+        var action = actionAt(rho, load);
+        samples.push({ rho: rho, action: action });
+        maximumAction = Math.max(maximumAction, action);
+      }
+      actionExtent = Math.max(
+        minimumActionExtent,
+        (maximumAction - minimumAction) * 1.05
+      );
+
+      samples.forEach(function (sample, index) {
+        commands.push(
+          (index === 0 ? "M" : "L") +
+            xPosition(sample.rho).toFixed(2) +
+            " " +
+            yPosition(sample.action, minimumAction).toFixed(2)
+        );
+      });
+      curve.setAttribute("d", commands.join(""));
+
+      var fragment = document.createDocumentFragment();
+      minima.forEach(function (minimum) {
+        var circle = document.createElementNS(SVG_NAMESPACE, "circle");
+        circle.setAttribute("class", "scientific-plate-minimum");
+        circle.setAttribute("cx", xPosition(minimum.rho).toFixed(2));
+        circle.setAttribute(
+          "cy",
+          yPosition(minimum.action, minimumAction).toFixed(2)
+        );
+        circle.setAttribute("r", "4");
+        fragment.appendChild(circle);
+      });
+      minimaGroup.replaceChildren(fragment);
+
+      var state = stateFor(minima);
+      input.value = loadText;
+      output.value = loadText;
+      output.textContent = loadText;
+      statusLoad.textContent = loadText;
+      statusState.textContent =
+        state.charAt(0).toUpperCase() + state.slice(1) + ".";
+      stateLabel.textContent = state;
+      drawPopulation(load, minima);
+    }
+
+    function scheduleDraw() {
+      if (frame) window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(draw);
+    }
+
+    input.addEventListener("input", scheduleDraw, { passive: true });
+    draw();
+    controls.hidden = false;
+    plate.classList.add("is-ready");
+  }
+
   document
     .querySelectorAll('[data-scientific-plate="field"]')
     .forEach(mountFieldPlate);
   document
     .querySelectorAll('[data-scientific-plate="error"]')
     .forEach(mountErrorPlate);
+  document
+    .querySelectorAll('[data-scientific-plate="overlap"]')
+    .forEach(mountOverlapPlate);
 })();

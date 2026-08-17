@@ -3,7 +3,7 @@
 {{- $page := .page -}}
 {{- $position := default "unknown source" .position -}}
 {{- $requestedOutput := default $page.Site.Params.mathOutput .output -}}
-{{- $mathOutputSetting := lower (string (default "htmlAndMathml" $requestedOutput)) -}}
+{{- $mathOutputSetting := lower (string (default "mathml" $requestedOutput)) -}}
 {{- $mathOutput := "" -}}
 {{- if eq $mathOutputSetting "htmlandmathml" -}}
   {{- $mathOutput = "htmlAndMathml" -}}

@@ -1,6 +1,6 @@
 {{- $noop := .WordCount -}}
 <link id="sunlit-favicon" rel="icon" href="{{ partial "static-asset-url.html" "favicon-shade.svg" }}" type="image/svg+xml" data-shade-href="{{ partial "static-asset-url.html" "favicon-shade.svg" }}" data-sunset-href="{{ partial "static-asset-url.html" "favicon-sunset.svg" }}">
-{{- $mathOutputSetting := lower (string (default "htmlAndMathml" .Site.Params.mathOutput)) -}}
+{{- $mathOutputSetting := lower (string (default "mathml" .Site.Params.mathOutput)) -}}
 {{- $mathOutput := "" -}}
 {{- if eq $mathOutputSetting "htmlandmathml" -}}
   {{- $mathOutput = "htmlAndMathml" -}}

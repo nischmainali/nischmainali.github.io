@@ -1,0 +1,50 @@
+{{- $id := .id -}}
+<div class="scientific-plate-plot scientific-plate-plot--sample-complexity">
+  <div class="scientific-plate-graphic">
+    <svg viewBox="0 0 720 286" role="img" aria-labelledby="{{ $id }}-sample-title {{ $id }}-sample-desc">
+      <title id="{{ $id }}-sample-title">Two routes to the cubic teacher mode</title>
+      <desc id="{{ $id }}-sample-desc">The upper route keeps random hidden directions. Their overlap is of order one over square root D, so cubic kernel power is of order D to the minus three and sample complexity is D cubed. The lower route uses the linear teacher component to learn the direction with D samples, after which cubic power is order one.</desc>
+      <path class="scientific-plate-lane" d="M62 114H657"></path>
+      <path class="scientific-plate-lane scientific-plate-lane--learned" d="M62 246H657"></path>
+      <g class="scientific-plate-stage-marks" aria-hidden="true">
+        <circle cx="85" cy="114" r="5"></circle><circle cx="270" cy="114" r="5"></circle><circle cx="458" cy="114" r="5"></circle><circle cx="640" cy="114" r="5"></circle>
+        <circle cx="85" cy="246" r="5"></circle><circle cx="270" cy="246" r="5"></circle><circle cx="458" cy="246" r="5"></circle><circle cx="640" cy="246" r="5"></circle>
+      </g>
+      <g class="scientific-plate-arrowheads" aria-hidden="true">
+        <path d="M251 108L265 114L251 120M439 108L453 114L439 120M621 108L635 114L621 120"></path>
+        <path d="M251 240L265 246L251 252M439 240L453 246L439 252M621 240L635 246L621 252"></path>
+      </g>
+      <text class="scientific-plate-label scientific-plate-label--muted" x="62" y="43">fixed features</text>
+      <text class="scientific-plate-label scientific-plate-label--green" x="62" y="162">adaptive features</text>
+    </svg>
+    {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\mathbf w\sim p_0` "mode" "anchor" "x" "11.8" "y" "28.5" "align" "center" "tone" "muted" "position" .position) -}}
+    {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\rho=O(D^{-1/2})` "mode" "anchor" "x" "37.5" "y" "28.5" "align" "center" "position" .position) -}}
+    {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `h_3^2=O(D^{-3})` "mode" "anchor" "x" "63.6" "y" "28.5" "align" "center" "position" .position) -}}
+    {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `P_{\mathrm{fixed}}=O(D^3)` "mode" "anchor" "x" "88.8" "y" "28.5" "align" "center" "tone" "wine" "size" "formula" "position" .position) -}}
+
+    {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `H_1\ \text{estimates }\mathbf e` "mode" "anchor" "x" "11.8" "y" "74.5" "align" "center" "tone" "green" "position" .position) -}}
+    {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `P_{\mathrm{align}}=O(D)` "mode" "anchor" "x" "37.5" "y" "74.5" "align" "center" "tone" "green" "position" .position) -}}
+    {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\rho=O(1),\quad h_3^2=O(1)` "mode" "anchor" "x" "63.6" "y" "74.5" "align" "center" "tone" "green" "position" .position) -}}
+    {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `P_{\mathrm{adaptive}}=O(D)` "mode" "anchor" "x" "88.8" "y" "74.5" "align" "center" "tone" "wine" "size" "formula" "position" .position) -}}
+  </div>
+</div>
+<div class="scientific-plate-sample-mobile">
+  <section class="scientific-plate-sample-route" aria-labelledby="{{ $id }}-fixed-route">
+    <p class="scientific-plate-panel-title" id="{{ $id }}-fixed-route">fixed features</p>
+    <ol class="scientific-plate-sample-steps">
+      <li>{{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\mathbf w\sim p_0` "tone" "muted" "position" .position) -}}</li>
+      <li>{{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\rho=O(D^{-1/2})` "position" .position) -}}</li>
+      <li>{{- partial "scientific-plates/math.html" (dict "page" .page "tex" `h_3^2=O(D^{-3})` "position" .position) -}}</li>
+      <li>{{- partial "scientific-plates/math.html" (dict "page" .page "tex" `P_{\mathrm{fixed}}=O(D^3)` "tone" "wine" "position" .position) -}}</li>
+    </ol>
+  </section>
+  <section class="scientific-plate-sample-route scientific-plate-sample-route--learned" aria-labelledby="{{ $id }}-adaptive-route">
+    <p class="scientific-plate-panel-title" id="{{ $id }}-adaptive-route">adaptive features</p>
+    <ol class="scientific-plate-sample-steps">
+      <li>{{- partial "scientific-plates/math.html" (dict "page" .page "tex" `H_1\ \text{estimates }\mathbf e` "tone" "green" "position" .position) -}}</li>
+      <li>{{- partial "scientific-plates/math.html" (dict "page" .page "tex" `P_{\mathrm{align}}=O(D)` "tone" "green" "position" .position) -}}</li>
+      <li>{{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\rho=O(1),\quad h_3^2=O(1)` "tone" "green" "position" .position) -}}</li>
+      <li>{{- partial "scientific-plates/math.html" (dict "page" .page "tex" `P_{\mathrm{adaptive}}=O(D)` "tone" "wine" "position" .position) -}}</li>
+    </ol>
+  </section>
+</div>

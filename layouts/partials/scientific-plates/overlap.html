@@ -1,0 +1,109 @@
+{{- $id := .id -}}
+{{- $load := "29.45" -}}
+<div class="scientific-plate-live-reading" data-overlap-status aria-live="polite">
+  <span>Effective load </span>
+  {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `u` "position" .position) -}}
+  <span aria-hidden="true"> = </span><span data-overlap-status-load>{{ $load }}</span>
+  <span aria-hidden="true">. </span><span data-overlap-status-state>Equal-depth coexistence.</span>
+  <span> Population phase </span><span data-overlap-status-phase>GMFL-I.</span>
+  <span> Population second moment R equals </span><span data-overlap-status-moment>0.15</span><span>.</span>
+</div>
+<div class="scientific-plate-overlap-assembly">
+  <div class="scientific-plate-plot scientific-plate-plot--overlap">
+    <div class="scientific-plate-graphic">
+      <svg viewBox="0 0 640 270" role="img" aria-labelledby="{{ $id }}-overlap-title {{ $id }}-overlap-desc" focusable="false">
+        <title id="{{ $id }}-overlap-title">The overlap action as effective load changes</title>
+        <desc id="{{ $id }}-overlap-desc">A line plot of the normalized overlap action. Move the effective-load control to see symmetric side wells appear, dominate, and destabilize the centred state.</desc>
+        <g class="scientific-plate-grid scientific-plate-grid--overlap" aria-hidden="true">
+          <path d="M52 28H608M52 77H608M52 126H608M52 175H608M52 224H608"></path>
+          <path d="M124.07 28V224M330 28V224M535.93 28V224"></path>
+        </g>
+        <path class="scientific-plate-condition scientific-plate-condition--overlap" d="M330 28V224" aria-hidden="true"></path>
+        <path class="scientific-plate-line scientific-plate-line--primary scientific-plate-line--strong" data-overlap-curve d="M52.00 37.43L65.90 81.79L79.80 119.31L93.70 150.24L107.60 174.93L121.50 193.80L135.40 207.40L149.30 216.41L163.20 221.58L177.10 223.75L191.00 223.83L204.90 222.68L218.80 221.10L232.70 219.74L246.60 219.02L260.50 219.12L274.40 219.96L288.30 221.26L302.20 222.61L316.10 223.63L330.00 224.00L343.90 223.63L357.80 222.61L371.70 221.26L385.60 219.96L399.50 219.12L413.40 219.02L427.30 219.74L441.20 221.10L455.10 222.68L469.00 223.83L482.90 223.75L496.80 221.58L510.70 216.41L524.60 207.40L538.50 193.80L552.40 174.93L566.30 150.24L580.20 119.31L594.10 81.79L608.00 37.43"></path>
+        <g class="scientific-plate-overlap-minima" data-overlap-minima aria-hidden="true">
+          <circle class="scientific-plate-minimum" cx="184.39" cy="224" r="4"></circle>
+          <circle class="scientific-plate-minimum" cx="330" cy="224" r="4"></circle>
+          <circle class="scientific-plate-minimum" cx="475.61" cy="224" r="4"></circle>
+        </g>
+        <path class="scientific-plate-axis" d="M52 224H608M52 28V224" aria-hidden="true"></path>
+      </svg>
+      <span class="scientific-plate-overlap-state" data-overlap-state>equal-depth coexistence</span>
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `U_u(\rho)-\min U_u` "mode" "anchor" "x" "8.2" "y" "5.7" "size" "small" "tone" "green" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `-1` "mode" "anchor" "x" "19.4" "y" "88.3" "align" "center" "size" "small" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `0` "mode" "anchor" "x" "51.55" "y" "88.3" "align" "center" "size" "small" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `1` "mode" "anchor" "x" "83.75" "y" "88.3" "align" "center" "size" "small" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\rho` "mode" "anchor" "x" "95" "y" "88.3" "align" "right" "tone" "green" "position" .position) -}}
+    </div>
+  </div>
+
+  <aside class="scientific-plate-overlap-population" aria-label="Hidden-unit population by overlap">
+    <div class="scientific-plate-overlap-population-header">
+      <span data-overlap-population-phase>GMFL-I</span>
+      <span class="scientific-plate-overlap-moment">
+        {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `R` "position" .position) -}}
+        <span aria-hidden="true"> = </span><output data-overlap-population-moment>0.15</output>
+      </span>
+    </div>
+    <div class="scientific-plate-graphic scientific-plate-overlap-population-graphic">
+      <svg viewBox="0 0 230 174" role="img" aria-labelledby="{{ $id }}-population-title {{ $id }}-population-desc" focusable="false">
+        <title id="{{ $id }}-population-title">A schematic hidden-unit population on the overlap axis</title>
+        <desc id="{{ $id }}-population-desc">Twenty sign-symmetric neuron pairs move between the centred overlap state and the two teacher-aligned states as effective load increases. Vertical position only separates the units.</desc>
+        <path class="scientific-plate-condition scientific-plate-condition--population" d="M115 16V150" aria-hidden="true"></path>
+        <path class="scientific-plate-population-minima" data-overlap-population-minima d="M61.05 146V154M115 146V154M168.95 146V154" aria-hidden="true"></path>
+        <g class="scientific-plate-population-points" aria-hidden="true">
+          <circle data-overlap-unit cx="66.75" cy="121.30" r="2.7"></circle>
+          <circle data-overlap-unit cx="163.25" cy="30.01" r="2.7"></circle>
+          <circle data-overlap-unit cx="62.53" cy="95.54" r="2.7"></circle>
+          <circle data-overlap-unit cx="167.47" cy="94.28" r="2.7"></circle>
+          <circle data-overlap-unit cx="58.32" cy="98.28" r="2.7"></circle>
+          <circle data-overlap-unit cx="171.68" cy="65.18" r="2.7"></circle>
+          <circle data-overlap-unit cx="66.15" cy="87.17" r="2.7"></circle>
+          <circle data-overlap-unit cx="163.85" cy="94.21" r="2.7"></circle>
+          <circle data-overlap-unit cx="61.93" cy="26.69" r="2.7"></circle>
+          <circle data-overlap-unit cx="168.07" cy="121.77" r="2.7"></circle>
+          <circle data-overlap-unit cx="76.62" cy="50.87" r="2.7"></circle>
+          <circle data-overlap-unit cx="153.38" cy="106.67" r="2.7"></circle>
+          <circle data-overlap-unit cx="99.42" cy="87.19" r="2.7"></circle>
+          <circle data-overlap-unit cx="130.58" cy="83.87" r="2.7"></circle>
+          <circle data-overlap-unit cx="112.17" cy="107.33" r="2.7"></circle>
+          <circle data-overlap-unit cx="117.83" cy="62.85" r="2.7"></circle>
+          <circle data-overlap-unit cx="101.24" cy="76.30" r="2.7"></circle>
+          <circle data-overlap-unit cx="128.76" cy="85.60" r="2.7"></circle>
+          <circle data-overlap-unit cx="101.24" cy="90.52" r="2.7"></circle>
+          <circle data-overlap-unit cx="128.76" cy="119.30" r="2.7"></circle>
+          <circle data-overlap-unit cx="112.17" cy="65.22" r="2.7"></circle>
+          <circle data-overlap-unit cx="117.83" cy="94.70" r="2.7"></circle>
+          <circle data-overlap-unit cx="99.42" cy="44.52" r="2.7"></circle>
+          <circle data-overlap-unit cx="130.58" cy="44.53" r="2.7"></circle>
+          <circle data-overlap-unit cx="103.06" cy="131.21" r="2.7"></circle>
+          <circle data-overlap-unit cx="126.94" cy="35.88" r="2.7"></circle>
+          <circle data-overlap-unit cx="110.35" cy="43.07" r="2.7"></circle>
+          <circle data-overlap-unit cx="119.65" cy="118.91" r="2.7"></circle>
+          <circle data-overlap-unit cx="97.59" cy="96.54" r="2.7"></circle>
+          <circle data-overlap-unit cx="132.41" cy="71.17" r="2.7"></circle>
+          <circle data-overlap-unit cx="104.88" cy="53.34" r="2.7"></circle>
+          <circle data-overlap-unit cx="125.12" cy="44.06" r="2.7"></circle>
+          <circle data-overlap-unit cx="108.52" cy="124.93" r="2.7"></circle>
+          <circle data-overlap-unit cx="121.48" cy="112.55" r="2.7"></circle>
+          <circle data-overlap-unit cx="95.77" cy="23.79" r="2.7"></circle>
+          <circle data-overlap-unit cx="134.23" cy="24.66" r="2.7"></circle>
+          <circle data-overlap-unit cx="106.70" cy="89.36" r="2.7"></circle>
+          <circle data-overlap-unit cx="123.30" cy="65.06" r="2.7"></circle>
+          <circle data-overlap-unit cx="106.70" cy="62.59" r="2.7"></circle>
+          <circle data-overlap-unit cx="123.30" cy="119.84" r="2.7"></circle>
+        </g>
+        <path class="scientific-plate-axis" d="M12 150H218" aria-hidden="true"></path>
+      </svg>
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `-1` "mode" "anchor" "x" "16.8" "y" "93" "align" "center" "size" "small" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `0` "mode" "anchor" "x" "50" "y" "93" "align" "center" "size" "small" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `1` "mode" "anchor" "x" "83.2" "y" "93" "align" "center" "size" "small" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\rho_i` "mode" "anchor" "x" "96" "y" "93" "align" "right" "size" "small" "tone" "green" "position" .position) -}}
+    </div>
+  </aside>
+</div>
+<div class="scientific-plate-controls scientific-plate-controls--overlap" data-scientific-plate-controls data-overlap-controls hidden>
+  <label for="{{ $id }}-load">effective load&nbsp;{{- partial "scientific-plates/math.html" (dict "page" .page "tex" `u` "tone" "green" "position" .position) -}}</label>
+  <input id="{{ $id }}-load" data-overlap-input type="range" min="22" max="38" step="0.05" value="{{ $load }}" aria-describedby="{{ $id }}-load-hint">
+  <output for="{{ $id }}-load" data-overlap-output>{{ $load }}</output>
+</div>
+<p class="scientific-plate-control-hint" id="{{ $id }}-load-hint">Drag, or use the arrow keys for fine steps.</p>

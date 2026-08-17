@@ -805,23 +805,10 @@ body.sunset .paper-readout {
     margin-bottom: 0.5rem;
   }
 
-  .paper-readout-shell[open] :is(
-    .publication-inspect__signal,
-    .paper-readout__rails
-  ) {
-    animation: paper-readout-drift var(--instrument-drift) linear infinite;
-    will-change: translate;
-  }
-
   .paper-readout-shell[open] .paper-readout {
     animation:
       paper-readout-enter var(--instrument-open) var(--instrument-ease-out) both,
       paper-readout-drift var(--instrument-drift) linear infinite;
-  }
-
-  .paper-readout-shell:has(.paper-readout :focus-visible)
-    :is(.publication-inspect__signal, .paper-readout__rails) {
-    animation-play-state: paused;
   }
 
   .paper-readout-shell:has(.paper-readout :focus-visible) .paper-readout {

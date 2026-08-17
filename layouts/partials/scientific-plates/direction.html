@@ -1,0 +1,69 @@
+{{- $id := .id -}}
+<div class="scientific-plate-panels scientific-plate-panels--three scientific-plate-panels--direction">
+  <section class="scientific-plate-panel" aria-labelledby="{{ $id }}-projection-label">
+    <p class="scientific-plate-panel-title" id="{{ $id }}-projection-label">one informative projection</p>
+    <div class="scientific-plate-graphic">
+      <svg viewBox="0 0 220 176" role="img" aria-labelledby="{{ $id }}-projection-title {{ $id }}-projection-desc">
+        <title id="{{ $id }}-projection-title">Gaussian inputs projected onto one teacher direction</title>
+        <desc id="{{ $id }}-projection-desc">A cloud of input points surrounds the origin. A single diagonal axis marked e crosses the cloud, and faint perpendicular segments show several projections onto it.</desc>
+        <path class="scientific-plate-axis" d="M25 148L193 28"></path>
+        <path class="scientific-plate-axis scientific-plate-axis--quiet" d="M42 35L182 151"></path>
+        <g class="scientific-plate-projections" aria-hidden="true">
+          <path d="M51 76L78 96M84 45L105 62M123 126L142 99M158 78L143 66M87 132L112 114"></path>
+        </g>
+        <g class="scientific-plate-points" aria-hidden="true">
+          <circle cx="51" cy="76" r="2.7"></circle><circle cx="84" cy="45" r="2.7"></circle>
+          <circle cx="123" cy="126" r="2.7"></circle><circle cx="158" cy="78" r="2.7"></circle>
+          <circle cx="87" cy="132" r="2.7"></circle><circle cx="145" cy="43" r="2.7"></circle>
+          <circle cx="63" cy="113" r="2.7"></circle><circle cx="171" cy="117" r="2.7"></circle>
+          <circle cx="110" cy="81" r="2.7"></circle><circle cx="116" cy="39" r="2.7"></circle>
+          <circle cx="45" cy="48" r="2.7"></circle><circle cx="177" cy="55" r="2.7"></circle>
+        </g>
+        <path class="scientific-plate-event" d="M180 37L193 28L188 43"></path>
+      </svg>
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\mathbf e` "mode" "anchor" "x" "91" "y" "13" "align" "right" "tone" "green" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `z=\mathbf e^{\mathsf T}\mathbf x` "mode" "anchor" "x" "8" "y" "13" "tone" "ink" "size" "formula" "position" .position) -}}
+    </div>
+  </section>
+
+  <section class="scientific-plate-panel" aria-labelledby="{{ $id }}-teacher-label">
+    <p class="scientific-plate-panel-title" id="{{ $id }}-teacher-label">two orthogonal target modes</p>
+    <div class="scientific-plate-graphic">
+      <svg viewBox="0 0 220 176" role="img" aria-labelledby="{{ $id }}-teacher-title {{ $id }}-teacher-desc">
+        <title id="{{ $id }}-teacher-title">Linear and cubic Hermite modes of the teacher</title>
+        <desc id="{{ $id }}-teacher-desc">A straight green line represents the first Hermite mode. A wine cubic curve represents the third Hermite mode. Both depend on the same scalar coordinate z.</desc>
+        <g class="scientific-plate-grid" aria-hidden="true">
+          <path d="M28 40V144M69 40V144M110 40V144M151 40V144M192 40V144"></path>
+          <path d="M28 57H192M28 92H192M28 127H192"></path>
+        </g>
+        <path class="scientific-plate-axis" d="M28 92H192M110 35V149"></path>
+        <path class="scientific-plate-line scientific-plate-line--primary scientific-plate-line--strong" d="M34 135L186 49"></path>
+        <path class="scientific-plate-line scientific-plate-line--event" d="M34 45C55 99 73 127 92 112C100 105 105 96 110 92C115 88 120 79 128 72C147 57 165 85 186 139"></path>
+      </svg>
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `H_1(z)=z` "mode" "anchor" "x" "67" "y" "20" "tone" "green" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `H_3(z)=z^3-3z` "mode" "anchor" "x" "9" "y" "18" "tone" "wine" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `z` "mode" "anchor" "x" "92" "y" "88" "align" "right" "size" "small" "position" .position) -}}
+    </div>
+  </section>
+
+  <section class="scientific-plate-panel" aria-labelledby="{{ $id }}-overlap-label">
+    <p class="scientific-plate-panel-title" id="{{ $id }}-overlap-label">a neuron can rotate toward it</p>
+    <div class="scientific-plate-graphic">
+      <svg viewBox="0 0 220 176" role="img" aria-labelledby="{{ $id }}-overlap-title {{ $id }}-overlap-desc">
+        <title id="{{ $id }}-overlap-title">Hidden weights described by their overlap with the teacher</title>
+        <desc id="{{ $id }}-overlap-desc">Quiet radial directions surround an origin. A highlighted hidden weight approaches the teacher axis. Their scalar alignment is rho.</desc>
+        <circle class="scientific-plate-orbit" cx="110" cy="94" r="62"></circle>
+        <g class="scientific-plate-weight-rays" aria-hidden="true">
+          <path d="M110 94L55 71M110 94L73 45M110 94L118 35M110 94L157 51M110 94L172 89M110 94L155 135M110 94L100 153M110 94L60 129"></path>
+        </g>
+        <path class="scientific-plate-line scientific-plate-line--primary scientific-plate-line--strong" d="M67 138L165 44"></path>
+        <path class="scientific-plate-line scientific-plate-line--event scientific-plate-line--strong" d="M110 94L154 57"></path>
+        <path class="scientific-plate-angle" d="M132 94A22 22 0 0 0 126 78"></path>
+        <circle class="scientific-plate-event-dot" cx="110" cy="94" r="3.2"></circle>
+      </svg>
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\mathbf e` "mode" "anchor" "x" "78" "y" "21" "tone" "green" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\mathbf w` "mode" "anchor" "x" "73" "y" "35" "tone" "wine" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\rho=\mathbf w^{\mathsf T}\mathbf e` "mode" "anchor" "x" "50" "y" "91" "align" "center" "tone" "ink" "size" "formula" "position" .position) -}}
+    </div>
+  </section>
+</div>

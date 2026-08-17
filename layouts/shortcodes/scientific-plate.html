@@ -3,7 +3,7 @@
   plate body, while this shortcode owns stable ids, numbering, title, caption,
   and the common semantic figure structure.
 */ -}}
-{{- $allowedKinds := slice "construction" "field" "kac-rice" "spectrum" "excursion" "error" -}}
+{{- $allowedKinds := slice "construction" "field" "kac-rice" "spectrum" "excursion" "error" "direction" "overlap" "rank-one" "sample-complexity" "self-consistency" -}}
 {{- $allowedArguments := slice "kind" "id" "title" "caption" "threshold" "population" -}}
 {{- if not .IsNamedParams -}}
   {{- errorf "scientific-plate accepts named arguments only: see %s" .Position -}}
@@ -21,7 +21,7 @@
 {{- $thresholdText := strings.TrimSpace (default "0.00" (.Get "threshold")) -}}
 {{- $populationText := strings.TrimSpace (default "16" (.Get "population")) -}}
 {{- if not (in $allowedKinds $kind) -}}
-  {{- errorf "Unsupported scientific plate kind %q; use construction, field, kac-rice, spectrum, excursion, or error: see %s" $kind .Position -}}
+  {{- errorf "Unsupported scientific plate kind %q: see %s" $kind .Position -}}
 {{- end -}}
 {{- if eq (len (findRE `^[a-z][a-z0-9-]*$` $id)) 0 -}}
   {{- errorf "scientific-plate requires a slug-like id: see %s" .Position -}}
@@ -66,7 +66,7 @@
   {{- errorf "Scientific plate %q has inconsistent kind metadata: see %s" $id .Position -}}
 {{- end -}}
 {{- .Page.Store.Set "hasScientificPlate" true -}}
-{{- if in (slice "field" "error") $kind -}}
+{{- if in (slice "field" "error" "overlap") $kind -}}
   {{- .Page.Store.Set "hasInteractiveScientificPlate" true -}}
 {{- end -}}
 {{- $renderer := printf "scientific-plates/%s.html" $kind -}}

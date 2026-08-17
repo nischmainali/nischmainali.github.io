@@ -1595,6 +1595,210 @@ html.article-figure-is-open {
   line-height: 1;
 }
 
+/* Optional calculations are set as folds in the sheet, not panels placed on
+ * top of it. The summary forms one printer's corner and a rule that fades into
+ * the measure. Opening the fold continues that corner down the working, so the
+ * relationship between label and derivation remains visible without a box,
+ * fill, shadow, or second interface language. Native details supplies the
+ * interaction and keyboard semantics; no script or animated height is needed. */
+.single.blog .article-calculation {
+  position: relative;
+  margin: 1.5rem 0 1.65rem;
+  padding: 0;
+  color: var(--article-ink);
+}
+
+.single.blog .article-calculation__summary {
+  position: relative;
+  display: grid;
+  grid-template-columns: 0.9rem auto minmax(0, 1fr) 0.85rem;
+  align-items: baseline;
+  gap: 0.48rem;
+  padding: 0.43rem 0 0.52rem;
+  color: var(--article-muted);
+  cursor: pointer;
+  list-style: none;
+}
+
+.single.blog .article-calculation__summary::-webkit-details-marker {
+  display: none;
+}
+
+.single.blog .article-calculation__summary::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0.9rem;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    var(--article-rule-strong) 0,
+    var(--article-rule) 58%,
+    transparent 100%
+  );
+  content: "";
+}
+
+.single.blog .article-calculation__summary:hover {
+  color: var(--article-green);
+}
+
+.single.blog .article-calculation__summary:focus {
+  outline: none;
+}
+
+.single.blog .article-calculation__summary:focus-visible {
+  color: var(--article-blue);
+}
+
+.single.blog .article-calculation__summary:focus-visible::after {
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--article-blue) 0,
+    color-mix(in srgb, var(--article-blue) 62%, transparent) 58%,
+    transparent 100%
+  );
+}
+
+.single.blog .article-calculation__summary:focus-visible
+  :is(.article-calculation__fold, .article-calculation__state) {
+  color: var(--article-blue);
+}
+
+.single.blog .article-calculation__fold {
+  position: relative;
+  top: 0.06rem;
+  display: block;
+  width: 0.72rem;
+  height: 0.72rem;
+  color: var(--article-wine);
+}
+
+.single.blog .article-calculation__fold::before,
+.single.blog .article-calculation__fold::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: currentColor;
+  content: "";
+  transform-origin: top left;
+  transition: opacity 130ms ease, transform 130ms ease;
+}
+
+.single.blog .article-calculation__fold::before {
+  width: 0.72rem;
+  height: 1px;
+}
+
+.single.blog .article-calculation__fold::after {
+  width: 1px;
+  height: 0.72rem;
+  transform: scaleY(0.45);
+}
+
+.single.blog .article-calculation[open] .article-calculation__fold::after {
+  transform: scaleY(1);
+}
+
+.single.blog .article-calculation__label {
+  color: var(--article-wine);
+  font-family: Jost, sans-serif;
+  font-size: 0.68rem;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.09em;
+  line-height: 1.35;
+}
+
+.single.blog .article-calculation__title {
+  min-width: 0;
+  color: inherit;
+  font-size: 0.94rem;
+  font-style: italic;
+  line-height: 1.35;
+  text-wrap: pretty;
+}
+
+.single.blog .article-calculation__state {
+  position: relative;
+  top: 0.05rem;
+  display: block;
+  width: 0.68rem;
+  height: 0.68rem;
+  color: var(--article-faint);
+}
+
+.single.blog .article-calculation__state::before,
+.single.blog .article-calculation__state::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.62rem;
+  height: 1px;
+  background: currentColor;
+  content: "";
+  transform: translate(-50%, -50%);
+  transition: opacity 130ms ease, transform 130ms ease;
+}
+
+.single.blog .article-calculation__state::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.single.blog .article-calculation[open] .article-calculation__state::after {
+  opacity: 0;
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+.single.blog .article-calculation__body {
+  position: relative;
+  margin: 0;
+  padding: 0.78rem 0 0.15rem 1.38rem;
+}
+
+.single.blog .article-calculation__body::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0.43rem;
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    var(--article-rule-strong) 0,
+    var(--article-rule) 68%,
+    transparent 100%
+  );
+  content: "";
+}
+
+.single.blog .article-calculation__body > :first-child {
+  margin-top: 0;
+}
+
+.single.blog .article-calculation__body > :last-child {
+  margin-bottom: 0;
+}
+
+.single.blog .article-calculation__body p {
+  color: var(--article-quiet-ink);
+  font-size: 0.96em;
+  line-height: 1.56;
+}
+
+.single.blog .article-calculation__body .math-display {
+  margin-top: 1.12rem;
+  margin-bottom: 1.12rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .single.blog .article-calculation__fold::before,
+  .single.blog .article-calculation__fold::after,
+  .single.blog .article-calculation__state::before,
+  .single.blog .article-calculation__state::after {
+    transition: none;
+  }
+}
+
 /* Citations are compiled into the sheet, not layered on as a widget. Their
  * author-year voice stays slightly quieter than prose; the bibliography uses
  * a hanging printer's rule instead of cards, badges, or numbered chrome. */
@@ -2184,6 +2388,23 @@ html.article-figure-is-open {
     margin-left: 0.72rem;
   }
 
+  .single.blog .article-calculation__summary {
+    grid-template-columns: 0.78rem auto minmax(0, 1fr) 0.72rem;
+    gap: 0.38rem;
+  }
+
+  .single.blog .article-calculation__title {
+    font-size: 0.9rem;
+  }
+
+  .single.blog .article-calculation__body {
+    padding-left: 1.08rem;
+  }
+
+  .single.blog .article-calculation__body::before {
+    left: 0.32rem;
+  }
+
   .single.blog .article-body pre code,
   .single.blog .article-body pre code:hover {
     padding: 1rem;
@@ -2348,6 +2569,31 @@ html.article-figure-is-open {
     margin-right: 0;
     margin-left: 0;
     break-inside: avoid;
+  }
+
+  .single.blog .article-calculation {
+    width: auto;
+    margin-right: 0;
+    margin-left: 0;
+    break-inside: auto;
+  }
+
+  .single.blog .article-calculation:not([open]) > .article-calculation__body {
+    display: block !important;
+  }
+
+  .single.blog .article-calculation__summary {
+    break-after: avoid;
+    color: #333;
+  }
+
+  .single.blog .article-calculation__summary::after,
+  .single.blog .article-calculation__body::before {
+    background: #999;
+  }
+
+  .single.blog .article-calculation__state {
+    display: none;
   }
 
   .single.blog .article-body .highlight,

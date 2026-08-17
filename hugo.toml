@@ -24,7 +24,7 @@ description = "Nischal's address on the web"
 # "Cite as" line. Page-level author fields stay informal. This is deliberately
 # not `author`, which the vendored theme reads as a section-keyed table.
 citation_author = "Nischal Mainali"
-mathOutput = "htmlAndMathml"
+mathOutput = "mathml"
 logo = {}
 
 [markup]

@@ -1,6 +1,6 @@
-/* KaTeX is rendered by Hugo. The default output carries semantic MathML and a
- * metric-matched HTML fallback; the experimental MathML-only build carries one
- * native tree. Both remain static HTML. Article typography stays in article.css. */
+/* KaTeX is rendered by Hugo. The default output is one native MathML tree. A
+ * compatibility build can add KaTeX's metric-matched HTML layer. Both remain
+ * static markup. Article typography stays in article.css. */
 
 @font-face {
   font-family: "Asana Math Web";
@@ -11,9 +11,9 @@
 }
 
 /* `transform.ToMath` omits the `.katex-mathml` and `.katex-display` wrappers
- * when asked for MathML alone. The renderer marks its direct root so the one-
- * tree experiment has the same baseline, centering, and overflow contract as
- * the default dual output without relying on runtime feature detection. */
+ * when asked for MathML alone. The renderer marks its direct root so the native
+ * tree has the same baseline, centering, and overflow contract as the optional
+ * dual output without relying on runtime feature detection. */
 .katex.math-output-mathml > math {
   font-family: "Asana Math Web", math;
   font-size: 1em;

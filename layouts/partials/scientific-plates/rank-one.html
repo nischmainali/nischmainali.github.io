@@ -1,0 +1,53 @@
+{{- $id := .id -}}
+<div class="scientific-plate-panels scientific-plate-panels--two scientific-plate-panels--covariance">
+  <section class="scientific-plate-panel" aria-labelledby="{{ $id }}-isotropic-label">
+    <p class="scientific-plate-panel-title" id="{{ $id }}-isotropic-label">before direction learning</p>
+    <div class="scientific-plate-graphic">
+      <svg viewBox="0 0 330 214" role="img" aria-labelledby="{{ $id }}-isotropic-title {{ $id }}-isotropic-desc">
+        <title id="{{ $id }}-isotropic-title">An isotropic hidden-weight distribution</title>
+        <desc id="{{ $id }}-isotropic-desc">Hidden weights form an approximately circular cloud around zero in a plane containing the teacher direction.</desc>
+        <path class="scientific-plate-axis scientific-plate-axis--quiet" d="M39 107H291M165 24V190"></path>
+        <circle class="scientific-plate-covariance-outline" cx="165" cy="107" r="66"></circle>
+        <g class="scientific-plate-points scientific-plate-points--quiet" aria-hidden="true">
+          <circle cx="121" cy="73" r="2.8"></circle><circle cx="145" cy="54" r="2.8"></circle>
+          <circle cx="183" cy="55" r="2.8"></circle><circle cx="209" cy="73" r="2.8"></circle>
+          <circle cx="225" cy="107" r="2.8"></circle><circle cx="205" cy="139" r="2.8"></circle>
+          <circle cx="176" cy="158" r="2.8"></circle><circle cx="142" cy="151" r="2.8"></circle>
+          <circle cx="111" cy="128" r="2.8"></circle><circle cx="105" cy="96" r="2.8"></circle>
+          <circle cx="155" cy="82" r="2.8"></circle><circle cx="190" cy="101" r="2.8"></circle>
+          <circle cx="165" cy="125" r="2.8"></circle><circle cx="137" cy="111" r="2.8"></circle>
+        </g>
+        <path class="scientific-plate-line scientific-plate-line--primary scientific-plate-line--strong" d="M64 107H274"></path>
+        <path class="scientific-plate-event" d="M260 101L274 107L260 113"></path>
+      </svg>
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\mathbf e` "mode" "anchor" "x" "85" "y" "49" "tone" "green" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `R=\EE[\rho^2]=O(D^{-1})` "mode" "anchor" "x" "50" "y" "91" "align" "center" "tone" "ink" "position" .position) -}}
+    </div>
+  </section>
+
+  <section class="scientific-plate-panel" aria-labelledby="{{ $id }}-anisotropic-label">
+    <p class="scientific-plate-panel-title" id="{{ $id }}-anisotropic-label">after direction learning</p>
+    <div class="scientific-plate-graphic">
+      <svg viewBox="0 0 330 214" role="img" aria-labelledby="{{ $id }}-anisotropic-title {{ $id }}-anisotropic-desc">
+        <title id="{{ $id }}-anisotropic-title">A hidden-weight distribution elongated along the teacher</title>
+        <desc id="{{ $id }}-anisotropic-desc">The cloud is symmetric about zero but elongated along the teacher axis, showing a rank-one covariance increase without a nonzero mean weight.</desc>
+        <path class="scientific-plate-axis scientific-plate-axis--quiet" d="M39 107H291M165 24V190"></path>
+        <ellipse class="scientific-plate-covariance-outline scientific-plate-covariance-outline--learned" cx="165" cy="107" rx="112" ry="45"></ellipse>
+        <g class="scientific-plate-points scientific-plate-points--learned" aria-hidden="true">
+          <circle cx="72" cy="99" r="2.8"></circle><circle cx="90" cy="120" r="2.8"></circle>
+          <circle cx="111" cy="82" r="2.8"></circle><circle cx="129" cy="109" r="2.8"></circle>
+          <circle cx="145" cy="72" r="2.8"></circle><circle cx="156" cy="124" r="2.8"></circle>
+          <circle cx="174" cy="91" r="2.8"></circle><circle cx="190" cy="131" r="2.8"></circle>
+          <circle cx="209" cy="81" r="2.8"></circle><circle cx="225" cy="111" r="2.8"></circle>
+          <circle cx="250" cy="94" r="2.8"></circle><circle cx="267" cy="117" r="2.8"></circle>
+          <circle cx="115" cy="131" r="2.8"></circle><circle cx="220" cy="134" r="2.8"></circle>
+        </g>
+        <path class="scientific-plate-line scientific-plate-line--primary scientific-plate-line--strong" d="M45 107H285"></path>
+        <path class="scientific-plate-event" d="M271 101L285 107L271 113"></path>
+      </svg>
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\mathbf e` "mode" "anchor" "x" "88" "y" "49" "tone" "green" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `R=\EE[\rho^2]=O(1)` "mode" "anchor" "x" "50" "y" "91" "align" "center" "tone" "wine" "position" .position) -}}
+    </div>
+  </section>
+</div>
+{{- partial "scientific-plates/math.html" (dict "page" .page "tex" `\EE[\mathbf w\mathbf w^{\mathsf T}]=\frac{\sigma_w^2}{D-1}\mathbf I+\left(R-\frac{\sigma_w^2}{D-1}\right)\mathbf e\mathbf e^{\mathsf T}` "mode" "strip" "tone" "ink" "size" "formula" "position" .position) -}}

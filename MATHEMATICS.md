@@ -1,9 +1,9 @@
 # Mathematics authoring
 
 Hugo 0.164.0 renders mathematics during the build. The deployed page contains
-KaTeX HTML and MathML, with no MathJax configuration, renderer JavaScript, or
-mathematical CDN request. The repository holds KaTeX 0.17.0 CSS and WOFF2 fonts
-under `static/vendor/katex/0.17.0`.
+one native MathML tree, with no MathJax configuration, renderer JavaScript, or
+mathematical CDN request. KaTeX is the build-time parser. It does not run in the
+reader's browser.
 
 ## Ordinary mathematics
 
@@ -22,7 +22,7 @@ The compatible forms \( ... \) and \[ ... \] are also supported. Escape a
 literal currency dollar in Markdown, for example \$2. Code spans and fenced
 examples are ignored by the local checker.
 
-Hugo renders with HTML and MathML output, strict errors, a 0.05 em minimum rule
+Hugo renders with MathML output, strict errors, a 0.05 em minimum rule
 thickness, and trusted HTML commands disabled. Unsupported or malformed TeX
 fails the build at its source position. KaTeX's
 [supported-function table](https://katex.org/docs/supported) is the practical
@@ -30,10 +30,9 @@ language reference.
 
 ## Mathematical type
 
-Modern browsers typeset the MathML layer with Asana Math 000.962. Its warm,
+The browser typesets the MathML tree with Asana Math 000.962. Its warm,
 calligraphic forms sit closer to Linden Hill's old-style book face than KaTeX's
-Computer Modern-derived default. The site keeps KaTeX HTML as a fallback for
-browsers without MathML Core support.
+Computer Modern-derived default.
 
 Blackboard, calligraphic, fraktur, and sans-serif letters are substituted for
 their Mathematical Alphanumeric Symbols codepoints during rendering, from
@@ -48,20 +47,20 @@ loads only on pages that can contain mathematics. Do not replace KaTeX's HTML
 font files or mix isolated glyphs from another family: KaTeX calculates that
 layer with its own font metrics.
 
-The default build emits KaTeX HTML plus MathML. A compatibility build can emit
-MathML alone:
+The default build emits MathML alone. A compatibility build can restore KaTeX
+HTML alongside MathML:
 
 ~~~sh
-HUGO_PARAMS_MATHOUTPUT=mathml hugo --buildDrafts \
-  --cacheDir /tmp/hugo-mathml-cache \
-  --destination /tmp/hugo-mathml-public
+HUGO_PARAMS_MATHOUTPUT=htmlAndMathml hugo --buildDrafts \
+  --cacheDir /tmp/hugo-dual-math-cache \
+  --destination /tmp/hugo-dual-math-public
 ~~~
 
-MathML-only output cuts the dense specimen's HTML and live element count by more
-than half and removes the KaTeX stylesheet request. Keep the dual output as the
-deployment default until Chromium, Safari, Firefox, VoiceOver, NVDA, overflow,
-and print checks pass. This switch changes emitted markup only; both modes use
-the same strict build-time renderer and Asana Math face.
+MathML-only output avoids a second hidden rendering tree and removes the KaTeX
+stylesheet request. This is important in long mathematical notes, where the
+duplicate tree costs more than the diagrams or article script. The compatibility
+switch changes emitted markup only. Both modes use the same strict build-time
+renderer and Asana Math face.
 
 ## The numbering spine
 
@@ -123,6 +122,27 @@ examples, and proofs are unnumbered. Theorem-family bodies are italic;
 definitions, remarks, examples, and proofs are upright. These are typographic
 passages on the Lokta sheet, not cards.
 
+## Optional calculations
+
+Keep every definition, result, and interpretation needed by the next paragraph
+in the main reading path. Put a verification that some readers may want behind
+the `calculation` helper:
+
+~~~
+{{< calculation id="readout-integral" title="Complete the square in the readout weight" >}}
+The intermediate algebra and unnumbered displays go here.
+{{< /calculation >}}
+~~~
+
+The `id` must be unique and slug-like. The `title` should name the operation in
+plain language. Do not place a section heading or a numbered result inside the
+fold. A fold is for algebra that checks a result already stated in the article,
+not for an assumption or a step that the later argument needs.
+
+On screen, a small printer's corner opens into a fading rule. The calculation
+uses the same paper, prose face, and mathematical type as the article. It has no
+panel or separate interface style. Print expands every calculation.
+
 ## Referring to another note
 
 A reference argument is either a bare identifier, which stays inside the note, or
@@ -170,8 +190,9 @@ declaration stays on one source line so the registry can assign a stable label:
 {{< scientific-plate kind="spectrum" id="spectral-moments" title="Spectral moments" caption="Higher spectral moments give more weight to high frequencies." >}}
 ~~~
 
-Supported kinds are construction, field, kac-rice, spectrum, excursion, and
-error. The field and error kinds have optional validated control defaults.
+Supported kinds are construction, field, kac-rice, spectrum, excursion, error,
+direction, overlap, rank-one, sample-complexity, and self-consistency. The field
+and error kinds have optional validated control defaults.
 Plates have a separate sequence that restarts in each level-two section.
 
 Refer to a plate without writing its number by hand:
