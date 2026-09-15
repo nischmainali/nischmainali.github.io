@@ -7,10 +7,13 @@
   {{- errorf "The calculation shortcode requires a short title: see %s" .Position -}}
 {{- end -}}
 {{- $storeKey := printf "articleCalculation:%s" $id -}}
-{{- if .Page.Store.Get $storeKey -}}
+{{- $position := printf "%s" .Position -}}
+{{- /* Hugo may render the same shortcode again during a live template rebuild. */ -}}
+{{- $previous := .Page.Store.Get $storeKey -}}
+{{- if and $previous (ne $previous $position) -}}
   {{- errorf "Duplicate calculation id %q: see %s" $id .Position -}}
 {{- end -}}
-{{- .Page.Store.Set $storeKey true -}}
+{{- .Page.Store.Set $storeKey $position -}}
 <details class="article-calculation" id="calculation-{{ $id }}">
   <summary class="article-calculation__summary">
     <span class="article-calculation__fold" aria-hidden="true"></span>

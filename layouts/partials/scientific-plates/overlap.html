@@ -1,7 +1,7 @@
 {{- $id := .id -}}
 {{- $load := "29.45" -}}
 <div class="scientific-plate-live-reading" data-overlap-status aria-live="polite">
-  <span>Effective load </span>
+  <span>Interaction strength </span>
   {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `u` "position" .position) -}}
   <span aria-hidden="true"> = </span><span data-overlap-status-load>{{ $load }}</span>
   <span aria-hidden="true">. </span><span data-overlap-status-state>Equal-depth coexistence.</span>
@@ -12,8 +12,8 @@
   <div class="scientific-plate-plot scientific-plate-plot--overlap">
     <div class="scientific-plate-graphic">
       <svg viewBox="0 0 640 270" role="img" aria-labelledby="{{ $id }}-overlap-title {{ $id }}-overlap-desc" focusable="false">
-        <title id="{{ $id }}-overlap-title">The overlap action as effective load changes</title>
-        <desc id="{{ $id }}-overlap-desc">A line plot of the normalized overlap action. Move the effective-load control to see symmetric side wells appear, dominate, and destabilize the centred state.</desc>
+        <title id="{{ $id }}-overlap-title">The overlap potential as interaction strength changes</title>
+        <desc id="{{ $id }}-overlap-desc">A line plot of the normalized overlap potential. Move the interaction-strength control to see symmetric side wells appear, dominate, and destabilize the centred state.</desc>
         <g class="scientific-plate-grid scientific-plate-grid--overlap" aria-hidden="true">
           <path d="M52 28H608M52 77H608M52 126H608M52 175H608M52 224H608"></path>
           <path d="M124.07 28V224M330 28V224M535.93 28V224"></path>
@@ -28,7 +28,7 @@
         <path class="scientific-plate-axis" d="M52 224H608M52 28V224" aria-hidden="true"></path>
       </svg>
       <span class="scientific-plate-overlap-state" data-overlap-state>equal-depth coexistence</span>
-      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `U_u(\rho)-\min U_u` "mode" "anchor" "x" "8.2" "y" "5.7" "size" "small" "tone" "green" "position" .position) -}}
+      {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `(\widetilde U_u(\rho)-\min\widetilde U_u)/D` "mode" "anchor" "x" "8.2" "y" "5.7" "size" "small" "tone" "green" "position" .position) -}}
       {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `-1` "mode" "anchor" "x" "19.4" "y" "88.3" "align" "center" "size" "small" "position" .position) -}}
       {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `0` "mode" "anchor" "x" "51.55" "y" "88.3" "align" "center" "size" "small" "position" .position) -}}
       {{- partial "scientific-plates/math.html" (dict "page" .page "tex" `1` "mode" "anchor" "x" "83.75" "y" "88.3" "align" "center" "size" "small" "position" .position) -}}
@@ -47,7 +47,7 @@
     <div class="scientific-plate-graphic scientific-plate-overlap-population-graphic">
       <svg viewBox="0 0 230 174" role="img" aria-labelledby="{{ $id }}-population-title {{ $id }}-population-desc" focusable="false">
         <title id="{{ $id }}-population-title">A schematic hidden-unit population on the overlap axis</title>
-        <desc id="{{ $id }}-population-desc">Twenty sign-symmetric neuron pairs move between the centred overlap state and the two teacher-aligned states as effective load increases. Vertical position only separates the units.</desc>
+        <desc id="{{ $id }}-population-desc">Twenty sign-symmetric neuron pairs move between the centred overlap state and the two teacher-aligned states as interaction strength increases. Vertical position only separates the units.</desc>
         <path class="scientific-plate-condition scientific-plate-condition--population" d="M115 16V150" aria-hidden="true"></path>
         <path class="scientific-plate-population-minima" data-overlap-population-minima d="M61.05 146V154M115 146V154M168.95 146V154" aria-hidden="true"></path>
         <g class="scientific-plate-population-points" aria-hidden="true">
@@ -102,7 +102,7 @@
   </aside>
 </div>
 <div class="scientific-plate-controls scientific-plate-controls--overlap" data-scientific-plate-controls data-overlap-controls hidden>
-  <label for="{{ $id }}-load">effective load&nbsp;{{- partial "scientific-plates/math.html" (dict "page" .page "tex" `u` "tone" "green" "position" .position) -}}</label>
+  <label for="{{ $id }}-load">interaction strength&nbsp;{{- partial "scientific-plates/math.html" (dict "page" .page "tex" `u` "tone" "green" "position" .position) -}}</label>
   <input id="{{ $id }}-load" data-overlap-input type="range" min="22" max="38" step="0.05" value="{{ $load }}" aria-describedby="{{ $id }}-load-hint">
   <output for="{{ $id }}-load" data-overlap-output>{{ $load }}</output>
 </div>

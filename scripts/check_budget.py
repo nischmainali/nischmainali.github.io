@@ -32,7 +32,9 @@ PAGES = (
     PageBudget(
         "direction note",
         "blog/nonlinear-direction-learning/index.html",
-        180_000,
+        # The revised derivation adds prose and native MathML. Keep its
+        # compressed initial-page allowance unchanged.
+        195_000,
         400_000,
     ),
 )

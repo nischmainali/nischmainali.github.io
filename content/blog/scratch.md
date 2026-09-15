@@ -88,11 +88,11 @@ plt.show()
 | 5.4          | 3.9         | 1.7          | 0.4         | setosa  |
 
 
-## Marginal plate {#image}
+## Marginal figure {#image}
 
-The right field can carry a compact scientific plate without turning it into a second sidebar. Below the wide breakpoint, the same figure returns to the reading measure. Its image remains an ordinary full-resolution link without JavaScript and opens as a second Lokta sheet when the article reader is available.
+The right field can carry a compact scientific figure without turning it into a second sidebar. Below the wide breakpoint, the same figure returns to the reading measure. Its image remains an ordinary full-resolution link without JavaScript and opens as a second Lokta sheet when the article reader is available.
 
-{{< figure src="images/article-specimens/gp-threshold-crossings.svg" alt="Gaussian-process posterior sample paths crossing a threshold" title="Plate 1" caption="Posterior sample paths crossing a reference threshold." placement="margin" treatment="ink" width="960" height="560" >}}
+{{< figure src="images/article-specimens/gp-threshold-crossings.svg" alt="Gaussian-process posterior sample paths crossing a threshold" title="Figure 1" caption="Posterior sample paths crossing a reference threshold." placement="margin" treatment="ink" width="960" height="560" >}}
 
 
 ## Mathematics: $\GP$ fields {#mathematics}

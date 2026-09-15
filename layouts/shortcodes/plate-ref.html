@@ -12,5 +12,5 @@
   {{- end -}}
 {{- end -}}
 {{- $href := cond $resolved.external (printf "%s#plate-%s" $target.RelPermalink $id) (printf "#plate-%s" $id) -}}
-<a class="plate-ref{{ if $resolved.external }} reference--external{{ end }}" href="{{ $href }}" data-plate-ref="{{ $id }}"{{ if $resolved.external }} data-reference-scope="external"{{ end }} aria-label="Plate {{ $number }}{{ with $resolved.source }} in {{ . }}{{ end }}"><span class="plate-ref-kind">Plate</span> <span class="plate-ref-number">{{ $number }}</span>{{ with $resolved.source }}<span class="reference-source" aria-hidden="true"> in <cite>{{ . }}</cite></span>{{ end }}</a>
+<a class="plate-ref{{ if $resolved.external }} reference--external{{ end }}" href="{{ $href }}" data-plate-ref="{{ $id }}"{{ if $resolved.external }} data-reference-scope="external"{{ end }} aria-label="Figure {{ $number }}{{ with $resolved.source }} in {{ . }}{{ end }}"><span class="plate-ref-kind">Figure</span> <span class="plate-ref-number">{{ $number }}</span>{{ with $resolved.source }}<span class="reference-source" aria-hidden="true"> in <cite>{{ . }}</cite></span>{{ end }}</a>
 {{- /* Inline output must not end in whitespace before sentence punctuation. */ -}}

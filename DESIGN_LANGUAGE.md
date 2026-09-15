@@ -543,6 +543,12 @@ failure-safe and the colour baseline below.
 
 ## Page grammars
 
+### Figure labels (15 September 2026)
+
+Scientific illustrations are labelled “Figure” in headings, references, and
+accessible names. Existing `scientific-plate` helpers and `plate-` anchors stay
+in place so published links and controls continue to work.
+
 ### Home
 
 The home page is a compact field-desk frontispiece, not a hero landing page. Its
