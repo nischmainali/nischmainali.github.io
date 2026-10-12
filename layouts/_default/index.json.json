@@ -1,0 +1,9 @@
+{{- /* The search index: the site's own writing. The index's paper pages are
+      addresses for states of the index, not pages to search. */ -}}
+{{- $pages := where site.RegularPages "Section" "not in" (slice "papers") -}}
+[
+{{- range $i, $p := $pages -}}
+{{- if gt $i 0 -}},{{- end -}}
+{{- dict "uri" $p.RelPermalink "title" $p.Title "content" ($p.Plain | htmlUnescape | plainify) | jsonify -}}
+{{- end -}}
+]

@@ -1,0 +1,35 @@
+{{- /* sheet-list.html — a section printed whole on the sheet. */ -}}
+{{- $kind := .kind -}}
+<main class="sheet sheet--list" id="sheet">
+  {{- if eq $kind "papers" }}
+  <h1 class="list-title"><span class="list-title__mark" aria-hidden="true">❧</span>Papers</h1>
+  <ol class="list-register">
+    {{- range hugo.Data.selected_works.works }}
+    <li>
+      <a class="list-entry" href="{{ printf "/papers/%s/" .id | relURL }}">
+        <time class="list-entry__date" datetime="{{ .year }}">{{ .year }}</time>
+        <span class="list-entry__title">{{ .title }}</span>
+        <span class="list-entry__meta">{{ .collaborators }}{{ with .readout }}{{ with .venue }} · {{ . }}{{ end }}{{ end }}</span>
+        {{- with .readout }}
+        <span class="list-entry__summary">{{ .contribution }}</span>
+        {{- end }}
+      </a>
+    </li>
+    {{- end }}
+  </ol>
+  {{- else }}
+  <h1 class="list-title"><span class="list-title__mark" aria-hidden="true">❧</span>Field notes</h1>
+  <ol class="list-register">
+    {{- range (where (where site.RegularPages "Section" "blog") "Draft" false).ByDate.Reverse }}
+    <li class="h-entry">
+      <a class="list-entry u-url" href="{{ .RelPermalink }}">
+        <time class="list-entry__date dt-published" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 Jan 2006" }}</time>
+        <span class="list-entry__title p-name">{{ .Title | markdownify }}</span>
+        {{- with .Params.subtitle }}<span class="list-entry__meta">{{ . | markdownify }}</span>{{ end }}
+        {{- with .Description }}<span class="list-entry__summary p-summary">{{ . | plainify }}</span>{{ end }}
+      </a>
+    </li>
+    {{- end }}
+  </ol>
+  {{- end }}
+</main>

@@ -1,0 +1,160 @@
+/*
+ * Passages between pages.
+ *
+ * Every state of the index is a static page, and the browser's cross-document
+ * view transitions carry what persists. The rule is Trousdale's: one motion.
+ * Content changes at once and only the paper moves: the index card's edge
+ * glides to its new height and clips what it passes, and the page's trimmed
+ * frame glides to its next size with the light and ink controls on its
+ * corners. The page's printing lifts away and the next settles. Browsers
+ * without these transitions simply navigate; the room's handoff frame already
+ * keeps the light continuous.
+ */
+
+@view-transition {
+  navigation: auto;
+}
+
+:root {
+  --passage-duration: 800ms;
+  --passage-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  /* The card's paper is drawn on the transition's own box while it moves, so
+   * the value lives on the root, where those pseudo-elements inherit. Each ink
+   * tints it only faintly, so in every ink the card is plain paper, a step
+   * lighter than the room by day and a step deeper by night. */
+  --slip-paper: color-mix(in srgb, color-mix(in oklab, var(--palette-bg-main, #fbf7f0) 12%, #fdfbf7) 96%, transparent);
+  /* The crop marks' ink, for the frame drawn while it moves. */
+  --frame-ink: color-mix(in srgb, var(--day-ink, #202622) 52%, transparent);
+}
+
+:root[data-sunlit-mode="night"] {
+  --slip-paper: color-mix(in srgb, #27242b 93%, transparent);
+  --frame-ink: color-mix(in srgb, var(--night-ink, #efd5c5) 52%, transparent);
+}
+
+#theme-toggle {
+  view-transition-name: light-control;
+}
+
+.ink-register {
+  view-transition-name: ink-control;
+}
+
+/* A click during a glide reaches the new page, as on the reference, where a
+ * click mid-glide simply starts the next one. */
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-group(*) {
+  animation-duration: var(--passage-duration);
+  animation-timing-function: var(--passage-ease);
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 260ms;
+  animation-timing-function: ease;
+}
+
+/* The card: one on every page, always the same width. As on the reference,
+ * its content changes at once and only the paper moves. The old picture is
+ * gone immediately; the transition's own box carries the flat paper while its
+ * edge glides, and the new content rides inside at its natural size, clipped
+ * by the moving edge. */
+::view-transition-group(slip-main) {
+  z-index: 3;
+  overflow: clip;
+  background: var(--slip-paper);
+}
+
+::view-transition-image-pair(slip-main) {
+  isolation: auto;
+}
+
+::view-transition-old(slip-main) {
+  animation: none;
+  opacity: 0;
+}
+
+::view-transition-new(slip-main) {
+  inset: 0 auto auto 0;
+  width: auto;
+  height: auto;
+  animation: none;
+}
+
+html:active-view-transition .index-slip .slip-card {
+  background: transparent;
+}
+
+/* Every page names its frame, so the corners always have somewhere to go. */
+body > .crop-c {
+  view-transition-name: page-frame;
+}
+
+/* The page's frame: its pictures are hidden and the transition's own box
+ * draws the eight crop strokes, exactly as the theme does, so the corners move
+ * to the next page's size without stretching. */
+::view-transition-group(page-frame) {
+  z-index: 2;
+  background:
+    linear-gradient(var(--frame-ink), var(--frame-ink)) left 0 top 2rem / 1rem 1px no-repeat,
+    linear-gradient(var(--frame-ink), var(--frame-ink)) left 2rem top 0 / 1px 1rem no-repeat,
+    linear-gradient(var(--frame-ink), var(--frame-ink)) right 0 top 2rem / 1rem 1px no-repeat,
+    linear-gradient(var(--frame-ink), var(--frame-ink)) right 2rem top 0 / 1px 1rem no-repeat,
+    linear-gradient(var(--frame-ink), var(--frame-ink)) left 0 bottom 2rem / 1rem 1px no-repeat,
+    linear-gradient(var(--frame-ink), var(--frame-ink)) left 2rem bottom 0 / 1px 1rem no-repeat,
+    linear-gradient(var(--frame-ink), var(--frame-ink)) right 0 bottom 2rem / 1rem 1px no-repeat,
+    linear-gradient(var(--frame-ink), var(--frame-ink)) right 2rem bottom 0 / 1px 1rem no-repeat;
+}
+
+::view-transition-old(page-frame),
+::view-transition-new(page-frame) {
+  animation: none;
+  opacity: 0;
+}
+
+/* The sheet's printing travels with its frame, so the text stays inside the
+ * trim while the page moves to its next place; the old printing lifts away
+ * before the new one settles, so two pages of type never overlap. */
+body.index-page :is(.sheet, .article-shell) {
+  view-transition-name: sheet;
+}
+
+::view-transition-old(sheet),
+::view-transition-new(sheet) {
+  inset: 0 auto auto 0;
+  width: auto;
+  height: auto;
+}
+
+::view-transition-old(sheet) {
+  animation: sheet-lift 150ms ease-in both;
+}
+
+::view-transition-new(sheet) {
+  animation: sheet-settle 420ms 110ms var(--passage-ease) both;
+}
+
+@keyframes sheet-lift {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes sheet-settle {
+  from {
+    opacity: 0;
+    translate: 0 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+  }
+}

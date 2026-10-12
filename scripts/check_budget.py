@@ -22,7 +22,15 @@ class PageBudget:
 
 PAGES = (
     PageBudget("home", "index.html", 36_000, 100_000),
-    PageBudget("writing", "blog/index.html", 24_000, 90_000),
+    # The Writing address shows the index with its field notes open, so it
+    # carries the home page's allowance.
+    PageBudget("writing", "blog/index.html", 36_000, 100_000),
+    PageBudget(
+        "paper card",
+        "papers/place-fields/index.html",
+        36_000,
+        100_000,
+    ),
     PageBudget(
         "gp field note",
         "blog/gp-code-notes/index.html",

@@ -12,8 +12,8 @@
 {{- end }}
 {{- end -}}
 
-{{- if .IsHome -}}
-<script src="{{ partialCached "js-asset-url.html" "js/home-readout.js" "js/home-readout.js" }}" defer></script>
+{{- if in (string .Params.page_class) "index-page" -}}
+<script src="{{ partialCached "js-asset-url.html" "js/index-room.js" "js/index-room.js" }}" defer></script>
 {{- end -}}
 
 {{- if .Page.Store.Get "hasInteractiveScientificPlate" -}}

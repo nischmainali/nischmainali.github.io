@@ -1,0 +1,6 @@
+{{ partial "header.html" . }}
+{{- $work := index (where hugo.Data.selected_works.works "id" .Params.work_id) 0 -}}
+{{- if not $work -}}{{- errorf "No selected work %q for %s" .Params.work_id .RelPermalink -}}{{- end -}}
+{{ partial "index-slip.html" (dict "page" . "state" "paper" "work" $work) }}
+{{ partial "sheet-paper.html" (dict "work" $work) }}
+{{ partial "footer.html" . }}

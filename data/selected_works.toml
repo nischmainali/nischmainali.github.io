@@ -1,9 +1,11 @@
 # Homepage publication records. The ledger and its optional paper notes are
 # rendered from this one source so the visible title, authors, and links stay in
-# agreement.
+# agreement. A short title names the work in the index card; the full title
+# stays on the paper's own page.
 
 [[works]]
 id = "icl-linear-transformers"
+short_title = "In-context learning dynamics"
 year = 2025
 title = "Exact Learning Dynamics of In-Context Learning in Linear Transformers and Its Application"
 collaborators = "with L. Teixeira"
@@ -29,6 +31,7 @@ url = "https://arxiv.org/html/2504.12916"
 
 [[works]]
 id = "place-fields"
+short_title = "Universal place-field statistics"
 year = 2025
 title = "Universal statistics of hippocampal place fields across species and dimensionalities"
 collaborators = "with R. da Silveira and Y. Burak"
@@ -54,6 +57,7 @@ url = "/blog/gp-code-notes/"
 
 [[works]]
 id = "statistical-mechanics"
+short_title = "Statistical mechanics of deep learning"
 year = 2024
 title = "Statistical mechanics of deep learning"
 collaborators = "with F. Behrens and others"
@@ -61,6 +65,7 @@ url = "https://iopscience.iop.org/article/10.1088/1742-5468/ad3a60/meta"
 
 [[works]]
 id = "moral-reasoning"
+short_title = "Moral reasoning in judicial decisions"
 year = 2018
 title = "Automated Classification of Modes of Moral Reasoning in Judicial Decisions"
 collaborators = "with collaborators"

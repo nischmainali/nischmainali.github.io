@@ -1,0 +1,58 @@
+{{- /*
+  sheet-paper.html — one paper on the cropped page, like the first page of a
+  reprint: its record, the contribution in one sentence, and its plate. The
+  margin carries what points elsewhere: the paper's own links, the field
+  notes that read alongside it, and the plate's caption.
+*/ -}}
+{{- $work := .work -}}
+{{- $readout := $work.readout -}}
+{{- $notes := (where (where site.RegularPages "Section" "blog") "Draft" false).ByDate.Reverse -}}
+{{- $urls := slice $work.url -}}
+{{- with $readout }}{{ range .links }}{{ $urls = $urls | append .url }}{{ end }}{{ end -}}
+{{- $related := slice -}}
+{{- range $notes -}}
+  {{- $note := . -}}
+  {{- $linked := false -}}
+  {{- range $urls }}{{ if eq (strings.TrimSuffix "/" .) (strings.TrimSuffix "/" $note.RelPermalink) }}{{ $linked = true }}{{ end }}{{ end -}}
+  {{- range $key, $entry := hugo.Data.citations -}}
+    {{- if and (in $urls $entry.url) (in $note.RawContent (printf "\"%s\"" $key)) }}{{ $linked = true }}{{ end -}}
+  {{- end -}}
+  {{- if $linked }}{{ $related = $related | append $note }}{{ end -}}
+{{- end -}}
+<main class="sheet sheet--paper h-cite" id="sheet">
+  <header class="reprint-head">
+    <p class="reprint-kicker">Paper · <time class="dt-published" datetime="{{ $work.year }}">{{ $work.year }}</time>{{ with $readout }}{{ with .venue }} · <span class="p-publication">{{ . }}</span>{{ end }}{{ end }}</p>
+    <h1 class="reprint-title p-name">{{ $work.title }}</h1>
+    <p class="reprint-byline"><span class="p-author">{{ site.Home.Params.name }}</span>, {{ $work.collaborators }}</p>
+    {{- with $readout }}
+    <p class="reprint-abstract p-summary">{{ .contribution }}</p>
+    {{- end }}
+  </header>
+
+  <aside class="reprint-aside sheet-margin" aria-label="Links for this paper">
+    <p class="margin-label">Read</p>
+    <ul class="margin-links">
+      {{- if $readout }}
+        {{- range $readout.links }}{{ if not (hasPrefix .url "/") }}<li><a class="u-url" href="{{ .url | safeURL }}">{{ .label }}</a></li>{{ end }}{{ end }}
+      {{- else }}
+      <li><a class="u-url" href="{{ $work.url | safeURL }}">Paper</a></li>
+      {{- end }}
+    </ul>
+    {{- with $related }}
+    <p class="margin-label">Alongside</p>
+    <ul class="margin-links margin-links--notes">
+      {{- range . }}<li><a href="{{ .RelPermalink }}">{{ .Params.short_title | default .Title | markdownify }}</a></li>{{ end }}
+    </ul>
+    {{- end }}
+  </aside>
+
+  {{- with $readout }}
+  <figure class="reprint-plate">
+    {{ partial "paper-readout-plate.html" (dict "Kind" .plate "ID" (printf "sheet-%s" $work.id)) }}
+  </figure>
+  <aside class="reprint-plate-note sheet-margin" aria-label="About the plate">
+    <p class="margin-label">Plate</p>
+    <p class="reprint-plate-note__text">{{ .plate_caption }}</p>
+  </aside>
+  {{- end }}
+</main>

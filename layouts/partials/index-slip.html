@@ -1,0 +1,166 @@
+{{- /*
+  index-slip.html — the index card, on every page.
+
+  A card of plain paper beside the page, set like the reference's index in the
+  site's own printer's marks. Its left gutter carries the marks: the leaf at
+  its head, the pilcrow for papers and the section sign for field notes, and a
+  pointing hand at the item on the page. Each section opens to its years, and
+  each year to its items: a short title over an italic line of record. An
+  opened note lists its sections beneath its row. Every state is its own
+  static page, and the browser's cross-document view transitions carry the
+  card between them.
+
+  The card lists and the page prints: the card never opens the section the
+  page beside it is printing whole.
+
+  Takes a dict:
+    page      the current page
+    state     "index" | "paper" | "article"
+    work      the selected_works record (paper)
+    printing  "papers" | "notes" when the page prints that section whole
+*/ -}}
+{{- $page := .page -}}
+{{- $state := .state -}}
+{{- $works := hugo.Data.selected_works.works -}}
+{{- $notes := (where (where site.RegularPages "Section" "blog") "Draft" false).ByDate.Reverse -}}
+{{- $open := slice "papers" -}}
+{{- if eq $state "article" }}{{ $open = slice "notes" }}{{ end -}}
+{{- if .printing }}{{ $open = slice }}{{ end -}}
+{{- $activeWork := "" -}}
+{{- with .work }}{{ $activeWork = .id }}{{ end -}}
+{{- $workYears := slice -}}
+{{- range $works }}{{ if not (in $workYears .year) }}{{ $workYears = $workYears | append .year }}{{ end }}{{ end -}}
+{{- $noteYears := slice -}}
+{{- range $notes }}{{ if not (in $noteYears .Date.Year) }}{{ $noteYears = $noteYears | append .Date.Year }}{{ end }}{{ end -}}
+
+{{- if $page.IsHome }}
+<script>
+  /* A first visit from outside opens the card after a beat, as the reference
+   * does; returns and passages within the site never replay it. */
+  (function () {
+    try {
+      var fromSite = document.referrer && new URL(document.referrer).origin === location.origin;
+      if (!sessionStorage.getItem("index-opened") && !fromSite &&
+          !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.documentElement.classList.add("index-first-open");
+      }
+      sessionStorage.setItem("index-opened", "1");
+    } catch (error) {}
+  }());
+</script>
+{{- end }}
+<nav class="index-slip" aria-label="Index" data-index-state="{{ $state }}"{{ if $page.IsHome }} data-index-remember{{ end }}>
+  <div class="slip-card">
+    <header class="slip-head">
+      <span class="slip-mark slip-mark--leaf" aria-hidden="true">❧</span>
+      {{- if $page.IsHome }}
+      <span class="slip-label slip-label--head">Index</span>
+      {{- else }}
+      <a class="slip-label slip-label--head" href="{{ "/" | relURL }}">{{ site.Home.Params.name }}</a>
+      {{- end }}
+      <button class="slip-fold" type="button" aria-expanded="true" aria-controls="slip-body" data-slip-fold>
+        <span class="visually-hidden">Fold the index</span>
+      </button>
+    </header>
+
+    <div class="slip-card__body" id="slip-body">
+      <div class="slip-card__inner">
+        <details class="slip-section" name="index-sections" data-slip-section="papers"{{ if in $open "papers" }} open{{ end }}>
+          <summary class="slip-section__head"><span class="slip-mark" aria-hidden="true">¶</span><span class="slip-label">Papers</span><span class="slip-toggle" aria-hidden="true"></span></summary>
+          <ol class="slip-years">
+            {{- range $year := $workYears }}
+            <li class="slip-year">
+              <span class="slip-year__label">{{ $year }}</span>
+              <ol class="slip-list">
+                {{- range where $works "year" $year }}
+                {{- $here := eq .id $activeWork }}
+                <li>
+                  <a class="slip-item" href="{{ printf "/papers/%s/" .id | relURL }}"{{ if $here }} aria-current="page"{{ end }}>
+                    {{- if $here }}<span class="slip-mark slip-mark--here" aria-hidden="true">☞</span>{{ end }}
+                    <span class="slip-item__title">{{ .short_title | default .title }}</span>
+                    <span class="slip-item__meta">{{ .collaborators }}</span>
+                  </a>
+                </li>
+                {{- end }}
+              </ol>
+            </li>
+            {{- end }}
+          </ol>
+        </details>
+
+        <details class="slip-section" name="index-sections" data-slip-section="notes"{{ if in $open "notes" }} open{{ end }}>
+          <summary class="slip-section__head"><span class="slip-mark" aria-hidden="true">§</span><span class="slip-label">Field notes</span><span class="slip-toggle" aria-hidden="true"></span></summary>
+          <ol class="slip-years">
+            {{- range $year := $noteYears }}
+            <li class="slip-year">
+              <span class="slip-year__label">{{ $year }}</span>
+              <ol class="slip-list">
+                {{- range $notes }}{{ if eq .Date.Year $year }}
+                {{- $here := and (eq $state "article") (eq .RelPermalink $page.RelPermalink) }}
+                <li>
+                  <a class="slip-item" href="{{ if $here }}#article-title{{ else }}{{ .RelPermalink }}{{ end }}"{{ if $here }} aria-current="page"{{ end }}>
+                    {{- if $here }}<span class="slip-mark slip-mark--here" aria-hidden="true">☞</span>{{ end }}
+                    <span class="slip-item__title">{{ .Params.short_title | default .Title | markdownify }}</span>
+                    <span class="slip-item__meta"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 January" }}</time></span>
+                  </a>
+                  {{- if $here }}
+                  {{- $headings := $page.Fragments.Headings }}
+                  {{- if and (eq (len $headings) 1) (not (index $headings 0).Title) }}{{ $headings = (index $headings 0).Headings }}{{ end }}
+                  {{- with $headings }}
+                  <ol class="slip-sections" aria-label="Sections of this note">
+                    {{- range . }}{{ if .Title }}
+                    <li>
+                      <a href="#{{ .ID }}" data-slip-section-link>{{ $page.RenderString (dict "display" "inline") .Title }}</a>
+                      {{- with .Headings }}
+                      <ol>
+                        {{- range . }}{{ if .Title }}<li><a href="#{{ .ID }}" data-slip-section-link>{{ $page.RenderString (dict "display" "inline") .Title }}</a></li>{{ end }}{{ end }}
+                      </ol>
+                      {{- end }}
+                    </li>
+                    {{- end }}{{ end }}
+                  </ol>
+                  {{- end }}
+                  {{- end }}
+                </li>
+                {{- end }}{{ end }}
+              </ol>
+            </li>
+            {{- end }}
+          </ol>
+        </details>
+
+        <p class="slip-foot">
+          <a class="slip-label" href="{{ "/pdfs/cv.pdf" | relURL }}">CV</a>
+          <a class="slip-label" href="{{ "/colophon/" | relURL }}">Colophon</a>
+          <a class="slip-label" href="{{ "/search/" | relURL }}">Search</a>
+        </p>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var slip = document.currentScript.parentNode;
+      try {
+        {{- if $page.IsHome }}
+        /* On the home page, sections keep the state the reader left them in. */
+        var saved = JSON.parse(sessionStorage.getItem("index-sections") || "null");
+        if (saved) slip.querySelectorAll("[data-slip-section]").forEach(function (section) {
+          var key = section.getAttribute("data-slip-section");
+          if (key in saved) section.open = !!saved[key];
+        });
+        {{- end }}
+        {{- if not $page.IsHome }}
+        /* On a phone the card waits folded above the page, so the page comes
+         * first. On the home page it follows the title and stays open, since
+         * it is the list of work. */
+        if (matchMedia("(max-width: 959px)").matches) {
+          var fold = slip.querySelector("[data-slip-fold]");
+          slip.querySelector(".slip-card").classList.add("is-folded");
+          fold.setAttribute("aria-expanded", "false");
+          fold.querySelector(".visually-hidden").textContent = "Unfold the index";
+        }
+        {{- end }}
+      } catch (error) {}
+    }());
+  </script>
+</nav>

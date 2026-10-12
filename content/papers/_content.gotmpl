@@ -1,0 +1,16 @@
+{{- /* One page per selected work, so every state of the index has its own
+      address. The record itself stays in data/selected_works.toml. */ -}}
+{{- $.AddPage (dict
+    "kind" "section"
+    "path" "."
+    "title" "Papers"
+    "params" (dict "page_class" "index-page")) -}}
+{{- range hugo.Data.selected_works.works -}}
+  {{- $.AddPage (dict
+      "kind" "page"
+      "path" .id
+      "title" .title
+      "date" (printf "%d-01-01" (int .year))
+      "content" (dict "mediaType" "text/markdown" "value" "")
+      "params" (dict "work_id" .id "page_class" "index-page index-paper")) -}}
+{{- end -}}

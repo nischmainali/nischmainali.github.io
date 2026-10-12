@@ -1,0 +1,6 @@
+{{ partial "header.html" . }}
+{{- /* The title page comes first; the card, the list of work, follows it. On
+      a wide screen the card is fixed in the left wing either way. */}}
+{{ partial "sheet-frontispiece.html" . }}
+{{ partial "index-slip.html" (dict "page" . "state" "index") }}
+{{ partial "footer.html" . }}

@@ -26,6 +26,11 @@
   {{- $showToc = .Params.show_toc -}}
 {{- end -}}
 
+{{- /* The index slip carries the note's contents beneath its row; the sheet
+      carries the note itself. */ -}}
+{{- if $showToc }}{{ .Scratch.Set "has_toc" true }}{{ end -}}
+{{ partial "index-slip.html" (dict "page" . "state" "article") }}
+
 <main class="article-shell" aria-labelledby="article-title">
 <article class="h-entry article-depth-{{ $articleDepth }}">
   <header class="article-meta article-header">
@@ -37,34 +42,6 @@
   </header>
 
   <div class="main article-body e-content" id="article-content">
-    {{ if $showToc }}
-      {{ .Scratch.Set "has_toc" true }}
-      <aside class="article-contents-rail" aria-label="Article contents">
-        <details class="article-contents" data-article-contents>
-          <summary>
-            <span class="article-contents-label">Contents</span>
-            <span class="article-contents-count">{{ $tocItems }} {{ cond (eq $tocItems 1) "section" "sections" }}</span>
-            <span class="article-contents-disclosure" aria-hidden="true"></span>
-          </summary>
-          <a class="article-contents-return" href="#article-title" aria-label="Return to article opening"><span aria-hidden="true">top</span></a>
-          {{- /* Trace: the ambient member of the instrument register. It reports
-                 where the reader is and never opens anything, so it carries no
-                 mark and no corners. See assets/css/instrument.css. */ -}}
-          <div class="article-contents-progress instrument-trace" aria-hidden="true">
-            <span class="instrument-trace__scale"></span>
-            <span class="instrument-trace__value" data-article-reading-value></span>
-            <span class="instrument-trace__index" data-article-reading-progress></span>
-          </div>
-          <div class="article-contents-trace" aria-hidden="true">
-            <span class="article-contents-trace-current" data-article-current-section>Opening</span>
-          </div>
-          <div class="article-contents-list" data-article-contents-list>
-            {{ $toc }}
-          </div>
-        </details>
-      </aside>
-    {{ end }}
-
     <span class="article-prose-start" id="article-prose-start" tabindex="-1"></span>
 
     {{- $articleContent = replace $articleContent `<section class="footnotes" role="doc-endnotes">` `<section class="footnotes" role="doc-endnotes" aria-label="Notes">` -}}

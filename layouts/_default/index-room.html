@@ -1,0 +1,4 @@
+{{ partial "header.html" . }}
+{{ partial "index-slip.html" (dict "page" . "state" "index" "printing" "notes") }}
+{{ partial "sheet-list.html" (dict "kind" "notes") }}
+{{ partial "footer.html" . }}
