@@ -48,8 +48,8 @@
           <span class="ink-register__description">{{ $ink.description }}</span>
         </span>
         <span class="ink-register__swatches" aria-hidden="true">
-          {{- range $ink.swatches }}
-          <span class="ink-register__swatch" style="--ink-register-swatch: {{ . }}"></span>
+          {{- range $swatch, $day := $ink.swatches }}
+          <span class="ink-register__swatch" style="--swatch:{{ $day }};--swatch-night:{{ index $ink.night_swatches $swatch }}"></span>
           {{- end }}
         </span>
       </button>

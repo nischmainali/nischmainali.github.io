@@ -62,3 +62,22 @@ uses a static silhouette posed in the day's breeze, and the sway is drawn in
 the shader, matched to the lab by the change over one and two seconds. Outside
 the leaves, the site renderer reproduces the lab pixel for pixel. The 99th
 percentile of difference is at most 4 levels.
+
+## Ink follow-up (accepted, 12 October 2026)
+
+With the room settled, the ink system was measured against it:
+
+- At night every ink became ef-dream, so the ink picker offered six choices
+  that looked the same.
+- The day inks were still darkened for Shade's deep floor and Sunset (L\* 79
+  and 63), but the new day room is lighter (L\* 85.4 behind text).
+- The green and peach paper tints dimmed the whole room by 5–8% and greyed the
+  sun pool.
+- Inside the moonlit window, night's muted ink and accent fell to about 4:1.
+
+Nisch accepted the proposal the same day. It gives each ink a night proof: its
+hues on one ladder of lightness and chroma measured from ef-dream. Lokta
+Hybrid's night stays ef-dream. Day roles return to their source colours
+wherever the new light allows. The tint changes hue only, keeping the room's
+brightness, and the sun pool takes half of it. The rules are in
+`docs/INK_SYSTEM.md`; the review page is the lab's `inks.html`.

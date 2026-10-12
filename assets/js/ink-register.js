@@ -95,13 +95,6 @@
     return "House impression · sunlight held constant";
   }
 
-  function updateMark(ink) {
-    var swatches = ink.swatches || [];
-    register.style.setProperty("--ink-mark-a", swatches[2] || "currentColor");
-    register.style.setProperty("--ink-mark-b", swatches[3] || "currentColor");
-    register.style.setProperty("--ink-mark-c", swatches[4] || "currentColor");
-  }
-
   function updateToggleLabel() {
     var ink = inkById.get(currentInk);
     var action = panel.hidden ? "Choose ink" : "Close ink selector";
@@ -111,7 +104,6 @@
   function updateRegister(announce) {
     var ink = inkById.get(currentInk);
     note.textContent = originText(currentOrigin);
-    updateMark(ink);
     choices.forEach(function (choice) {
       var selected = choice.dataset.inkValue === currentInk;
       choice.setAttribute("aria-checked", String(selected));

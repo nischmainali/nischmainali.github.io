@@ -86,7 +86,7 @@
         <dt>
           <span class="colophon-ink-name">{{ .name }}</span>
           <span class="colophon-swatches" aria-hidden="true">
-            {{- range .swatches }}<span class="colophon-swatch" style="background: {{ . }}"></span>{{ end -}}
+            {{- $night := .night_swatches }}{{ range $swatch, $day := .swatches }}<span class="colophon-swatch" style="--swatch:{{ $day }};--swatch-night:{{ index $night $swatch }}"></span>{{ end -}}
           </span>
         </dt>
         <dd>{{ .description }}{{ if eq .id $default }} · the canonical impression, and the one you get without JavaScript, in print, or when storage fails{{ else if in $pool .id }} · in the first-visit pool{{ end }}</dd>

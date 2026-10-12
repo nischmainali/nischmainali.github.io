@@ -563,7 +563,7 @@
     '  }',
     '  float deep = 1.0 - smoothstep(0.0, 0.35, halo);',
     '  shadeC = mix(shadeC, shadeC * vec3(0.985, 0.995, 1.02), u_cool * deep);',
-    '  vec3 E = mix(shadeC, toLin(u_sun), lit) * u_tint;',
+    '  vec3 E = mix(shadeC * u_tint, toLin(u_sun) * mix(u_tint, vec3(1.0), 0.5), lit);',
     '  vec3 col = toSrgb(E * u_exposure);',
     '  float amt = u_grain.x * mix(1.0, 1.6 - 1.2 * clamp(lit, 0.0, 1.0), u_grain.z);',
     '  col += amt * (texture(u_grainTex, p / (u_grain.y * ' + GRAIN_SIZE + '.0)).r - 0.5) / ' + GRAIN_SPREAD + ';',
@@ -868,14 +868,18 @@
     }
   };
 
-  /* Each ink casts a restrained tint in the day's paper; night is one room. */
+  /* Each ink casts a restrained tint in the day's paper; night is one room.
+   * The tint changes the paper's hue, never the light: it keeps the room's
+   * luminance, and the sun pool keeps half its own colour. */
   Renderer.prototype.setInkPaper = function(color, strength) {
     var reference = hexToLinear('#fcfbf8');
     var paper = Array.isArray(color) && color.length >= 3 ? color : [0.989, 0.986, 0.975];
-    this.inkPaperRatio = paper.slice(0, 3).map(function(c, index) {
+    var ratio = paper.slice(0, 3).map(function(c, index) {
       var linear = c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
       return clamp(linear / reference[index], 0.85, 1.05);
     });
+    var luminance = 0.2126 * ratio[0] + 0.7152 * ratio[1] + 0.0722 * ratio[2];
+    this.inkPaperRatio = ratio.map(function(c) { return c / luminance; });
     this.inkPaperStrength = clamp(Number(strength) || 0);
     if (this.resources && !this.disposed) this.renderFrame();
   };

@@ -4,8 +4,8 @@
 - Accepted production direction: **Lokta Sunlight reader + Lokta Field Note**,
   with a build-time mathematical apparatus and the instrument register
 - Accepted on `experiment/day-night` (12 October 2026): the day and night
-  room replaces Shade and Sunset; `main` before it is archived as
-  `archive/pre-day-night-2026-10-12`
+  room replaces Shade and Sunset, and every ink gains its own night proof;
+  `main` before it is archived as `archive/pre-day-night-2026-10-12`
 - Production branch: `main`
 - Accepted lineage: `experiment/toc-outside-sheet` promoted with the homepage
   paper readout and the Writing page (`45c3ed6`, 4 August 2026), then
@@ -135,8 +135,9 @@ and the peepal in the lower pane. Its light spills faintly into the room, and
 its outer edges soften with distance while the cross stays crisp. About once
 every eighty seconds a thin cloud crosses the moon: the patch dims and its
 shadows soften for twenty seconds or so. Night's warmth lives in the ink:
-peach-cream text, gold headings and links, a rose accent. It never lives in a
-brown or amber ground. Moonlight is a pale, near-neutral silver, never blue.
+warm light text and each ink's own soft hues (for Lokta Hybrid, ef-dream's
+peach-cream text, gold headings and links, and rose accent). It never lives in
+a brown or amber ground. Moonlight is a pale, near-neutral silver, never blue.
 
 **Motion** is a breeze below the leaves' flutter threshold. Branches sway
 slowly on their springs and single leaves swing gently, matched to the lab's
@@ -170,9 +171,21 @@ still in progress from the previous page paints whichever side of the ink's
 turnover it has reached, and continues on the new page. Print and no-script
 pages are day.
 
-**Inks.** Each day ink keeps its own proof roles and casts a restrained tint
-in the day's light. Night is one room for every ink, ef-dream's. Per-ink night
-versions are a possible later refinement, not a gap to patch piecemeal.
+**Inks.** The room is shared; the ink is the voice. Every ink carries two
+proofs fitted to the light measured behind text, body at 7:1 and every other
+role at 4.5:1 (`docs/INK_SYSTEM.md` has the method):
+
+- By day, each role is its source theme's colour, lowered in lightness only
+  where the darkest light behind text needs it.
+- By night, each ink keeps its own hues on one ladder of lightness and chroma
+  measured from ef-dream, raised where the moonlit window needs it. Lokta
+  Hybrid's night is ef-dream. Body text stays in a warm band for every ink.
+- Each ink casts a restrained tint into the day's paper. The tint changes the
+  paper's hue, never the light: the room keeps its brightness, and the sun pool
+  takes only half the tint, so the sun stays warm. Night has no tint.
+- During a change, the text blends from the ink's own day colours to its own
+  night colours. The proof slip, its mark, and the colophon show night
+  swatches at night.
 
 Rules that came out of the study:
 
@@ -247,8 +260,8 @@ The two crop instruments have separate responsibilities. The left control
 moves the room between day and night; the right control changes editorial ink
 and a restrained tint in the day's light. Selection never restarts the WebGL
 worker or changes the light's clock. The source paper swatch stays exact in the
-proof slip. At night every ink shares ef-dream's room, and the slip follows the
-night palette. Both instruments are part of the paper
+proof slip. At night every ink shares the moonlit room and keeps its own night
+proof, and the slip shows night swatches. Both instruments are part of the paper
 frame on every route and leave with its top crop marks, so neither can linger
 over home content, the contents rail, or marginalia.
 
@@ -262,7 +275,7 @@ linked page until the visitor chooses an ink.
 
 Treat the random choice as local printing variation, not visitor tracking. It
 uses no cookie, account, request, or server record. Each ink's day
-contrast corrections remain part of it, and the control must keep
+and night proofs remain part of it, and the control must keep
 its keyboard, touch, forced-color, reduced-motion, and cross-tab behavior. Nisch
 accepted this register on 21 July 2026, and Lokta Hybrid remains the canonical
 failure-safe and the colour baseline below.
@@ -1092,6 +1105,14 @@ followed live when no choice was stored. The control was the first Tab stop, wit
 a visible ring, and Enter changed the light. Printing at night produced day ink
 on white. The main-thread fallback rendered and changed the light. Changing ink
 retinted the day without restarting the worker.
+
+The same day the ink proofs were checked on all six inks by day and by night,
+on Home, the nonlinear field note, the scratch specimen's code, and the open
+proof slip. Measured behind text, the day's darkest 1% is L\* 85.4 for every
+ink and the night's brightest moonlit light is L\* 25.7. Every day and night
+role meets its target there. During a change, the text blended from each ink's
+day colours to its own night colours, and the colophon and slip showed night
+swatches at night. There was no console error, and `./scripts/qa.sh` passed.
 
 ## Known rough edges: observe before fixing
 

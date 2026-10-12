@@ -6,33 +6,39 @@ id = "lokta-hybrid"
 name = "Lokta Hybrid"
 description = "Field-note ink · forest and wine"
 swatches = ["#fbf7f0", "#202622", "#005077", "#184034", "#6f3b3f", "#6e678f"]
+night_swatches = ["#1a181c", "#efd5c5", "#deb07a", "#deb07a", "#f4878e", "#aea59f"]
 
 [[inks]]
 id = "ef-arbutus"
 name = "Ef Arbutus"
 description = "Peach paper · green and madder"
 swatches = ["#ffead8", "#393330", "#00704f", "#007000", "#aa184f", "#6e678f"]
+night_swatches = ["#1a181c", "#f2d5cc", "#92c9ad", "#f29fb1", "#f38a7c", "#a7a5b4"]
 
 [[inks]]
 id = "ef-cyprus"
 name = "Ef Cyprus"
 description = "Ochre paper · olive and wine"
 swatches = ["#fcf7ef", "#242521", "#a7601f", "#557400", "#ca3400", "#59786f"]
+night_swatches = ["#1a181c", "#e7dbc5", "#e6ac87", "#abc58b", "#f38a7b", "#98aba5"]
 
 [[inks]]
 id = "ef-elea-light"
 name = "Ef Elea Light"
 description = "Lichen paper · plum and olive"
 swatches = ["#edf5e2", "#221321", "#00601f", "#355500", "#9f356a", "#676470"]
+night_swatches = ["#1a181c", "#e1e1d2", "#92cb97", "#a9c68d", "#e28db1", "#a8a5b2"]
 
 [[inks]]
 id = "ef-arcadia"
 name = "Ef Arcadia"
 description = "Verdant paper · plum and indigo"
 swatches = ["#d6e4d3", "#40314e", "#503094", "#113384", "#922e7f", "#646170"]
+night_swatches = ["#1a181c", "#e6d7e4", "#bcaff5", "#99bafb", "#dc8dca", "#a8a5b4"]
 
 [[inks]]
 id = "modus-operandi-tinted"
 name = "Modus Operandi Tinted"
 description = "Warm paper · rigorous blue ink"
 swatches = ["#fbf7f0", "#000000", "#3546c2", "#574316", "#a0132f", "#595959"]
+night_swatches = ["#1a181c", "#e9e6e0", "#a3b7fb", "#92c9ac", "#7aacd5", "#a8a7a7"]
