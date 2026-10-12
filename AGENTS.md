@@ -54,7 +54,7 @@ Start the site with `./scripts/dev.sh`. Use `HUGO_PORT=1320 ./scripts/dev.sh`
 when port 1315 is busy.
 
 Inspect every affected page in the in app browser. Check a normal desktop
-viewport and a viewport near 390 pixels wide. Check shade and sunset, at least
+viewport and a viewport near 390 pixels wide. Check day and night, at least
 one alternate ink scheme, keyboard focus, horizontal overflow, and browser
 console errors.
 

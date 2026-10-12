@@ -1,7 +1,7 @@
 # Editorial ink system
 
 Status: accepted and on `main` · Prepared: 21 July 2026 · Promoted: 4 August 2026
-· Day and night proofs: accepted 12 October 2026 on `experiment/day-night`
+· Day and night proofs: accepted and promoted 12 October 2026
 
 ## Purpose
 

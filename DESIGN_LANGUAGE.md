@@ -2,18 +2,19 @@
 
 - Last baseline study: 2026-08-05
 - Accepted production direction: **Lokta Sunlight reader + Lokta Field Note**,
-  with a build-time mathematical apparatus and the instrument register
-- Accepted on `experiment/day-night` (12 October 2026): the day and night
-  room replaces Shade and Sunset, and every ink gains its own night proof;
-  `main` before it is archived as `archive/pre-day-night-2026-10-12`
+  with a build-time mathematical apparatus, the instrument register, and the
+  day and night room
 - Production branch: `main`
 - Accepted lineage: `experiment/toc-outside-sheet` promoted with the homepage
   paper readout and the Writing page (`45c3ed6`, 4 August 2026), then
   `experiment/scholarly-apparatus` promoted with section-scoped build-time
   numbering, cross-note references, article end matter, `/colophon/`, an authored
   404, the instrument register, and the removal of the vendored theme's published
-  fixtures (5 August 2026)
+  fixtures (5 August 2026), then `experiment/day-night` promoted with the day
+  and night room in place of Shade and Sunset and each ink's own night proof
+  (`3791247`, 12 October 2026)
 - Pre-promotion main archives, never to be deleted:
+  `archive/pre-day-night-2026-10-12` (`31f2934`),
   `archive/pre-apparatus-main-2026-08-05`,
   `archive/pre-writing-main-2026-08-04`,
   `archive/pre-field-note-main-2026-07-20` (`d37a896`)

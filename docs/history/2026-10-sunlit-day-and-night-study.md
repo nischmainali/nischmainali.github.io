@@ -1,11 +1,11 @@
 # Sunlit day and night: the October 2026 study
 
-Nisch accepted the result on 12 October 2026; it is integrated on
-`experiment/day-night`. The current rules are in `DESIGN_LANGUAGE.md`,
-section 4. This note records how the study got there and what was rejected, so
-a later pass does not repeat it. The working lab lives outside the repository at
-`/Users/nisch/code/site/sunlit-lab/`; its `final.html` and `daynight.html` hold the
-accepted references and measurements.
+Nisch accepted the result on 12 October 2026; it was integrated on
+`experiment/day-night` and promoted to `main` the same day. The current rules
+are in `DESIGN_LANGUAGE.md`, section 4. This note records how the study got
+there and what was rejected, so a later pass does not repeat it. The working lab
+lives outside the repository at `/Users/nisch/code/site/sunlit-lab/`; its
+`final.html` and `daynight.html` hold the accepted references and measurements.
 
 ## What started it
 
