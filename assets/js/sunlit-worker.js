@@ -140,9 +140,7 @@
         case 'theme':
           renderer.setTheme(message.theme, {
             nowMs: message.nowMs,
-            startTimeMs: message.startTimeMs,
-            immediate: message.immediate,
-            fromValues: message.fromValues
+            change: message.change
           });
           break;
         case 'route':

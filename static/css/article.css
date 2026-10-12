@@ -38,25 +38,6 @@
   --article-focus-backdrop: rgba(24, 31, 27, 0.56);
 }
 
-.single.blog.sunset {
-  --article-ink: #20231f;
-  --article-green: #213d2f;
-  --article-blue: #253f48;
-  --article-wine: #704044;
-  --article-muted: rgba(32, 35, 31, 0.64);
-  --article-faint: rgba(32, 35, 31, 0.44);
-  --article-quiet-ink: rgba(32, 35, 31, 0.74);
-  --article-rule: rgba(92, 72, 72, 0.3);
-  --article-rule-strong: rgba(92, 72, 72, 0.44);
-  --article-block: rgba(217, 190, 151, 0.25);
-  --article-block-strong: rgba(202, 174, 139, 0.34);
-  --article-code-ink: #292d26;
-  --article-dropcap-ink: #263d30;
-  --article-dropcap-ornament: rgba(112, 64, 68, 0.22);
-  --article-focus-paper: rgba(231, 211, 178, 0.955);
-  --article-focus-backdrop: rgba(28, 31, 24, 0.58);
-}
-
 /* The environmental sheet and the reading matter must be sibling paint
  * planes. With the scene at a negative z-index behind a transparent root,
  * Chromium can fold both into one large raster surface and checkerboard the
@@ -720,7 +701,7 @@
 /* Reading vocabulary */
 
 .single.blog .article-body ::selection {
-  background: rgba(143, 58, 65, 0.18);
+  background: color-mix(in srgb, var(--article-wine) 18%, transparent);
 }
 
 .single.blog .article-body a:focus-visible,
@@ -818,13 +799,9 @@
   padding: 0.18rem 0 0.18rem 1.25rem;
   border-left: 2px solid var(--article-rule-strong);
   background: transparent;
-  color: rgba(32, 38, 34, 0.82);
+  color: color-mix(in srgb, var(--article-ink) 82%, transparent);
   font-size: 1.045rem;
   font-style: italic;
-}
-
-.single.blog.sunset .article-body blockquote {
-  color: rgba(32, 35, 31, 0.84);
 }
 
 .single.blog .article-body blockquote p {
@@ -857,14 +834,10 @@
   padding: 0;
   border: 0;
   background: transparent;
-  color: rgba(32, 38, 34, 0.84);
+  color: color-mix(in srgb, var(--article-ink) 84%, transparent);
   font-size: 1.07rem;
   font-style: italic;
   line-height: 1.52;
-}
-
-.single.blog.sunset .article-epigraph blockquote {
-  color: rgba(32, 35, 31, 0.86);
 }
 
 .single.blog .article-epigraph-text {
@@ -893,14 +866,6 @@
   bottom: -1.02rem;
   font-size: 3.45rem;
   opacity: 0.12;
-}
-
-.single.blog.sunset .article-epigraph-mark {
-  opacity: 0.12;
-}
-
-.single.blog.sunset .article-epigraph-mark--close {
-  opacity: 0.095;
 }
 
 .single.blog .article-epigraph-text > :first-child {
@@ -955,7 +920,7 @@
   padding: 0.05em 0.28em;
   border: 1px solid var(--article-rule-strong);
   border-bottom-width: 2px;
-  background: rgba(251, 247, 240, 0.45);
+  background: color-mix(in srgb, var(--palette-bg-main, #fbf7f0) 45%, transparent);
 }
 
 .single.blog .article-body pre {
@@ -1181,7 +1146,7 @@
 }
 
 .single.blog .article-body tbody tr + tr td {
-  border-top: 1px solid rgba(83, 76, 95, 0.14);
+  border-top: 1px solid color-mix(in srgb, var(--article-rule) 50%, transparent);
 }
 
 .single.blog .article-figure {
@@ -1208,9 +1173,11 @@
   mix-blend-mode: normal;
 }
 
-.single.blog.sunset .article-figure--ink .article-media {
-  opacity: 0.88;
-  filter: saturate(0.62) contrast(1.04);
+/* At night, ink diagrams drawn for paper turn to light lines on the dark
+ * sheet; their hues stay put. */
+.single.blog.night .article-figure--ink .article-media {
+  opacity: 0.9;
+  filter: invert(0.88) hue-rotate(180deg) saturate(0.7) contrast(1.02);
 }
 
 .single.blog .article-figure-link {
@@ -1469,7 +1436,7 @@ html.article-figure-is-open {
 
 .single.blog .equation-ref,
 .single.blog .statement-ref {
-  border-bottom: 1px dotted rgba(23, 63, 81, 0.36);
+  border-bottom: 1px dotted color-mix(in srgb, var(--article-blue) 36%, transparent);
   color: var(--article-blue);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -1810,7 +1777,7 @@ html.article-figure-is-open {
 }
 
 .single.blog .article-citation a {
-  border-bottom: 1px dotted rgba(111, 59, 63, 0.42);
+  border-bottom: 1px dotted color-mix(in srgb, var(--article-wine) 42%, transparent);
   color: var(--article-green);
 }
 
@@ -1999,7 +1966,7 @@ html.article-figure-is-open {
 }
 
 .single.blog .article-end-link {
-  border-bottom: 1px dotted rgba(39, 63, 57, 0.34);
+  border-bottom: 1px dotted color-mix(in srgb, var(--article-green) 34%, transparent);
   color: var(--article-muted);
 }
 

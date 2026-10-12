@@ -2,9 +2,44 @@
   (function () {
     "use strict";
 
+    var root = document.documentElement;
+
+    /* Day or night, decided before anything paints. An explicit choice
+     * wins (Shade and Sunset from the earlier design read as day and
+     * night); otherwise the light follows the system. A change still in
+     * progress from the previous page paints whichever side of the ink's
+     * turnover it has reached. */
+    var theme = "day";
+    try {
+      var stored = localStorage.getItem("sunlit-theme");
+      if (stored === "night" || stored === "sunset" || stored === "dark") {
+        theme = "night";
+      } else if (stored !== "day" && stored !== "shade" &&
+          window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        theme = "night";
+      }
+    } catch (error) {}
+
+    var mode = theme;
+    try {
+      var change = JSON.parse(sessionStorage.getItem("sunlit-change-v3") || "null");
+      if (change) {
+        var dir = Number(change.dir) < 0 ? -1 : 1;
+        var target = (change.path === "dusk") === (dir > 0) ? "night" : "day";
+        var x = Number(change.x0) + dir * (Date.now() - Number(change.startTimeMs)) /
+          Math.max(1, Number(change.durationMs) || 1800);
+        if (target === theme && x > 0 && x < 1) {
+          /* The ink turns over at p = 0.42: x = 0.42 on the way to night,
+           * x = 0.3117 on dawn's remapped clock, linear when reduced. */
+          var turn = change.path === "dusk" ? 0.42 : (change.reduced ? 0.58 : 0.3117);
+          mode = change.path === "dusk" ? (x >= turn ? "night" : "day") : (x <= turn ? "night" : "day");
+        }
+      }
+    } catch (error) {}
+    root.setAttribute("data-sunlit-mode", mode);
+
     var key = "sunlit-handoff-frame-v1";
     var maximumAge = 12 * 60 * 60 * 1000;
-    var root = document.documentElement;
 
     function discard() {
       try { sessionStorage.removeItem(key); } catch (error) {}
@@ -14,9 +49,6 @@
       var source = sessionStorage.getItem(key);
       if (!source) return;
       var frame = JSON.parse(source);
-      var storedTheme = localStorage.getItem("sunlit-theme");
-      var theme = storedTheme === "sunset" || storedTheme === "dark" ?
-        "sunset" : "shade";
       var ink = root.getAttribute("data-ink") || "lokta-hybrid";
       var width = Math.max(1, window.innerWidth || 1);
       var height = Math.max(1, window.innerHeight || 1);
@@ -28,7 +60,7 @@
         Math.log((width / height) / (frameWidth / frameHeight))
       );
 
-      if (!frame || frame.version !== 1 ||
+      if (!frame || frame.version !== 2 ||
           frame.theme !== theme || frame.ink !== ink ||
           !(frameWidth > 0) || !(frameHeight > 0) ||
           !(age >= 0 && age <= maximumAge) ||

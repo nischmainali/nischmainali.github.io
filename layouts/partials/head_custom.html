@@ -1,5 +1,5 @@
 {{- $noop := .WordCount -}}
-<link id="sunlit-favicon" rel="icon" href="{{ partial "static-asset-url.html" "favicon-shade.svg" }}" type="image/svg+xml" data-shade-href="{{ partial "static-asset-url.html" "favicon-shade.svg" }}" data-sunset-href="{{ partial "static-asset-url.html" "favicon-sunset.svg" }}">
+<link id="sunlit-favicon" rel="icon" href="{{ partial "static-asset-url.html" "favicon-day.svg" }}" type="image/svg+xml" data-day-href="{{ partial "static-asset-url.html" "favicon-day.svg" }}" data-night-href="{{ partial "static-asset-url.html" "favicon-night.svg" }}">
 {{- $mathOutputSetting := lower (string (default "mathml" .Site.Params.mathOutput)) -}}
 {{- $mathOutput := "" -}}
 {{- if eq $mathOutputSetting "htmlandmathml" -}}

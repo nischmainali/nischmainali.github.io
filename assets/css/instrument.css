@@ -82,6 +82,12 @@
   --instrument-cool-quiet: rgba(74, 86, 92, 0.62);
 }
 
+/* At night the machine voice stays a cool neutral, lifted so it reads. */
+body.night {
+  --instrument-cool: #a9b2b5;
+  --instrument-cool-quiet: rgba(169, 178, 181, 0.58);
+}
+
 /* === The crest === */
 
 .instrument-mark {

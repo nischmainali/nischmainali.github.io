@@ -81,14 +81,18 @@ decoration that has no function.
 
 ### Background and paper
 
-`assets/js/sunlit-renderer.js` draws the paper, light, shutter shadows, grain,
-and sunset state on one canvas. `assets/js/sunlit-worker.js` runs that renderer
-away from the main browser thread when the browser allows it.
+`assets/js/sunlit-renderer.js` draws one room in two lights on one canvas: a
+sun pool by day and the moon's window by night, the change between them, the
+peepal's shadow (from `assets/images/sunlit-peepal.png`), clouds, and grain.
+`assets/js/sunlit-worker.js` runs that renderer away from the main browser
+thread when the browser allows it.
 
-`assets/js/sunlit.js` manages state, motion, resizing, and navigation
-continuity. It saves a small copy of the live surface in session storage.
-`layouts/partials/sunlit-handoff-head.html` restores that copy before the body
-is painted, and `static/css/sunlit.css` supplies a complete static fallback.
+`assets/js/sunlit.js` manages the day or night choice, the change between
+them, the ink's turnover, the control, resizing, and navigation continuity. It
+saves a small copy of the live surface in session storage.
+`layouts/partials/sunlit-handoff-head.html` decides day or night and restores
+that copy before the body is painted, and `static/css/sunlit.css` supplies a
+complete static fallback for each light.
 
 Do not attach the background clock to scrolling. Do not add a second animation
 system for page changes. Any performance change must keep the paper opaque and
