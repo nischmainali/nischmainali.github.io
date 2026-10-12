@@ -28,18 +28,16 @@
   <section class="colophon-entry" id="paper-and-light">
     <h2 class="colophon-label">Paper and light</h2>
     <div class="colophon-body">
-      <p>The surface is a Lokta-like pulp drawn in the browser: one opaque WebGL2
-      canvas, owned by a worker where the browser allows it, carrying a projected
-      shutter field, fine moving grain, and a sparse raking relief that only
-      resolves under low sun.</p>
-      <p>The light has two positions rather than two themes. <em>Shade</em> is a
-      covered sheet near a clearer window side; <em>sunset</em> multiplies a warm
-      apricot field across the same geometry and opens the slats. The ink stays
-      daylight in both. The optics are a reconstruction of
-      <a href="https://www.sunlit.place/">sunlit.place</a>, re-derived on this
-      paper rather than copied: the shutter is a projective fan with the source's
-      periods, depths, and progressive diffusion, and its one botanical
-      signature is a single niuro frond that enters only at sunset.</p>
+      <p>The page lies in one room, drawn in the browser on one opaque WebGL2
+      canvas, owned by a worker where the browser allows it.</p>
+      <p>The room has two lights. By day an afternoon sun comes through a window
+      at the top right: slim bars, the branch tips of a peepal outside, sun coins
+      near its leaves, and a fine grain that gathers in the shade. By night the
+      moon, standing higher, lays the same window down as a small patch with its
+      cross, in a room coloured after Protesilaos's
+      <a href="https://protesilaos.com/emacs/ef-themes">ef-dream</a>, and now and
+      then a thin cloud crosses it. Between them the shadows carry the change.
+      The room follows your device's light or dark setting until you choose.</p>
       <p>A small copy of the live surface is kept for the length of a visit, so a
       link, a refresh, or a step back through history lands in the same patch of
       light on the same clock instead of replaying an entrance.</p>
@@ -88,7 +86,7 @@
         <dt>
           <span class="colophon-ink-name">{{ .name }}</span>
           <span class="colophon-swatches" aria-hidden="true">
-            {{- range .swatches }}<span class="colophon-swatch" style="background: {{ . }}"></span>{{ end -}}
+            {{- $night := .night_swatches }}{{ range $swatch, $day := .swatches }}<span class="colophon-swatch" style="--swatch:{{ $day }};--swatch-night:{{ index $night $swatch }}"></span>{{ end -}}
           </span>
         </dt>
         <dd>{{ .description }}{{ if eq .id $default }} · the canonical impression, and the one you get without JavaScript, in print, or when storage fails{{ else if in $pool .id }} · in the first-visit pool{{ end }}</dd>

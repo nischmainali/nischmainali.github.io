@@ -451,18 +451,16 @@
   mask-image: radial-gradient(140% 118% at 50% 50%, #000 82%, rgba(0, 0, 0, 0.9) 88%, rgba(0, 0, 0, 0.35) 96%, transparent 100%);
 }
 
-body.sunset .profile-image {
+/* At night the portrait sits a little back in the room's dimness, so it
+ * is not the brightest thing on the page. */
+body.night .profile-image {
   mix-blend-mode: normal;
-  opacity: 0.93;
-  filter: saturate(1.03) contrast(1.06) brightness(0.98) sepia(0.04);
+  opacity: 0.9;
+  filter: saturate(0.94) contrast(1.02) brightness(0.84);
 }
 
-body.sunset .profile-burn::before {
+body.night .profile-burn::before {
   opacity: 0;
-}
-
-body.sunset .profile-burn::after {
-  opacity: 0.24;
 }
 
 .publications {
@@ -480,7 +478,7 @@ body.sunset .profile-burn::after {
 .site-search label {
   display: block;
   margin-bottom: 0.4rem;
-  color: #173d31;
+  color: var(--site-heading, #173d31);
   font-family: Jost, sans-serif;
   font-size: 0.76rem;
   letter-spacing: 0.09em;
@@ -491,7 +489,7 @@ body.sunset .profile-burn::after {
   width: 100%;
   padding: 0.42rem 0 0.34rem;
   border: 0;
-  border-bottom: 1px solid rgba(83, 76, 95, 0.42);
+  border-bottom: 1px solid var(--site-rule-strong, rgba(83, 76, 95, 0.42));
   border-radius: 0;
   outline: 0;
   background: transparent;
@@ -501,14 +499,14 @@ body.sunset .profile-burn::after {
 }
 
 .site-search input:focus {
-  border-bottom-color: #173f51;
-  box-shadow: 0 1px 0 rgba(23, 63, 81, 0.22);
+  border-bottom-color: var(--site-link, #173f51);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--site-link, #173f51) 22%, transparent);
 }
 
 .site-search-status {
   min-height: 1.4em;
   margin: 0.42rem 0 1.1rem;
-  color: rgba(32, 38, 34, 0.58);
+  color: color-mix(in srgb, var(--site-ink, #202622) 58%, transparent);
   font-family: Jost, sans-serif;
 }
 
@@ -529,7 +527,7 @@ body.sunset .profile-burn::after {
   top: 0.78rem;
   left: 0;
   width: 0.58rem;
-  border-top: 1px solid rgba(111, 59, 63, 0.58);
+  border-top: 1px solid color-mix(in srgb, var(--site-accent, #6f3b3f) 58%, transparent);
   content: "";
 }
 
@@ -541,7 +539,7 @@ body.sunset .profile-burn::after {
 
 .site-search-preview {
   margin: 0.18rem 0 0;
-  color: rgba(32, 38, 34, 0.66);
+  color: color-mix(in srgb, var(--site-ink, #202622) 66%, transparent);
   font-size: 0.9rem;
   line-height: 1.45;
 }

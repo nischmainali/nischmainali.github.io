@@ -156,7 +156,12 @@
 .colophon-swatch {
   width: 0.52rem;
   height: 0.52rem;
-  box-shadow: inset 0 0 0 1px rgba(32, 38, 34, 0.16);
+  background: var(--swatch);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 16%, transparent);
+}
+
+body.night .colophon-swatch {
+  background: var(--swatch-night, var(--swatch));
 }
 
 .colophon-ink-name {

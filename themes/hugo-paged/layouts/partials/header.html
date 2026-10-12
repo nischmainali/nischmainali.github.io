@@ -75,45 +75,12 @@
         var elapsed = Math.max(0, (now - motionEpoch) / 1000);
         document.documentElement.style.setProperty('--sunlit-clock', (-elapsed).toFixed(3) + 's');
 
-        var stored = null;
-        try {
-          stored = localStorage.getItem('sunlit-theme');
-        } catch (e) {
-          stored = null;
-        }
-        var theme = stored === 'sunset' || stored === 'dark' ? 'sunset' : 'shade';
-        var posterTheme = theme;
-        try {
-          var transition = JSON.parse(sessionStorage.getItem('sunlit-transition-v2') || 'null');
-          var transitionTarget = transition && (transition.to === 'sunset' || transition.to === 'dark') ? 'sunset' : 'shade';
-          var transitionSource = transition && (transition.from === 'sunset' || transition.from === 'dark') ? 'sunset' : 'shade';
-          var transitionStart = Number(transition && transition.startTimeMs);
-          var transitionEnd = Number(transition && transition.endTimeMs);
-          if (!(transitionEnd > transitionStart)) {
-            transitionEnd = transitionStart + (transitionTarget === 'sunset' ? 5350 : 3000);
-          }
-          if (transition && transitionTarget === theme && now >= transitionStart && now <= transitionEnd) {
-            var targetColor = transitionTarget === 'sunset' ? 1 : 0;
-            var sourceColor = transitionSource === 'sunset' ? 1 : 0;
-            if (Array.isArray(transition.fromValues) && transition.fromValues.length === 5) {
-              var savedColor = Number(transition.fromValues[3]);
-              if (isFinite(savedColor)) sourceColor = Math.max(0, Math.min(1, savedColor));
-            }
-            var colorDistance = Math.abs(targetColor - sourceColor);
-            var colorDuration = 3000 * colorDistance;
-            var colorProgress = colorDuration > 0 ?
-              Math.max(0, Math.min(1, (now - transitionStart) / colorDuration)) : 1;
-            var sampledColor = sourceColor + (targetColor - sourceColor) * colorProgress;
-            posterTheme = sampledColor >= 0.5 ? 'sunset' : 'shade';
-          } else if (transition) {
-            sessionStorage.removeItem('sunlit-transition-v2');
-          }
-        } catch (e) {
-          posterTheme = theme;
-        }
-        document.body.setAttribute('data-theme', posterTheme);
-        if (posterTheme === 'sunset') {
-          document.body.classList.add('sunset');
+        /* Day or night was decided in the head, before anything painted;
+         * the body takes the same side so its ink matches the first frame. */
+        var mode = document.documentElement.getAttribute('data-sunlit-mode') === 'night' ? 'night' : 'day';
+        document.body.setAttribute('data-theme', mode);
+        if (mode === 'night') {
+          document.body.classList.add('night');
         }
       })();
     </script>

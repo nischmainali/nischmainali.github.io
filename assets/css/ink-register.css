@@ -1,12 +1,18 @@
 /*
  * Editorial ink register for the Lokta Field Note.
  *
- * The five upstream palettes below are transcribed from the current 2026
+ * The upstream palettes below are transcribed from the current 2026
  * Protesilaos theme sources.  Named colors remain exact.  The site aliases
  * then translate those colors into paper, ink, rule, link, article, and syntax
- * roles. Each palette also supplies one optically adapted paper impression;
- * the renderer applies it to the cached Lokta sheet without changing the
- * sunlight geometry, texture, or motion clocks.
+ * roles, in two proofs:
+ *
+ *   --day-*    the source colors, lowered in OKLCH lightness only where the
+ *              darkest light behind text needs it (body 7:1, the rest 4.5:1);
+ *   --night-*  the ink's hues on one ladder of lightness and chroma measured
+ *              from ef-dream, raised where the moonlit window needs it.
+ *
+ * Each palette also casts a restrained tint into the day's paper. The tint
+ * changes the paper's hue, never the light: the room keeps its brightness.
  *
  * Ef sources: https://github.com/protesilaos/ef-themes
  * Modus source: https://github.com/protesilaos/modus-themes
@@ -34,11 +40,6 @@ html[data-ink="lokta-hybrid"] {
   --palette-focus: #173f51;
   --palette-hover: #dbe0c0;
   --palette-selection: #dbe0c0;
-  --palette-sunset-link: #00455f;
-  --palette-sunset-link-visited: #63363b;
-  --palette-sunset-heading: #17382d;
-  --palette-sunset-heading-alt: #153744;
-  --palette-sunset-accent: #63363b;
   --palette-syntax-error: #8a343d;
   --palette-syntax-comment: #657465;
   --palette-syntax-keyword: #743f49;
@@ -49,38 +50,41 @@ html[data-ink="lokta-hybrid"] {
   --palette-syntax-variable: #6f3b3f;
   --palette-syntax-added: #2d6549;
   --palette-syntax-removed: #8a343d;
-  --proof-shade-ink: #202622;
-  --proof-shade-muted: #4f524f;
-  --proof-shade-link: #173f51;
-  --proof-shade-heading: #173d31;
-  --proof-shade-heading-alt: #093060;
-  --proof-shade-accent: #6f3b3f;
-  --proof-sunset-ink: #1f2421;
-  --proof-sunset-muted: #303330;
-  --proof-sunset-link: #0d3648;
-  --proof-sunset-heading: #12382d;
-  --proof-sunset-heading-alt: #0d3648;
-  --proof-sunset-accent: #542227;
-  --proof-shade-syntax-error: #743f49;
-  --proof-shade-syntax-comment: #475547;
-  --proof-shade-syntax-keyword: #743f49;
-  --proof-shade-syntax-string: #684d22;
-  --proof-shade-syntax-number: #3f5179;
-  --proof-shade-syntax-name: #225868;
-  --proof-shade-syntax-type: #225868;
-  --proof-shade-syntax-variable: #225868;
-  --proof-shade-syntax-added: #245c3e;
-  --proof-shade-syntax-removed: #743f49;
-  --proof-sunset-syntax-error: #54222d;
-  --proof-sunset-syntax-comment: #283528;
-  --proof-sunset-syntax-keyword: #54222d;
-  --proof-sunset-syntax-string: #472d00;
-  --proof-sunset-syntax-number: #213156;
-  --proof-sunset-syntax-name: #003747;
-  --proof-sunset-syntax-type: #003747;
-  --proof-sunset-syntax-variable: #003747;
-  --proof-sunset-syntax-added: #143822;
-  --proof-sunset-syntax-removed: #54222d;
+  --day-ink: #202622;
+  --day-muted: #515f51;
+  --day-link: #005077;
+  --day-heading: #184034;
+  --day-heading-alt: #093060;
+  --day-accent: #6f3b3f;
+  --day-syntax-error: #8a343d;
+  --day-syntax-comment: #515f51;
+  --day-syntax-keyword: #743f49;
+  --day-syntax-string: #74582d;
+  --day-syntax-number: #495c84;
+  --day-syntax-name: #235969;
+  --day-syntax-type: #225868;
+  --day-syntax-variable: #225868;
+  --day-syntax-added: #2d6549;
+  --day-syntax-removed: #8a343d;
+  /* Night: ef-dream, its quiet roles lifted to clear the moonlit window. */
+  --night-ink: #efd5c5;
+  --night-muted: #aea59f;
+  --night-link: #deb07a;
+  --night-heading: #deb07a;
+  --night-heading-alt: #caa89f;
+  --night-accent: #f4878e;
+  --night-accent-alt: #d49d54;
+  --night-focus-accent: #80aadf;
+  --night-syntax-error: #fd846b;
+  --night-syntax-comment: #a3a3d2;
+  --night-syntax-keyword: #deb07a;
+  --night-syntax-string: #f3a0a0;
+  --night-syntax-number: #80aadf;
+  --night-syntax-name: #8fcfd0;
+  --night-syntax-type: #a9c99f;
+  --night-syntax-variable: #ffaacf;
+  --night-syntax-added: #a0d0f0;
+  --night-syntax-removed: #f0bfcf;
 }
 
 /* Ef Arbutus: ef-arbutus-theme.el. */
@@ -105,12 +109,6 @@ html[data-ink="ef-arbutus"] {
   --palette-focus: #208f10;
   --palette-hover: #afdeaf;
   --palette-selection: #dbe0c0;
-  /* Exact fg-added is the source palette's sunset-safe green. */
-  --palette-sunset-link: #005000;
-  --palette-sunset-link-visited: color-mix(in srgb, #6448ca 42%, #393330);
-  --palette-sunset-heading: #005000;
-  --palette-sunset-heading-alt: color-mix(in srgb, #0f7688 48%, #393330);
-  --palette-sunset-accent: color-mix(in srgb, #aa184f 55%, #393330);
   --palette-syntax-error: #b20f00;
   --palette-syntax-comment: #6e678f;
   --palette-syntax-keyword: #8f2f30;
@@ -121,38 +119,41 @@ html[data-ink="ef-arbutus"] {
   --palette-syntax-variable: #aa184f;
   --palette-syntax-added: #005000;
   --palette-syntax-removed: #8f1313;
-  --proof-shade-ink: #393330;
-  --proof-shade-muted: #544c73;
-  --proof-shade-link: #005e3f;
-  --proof-shade-heading: #a20a49;
-  --proof-shade-heading-alt: #006000;
-  --proof-shade-accent: #a80005;
-  --proof-sunset-ink: #282220;
-  --proof-sunset-muted: #352d51;
-  --proof-sunset-link: #003b1f;
-  --proof-sunset-heading: #6b0020;
-  --proof-sunset-heading-alt: #003c00;
-  --proof-sunset-accent: #6c0000;
-  --proof-shade-syntax-error: #a80005;
-  --proof-shade-syntax-comment: #544c73;
-  --proof-shade-syntax-keyword: #8f2f30;
-  --proof-shade-syntax-string: #405900;
-  --proof-shade-syntax-number: #89238b;
-  --proof-shade-syntax-name: #006000;
-  --proof-shade-syntax-type: #a80005;
-  --proof-shade-syntax-variable: #a20a49;
-  --proof-shade-syntax-added: #005e3f;
-  --proof-shade-syntax-removed: #8f2f30;
-  --proof-sunset-syntax-error: #6c0000;
-  --proof-sunset-syntax-comment: #352d51;
-  --proof-sunset-syntax-keyword: #6a0512;
-  --proof-sunset-syntax-string: #223800;
-  --proof-sunset-syntax-number: #5d0061;
-  --proof-sunset-syntax-name: #003c00;
-  --proof-sunset-syntax-type: #6c0000;
-  --proof-sunset-syntax-variable: #6b0020;
-  --proof-sunset-syntax-added: #003b1f;
-  --proof-sunset-syntax-removed: #6c0000;
+  --day-ink: #393330;
+  --day-muted: #5e577e;
+  --day-link: #03694a;
+  --day-heading: #a20a49;
+  --day-heading-alt: #006000;
+  --day-accent: #a80005;
+  --day-syntax-error: #b20f00;
+  --day-syntax-comment: #5e577e;
+  --day-syntax-keyword: #8f2f30;
+  --day-syntax-string: #4d6507;
+  --day-syntax-number: #953197;
+  --day-syntax-name: #076c06;
+  --day-syntax-type: #b0000f;
+  --day-syntax-variable: #aa184f;
+  --day-syntax-added: #005e3f;
+  --day-syntax-removed: #8f1313;
+  /* Night: rose-cream ink, mint links, raspberry heads, coral accent. */
+  --night-ink: #f2d5cc;
+  --night-muted: #a7a5b4;
+  --night-link: #92c9ad;
+  --night-heading: #f29fb1;
+  --night-heading-alt: #9cbb98;
+  --night-accent: #f38a7c;
+  --night-accent-alt: #e59373;
+  --night-focus-accent: #88b681;
+  --night-syntax-error: #e39287;
+  --night-syntax-comment: #a8a3c4;
+  --night-syntax-keyword: #f3a29d;
+  --night-syntax-string: #adc58b;
+  --night-syntax-number: #d79ed5;
+  --night-syntax-name: #98cf93;
+  --night-syntax-type: #f7a599;
+  --night-syntax-variable: #f29fb1;
+  --night-syntax-added: #95ccb0;
+  --night-syntax-removed: #f6a5a0;
 }
 
 /* Ef Cyprus: ef-cyprus-theme.el. */
@@ -177,11 +178,6 @@ html[data-ink="ef-cyprus"] {
   --palette-focus: #007f00;
   --palette-hover: #efc26f;
   --palette-selection: #e0e7e5;
-  --palette-sunset-link: #005000;
-  --palette-sunset-link-visited: color-mix(in srgb, #1f70af 45%, #242521);
-  --palette-sunset-heading: #005000;
-  --palette-sunset-heading-alt: color-mix(in srgb, #007a9f 48%, #242521);
-  --palette-sunset-accent: color-mix(in srgb, #ca3400 54%, #242521);
   --palette-syntax-error: #dd0020;
   --palette-syntax-comment: #8f6f4a;
   --palette-syntax-keyword: #006f00;
@@ -192,38 +188,41 @@ html[data-ink="ef-cyprus"] {
   --palette-syntax-variable: #007a9f;
   --palette-syntax-added: #005000;
   --palette-syntax-removed: #8f1313;
-  --proof-shade-ink: #242521;
-  --proof-shade-muted: #39574f;
-  --proof-shade-link: #833f00;
-  --proof-shade-heading: #3d5a00;
-  --proof-shade-heading-alt: #00577b;
-  --proof-shade-accent: #a80000;
-  --proof-sunset-ink: #232320;
-  --proof-sunset-muted: #1a3730;
-  --proof-sunset-link: #5e1c00;
-  --proof-sunset-heading: #1f3900;
-  --proof-sunset-heading-alt: #003556;
-  --proof-sunset-accent: #6c0000;
-  --proof-shade-syntax-error: #a80000;
-  --proof-shade-syntax-comment: #6a4c28;
-  --proof-shade-syntax-keyword: #006000;
-  --proof-shade-syntax-string: #a80000;
-  --proof-shade-syntax-number: #005f2f;
-  --proof-shade-syntax-name: #833f00;
-  --proof-shade-syntax-type: #3a40c0;
-  --proof-shade-syntax-variable: #00577b;
-  --proof-shade-syntax-added: #005f2f;
-  --proof-shade-syntax-removed: #a80000;
-  --proof-sunset-syntax-error: #6c0000;
-  --proof-sunset-syntax-comment: #492c04;
-  --proof-sunset-syntax-keyword: #003c00;
-  --proof-sunset-syntax-string: #6c0000;
-  --proof-sunset-syntax-number: #003b0d;
-  --proof-sunset-syntax-name: #5e1c00;
-  --proof-sunset-syntax-type: #231699;
-  --proof-sunset-syntax-variable: #003556;
-  --proof-sunset-syntax-added: #003b0d;
-  --proof-sunset-syntax-removed: #6c0000;
+  --day-ink: #242521;
+  --day-muted: #446259;
+  --day-link: #8d4b05;
+  --day-heading: #4a6501;
+  --day-heading-alt: #036482;
+  --day-accent: #ab2f0a;
+  --day-syntax-error: #ba0f1e;
+  --day-syntax-comment: #765732;
+  --day-syntax-keyword: #0a6c08;
+  --day-syntax-string: #ab2f0a;
+  --day-syntax-number: #036a40;
+  --day-syntax-name: #8d4b05;
+  --day-syntax-type: #424ccc;
+  --day-syntax-variable: #036482;
+  --day-syntax-added: #005f2f;
+  --day-syntax-removed: #8f1313;
+  /* Night: parchment ink, apricot links, sage heads, coral accent. */
+  --night-ink: #e7dbc5;
+  --night-muted: #98aba5;
+  --night-link: #e6ac87;
+  --night-heading: #abc58b;
+  --night-heading-alt: #8cb8d2;
+  --night-accent: #f38a7b;
+  --night-accent-alt: #d893b1;
+  --night-focus-accent: #87b782;
+  --night-syntax-error: #e39286;
+  --night-syntax-comment: #bca387;
+  --night-syntax-keyword: #95cb90;
+  --night-syntax-string: #f4a295;
+  --night-syntax-number: #8cc49b;
+  --night-syntax-name: #eaaf8a;
+  --night-syntax-type: #a9baff;
+  --night-syntax-variable: #8fc2e1;
+  --night-syntax-added: #95cea4;
+  --night-syntax-removed: #f7a598;
 }
 
 /* Ef Elea Light: ef-elea-light-theme.el. */
@@ -248,11 +247,6 @@ html[data-ink="ef-elea-light"] {
   --palette-focus: #770080;
   --palette-hover: #dfbac0;
   --palette-selection: #d9d2ef;
-  --palette-sunset-link: #005000;
-  --palette-sunset-link-visited: color-mix(in srgb, #80308f 46%, #221321);
-  --palette-sunset-heading: #005000;
-  --palette-sunset-heading-alt: color-mix(in srgb, #5032aa 52%, #221321);
-  --palette-sunset-accent: color-mix(in srgb, #9f356a 52%, #221321);
   --palette-syntax-error: #d00000;
   --palette-syntax-comment: #7f4f4a;
   --palette-syntax-keyword: #894852;
@@ -263,38 +257,41 @@ html[data-ink="ef-elea-light"] {
   --palette-syntax-variable: #80308f;
   --palette-syntax-added: #005000;
   --palette-syntax-removed: #8f1313;
-  --proof-shade-ink: #221321;
-  --proof-shade-muted: #53505c;
-  --proof-shade-link: #005f1e;
-  --proof-shade-heading: #355500;
-  --proof-shade-heading-alt: #5032aa;
-  --proof-shade-accent: #91285e;
-  --proof-sunset-ink: #221321;
-  --proof-sunset-muted: #33313b;
-  --proof-sunset-link: #003c00;
-  --proof-sunset-heading: #1c3900;
-  --proof-sunset-heading-alt: #3b108d;
-  --proof-sunset-accent: #67003c;
-  --proof-shade-syntax-error: #91285e;
-  --proof-shade-syntax-comment: #744541;
-  --proof-shade-syntax-keyword: #7e3e49;
-  --proof-shade-syntax-string: #005e37;
-  --proof-shade-syntax-number: #5032aa;
-  --proof-shade-syntax-name: #355500;
-  --proof-shade-syntax-type: #162f8f;
-  --proof-shade-syntax-variable: #7f2e8d;
-  --proof-shade-syntax-added: #005e37;
-  --proof-shade-syntax-removed: #7e3e49;
-  --proof-sunset-syntax-error: #67003c;
-  --proof-sunset-syntax-comment: #512522;
-  --proof-sunset-syntax-keyword: #591e2a;
-  --proof-sunset-syntax-string: #003b17;
-  --proof-sunset-syntax-number: #3b108d;
-  --proof-sunset-syntax-name: #1c3900;
-  --proof-sunset-syntax-type: #102686;
-  --proof-sunset-syntax-variable: #5a0069;
-  --proof-sunset-syntax-added: #003b17;
-  --proof-sunset-syntax-removed: #591e2a;
+  --day-ink: #221321;
+  --day-muted: #5e5b67;
+  --day-link: #00601f;
+  --day-heading: #355500;
+  --day-heading-alt: #5032aa;
+  --day-accent: #9e3469;
+  --day-syntax-error: #91285e;
+  --day-syntax-comment: #7f4f4a;
+  --day-syntax-keyword: #894852;
+  --day-syntax-string: #036943;
+  --day-syntax-number: #5032aa;
+  --day-syntax-name: #355500;
+  --day-syntax-type: #162f8f;
+  --day-syntax-variable: #80308f;
+  --day-syntax-added: #005e37;
+  --day-syntax-removed: #7e3e49;
+  /* Night: pale lichen ink, green links and heads, orchid accent. */
+  --night-ink: #e1e1d2;
+  --night-muted: #a8a5b2;
+  --night-link: #92cb97;
+  --night-heading: #a9c68d;
+  --night-heading-alt: #aeacd6;
+  --night-accent: #e28db1;
+  --night-accent-alt: #7cb5c8;
+  --night-focus-accent: #c897ca;
+  --night-syntax-error: #dd91b1;
+  --night-syntax-comment: #c69d99;
+  --night-syntax-keyword: #e2a9b0;
+  --night-syntax-string: #92caa7;
+  --night-syntax-number: #b0aaf1;
+  --night-syntax-name: #acc991;
+  --night-syntax-type: #a0bcff;
+  --night-syntax-variable: #d9a5e1;
+  --night-syntax-added: #95cdaa;
+  --night-syntax-removed: #e5adb3;
 }
 
 /* Ef Arcadia: ef-arcadia-theme.el. */
@@ -319,11 +316,6 @@ html[data-ink="ef-arcadia"] {
   --palette-focus: #495080;
   --palette-hover: #afbad0;
   --palette-selection: #b3c5c0;
-  --palette-sunset-link: #503094;
-  --palette-sunset-link-visited: #113384;
-  --palette-sunset-heading: #113384;
-  --palette-sunset-heading-alt: color-mix(in srgb, #005070 55%, #40314e);
-  --palette-sunset-accent: color-mix(in srgb, #922e7f 55%, #40314e);
   --palette-syntax-error: #800e38;
   --palette-syntax-comment: #72366f;
   --palette-syntax-keyword: #125a7f;
@@ -334,38 +326,41 @@ html[data-ink="ef-arcadia"] {
   --palette-syntax-variable: #006e50;
   --palette-syntax-added: #005200;
   --palette-syntax-removed: #8f1013;
-  --proof-shade-ink: #40314e;
-  --proof-shade-muted: #53505e;
-  --proof-shade-link: #503094;
-  --proof-shade-heading: #113384;
-  --proof-shade-heading-alt: #005070;
-  --proof-shade-accent: #8b2779;
-  --proof-sunset-ink: #2c1d38;
-  --proof-sunset-muted: #33303e;
-  --proof-sunset-link: #3e197e;
-  --proof-sunset-heading: #0a2b7b;
-  --proof-sunset-heading-alt: #003554;
-  --proof-sunset-accent: #620053;
-  --proof-shade-syntax-error: #8b2779;
-  --proof-shade-syntax-comment: #72366f;
-  --proof-shade-syntax-keyword: #0e577c;
-  --proof-shade-syntax-string: #2a5090;
-  --proof-shade-syntax-number: #503094;
-  --proof-shade-syntax-name: #8b2779;
-  --proof-shade-syntax-type: #005070;
-  --proof-shade-syntax-variable: #005e41;
-  --proof-shade-syntax-added: #005e41;
-  --proof-shade-syntax-removed: #8b2779;
-  --proof-sunset-syntax-error: #620053;
-  --proof-sunset-syntax-comment: #541952;
-  --proof-sunset-syntax-keyword: #003457;
-  --proof-sunset-syntax-string: #0a2f6d;
-  --proof-sunset-syntax-number: #3e197e;
-  --proof-sunset-syntax-name: #620053;
-  --proof-sunset-syntax-type: #003554;
-  --proof-sunset-syntax-variable: #003a21;
-  --proof-sunset-syntax-added: #003a21;
-  --proof-sunset-syntax-removed: #620053;
+  --day-ink: #40314e;
+  --day-muted: #5e5b6a;
+  --day-link: #503094;
+  --day-heading: #113384;
+  --day-heading-alt: #005070;
+  --day-accent: #922e7f;
+  --day-syntax-error: #8b2779;
+  --day-syntax-comment: #72366f;
+  --day-syntax-keyword: #125a7f;
+  --day-syntax-string: #2a5090;
+  --day-syntax-number: #503094;
+  --day-syntax-name: #922e7f;
+  --day-syntax-type: #005070;
+  --day-syntax-variable: #086a4d;
+  --day-syntax-added: #005e41;
+  --day-syntax-removed: #8b2779;
+  /* Night: lilac-cream ink, violet links, periwinkle heads, orchid accent. */
+  --night-ink: #e6d7e4;
+  --night-muted: #a8a5b4;
+  --night-link: #bcaff5;
+  --night-heading: #99bafb;
+  --night-heading-alt: #8cb8d2;
+  --night-accent: #dc8dca;
+  --night-accent-alt: #8ab987;
+  --night-focus-accent: #9da5ce;
+  --night-syntax-error: #d493c4;
+  --night-syntax-comment: #bb9eb8;
+  --night-syntax-keyword: #92c2e1;
+  --night-syntax-string: #9bbcf2;
+  --night-syntax-number: #b6a8ef;
+  --night-syntax-name: #e7a5d6;
+  --night-syntax-type: #95c5e1;
+  --night-syntax-variable: #92c9af;
+  --night-syntax-added: #95ccb2;
+  --night-syntax-removed: #e7a5d6;
 }
 
 /* Modus Operandi Tinted: modus-themes-operandi-tinted-palette. */
@@ -390,11 +385,6 @@ html[data-ink="modus-operandi-tinted"] {
   --palette-focus: #d00000;
   --palette-hover: #b2e4dc;
   --palette-selection: #c2bcb5;
-  --palette-sunset-link: #0000b0;
-  --palette-sunset-link-visited: #721045;
-  --palette-sunset-heading: #574316;
-  --palette-sunset-heading-alt: #193668;
-  --palette-sunset-accent: #7f0000;
   --palette-syntax-error: #a60000;
   --palette-syntax-comment: #7f0000;
   --palette-syntax-keyword: #0031a9;
@@ -405,38 +395,41 @@ html[data-ink="modus-operandi-tinted"] {
   --palette-syntax-variable: #00603f;
   --palette-syntax-added: #005000;
   --palette-syntax-removed: #8f1313;
-  --proof-shade-ink: #000000;
-  --proof-shade-muted: #525151;
-  --proof-shade-link: #3342be;
-  --proof-shade-heading: #005e3e;
-  --proof-shade-heading-alt: #193668;
-  --proof-shade-accent: #005587;
-  --proof-sunset-ink: #000000;
-  --proof-sunset-muted: #333232;
-  --proof-sunset-link: #1d1998;
-  --proof-sunset-heading: #003b1d;
-  --proof-sunset-heading-alt: #003262;
-  --proof-sunset-accent: #003262;
-  --proof-shade-syntax-error: #7f0000;
-  --proof-shade-syntax-comment: #7f0000;
-  --proof-shade-syntax-keyword: #0031a9;
-  --proof-shade-syntax-string: #005587;
-  --proof-shade-syntax-number: #531ab6;
-  --proof-shade-syntax-name: #602938;
-  --proof-shade-syntax-type: #2d5c0b;
-  --proof-shade-syntax-variable: #005e3e;
-  --proof-shade-syntax-added: #005e3e;
-  --proof-shade-syntax-removed: #7f0000;
-  --proof-sunset-syntax-error: #6c0000;
-  --proof-sunset-syntax-comment: #6c0000;
-  --proof-sunset-syntax-keyword: #001e99;
-  --proof-sunset-syntax-string: #003262;
-  --proof-sunset-syntax-number: #3d0097;
-  --proof-sunset-syntax-name: #562030;
-  --proof-sunset-syntax-type: #0a3b00;
-  --proof-sunset-syntax-variable: #003b1d;
-  --proof-sunset-syntax-added: #003b1d;
-  --proof-sunset-syntax-removed: #6c0000;
+  --day-ink: #000000;
+  --day-muted: #525151;
+  --day-link: #3546c2;
+  --day-heading: #005e3e;
+  --day-heading-alt: #193668;
+  --day-accent: #005587;
+  --day-syntax-error: #a60000;
+  --day-syntax-comment: #7f0000;
+  --day-syntax-keyword: #0031a9;
+  --day-syntax-string: #00598b;
+  --day-syntax-number: #531ab6;
+  --day-syntax-name: #602938;
+  --day-syntax-type: #306010;
+  --day-syntax-variable: #00603f;
+  --day-syntax-added: #005e3e;
+  --day-syntax-removed: #8f1313;
+  /* Night: near-white ink, clear blue links, sea-green heads. */
+  --night-ink: #e9e6e0;
+  --night-muted: #a8a7a7;
+  --night-link: #a3b7fb;
+  --night-heading: #92c9ac;
+  --night-heading-alt: #9bb2d8;
+  --night-accent: #7aacd5;
+  --night-accent-alt: #7db1db;
+  --night-focus-accent: #de9489;
+  --night-syntax-error: #e39286;
+  --night-syntax-comment: #c79d97;
+  --night-syntax-keyword: #99bafb;
+  --night-syntax-string: #8ec1eb;
+  --night-syntax-number: #b3aaf0;
+  --night-syntax-name: #e1aeb8;
+  --night-syntax-type: #a4cb92;
+  --night-syntax-variable: #92c9ac;
+  --night-syntax-added: #95ccb0;
+  --night-syntax-removed: #f7a598;
 }
 
 /*
@@ -444,14 +437,14 @@ html[data-ink="modus-operandi-tinted"] {
  * as --palette-*; --site-* values account for the transparent living surface.
  */
 html[data-ink] {
-  --site-ink: var(--proof-shade-ink);
-  --site-muted: var(--proof-shade-muted);
-  --site-secondary: var(--proof-shade-muted);
-  --site-link: var(--proof-shade-link);
-  --site-link-visited: var(--proof-shade-link);
-  --site-heading: var(--proof-shade-heading);
-  --site-heading-alt: var(--proof-shade-heading-alt);
-  --site-accent: var(--proof-shade-accent);
+  --site-ink: var(--day-ink);
+  --site-muted: var(--day-muted);
+  --site-secondary: var(--day-muted);
+  --site-link: var(--day-link);
+  --site-link-visited: var(--day-link);
+  --site-heading: var(--day-heading);
+  --site-heading-alt: var(--day-heading-alt);
+  --site-accent: var(--day-accent);
   --site-ornament: var(--palette-accent);
   --site-accent-alt: var(--palette-accent-alt);
   --site-focus: var(--site-ink);
@@ -462,41 +455,86 @@ html[data-ink] {
   --site-wash-strong: color-mix(in srgb, var(--palette-bg-dim) 54%, transparent);
   --site-selection: var(--palette-selection);
   --site-hover: var(--palette-hover);
-  --syntax-error: var(--proof-shade-syntax-error);
-  --syntax-comment: var(--proof-shade-syntax-comment);
-  --syntax-keyword: var(--proof-shade-syntax-keyword);
-  --syntax-string: var(--proof-shade-syntax-string);
-  --syntax-number: var(--proof-shade-syntax-number);
-  --syntax-name: var(--proof-shade-syntax-name);
-  --syntax-type: var(--proof-shade-syntax-type);
-  --syntax-variable: var(--proof-shade-syntax-variable);
-  --syntax-added: var(--proof-shade-syntax-added);
-  --syntax-removed: var(--proof-shade-syntax-removed);
+  --syntax-error: var(--day-syntax-error);
+  --syntax-comment: var(--day-syntax-comment);
+  --syntax-keyword: var(--day-syntax-keyword);
+  --syntax-string: var(--day-syntax-string);
+  --syntax-number: var(--day-syntax-number);
+  --syntax-name: var(--day-syntax-name);
+  --syntax-type: var(--day-syntax-type);
+  --syntax-variable: var(--day-syntax-variable);
+  --syntax-added: var(--day-syntax-added);
+  --syntax-removed: var(--day-syntax-removed);
 }
 
-html[data-ink] body.sunset {
-  --site-ink: var(--proof-sunset-ink);
-  --site-muted: var(--proof-sunset-muted);
-  --site-secondary: var(--proof-sunset-muted);
-  --site-link: var(--proof-sunset-link);
-  --site-link-visited: var(--proof-sunset-link);
-  --site-heading: var(--proof-sunset-heading);
-  --site-heading-alt: var(--proof-sunset-heading-alt);
-  --site-accent: var(--proof-sunset-accent);
-  --site-rule: color-mix(in srgb, color-mix(in srgb, var(--palette-border) 68%, var(--palette-fg-main)) 50%, transparent);
-  --site-rule-strong: color-mix(in srgb, color-mix(in srgb, var(--palette-border) 66%, var(--palette-fg-main)) 70%, transparent);
-  --site-wash: color-mix(in srgb, var(--palette-bg-dim) 24%, transparent);
-  --site-wash-strong: color-mix(in srgb, var(--palette-bg-dim) 36%, transparent);
-  --syntax-error: var(--proof-sunset-syntax-error);
-  --syntax-comment: var(--proof-sunset-syntax-comment);
-  --syntax-keyword: var(--proof-sunset-syntax-keyword);
-  --syntax-string: var(--proof-sunset-syntax-string);
-  --syntax-number: var(--proof-sunset-syntax-number);
-  --syntax-name: var(--proof-sunset-syntax-name);
-  --syntax-type: var(--proof-sunset-syntax-type);
-  --syntax-variable: var(--proof-sunset-syntax-variable);
-  --syntax-added: var(--proof-sunset-syntax-added);
-  --syntax-removed: var(--proof-sunset-syntax-removed);
+/*
+ * Night is one room for every ink: ef-dream's ground (Protesilaos), a step
+ * deeper, lit by the moon. Each ink keeps its own voice on that ground (its
+ * hues on one ladder of lightness and chroma measured from ef-dream), so the
+ * warmth lives in the light ink, never in a brown ground.
+ */
+html[data-ink] {
+  --night-paper: #1a181c;
+  --night-paper-dim: #322f34;
+  --night-paper-alt: #3b393e;
+  --night-region: #544a50;
+}
+
+html[data-ink] body.night {
+  --palette-bg-main: var(--night-paper);
+  --palette-bg-dim: var(--night-paper-dim);
+  --palette-bg-alt: var(--night-paper-alt);
+  --palette-fg-main: var(--night-ink);
+  --palette-fg-dim: #8f8886;
+  --palette-border: #8a7f78;
+  --palette-accent: var(--night-accent);
+  --palette-focus: var(--night-focus-accent);
+  --palette-hover: var(--night-region);
+  --palette-selection: var(--night-region);
+  --sunlit-paper-near: #1d1b1f;
+  --sunlit-paper-far: #1a181c;
+  --sunlit-paper-light: #2a272c;
+  --site-ink: var(--night-ink);
+  --site-muted: var(--night-muted);
+  --site-secondary: var(--night-muted);
+  --site-link: var(--night-link);
+  --site-link-visited: var(--night-link);
+  --site-heading: var(--night-heading);
+  --site-heading-alt: var(--night-heading-alt);
+  --site-accent: var(--night-accent);
+  --site-ornament: var(--night-accent);
+  --site-accent-alt: var(--night-accent-alt);
+  --site-focus: var(--night-ink);
+  --site-focus-accent: var(--night-focus-accent);
+  --site-rule: color-mix(in srgb, var(--night-ink) 20%, transparent);
+  --site-rule-strong: color-mix(in srgb, var(--night-ink) 32%, transparent);
+  --site-wash: color-mix(in srgb, var(--night-ink) 5%, transparent);
+  --site-wash-strong: color-mix(in srgb, var(--night-ink) 8%, transparent);
+  --site-selection: var(--night-region);
+  --site-hover: var(--night-region);
+  --syntax-error: var(--night-syntax-error);
+  --syntax-comment: var(--night-syntax-comment);
+  --syntax-keyword: var(--night-syntax-keyword);
+  --syntax-string: var(--night-syntax-string);
+  --syntax-number: var(--night-syntax-number);
+  --syntax-name: var(--night-syntax-name);
+  --syntax-type: var(--night-syntax-type);
+  --syntax-variable: var(--night-syntax-variable);
+  --syntax-added: var(--night-syntax-added);
+  --syntax-removed: var(--night-syntax-removed);
+}
+
+/* While the room passes mid-tone the ink turns over in a short blend; the
+ * controller sets --ink-mix from 0 (day) to 1 (night). */
+html[data-ink] body.ink-mixing {
+  --site-ink: color-mix(in oklab, var(--day-ink), var(--night-ink) calc(var(--ink-mix, 0) * 100%));
+  --site-muted: color-mix(in oklab, var(--day-muted), var(--night-muted) calc(var(--ink-mix, 0) * 100%));
+  --site-secondary: var(--site-muted);
+  --site-link: color-mix(in oklab, var(--day-link), var(--night-link) calc(var(--ink-mix, 0) * 100%));
+  --site-link-visited: var(--site-link);
+  --site-heading: color-mix(in oklab, var(--day-heading), var(--night-heading) calc(var(--ink-mix, 0) * 100%));
+  --site-heading-alt: color-mix(in oklab, var(--day-heading-alt), var(--night-heading-alt) calc(var(--ink-mix, 0) * 100%));
+  --site-accent: color-mix(in oklab, var(--day-accent), var(--night-accent) calc(var(--ink-mix, 0) * 100%));
 }
 
 /* Global print roles.  Geometry, type, motion, and the sunlight shader stay put. */
@@ -657,13 +695,9 @@ html[data-ink] body.single.blog {
   --article-focus-backdrop: color-mix(in srgb, var(--site-ink) 56%, transparent);
 }
 
-html[data-ink] body.sunset.single.blog {
-  --article-dropcap-ornament: color-mix(in srgb, var(--site-ornament) 25%, transparent);
-  --article-muted: var(--site-muted);
-  --article-faint: var(--site-muted);
-  --article-quiet-ink: color-mix(in oklch, var(--site-muted) 72%, var(--site-ink));
-  --article-focus-paper: color-mix(in srgb, var(--palette-bg-main) 83%, #dfb183);
-  --article-focus-backdrop: color-mix(in srgb, var(--site-ink) 58%, transparent);
+html[data-ink] body.night.single.blog {
+  --article-focus-paper: color-mix(in srgb, var(--night-paper) 94%, white);
+  --article-focus-backdrop: rgba(8, 7, 9, 0.66);
 }
 
 /* Chroma receives the source theme's semantic code roles. */
@@ -741,7 +775,7 @@ html[data-ink] body.single.blog :is(.article-citation a, .article-end-link) {
 .ink-register {
   --ink-register-paper: var(--palette-bg-main, #fbf7f0);
   --ink-register-ink: var(--palette-fg-main, #202622);
-  --ink-register-muted: var(--proof-shade-muted, #4f524f);
+  --ink-register-muted: var(--day-muted, #4f524f);
   --ink-register-rule: color-mix(in srgb, var(--palette-border, #6e678f) 58%, transparent);
   --ink-register-mark: var(--palette-accent, #6f3b3f);
   --ink-mark-a: var(--site-link, #005077);
@@ -767,8 +801,8 @@ html[data-ink] body.single.blog :is(.article-citation a, .article-end-link) {
   visibility: visible;
 }
 
-body.sunset .ink-register {
-  --ink-register-muted: var(--proof-sunset-muted, #303330);
+body.night .ink-register {
+  --ink-register-muted: var(--night-muted);
 }
 
 body.no-js .ink-register {
@@ -1021,7 +1055,11 @@ body.no-js .ink-register {
   height: 0.28rem;
   outline: 1px solid color-mix(in srgb, var(--ink-register-ink) 18%, transparent);
   outline-offset: -1px;
-  background: var(--ink-register-swatch);
+  background: var(--swatch);
+}
+
+body.night .ink-register__swatch {
+  background: var(--swatch-night, var(--swatch));
 }
 
 .ink-register__keys {
@@ -1104,7 +1142,7 @@ body.no-js .ink-register {
 
 @media print {
   html[data-ink] body,
-  html[data-ink] body.sunset {
+  html[data-ink] body.night {
     --palette-bg-main: #fbf7f0;
     --site-ink: #202622;
     --site-muted: #4f524f;
