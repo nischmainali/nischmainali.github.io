@@ -18,17 +18,8 @@
   {{- $articleDepth = 2 -}}
 {{- end -}}
 
-{{- $toc := partial "toc.html" . -}}
-{{- $tocItems := len (findRE `<li>` $toc) -}}
-{{- $tocThreshold := default 3 .Site.Params.toc_threshold -}}
-{{- $showToc := ge $tocItems $tocThreshold -}}
-{{- if isset .Params "show_toc" -}}
-  {{- $showToc = .Params.show_toc -}}
-{{- end -}}
-
-{{- /* The index slip carries the note's contents beneath its row; the sheet
-      carries the note itself. */ -}}
-{{- if $showToc }}{{ .Scratch.Set "has_toc" true }}{{ end -}}
+{{- /* The index card carries the note's contents beneath its row, from the
+      note's own headings; the sheet carries the note itself. */ -}}
 {{ partial "index-slip.html" (dict "page" . "state" "article") }}
 
 <main class="article-shell" aria-labelledby="article-title">

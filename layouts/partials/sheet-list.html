@@ -2,7 +2,7 @@
 {{- $kind := .kind -}}
 <main class="sheet sheet--list" id="sheet">
   {{- if eq $kind "papers" }}
-  <h1 class="list-title"><span class="list-title__mark" aria-hidden="true">❧</span>Papers</h1>
+  <h1 class="list-title"><span class="list-title__mark" aria-hidden="true">❧</span>Selected works</h1>
   <ol class="list-register">
     {{- range hugo.Data.selected_works.works }}
     <li>
@@ -18,9 +18,9 @@
     {{- end }}
   </ol>
   {{- else }}
-  <h1 class="list-title"><span class="list-title__mark" aria-hidden="true">❧</span>Field notes</h1>
+  <h1 class="list-title"><span class="list-title__mark" aria-hidden="true">❧</span>Writing</h1>
   <ol class="list-register">
-    {{- range (where (where site.RegularPages "Section" "blog") "Draft" false).ByDate.Reverse }}
+    {{- range (where site.RegularPages "Section" "blog").ByDate.Reverse }}
     <li class="h-entry">
       <a class="list-entry u-url" href="{{ .RelPermalink }}">
         <time class="list-entry__date dt-published" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 Jan 2006" }}</time>

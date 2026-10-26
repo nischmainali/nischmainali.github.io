@@ -1,5 +1,7 @@
 {{- $noop := .WordCount -}}
 <link id="sunlit-favicon" rel="icon" href="{{ partial "static-asset-url.html" "favicon-day.svg" }}" type="image/svg+xml" data-day-href="{{ partial "static-asset-url.html" "favicon-day.svg" }}" data-night-href="{{ partial "static-asset-url.html" "favicon-night.svg" }}">
+{{- /* A phone's browser chrome takes the room's own shade, day or night. */}}
+<meta id="sunlit-theme-color" name="theme-color" content="#e5e2dc" data-day-color="#e5e2dc" data-night-color="#1a181c">
 {{- $mathOutputSetting := lower (string (default "mathml" .Site.Params.mathOutput)) -}}
 {{- $mathOutput := "" -}}
 {{- if eq $mathOutputSetting "htmlandmathml" -}}
@@ -29,15 +31,17 @@
 <link rel="preload" href="{{ "vendor/fonts/eb-garamond-initials/EBGaramond-InitialsF2-LatinCaps.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
 {{ end }}
 {{ partial "ink-head.html" . }}
-{{- /* The instrument register is shared by every gesture, so it loads wherever
-      one of them can appear: the home ledger and an opened article. */ -}}
-{{- if or .IsHome $isIndexRoom (and .IsPage (eq .Section "blog")) -}}
+{{- /* The instrument register now appears only in an opened note, where a
+      formula that overflows its measure carries a trace. */ -}}
+{{- if and .IsPage (eq .Section "blog") -}}
 {{- $instrumentStyles := resources.Get "css/instrument.css" | minify | fingerprint "md5" -}}
 <link rel="stylesheet" href="{{ $instrumentStyles.RelPermalink }}">
 {{- end -}}
+{{- /* The page's frame, the index card, and what each page prints, as one
+      file. */ -}}
 {{- if $isIndexRoom -}}
-{{- $indexRoomStyles := resources.Get "css/index-room.css" | minify | fingerprint "md5" -}}
-<link rel="stylesheet" href="{{ $indexRoomStyles.RelPermalink }}">
+{{- $indexStyles := slice (resources.Get "css/page-frame.css") (resources.Get "css/index-card.css") (resources.Get "css/index-pages.css") | resources.Concat "css/index.css" | minify | fingerprint "md5" -}}
+<link rel="stylesheet" href="{{ $indexStyles.RelPermalink }}">
 {{- end -}}
 {{- /* Fetch a page as soon as the reader shows intent, so passages begin at
       once. Prefetch only: a prerendered page would start its own light. */ -}}
@@ -46,7 +50,7 @@
       carry the index card, the page, and the two crop instruments. */ -}}
 {{- $passageStyles := resources.Get "css/passage.css" | minify | fingerprint "md5" -}}
 <link rel="stylesheet" href="{{ $passageStyles.RelPermalink }}">
-{{- if or (eq .Layout "colophon") (eq .Kind "404") -}}
+{{- if or (eq .Layout "colophon") (eq .Layout "search") (eq .Kind "404") -}}
 {{- $registerStyles := resources.Get "css/register.css" | minify | fingerprint "md5" -}}
 <link rel="stylesheet" href="{{ $registerStyles.RelPermalink }}">
 {{- end -}}

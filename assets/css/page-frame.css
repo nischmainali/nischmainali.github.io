@@ -1,0 +1,217 @@
+/*
+ * The page and its frame.
+ *
+ * Two pieces of paper lie in the sunlit room: a small index card
+ * (index-card.css) and the page it steers. The page is the stage. Its crop
+ * marks are trimmed to the text it prints, so the frame changes with each
+ * page; the margin column hangs from the page's right trim, out in the room,
+ * as marginalia on the site always passed beyond the crop. A page shorter than
+ * the window lies in the middle of the room; a longer one starts near the top
+ * and scrolls. The page and its margin keep the place they would have if the
+ * card, the page and the margin were centred together; the card itself stands
+ * further toward the window's left edge, at the height of the eye, so the page
+ * has room around it.
+ *
+ * Every state is its own static page. passage.css carries the card, the frame
+ * and the page between them; nothing here routes. The page grammars (title
+ * page, paper, registers, field note) are in index-pages.css.
+ */
+
+:root:has(> body.index-page) {
+  /* The note's measure, as an opened article on the site sets it. */
+  --measure: clamp(30rem, calc(30vw + 10.5rem), 37.5rem);
+  --note-w: clamp(10rem, calc(20vw - 3rem), 15rem);
+  /* The theme draws each crop corner 2em inside the page's box; the trim is
+   * that corner, and the page's padding runs from it. The same interval
+   * separates the text from the margin column on the other side. */
+  --crop-band: 2rem;
+  --trim-pad: clamp(2.25rem, calc(5.6vw - 1.5rem), 3.5rem);
+  --trim-pad-y: clamp(2.25rem, 5vh, 3.5rem);
+  --pad-x: calc(var(--crop-band) + var(--trim-pad));
+  --pad-y: calc(var(--crop-band) + var(--trim-pad-y));
+  --card-w: clamp(16.5rem, calc(25vw - 3rem), 18.5rem);
+  --card-gap: 1.25rem;
+  --portrait-w: clamp(13rem, 19vw, 17.25rem);
+  --page-top: clamp(1rem, 3vh, 2rem);
+  /* A short page is a little taller than the open card beside it, so the card
+   * sits inside the page's trim; the frame stays close around a title page. */
+  --page-min: 40rem;
+  --page-w: calc(2 * var(--pad-x) + var(--measure));
+  --group-w: calc(var(--card-w) + var(--card-gap) + var(--page-w));
+}
+
+/* The margin column begins at the page's right trim. */
+@media (min-width: 1180px) {
+  :root:has(> body.index-page) {
+    --group-w: calc(var(--card-w) + var(--card-gap) + var(--page-w) - var(--crop-band) + var(--note-w));
+  }
+}
+
+body.index-page {
+  --passage-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --instrument-accent: var(--site-accent, #6f3b3f);
+  interpolate-size: allow-keywords;
+}
+
+/* The footer only carries scripts. */
+body.index-page > footer {
+  margin-top: 0;
+}
+
+/* The crop marks frame the page a little more firmly than the theme's: a
+ * darker stroke and a longer tick. passage.css draws the same strokes while
+ * the frame moves between pages. */
+html[data-ink] body.index-page > .crop-c {
+  --crop-gap: 1.25em;
+  color: color-mix(in srgb, var(--site-ink) 72%, transparent);
+}
+
+/* === The page and its place in the room === */
+
+@media (min-width: 960px) {
+  html:has(> body.index-page) {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding-block: var(--page-top);
+  }
+
+  /* Auto margins set a short page in the middle of the room and let a long
+   * one start at the top. The left margin leaves room for the card, so the
+   * pair is centred rather than the page alone. */
+  body.index-page {
+    box-sizing: border-box;
+    width: var(--page-w);
+    max-width: none;
+    min-height: min(var(--page-min), calc(100dvh - 2 * var(--page-top)));
+    margin: auto auto auto calc((100% - var(--group-w)) / 2 + var(--card-w) + var(--card-gap));
+    padding: var(--pad-y) var(--pad-x);
+  }
+}
+
+/* The title page takes the margin column into its frame, so the portrait is
+ * printed inside the trim, beside the title. Its right edge is where the
+ * margin column's would be, so the card and the page keep their places. */
+@media (min-width: 1180px) {
+  body.index-page.is-home {
+    width: calc(var(--page-w) - var(--crop-band) + var(--note-w));
+  }
+}
+
+.sheet {
+  position: relative;
+  flex-grow: 1;
+}
+
+/* The margin column carries what belongs beside the text. It starts at the
+ * page's right trim and lies outside it, in the room. */
+@media (min-width: 1180px) {
+  .sheet--paper {
+    display: grid;
+    grid-template-columns: minmax(0, var(--measure)) var(--note-w);
+    column-gap: var(--trim-pad);
+    align-content: start;
+    width: calc(var(--measure) + var(--trim-pad) + var(--note-w));
+  }
+
+  /* The title and the portrait share one row inside the trim, the portrait's
+   * top on the name's capitals; the row lies in the middle of the page. */
+  .sheet--front {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--portrait-w);
+    column-gap: 3rem;
+    align-content: center;
+    align-items: start;
+  }
+
+  .sheet > :not(.sheet-margin) {
+    grid-column: 1;
+  }
+
+  .sheet > .sheet-margin {
+    grid-column: 2;
+  }
+}
+
+@media (min-width: 960px) and (max-width: 1179px) {
+  .sheet--front {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+/* Without the margin column, marginalia follow their passage. */
+@media (max-width: 1179px) {
+  .sheet--paper {
+    display: block;
+  }
+
+  .sheet > * + * {
+    margin-top: 2.4rem;
+  }
+}
+
+/* On a phone the title clears the light and ink controls above it. */
+@media (max-width: 959px) {
+  .sheet--front {
+    padding-top: 3.5rem;
+  }
+}
+
+/* === Marginalia === */
+
+.margin-label {
+  margin: 0 0 0.4rem;
+  color: var(--site-muted, #515f51);
+  font-family: Jost, sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.margin-label:not(:first-child) {
+  margin-top: 1.35rem;
+}
+
+.margin-links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.margin-links li + li {
+  margin-top: 0.15rem;
+}
+
+.sheet .margin-links a {
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--site-link, #173f51) 42%, transparent);
+  color: var(--site-link, #005077);
+  font-size: 0.92rem;
+  text-decoration: none;
+}
+
+.sheet .margin-links a[href^="http"]::after {
+  content: " ↗";
+  font-size: 0.8em;
+}
+
+.sheet .margin-links a:is(:hover, :focus-visible) {
+  border-bottom-color: currentColor;
+}
+
+@media print {
+  html:has(> body.index-page) {
+    display: block;
+    padding: 0;
+  }
+
+  body.index-page {
+    width: auto;
+    min-height: 0;
+    margin: 0 auto;
+  }
+}

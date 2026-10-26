@@ -13,7 +13,9 @@
       sentences rather than a specification. */ -}}
 {{- $words := slice "no" "one" "two" "three" "four" "five" "six" "seven" "eight" "nine" "ten" -}}
 
-<main class="register-shell colophon" aria-labelledby="register-title">
+{{ partial "index-slip.html" (dict "page" . "state" "index" "closed" true) }}
+
+<main class="sheet register-shell colophon" id="sheet" aria-labelledby="register-title">
   <header class="register-opening">
     <h1 class="title register-title" id="register-title">
       <span class="register-title-ornament" aria-hidden="true">❧</span>
@@ -123,7 +125,9 @@
       <a href="https://github.com/yihui/hugo-paged">hugo-paged</a>, whose crop
       marks were the beginning of everything here; almost none of its original
       appearance survives. Nothing on the page depends on a framework, a client
-      router, or a third-party script.</p>
+      router, or a third-party script. Every page is its own static page; where
+      the browser allows, its own view transitions carry the index card and the
+      page's frame from one page to the next.</p>
       <p>The
       <a href="{{ "search/" | relURL }}">search page</a> reads an index built
       with the site. Notes print as offprints: the light, the controls, and the

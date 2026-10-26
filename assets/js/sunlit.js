@@ -29,6 +29,7 @@
   var canvas = document.getElementById('sunlit-canvas');
   var themeButton = document.getElementById('theme-toggle');
   var favicon = document.getElementById('sunlit-favicon');
+  var themeColor = document.getElementById('sunlit-theme-color');
   if (!scene || !canvas) return;
 
   var root = document.documentElement;
@@ -266,6 +267,7 @@
     document.body.classList.toggle('night', night);
     document.body.setAttribute('data-theme', value);
     if (favicon) favicon.href = favicon.getAttribute(night ? 'data-night-href' : 'data-day-href');
+    if (themeColor) themeColor.content = themeColor.getAttribute(night ? 'data-night-color' : 'data-day-color');
   }
 
   /* The ink turns over in a short blend while the room passes mid-tone. */

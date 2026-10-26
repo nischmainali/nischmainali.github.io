@@ -12,10 +12,10 @@ details that belong to this site.
 worktrees for experiments. Worktrees share the same repository history and do
 not form separate copies of the project.
 
-The branch `archive/pre-writing-main-2026-08-04` preserves the exact main state
-from before the accepted Writing page and background continuity work. Older
-named archive branches preserve earlier design stages. Do not delete archive
-branches during routine cleanup.
+The branch `archive/pre-index-card-2026-10-12` preserves the exact main state
+from before the index card and the trimmed page. Older named archive branches,
+such as `archive/pre-writing-main-2026-08-04`, preserve earlier design stages.
+Do not delete archive branches during routine cleanup.
 
 Local Git commands do not push or deploy the site. GitHub Actions builds the
 accepted `main` branch and publishes it at <https://nischmainali.github.io/>.
@@ -49,6 +49,15 @@ Run the full local check before committing a design or template change.
 
 The command checks content, draft rendering, JavaScript syntax, and a minified
 production build. GitHub Actions runs the same checks before every deployment.
+
+With a preview running, an optional browser pass loads every kind of page at six
+widths by day and night and reports horizontal overflow, console errors,
+repeated view-transition names, and a misplaced index card. It needs Python
+Playwright with Chrome.
+
+```sh
+python3 scripts/visual_check.py --base http://127.0.0.1:1315
+```
 
 ## Deployment
 
@@ -102,29 +111,52 @@ must preserve the light position across links and refreshes.
 
 `data/inks.toml` contains the approved Modus and Ef based ink schemes.
 `assets/css/ink-register.css` maps their semantic colors into the site, while
-`assets/js/ink-register.js` manages selection and persistence. Lokta Hybrid is
-the canonical fallback. Read [`docs/INK_SYSTEM.md`](docs/INK_SYSTEM.md) before
-changing the palette control or its storage rules.
+`assets/js/ink-register.js` manages selection and persistence. The control is
+a printer's colour bar in the index card's foot, one patch per ink. Lokta
+Hybrid is the canonical fallback. Read
+[`docs/INK_SYSTEM.md`](docs/INK_SYSTEM.md) before changing the palette control
+or its storage rules.
 
-### Homepage
+### The index card and the page
 
-The homepage is a compact frontispiece with an introduction, portrait, selected
-works, and optional research previews. The selected works data lives in
-`data/selected_works.toml`. The template and interaction are in
-`layouts/shortcodes/selected-works.html`, `assets/css/home-readout.css`, and
-`assets/js/home-readout.js`.
+Every page lies beside an index card, which is the site's navigation. The card
+lists Selected works and Writing by year with the site's printer's marks in
+its gutter, ends each with a link to its full list, marks the item on the
+page, lists an opened note's sections, and on a paper or a note shows what
+reads alongside it. Its foot carries the CV and the editorial ink. The page's
+crop marks are trimmed to the text it prints, and the margin column hangs from
+the page's right trim. Passages between pages use the browser's
+cross-document view transitions. `DESIGN_LANGUAGE.md` (section 7) holds the
+rules.
 
-### Writing page and articles
+The card is `layouts/partials/index-slip.html`, with `slip-more.html` for the
+link to a section's full list, and `assets/js/index-room.js`. The styles are
+`assets/css/page-frame.css`, `assets/css/index-card.css`, and
+`assets/css/index-pages.css`, served together as one file, and the passages
+are `assets/css/passage.css`.
 
-The public Writing index stays at `/blog/`. Its template is
-`layouts/_default/blog.html`. Article structure is owned by
+### Homepage and papers
+
+The homepage is a title page: the name, the research proposition, and the
+affiliation, with the portrait beside them inside the page's frame and the
+card open on Selected works. Its templates are `layouts/index.html` and
+`layouts/partials/sheet-frontispiece.html`.
+
+`data/selected_works.toml` is the one source for papers. The content adapter
+`content/papers/_content.gotmpl` builds a page for each paper and the Selected
+works register; `short_title` names a paper in the card.
+
+### Writing and articles
+
+The Writing register stays at `/blog/`; its template is
+`layouts/_default/index-room.html`. Article structure is owned by
 `layouts/blog/single.html`, `static/css/article.css`, and
 `assets/js/article.js`.
 
-Articles support a table of contents, sidenotes, citations, epigraphs, figures,
-drop capitals, statements, proofs, numbered equations, and numbered scientific
-plates. Keep the prose column readable and preserve the outside table of
-contents and right margin notes at wide widths. The full plate system is
+Articles support sidenotes, citations, epigraphs, figures, drop capitals,
+statements, proofs, numbered equations, and numbered scientific plates. A
+note's sections are listed in the index card. Keep the prose column readable
+and the margin notes beside it at wide widths. The full plate system is
 documented in [`docs/GAUSSIAN_FIELD_NOTE.md`](docs/GAUSSIAN_FIELD_NOTE.md).
 
 ### The instrument register
@@ -134,18 +166,23 @@ measuring device laid over it. `assets/css/instrument.css` holds its invariants
 and its vocabulary, and `layouts/partials/instrument-mark.html` is the single
 crest every gesture shares.
 
-It is a vocabulary rather than one repeated effect. *Projection* throws a panel
-into free margin and drifts; *Extension* slides a drawer out from behind a row
-and retracts behind it; *Trace* is the ambient member, a graduated scale with a
-travelling index that reports and never opens. Read the invariants before adding
-to it, and never place it in reading matter.
+It is a vocabulary rather than one repeated effect. Today only *Trace* is in
+use, a graduated scale with a travelling index on a formula that overflows its
+measure; *Projection* and *Extension* left with the old home ledger. Read the
+invariants before adding to it, and never place it in reading matter.
 
-### Colophon and missing page
+### Colophon, search, and missing page
 
 `/colophon/` states what the site is made of, reading its ink facts from
 `data/inks.toml` so they cannot drift. Its template is
-`layouts/_default/colophon.html`, and the authored missing page is
-`layouts/404.html`; both use `assets/css/register.css`.
+`layouts/_default/colophon.html`. Search is `layouts/_default/search.html`
+over the index built by `layouts/_default/index.json.json`, which covers notes
+and papers. The authored missing page is `layouts/404.html`. All three use
+`assets/css/register.css` on the trimmed page beside the card.
+
+The colophon and search are hidden for now. Their front matter sets
+`[build] list = 'never'` and `render = 'never'`, and `hugo.toml` no longer
+outputs `index.json`; the templates stay, so either can return.
 
 ### Mathematics
 
@@ -208,7 +245,7 @@ published file.
 - `docs/` contains current design references and completed studies.
 - `themes/hugo-paged/` is the locally modified base theme.
 - `org/` contains optional Org authoring source.
-- `hugo.toml` contains site configuration and navigation.
+- `hugo.toml` contains site configuration.
 - `.github/workflows/hugo.yaml` builds and deploys the production site.
 - `netlify.toml` preserves the previous host configuration as a fallback.
 

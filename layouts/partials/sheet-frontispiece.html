@@ -2,10 +2,10 @@
   sheet-frontispiece.html — the home page, set as a title page.
 
   The cropped page carries only the frontispiece: the name, the one
-  proposition, and the affiliation, centred in the room. The margin, beyond
-  the crop mark, carries the author's print. The index card beside them is
-  the list of work, so the page lists nothing; the curriculum vitae is in the
-  card's foot.
+  proposition, and the affiliation, with the author's print beside them
+  inside the trim, the two in one row in the middle of the page. The index
+  card beside them is the list of work, so the page lists nothing; the
+  curriculum vitae is in the card's foot.
 */ -}}
 {{- $home := site.Home -}}
 <main class="sheet sheet--front" id="sheet">
@@ -18,7 +18,7 @@
 
   <figure class="front-portrait sheet-margin profile-burn">
     <picture>
-      <source type="image/webp" srcset="{{ "/nisch-480.webp" | relURL }} 480w, {{ "/nisch-800.webp" | relURL }} 800w" sizes="(max-width: 959px) 60vw, 17rem">
+      <source type="image/webp" srcset="{{ "/nisch-480.webp" | relURL }} 480w, {{ "/nisch-800.webp" | relURL }} 800w" sizes="(max-width: 959px) 60vw, (max-width: 1179px) 13rem, 17.25rem">
       <img class="profile-image" src="{{ "/nisch.jpg" | relURL }}" alt="Portrait of Nischal Mainali in a garden" width="1600" height="1200" loading="eager" decoding="async">
     </picture>
   </figure>

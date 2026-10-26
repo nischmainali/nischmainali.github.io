@@ -2,12 +2,11 @@
 
 {{- if $isArticle -}}
 {{- $hasArticleCode := in .Content `class="highlight"` -}}
-{{- $hasArticleToc := .Scratch.Get "has_toc" -}}
 {{- $hasArticleMath := .Page.Store.Get "hasMath" -}}
 {{- $hasArticleReferences := or (in .Content `data-statement=`) (in .Content `data-equation-ref=`) -}}
 {{- $hasArticleSidenotes := in .Content `class="sidenote"` -}}
 {{- $hasArticleFocusMedia := .Page.Store.Get "articleHasFocusMedia" -}}
-{{- if or $hasArticleCode $hasArticleToc $hasArticleMath $hasArticleReferences $hasArticleSidenotes $hasArticleFocusMedia }}
+{{- if or $hasArticleCode $hasArticleMath $hasArticleReferences $hasArticleSidenotes $hasArticleFocusMedia }}
 <script src="{{ partialCached "js-asset-url.html" "js/article.js" "js/article.js" }}" defer></script>
 {{- end }}
 {{- end -}}

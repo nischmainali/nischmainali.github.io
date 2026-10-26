@@ -1,0 +1,23 @@
+{{- /*
+  related.html — which field notes read alongside which papers.
+
+  A note reads alongside a paper when the paper's own links point to it, or
+  when the note cites the paper by one of its addresses. Returns every pair
+  once, as dicts of {work, note}; call it with partialCached, since the answer
+  is the same on every page.
+*/ -}}
+{{- $notes := where site.RegularPages "Section" "blog" -}}
+{{- $pairs := slice -}}
+{{- range $work := hugo.Data.selected_works.works -}}
+  {{- $urls := slice -}}
+  {{- with $work.url }}{{ $urls = $urls | append (strings.TrimSuffix "/" .) }}{{ end -}}
+  {{- with $work.readout }}{{ range .links }}{{ with .url }}{{ $urls = $urls | append (strings.TrimSuffix "/" .) }}{{ end }}{{ end }}{{ end -}}
+  {{- range $note := $notes -}}
+    {{- $linked := in $urls (strings.TrimSuffix "/" $note.RelPermalink) -}}
+    {{- range $key, $entry := hugo.Data.citations -}}
+      {{- if and $entry.url (in $urls (strings.TrimSuffix "/" $entry.url)) (in $note.RawContent (printf "\"%s\"" $key)) }}{{ $linked = true }}{{ end -}}
+    {{- end -}}
+    {{- if $linked }}{{ $pairs = $pairs | append (dict "work" $work "note" $note) }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $pairs -}}

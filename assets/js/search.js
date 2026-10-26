@@ -9,6 +9,7 @@
   var results = root.querySelector('.site-search-results');
   var index = null;
   var timer = 0;
+  var MARKS = { paper: '\u00b6', note: '\u00a7', page: '\u00b7' };
 
   function groupsFor(query) {
     return query.split('|').map(function(part) {
@@ -82,15 +83,20 @@
     var fragment = document.createDocumentFragment();
     matches.forEach(function(item) {
       var row = document.createElement('li');
+      var mark = document.createElement('span');
       var heading = document.createElement('h2');
       var link = document.createElement('a');
       var preview = document.createElement('p');
+      /* Each result carries the index card's mark for its kind. */
+      mark.className = 'site-search-mark';
+      mark.setAttribute('aria-hidden', 'true');
+      mark.textContent = MARKS[item.entry.kind] || MARKS.page;
       link.href = item.entry.uri;
       link.textContent = item.entry.title;
       heading.append(link);
       preview.className = 'site-search-preview';
       preview.textContent = previewFor(item.entry.content, groups);
-      row.append(heading, preview);
+      row.append(mark, heading, preview);
       fragment.append(row);
     });
     results.append(fragment);

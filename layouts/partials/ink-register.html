@@ -1,61 +1,30 @@
+{{- /*
+  ink-register.html — the editorial ink, in the index card's foot.
+
+  A printer's colour bar: one small patch for each ink in data/inks.toml, in
+  that ink's heading colour by day and by night, with a hairline beneath the
+  ink on the page. Choosing a patch inks the page at once; the patches form
+  one radio group, so a keyboard reaches them as one stop and moves along
+  them with the left and right arrows. The script after the bar marks the
+  ink the head resolved before the card is painted.
+*/ -}}
 {{- $defaultInk := hugo.Data.inks.default -}}
-<aside
-  id="ink-register"
-  class="ink-register"
-  data-ink-register
-  style="--ink-register-texture: url('{{ "textures/lokta-fibres.svg" | relURL }}')">
-  <button
-    id="ink-toggle"
-    class="ink-register__toggle"
-    type="button"
-    aria-expanded="false"
-    aria-controls="ink-register-panel"
-    aria-haspopup="dialog"
-    aria-label="Choose ink. Current ink: Lokta Hybrid">
-    <span class="ink-register__mark" aria-hidden="true"><span></span></span>
-  </button>
-
-  <section
-    id="ink-register-panel"
-    class="ink-register__panel"
-    role="dialog"
-    aria-modal="false"
-    aria-labelledby="ink-register-heading"
-    hidden
-    inert>
-    <p class="ink-register__eyebrow">This copy</p>
-    <h2 id="ink-register-heading" class="ink-register__heading">Editorial ink</h2>
-    <p class="ink-register__note" data-ink-note>One impression, kept in this browser</p>
-
-    <div
-      class="ink-register__choices"
-      role="radiogroup"
-      aria-label="Editorial ink"
-      aria-orientation="vertical">
-      {{- range $index, $ink := hugo.Data.inks.inks }}
-      <button
-        class="ink-register__choice"
-        type="button"
-        role="radio"
-        aria-checked="{{ if eq $ink.id $defaultInk }}true{{ else }}false{{ end }}"
-        tabindex="{{ if eq $ink.id $defaultInk }}0{{ else }}-1{{ end }}"
-        data-ink-value="{{ $ink.id }}"
-        data-ink-name="{{ $ink.name }}"
-        data-ink-description="{{ $ink.description }}">
-        <span class="ink-register__index">{{ printf "%02d" (add $index 1) }}</span>
-        <span class="ink-register__copy">
-          <span class="ink-register__name">{{ $ink.name }}</span>
-          <span class="ink-register__description">{{ $ink.description }}</span>
-        </span>
-        <span class="ink-register__swatches" aria-hidden="true">
-          {{- range $swatch, $day := $ink.swatches }}
-          <span class="ink-register__swatch" style="--swatch:{{ $day }};--swatch-night:{{ index $ink.night_swatches $swatch }}"></span>
-          {{- end }}
-        </span>
-      </button>
-      {{- end }}
-    </div>
-    <p class="ink-register__keys">↑↓ choose · home/end · esc close</p>
-    <p class="ink-register__status" role="status" aria-live="polite" aria-atomic="true"></p>
-  </section>
-</aside>
+<div id="ink-register" class="ink-register" data-ink-register>
+  <span class="ink-register__bar" role="radiogroup" aria-label="Ink">
+    {{- range hugo.Data.inks.inks }}
+    {{- $here := eq .id $defaultInk }}
+    <button class="ink-register__choice" type="button" role="radio" aria-checked="{{ $here }}" tabindex="{{ if $here }}0{{ else }}-1{{ end }}" title="{{ .name }}" data-ink-value="{{ .id }}" style="--swatch:{{ index .swatches 3 }};--swatch-night:{{ index .night_swatches 3 }}"><span class="visually-hidden">{{ .name }}</span></button>
+    {{- end }}
+  </span>
+  <span class="ink-register__status" role="status" aria-live="polite" aria-atomic="true"></span>
+  <script>
+    (function () {
+      var ink = document.documentElement.dataset.ink;
+      document.currentScript.parentNode.querySelectorAll("[data-ink-value]").forEach(function (choice) {
+        var here = choice.getAttribute("data-ink-value") === ink;
+        choice.setAttribute("aria-checked", String(here));
+        choice.tabIndex = here ? 0 : -1;
+      });
+    }());
+  </script>
+</div>

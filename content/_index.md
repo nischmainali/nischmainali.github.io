@@ -5,8 +5,7 @@ page_class = 'index-page'
 name = 'Nischal Mainali'
 proposition = 'I study mathematical theories of cognition and how biological and artificial minds represent the world.'
 affiliation = 'I’m Nisch, a PhD candidate in Neuroscience at the <span class="p-org">Burak Lab, Hebrew University of Jerusalem</span>.'
-[menu]
-  [menu.main]
-    name = 'Index'
-    weight = 1
+# Every page lies beside the index card unless it says otherwise.
+[cascade.params]
+  page_class = 'index-page'
 +++

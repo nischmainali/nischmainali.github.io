@@ -16,7 +16,8 @@ disableKinds = ["taxonomy", "term"]
 dir = ':cacheDir/images'
 
 [outputs]
-home = ["html", "rss", "json"]
+# The search index (index.json) returns when search does.
+home = ["html", "rss"]
 
 [params]
 description = "Nischal's address on the web"

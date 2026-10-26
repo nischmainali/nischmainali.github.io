@@ -1,11 +1,20 @@
-{{- /* One page per selected work, so every state of the index has its own
-      address. The record itself stays in data/selected_works.toml. */ -}}
+{{- /* One page per selected work, each the first page of a reprint, plus the
+      Papers register. The record itself stays in data/selected_works.toml;
+      a work without an id, or with a repeated one, stops the build. */ -}}
+{{- $works := hugo.Data.selected_works.works -}}
+{{- if not $works }}{{ errorf "data/selected_works.toml contains no works" }}{{ end -}}
+{{- $seen := dict -}}
+{{- range $works -}}
+  {{- if not .id }}{{ errorf "A selected work is missing its id" }}{{ end -}}
+  {{- if isset $seen .id }}{{ errorf "Selected work id %q is repeated" .id }}{{ end -}}
+  {{- $seen = merge $seen (dict .id true) -}}
+{{- end -}}
 {{- $.AddPage (dict
     "kind" "section"
     "path" "."
-    "title" "Papers"
+    "title" "Selected works"
     "params" (dict "page_class" "index-page")) -}}
-{{- range hugo.Data.selected_works.works -}}
+{{- range $works -}}
   {{- $.AddPage (dict
       "kind" "page"
       "path" .id

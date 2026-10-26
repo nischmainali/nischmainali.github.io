@@ -89,9 +89,14 @@
     {{ end }}
     {{ partial "sunlit.html" . }}
     <div class="crop-h"></div><div class="crop-v"></div><div class="crop-c"></div>
+    {{- /* The index card is the site's navigation; the theme's top bar is
+          printed only when a menu or a logo asks for it. */ -}}
+    {{- $topMenu := (default .Site.Menus.main (index .Site.Menus $section)) -}}
+    {{- $topLogo := default .Site.Params.logo.en (index .Site.Params.logo $section) -}}
+    {{- if or $topMenu $topLogo }}
     <nav class="nav-top small" aria-label="Primary">
     <div class="logo">
-    {{ with default .Site.Params.logo.en (index .Site.Params.logo $section) }}
+    {{ with $topLogo }}
       <a href="{{ relURL .url }}">
       {{ if .img }}
       <img src="{{ relURL .img }}" alt="{{ .alt }}" />
@@ -119,3 +124,4 @@
       {{ end }}
     </div>
     </nav>
+    {{- end }}

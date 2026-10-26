@@ -1,8 +1,9 @@
 /*
  * The index card's small behaviours. Navigation itself is ordinary links
  * between static pages; this remembers the sections the reader left open on
- * the home page, folds the card on a phone, marks an opened note's current section
- * and keeps it in view inside the card, and lets Escape close a paper.
+ * the home page, folds the card on a phone, marks an opened note's current
+ * section and keeps it in view inside the card, moves through the card by
+ * arrow keys, and lets Escape close a paper.
  */
 (function () {
   "use strict";
@@ -72,21 +73,46 @@
       }
     };
     var schedule = function () { if (!frame) frame = window.requestAnimationFrame(mark); };
-    measure();
-    mark();
+    /* The first measurement waits for the first frame, so it reads the layout
+     * the browser makes for painting instead of forcing an early one that the
+     * page's other scripts would undo. */
+    window.requestAnimationFrame(function () { measure(); mark(); });
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", function () { measure(); schedule(); });
     window.addEventListener("load", function () { measure(); schedule(); });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { measure(); schedule(); });
   }
 
+  /* Arrow keys move through the card, as on the reference: up and down to the
+   * previous or next control that is showing, Home and End to its ends. Tab
+   * still moves through the page as usual. The ink's colour bar is one stop,
+   * its chosen patch; Left, Right, Home and End belong to the bar. */
+  if (card) {
+    card.addEventListener("keydown", function (event) {
+      var key = event.key;
+      if (key !== "ArrowDown" && key !== "ArrowUp" && key !== "Home" && key !== "End") return;
+      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || event.defaultPrevented) return;
+      var stops = Array.prototype.filter.call(card.querySelectorAll("a[href], summary, button"), function (stop) {
+        if (stop.getAttribute("role") === "radio" && stop.tabIndex < 0) return false;
+        if (card.classList.contains("is-folded") && stop.closest(".slip-card__body")) return false;
+        return stop.getClientRects().length > 0 && !stop.closest("details:not([open]) > :not(summary)");
+      });
+      var at = stops.indexOf(document.activeElement);
+      if (at === -1) return;
+      var next = key === "Home" ? 0 : key === "End" ? stops.length - 1 :
+        Math.min(stops.length - 1, Math.max(0, at + (key === "ArrowDown" ? 1 : -1)));
+      event.preventDefault();
+      stops[next].focus();
+    });
+  }
+
   /* Escape closes a paper, as the reference closes a node, unless the reader
-   * is typing or working a control. */
+   * is typing. */
   if (state === "paper") {
     document.addEventListener("keydown", function (event) {
       if (event.key !== "Escape" || event.defaultPrevented) return;
       var target = event.target;
-      if (target && target.closest && target.closest("input, textarea, select, [contenteditable], dialog, .ink-register")) return;
+      if (target && target.closest && target.closest("input, textarea, select, [contenteditable], dialog")) return;
       location.href = "/";
     });
   }

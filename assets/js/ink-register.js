@@ -1,4 +1,5 @@
-/* Persistent editorial ink register.  See layouts/partials/ink-register.html. */
+/* Persistent editorial ink: the colour bar in the index card's foot.
+ * See layouts/partials/ink-register.html. */
 (function () {
   "use strict";
 
@@ -20,9 +21,6 @@
     return [ink.id, ink];
   }));
   var fallback = inkById.has(config.default) ? config.default : "lokta-hybrid";
-  var toggle = register.querySelector("#ink-toggle");
-  var panel = register.querySelector("#ink-register-panel");
-  var note = register.querySelector("[data-ink-note]");
   var status = register.querySelector(".ink-register__status");
   var choices = Array.from(register.querySelectorAll("[data-ink-value]"));
   var local = safeStorage("localStorage");
@@ -87,46 +85,14 @@
     linkedInk = null;
   }
 
-  function originText(origin) {
-    if (origin === "assigned") return "Chosen for this copy · kept in this browser";
-    if (origin === "linked") return "Linked impression · choose one to keep it";
-    if (origin === "chosen") return "Your chosen impression · kept in this browser";
-    if (origin === "temporary") return "Current impression · storage unavailable";
-    return "House impression · sunlight held constant";
-  }
-
-  function updateToggleLabel() {
-    var ink = inkById.get(currentInk);
-    var action = panel.hidden ? "Choose ink" : "Close ink selector";
-    toggle.setAttribute("aria-label", action + ". Current ink: " + ink.name);
-  }
-
   function updateRegister(announce) {
     var ink = inkById.get(currentInk);
-    note.textContent = originText(currentOrigin);
     choices.forEach(function (choice) {
       var selected = choice.dataset.inkValue === currentInk;
       choice.setAttribute("aria-checked", String(selected));
       choice.tabIndex = selected ? 0 : -1;
     });
-    updateToggleLabel();
     if (announce) status.textContent = ink.name + " applied";
-  }
-
-  function setOpen(open, options) {
-    var settings = Object.assign({ focusChoice: false, returnFocus: false }, options);
-    panel.hidden = !open;
-    panel.inert = !open;
-    toggle.setAttribute("aria-expanded", String(open));
-    register.toggleAttribute("data-open", open);
-    updateToggleLabel();
-
-    if (open && settings.focusChoice) {
-      var selected = panel.querySelector('[aria-checked="true"]');
-      if (selected) selected.focus();
-    } else if (!open && settings.returnFocus) {
-      toggle.focus();
-    }
   }
 
   function applyInk(id, options) {
@@ -156,19 +122,8 @@
     }
   }
 
-  toggle.addEventListener("click", function (event) {
-    setOpen(panel.hidden, {
-      focusChoice: panel.hidden && event.detail === 0
-    });
-  });
-
-  toggle.addEventListener("keydown", function (event) {
-    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
-      event.preventDefault();
-      setOpen(true, { focusChoice: true });
-    }
-  });
-
+  /* The bar runs left to right, so its own keys are Left, Right, Home and
+   * End; Up and Down still move through the index card around it. */
   choices.forEach(function (choice) {
     choice.addEventListener("click", function () {
       applyInk(choice.dataset.inkValue);
@@ -178,18 +133,14 @@
       var currentIndex = choices.indexOf(choice);
       var nextIndex = null;
 
-      if (event.key === "ArrowDown" || event.key === "ArrowRight") {
+      if (event.key === "ArrowRight") {
         nextIndex = (currentIndex + 1) % choices.length;
-      } else if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
+      } else if (event.key === "ArrowLeft") {
         nextIndex = (currentIndex - 1 + choices.length) % choices.length;
       } else if (event.key === "Home") {
         nextIndex = 0;
       } else if (event.key === "End") {
         nextIndex = choices.length - 1;
-      } else if (event.key === "Escape") {
-        event.preventDefault();
-        setOpen(false, { returnFocus: true });
-        return;
       }
 
       if (nextIndex !== null) {
@@ -199,24 +150,6 @@
         next.focus();
       }
     });
-  });
-
-  register.addEventListener("focusout", function (event) {
-    /* A pointer press briefly leaves document.activeElement on <body> before
-     * the choice receives focus. Follow the focus destination directly so the
-     * panel cannot become hidden/inert before the ensuing click is delivered. */
-    if (!register.contains(event.relatedTarget)) setOpen(false);
-  });
-
-  document.addEventListener("pointerdown", function (event) {
-    if (!panel.hidden && !register.contains(event.target)) setOpen(false);
-  });
-
-  document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape" && !panel.hidden) {
-      event.preventDefault();
-      setOpen(false, { returnFocus: true });
-    }
   });
 
   window.addEventListener("storage", function (event) {

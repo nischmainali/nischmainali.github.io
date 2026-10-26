@@ -1,7 +1,7 @@
-# Homepage publication records. The ledger and its optional paper notes are
-# rendered from this one source so the visible title, authors, and links stay in
-# agreement. A short title names the work in the index card; the full title
-# stays on the paper's own page.
+# Publication records. The index card, the Papers register, each paper's own
+# page, and the search index are rendered from this one source, so the visible
+# title, authors, and links stay in agreement. A short title names the work in
+# the index card; the full title stays on the paper's own page.
 
 [[works]]
 id = "icl-linear-transformers"
@@ -14,8 +14,6 @@ url = "https://arxiv.org/abs/2504.12916"
 [works.readout]
 venue = "arXiv"
 contribution = "We derive exact stochastic gradient dynamics for a linear transformer, which reveal staged learning and conservation laws, and then use the same measurements to study nonlinear models."
-plate = "icl-dynamics"
-plate_caption = "A conceptual trace of separated learning timescales and the later onset of in-context learning."
 
 [[works.readout.links]]
 label = "Paper"
@@ -40,8 +38,6 @@ url = "https://www.cell.com/neuron/fulltext/S0896-6273(25)00043-1"
 [works.readout]
 venue = "Neuron"
 contribution = "Across species and environments, the statistics of hippocampal place fields are captured by threshold crossings of a Gaussian process."
-plate = "gp-thresholds"
-plate_caption = "A related technical plate showing smooth Gaussian process paths crossing a field threshold."
 
 [[works.readout.links]]
 label = "Article"

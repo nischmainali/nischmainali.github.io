@@ -6,6 +6,10 @@ author = "Nisch"
 date = 2026-07-28
 subtitle = "A private specimen for the cross-note apparatus"
 description = "Standard facts about excursion sets of a stationary Gaussian field, kept as the far side of a cross-note reference."
+# A private specimen: built in drafts at its own address for review, never
+# listed in the card, the Writing register, or the feed.
+[build]
+  list = 'never'
 +++
 
 {{< dropcap "T" >}}his second specimen exists so the cross-note apparatus has a

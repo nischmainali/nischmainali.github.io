@@ -2,6 +2,10 @@
 title = 'Colophon'
 layout = 'colophon'
 description = 'The paper, the type, the light, and the mathematics this site is made of.'
+# Hidden for now: kept here, neither built nor listed.
+[build]
+  list = 'never'
+  render = 'never'
 +++
 
 A colophon in the old sense: what this page is made of, and where each part came

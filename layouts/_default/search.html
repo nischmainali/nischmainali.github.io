@@ -1,0 +1,24 @@
+{{ partial "header.html" . }}
+
+{{- /*
+  Search on the sheet: the title, the short note on how queries work, and the
+  field with its results. The card stays closed; the page prints the search.
+*/ -}}
+{{ partial "index-slip.html" (dict "page" . "state" "index" "closed" true) }}
+
+<main class="sheet register-shell search" id="sheet" aria-labelledby="register-title">
+  <header class="register-opening">
+    <h1 class="title register-title" id="register-title">
+      <span class="register-title-ornament" aria-hidden="true">❧</span>
+      <span>{{ .Title | markdownify }}</span>
+    </h1>
+  </header>
+
+  {{- with .Content }}
+  <div class="register-intro">{{ . }}</div>
+  {{- end }}
+
+  {{ partial "search-interface.html" . }}
+</main>
+
+{{ partial "footer.html" . }}

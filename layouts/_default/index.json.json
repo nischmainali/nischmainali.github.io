@@ -1,9 +1,15 @@
-{{- /* The search index: the site's own writing. The index's paper pages are
-      addresses for states of the index, not pages to search. */ -}}
-{{- $pages := where site.RegularPages "Section" "not in" (slice "papers") -}}
-[
-{{- range $i, $p := $pages -}}
-{{- if gt $i 0 -}},{{- end -}}
-{{- dict "uri" $p.RelPermalink "title" $p.Title "content" ($p.Plain | htmlUnescape | plainify) | jsonify -}}
+{{- /* The search index: every field note, and every paper by its record. A
+      paper's page is built from data/selected_works.toml, so its searchable
+      text is its title, collaborators, venue, and contribution from there.
+      Each entry names its kind, so a result can carry the card's mark. */ -}}
+{{- $entries := slice -}}
+{{- range where site.RegularPages "Section" "not in" (slice "papers") -}}
+  {{- $kind := cond (eq .Section "blog") "note" "page" -}}
+  {{- $entries = $entries | append (dict "uri" .RelPermalink "title" .Title "kind" $kind "content" (.Plain | htmlUnescape | plainify)) -}}
 {{- end -}}
-]
+{{- range hugo.Data.selected_works.works -}}
+  {{- $text := slice .collaborators -}}
+  {{- with .readout }}{{ with .venue }}{{ $text = $text | append . }}{{ end }}{{ with .contribution }}{{ $text = $text | append . }}{{ end }}{{ end -}}
+  {{- $entries = $entries | append (dict "uri" (printf "/papers/%s/" .id | relURL) "title" .title "kind" "paper" "content" (delimit $text ". ")) -}}
+{{- end -}}
+{{- $entries | jsonify -}}

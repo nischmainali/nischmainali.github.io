@@ -1,7 +1,10 @@
-# The index and the sheet: a study
+# The index card and the page: a study
 
-Status: prototype on `experiment/index-room`, October 2026. Not accepted; the
-current rules remain in `DESIGN_LANGUAGE.md`.
+Status: accepted by Nisch on 12 October 2026 ("very good! Very excited by it!
+Let's keep this direction up") on `experiment/index-room`, and revised after
+Nisch's review of 26 October 2026. The accepted rules now live in
+`DESIGN_LANGUAGE.md`; this study records how they were reached.
+The main state it replaces is archived as `archive/pre-index-card-2026-10-12`.
 
 ## The brief
 
@@ -50,12 +53,117 @@ sunlit room, the field notes, the inks, and the printer's vocabulary.
    sooner on the right, with a note's margin beginning at the page's edge, so
    the text itself can be wider, and a little more room between the card and
    the text.
+8. The seventh was accepted. The prototype was committed (`16e5a0a`) and
+   `main` archived, and a consistency pass followed, with what else to adapt
+   from the reference:
+   - the colophon, search, and the missing page moved onto the card and the
+     trimmed page, and the theme's top bar was retired;
+   - from the reference: a connections section ("Alongside") on a paper or a
+     note, a section's note set after its "i.", a pointing hand that follows
+     the pointer, toggles that point down or up, an arrow that leans home,
+     and arrow keys inside the card;
+   - left behind: the map as the home page's space, the timeline, spinning
+     and blinking marks, the reference's type, orange, and rounded card, and
+     its two-card stack for an opened node;
+   - the old home ledger, Writing template, contents rail, and their styles
+     and scripts were removed, with screenshots of both notes confirming the
+     removal changed nothing on the page.
+9. Two weeks later, on 26 October 2026, Nisch reviewed the accepted state:
+   - bring the portrait into the frame, aligned and sized to it;
+   - a better mark than the pointing hand, and the sections named "Selected
+     works" and "Writing";
+   - hide the colophon and search for now;
+   - move the card further left to give the page more room, and make the crop
+     marks stronger without letting them distract;
+   - remove the empty placeholders from a paper's page;
+   - remove the subtitle from the card's Field notes;
+   - find the best way to reach the full lists;
+   - consider moving the editorial ink into the card, off the top of the page.
 
-## The idea now
+   What was done, and why:
+   - **The lozenge (⧫)** now marks the item on the page. Twelve marks were set
+     in the card by day and by night. The lozenge is an old printer's mark,
+     quiet at the card's size and distinct from the leaf at the head.
+     Rejected: ✦ and ✶ (they read as the sparkle of generated interfaces, and
+     ✶ is the reference's own), ❦ (too sweet), ☙ (it echoes the head's leaf),
+     and plain bullets (too slight to mark a place).
+   - **Selected works and Writing** name the sections in the card, on their
+     own pages, and in the Writing section's title.
+   - **The "i." notes went** from both sections. "Subtitle" was read as the
+     italic note under a section's head, the only line in the card that read
+     like one.
+   - **The colophon and search are hidden**, not deleted: their pages are
+     neither built nor listed, `index.json` is not generated, and their links
+     left the card's foot.
+   - **Full list** ends Selected works and Writing, with an arrow that leans
+     toward it on hover, and is marked on the list's own page. The section's
+     head cannot carry the link, since it is the control that opens the
+     section, and an address beside the head would turn the index into a menu
+     bar; the end of the section is where a reader who has run down the list
+     looks for more.
+   - **The ink moved into the card's foot**, opposite the CV. The light stayed
+     on the frame's corner: the light belongs to the room, and ink is a choice
+     about the printing, which belongs with the index. The frame now carries
+     one instrument. A first version kept the registration mark beside the
+     word "Ink" and opened the proof slip over the card on solid paper.
+   - **The card stands further left.** The page and its margin keep the place
+     a centred group would give them, and the card moves toward the window's
+     edge by half the room there, at most 3 rem. At 1440 px it stands 87 px
+     from the page's trim instead of 48 px, and 35 px from the window's edge;
+     at 1180 px, 70 px from the trim and 17 px from the edge.
+   - **The crop marks are firmer:** the ink at 72 % instead of 52 %, and
+     strokes 1.25 em long instead of 1 em. Four strengths were compared by day
+     and by night: 64 % was barely different, 82 % began to draw the eye, and
+     72 % matched the page's smallest type.
+   - **The portrait is printed inside the home page's frame**, beside the
+     title, its top on the name's capitals and its right edge on the page's
+     padding. The home page's frame takes in the width of the margin column,
+     so the card and the page keep their places. At 1440 px it is 274 px
+     wide.
+   - **A paper's page lost its plate and the plate's caption**, both empty;
+     a figure joins once there is a real one.
 
-The larger goal holds over the literal notes: a calm control index and a
-spacious stage. Two pieces of paper lie in the sunlit room, the index card and
-the page, and the pair is centred in the window.
+   Later the same day Nisch added three notes: the ink selector was too much,
+   and should be simpler, elegant and not ostentatious; a post's ending was too
+   glaring, with its lines, colours, formatting and placing, and might take a
+   dingbat in the background; and the updated mean-field post on `main` should
+   come across. Then: "remove 'ink' from the ink color choices, just the
+   colors are good enough!"
+   - **The ink became a printer's colour bar**, the sibling of the crop marks
+     on a press sheet: six small square patches in each ink's heading colour,
+     a hairline beneath the ink on the page, no label, nothing that opens.
+     Five forms were set in the card's foot by day and by night. A two-tone bar
+     of heading and accent was busier, read like flags, and said no more. The
+     numerals 1 to 6 printed in each ink were charming but said nothing. Dots
+     looked like a generic colour picker. The current ink's name, cycling on
+     each press, hid the choice.
+   - **The ending went quiet.** References and Notes take a small italic
+     heading and one ink at seven tenths, with hanging indents, dotted
+     underlines only on links, and no markers, arrows, or rules. A reference's
+     way back shows only when the reader is there, and the reference a
+     citation led to carries the card's lozenge. The record lost its rule and
+     its grid. The title's leaf, mirrored and as faint, closes the note at the
+     foot of its column. Three placings were compared: behind the References
+     heading, which echoed the title but was easily missed; a small centred
+     tailpiece, which was too sweet; and the foot of the column, which brackets
+     the note with the title's leaf at the opposite corner. The reversed
+     leaf `☙` was rejected because it falls back to a monospaced font.
+   - **The nonlinear feature-learning note** now carries Nisch's update from
+     `main`, copied unchanged: a new opening, a section on the setup and its
+     limits, a new closing section, two more references, and a revision on 26
+     October 2026.
+   - **The two specimens are unlisted.** Nisch asked to hide "Level sets of a
+     smooth field" and "Trying things out". Both were already drafts, which
+     production never builds; they now also set `[build] list = 'never'`, so
+     a preview still builds them for review but nothing lists them, and the
+     card adds one only on its own page.
+
+## Where it landed
+
+A snapshot at acceptance; `DESIGN_LANGUAGE.md` holds the current rules. The
+larger goal held over the literal notes: a calm control index and a spacious
+stage. Two pieces of paper lie in the sunlit room, the index card and the
+page, and the pair is centred in the window.
 
 - **The page is the stage.** Its crop marks are trimmed to the text it
   prints, at the opened article's own measure (37.5 rem at 1440 px). A page
@@ -87,7 +195,11 @@ the page, and the pair is centred in the window.
     title turns italic; an opened note lists its sections beneath its row, on
     a dotted rule.
   Only one section is open at a time. The type is darker than before: labels
-  and titles in the full ink, records at seven tenths.
+  and titles in the full ink, records at seven tenths. From the final round:
+  on a paper or a note an "Alongside" section (⇄) lists what reads with it; a
+  section's note follows an "i."; the hand follows the pointer to any item;
+  the + and − point down or up as a section is about to open or close; the
+  name's arrow leans toward home; arrow keys move through the card.
 - **The home page** is a title page. It prints the frontispiece as the
   current home page sets it (the name and its leaf, the proposition, the
   affiliation), centred in the page, with the portrait in the margin.
@@ -98,9 +210,10 @@ the page, and the pair is centred in the window.
 | Address | The page prints | The margin carries |
 | --- | --- | --- |
 | `/` | the frontispiece, centred | the portrait |
-| `/papers/<id>/` | the paper's record, contribution and plate | links, the note alongside, the plate's caption |
+| `/papers/<id>/` | the paper's record, contribution and plate | its links and the plate's caption |
 | `/papers/`, `/blog/` | the section printed whole | — |
 | `/blog/<slug>/` | the whole field note | its sidenotes and captions |
+| `/colophon/`, `/search/`, missing pages | the register itself | — |
 
 Short titles keep the card to one line per title at 1440 px. Papers take
 `short_title` from `data/selected_works.toml`, and notes from their front
@@ -123,9 +236,13 @@ matter. The full title stays on the page itself.
 
 ## Layout
 
-- From 1180 px: the card, the page, and the margin column hanging from the
-  page's right trim, centred together. At 1440 px the card is 296 px wide,
-  the text 600 px, the margin 240 px, and the room shows 72 px on either side.
+- From 1180 px: the page and the margin column hanging from its right trim
+  keep the place a centred group of card, page, and margin would give them,
+  and the card stands toward the window's edge by half the room there, at
+  most 3 rem. At 1440 px the card is 296 px wide, the text 600 px, and the
+  margin 240 px; the card stands 35 px from the window's edge and 87 px from
+  the trim, and the room on the right is 70 px. Until 26 October the three
+  were centred together, 72 px from either edge.
 - 960–1179 px: the page has no margin column, and marginalia follow their
   passage.
 - Below 960 px: the card waits folded above the page, so the page comes first.
@@ -136,8 +253,9 @@ matter. The full title stays on the page itself.
 
 - Papers come from `data/selected_works.toml`, one page each, through a
   content adapter.
-- "Read alongside" is derived: a note qualifies when the paper's own links
-  point to it, or when the note cites the paper's preprint.
+- "Alongside" is derived in both directions (`layouts/partials/related.html`):
+  a note reads alongside a paper when the paper's own links point to it, or
+  when the note cites the paper by one of its addresses.
 - Identity comes from the home page's front matter.
 - An opened note's sections come from its own headings.
 
@@ -155,8 +273,13 @@ matter. The full title stays on the page itself.
 
 ## Open questions
 
-- Two papers have no plate or summary; their pages are sparse. Plates drawn
-  from Nisch's own figures would complete them.
-- There are no contact links on the site; the card has room for them.
-- The colophon, search and missing pages still use the old top navigation.
-- At 1180 px the room shows only about 37 px either side.
+- An information page (positions, education, talks, contact) is planned but
+  waits on Nisch's content: the CV PDF predates the site's paper records, and
+  there are no contact links on the site.
+- Paper pages are sparse until their contributions and figures are written;
+  nothing holds their place. Figures drawn from Nisch's own papers would
+  complete them.
+- Search, when it returns, needs its own query examples; its note still gives
+  "R Markdown", from the base theme.
+- At 1180 px the card stands 17 px from the window's edge and the margin
+  column ends 35 px from the other.

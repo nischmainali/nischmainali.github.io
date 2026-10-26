@@ -40,7 +40,9 @@
   line-height: 1;
 }
 
-.register-title::before {
+/* The register keeps its own small leaf; the theme's large title ornament,
+   whose h1.title selector outranks a bare class, stays off. */
+h1.register-title::before {
   content: none;
 }
 

@@ -3,12 +3,15 @@
 
   A card of plain paper beside the page, set like the reference's index in the
   site's own printer's marks. Its left gutter carries the marks: the leaf at
-  its head, the pilcrow for papers and the section sign for field notes, and a
-  pointing hand at the item on the page. Each section opens to its years, and
-  each year to its items: a short title over an italic line of record. An
-  opened note lists its sections beneath its row. Every state is its own
-  static page, and the browser's cross-document view transitions carry the
-  card between them.
+  its head, the pilcrow for selected works, the section sign for writing, the
+  crossing arrows for what reads alongside, and a lozenge at the item on the
+  page, which also follows the reader's pointer. Each section opens to its
+  years, and each year to its items: a short title over an italic line of
+  record, then a link to the section's full list. An opened note lists its
+  sections beneath its row. The foot carries the curriculum vitae and the
+  editorial ink, a printer's colour bar. Every state is its own static page,
+  and the browser's cross-document view transitions carry the card between
+  them.
 
   The card lists and the page prints: the card never opens the section the
   page beside it is printing whole.
@@ -18,20 +21,36 @@
     state     "index" | "paper" | "article"
     work      the selected_works record (paper)
     printing  "papers" | "notes" when the page prints that section whole
+    closed    true when the page prints something of its own
 */ -}}
 {{- $page := .page -}}
 {{- $state := .state -}}
+{{- $printing := .printing -}}
 {{- $works := hugo.Data.selected_works.works -}}
-{{- $notes := (where (where site.RegularPages "Section" "blog") "Draft" false).ByDate.Reverse -}}
+{{- $notes := (where site.RegularPages "Section" "blog").ByDate.Reverse -}}
+{{- /* An unlisted note, such as a private specimen, joins the card only on its
+      own page, so its sections can still be read there. */ -}}
+{{- if and (eq $state "article") (not (in $notes $page)) }}{{ $notes = ($notes | append $page).ByDate.Reverse }}{{ end -}}
 {{- $open := slice "papers" -}}
 {{- if eq $state "article" }}{{ $open = slice "notes" }}{{ end -}}
-{{- if .printing }}{{ $open = slice }}{{ end -}}
+{{- if or .printing .closed }}{{ $open = slice }}{{ end -}}
 {{- $activeWork := "" -}}
 {{- with .work }}{{ $activeWork = .id }}{{ end -}}
 {{- $workYears := slice -}}
 {{- range $works }}{{ if not (in $workYears .year) }}{{ $workYears = $workYears | append .year }}{{ end }}{{ end -}}
 {{- $noteYears := slice -}}
 {{- range $notes }}{{ if not (in $noteYears .Date.Year) }}{{ $noteYears = $noteYears | append .Date.Year }}{{ end }}{{ end -}}
+{{- /* What reads alongside the item on the page, with the same line of record
+      its own section gives it. */ -}}
+{{- $alongside := slice -}}
+{{- range partialCached "related.html" (dict) "related" -}}
+  {{- if and (eq $state "paper") (eq .work.id $activeWork) -}}
+    {{- $alongside = $alongside | append (dict "href" .note.RelPermalink "title" (.note.Params.short_title | default .note.Title) "meta" (.note.Date.Format "2 January 2006")) -}}
+  {{- end -}}
+  {{- if and (eq $state "article") (eq .note.RelPermalink $page.RelPermalink) -}}
+    {{- $alongside = $alongside | append (dict "href" (printf "/papers/%s/" .work.id) "title" (.work.short_title | default .work.title) "meta" .work.collaborators) -}}
+  {{- end -}}
+{{- end -}}
 
 {{- if $page.IsHome }}
 <script>
@@ -56,9 +75,10 @@
       {{- if $page.IsHome }}
       <span class="slip-label slip-label--head">Index</span>
       {{- else }}
-      <a class="slip-label slip-label--head" href="{{ "/" | relURL }}">{{ site.Home.Params.name }}</a>
+      <a class="slip-label slip-label--head" href="{{ "/" | relURL }}">{{ site.Home.Params.name }}<svg class="slip-back" viewBox="0 0 12 10" width="12" height="10" aria-hidden="true" focusable="false"><path d="M11 5H1.5M5 1.5L1.5 5L5 8.5"/></svg></a>
       {{- end }}
       <button class="slip-fold" type="button" aria-expanded="true" aria-controls="slip-body" data-slip-fold>
+        {{ partial "slip-toggle.html" . }}
         <span class="visually-hidden">Fold the index</span>
       </button>
     </header>
@@ -66,7 +86,7 @@
     <div class="slip-card__body" id="slip-body">
       <div class="slip-card__inner">
         <details class="slip-section" name="index-sections" data-slip-section="papers"{{ if in $open "papers" }} open{{ end }}>
-          <summary class="slip-section__head"><span class="slip-mark" aria-hidden="true">¶</span><span class="slip-label">Papers</span><span class="slip-toggle" aria-hidden="true"></span></summary>
+          <summary class="slip-section__head"><span class="slip-mark" aria-hidden="true">¶</span><span class="slip-label">Selected works</span>{{ partial "slip-toggle.html" . }}</summary>
           <ol class="slip-years">
             {{- range $year := $workYears }}
             <li class="slip-year">
@@ -76,7 +96,7 @@
                 {{- $here := eq .id $activeWork }}
                 <li>
                   <a class="slip-item" href="{{ printf "/papers/%s/" .id | relURL }}"{{ if $here }} aria-current="page"{{ end }}>
-                    {{- if $here }}<span class="slip-mark slip-mark--here" aria-hidden="true">☞</span>{{ end }}
+                    <span class="slip-mark slip-mark--here" aria-hidden="true">⧫</span>
                     <span class="slip-item__title">{{ .short_title | default .title }}</span>
                     <span class="slip-item__meta">{{ .collaborators }}</span>
                   </a>
@@ -86,10 +106,11 @@
             </li>
             {{- end }}
           </ol>
+          {{ partial "slip-more.html" (dict "href" "/papers/" "here" (eq $printing "papers")) }}
         </details>
 
         <details class="slip-section" name="index-sections" data-slip-section="notes"{{ if in $open "notes" }} open{{ end }}>
-          <summary class="slip-section__head"><span class="slip-mark" aria-hidden="true">§</span><span class="slip-label">Field notes</span><span class="slip-toggle" aria-hidden="true"></span></summary>
+          <summary class="slip-section__head"><span class="slip-mark" aria-hidden="true">§</span><span class="slip-label">Writing</span>{{ partial "slip-toggle.html" . }}</summary>
           <ol class="slip-years">
             {{- range $year := $noteYears }}
             <li class="slip-year">
@@ -99,11 +120,11 @@
                 {{- $here := and (eq $state "article") (eq .RelPermalink $page.RelPermalink) }}
                 <li>
                   <a class="slip-item" href="{{ if $here }}#article-title{{ else }}{{ .RelPermalink }}{{ end }}"{{ if $here }} aria-current="page"{{ end }}>
-                    {{- if $here }}<span class="slip-mark slip-mark--here" aria-hidden="true">☞</span>{{ end }}
+                    <span class="slip-mark slip-mark--here" aria-hidden="true">⧫</span>
                     <span class="slip-item__title">{{ .Params.short_title | default .Title | markdownify }}</span>
                     <span class="slip-item__meta"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 January" }}</time></span>
                   </a>
-                  {{- if $here }}
+                  {{- if and $here (ne $page.Params.show_toc false) }}
                   {{- $headings := $page.Fragments.Headings }}
                   {{- if and (eq (len $headings) 1) (not (index $headings 0).Title) }}{{ $headings = (index $headings 0).Headings }}{{ end }}
                   {{- with $headings }}
@@ -127,13 +148,30 @@
             </li>
             {{- end }}
           </ol>
+          {{ partial "slip-more.html" (dict "href" "/blog/" "here" (eq $printing "notes")) }}
         </details>
 
-        <p class="slip-foot">
+        {{- with $alongside }}
+        <details class="slip-section" name="index-sections" data-slip-section="alongside">
+          <summary class="slip-section__head"><span class="slip-mark slip-mark--alongside" aria-hidden="true">⇄</span><span class="slip-label">Alongside</span>{{ partial "slip-toggle.html" . }}</summary>
+          <ol class="slip-list slip-list--alongside">
+            {{- range . }}
+            <li>
+              <a class="slip-item" href="{{ .href | relURL }}">
+                <span class="slip-mark slip-mark--here" aria-hidden="true">⧫</span>
+                <span class="slip-item__title">{{ .title | markdownify }}</span>
+                <span class="slip-item__meta">{{ .meta }}</span>
+              </a>
+            </li>
+            {{- end }}
+          </ol>
+        </details>
+        {{- end }}
+
+        <div class="slip-foot">
           <a class="slip-label" href="{{ "/pdfs/cv.pdf" | relURL }}">CV</a>
-          <a class="slip-label" href="{{ "/colophon/" | relURL }}">Colophon</a>
-          <a class="slip-label" href="{{ "/search/" | relURL }}">Search</a>
-        </p>
+          {{ partial "ink-register.html" $page }}
+        </div>
       </div>
     </div>
   </div>

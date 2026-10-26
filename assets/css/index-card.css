@@ -1,0 +1,583 @@
+/*
+ * The index card.
+ *
+ * A card of plain paper beside the page, a step lighter than the room by day
+ * and a step deeper by night, with no texture, border, shadow or radius. It is
+ * set like the reference's index in the site's own printer's marks: a left
+ * gutter of marks, a rule of fine dots beneath each row, small capitals for
+ * labels and the book face for titles. Each section opens to its years, and
+ * each year to its items, a short title over an italic line of record, then
+ * the way to the section's full list. The foot carries the curriculum vitae
+ * and the editorial ink.
+ *
+ * Its place beside the page is set in page-frame.css; its passage between
+ * pages, one glide of its paper's edge, in passage.css.
+ */
+
+/* While the light changes, the card's paper passes with the ink. */
+body.ink-mixing.index-page .index-slip {
+  --slip-paper: color-mix(
+    in oklab,
+    color-mix(in srgb, color-mix(in oklab, var(--palette-bg-main, #fbf7f0) 12%, #fdfbf7) 96%, transparent),
+    color-mix(in srgb, #27242b 93%, transparent) calc(var(--ink-mix, 0) * 100%)
+  );
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.index-slip {
+  --slip-gutter: 1.5rem;
+  --slip-rule: color-mix(in srgb, var(--site-ink, #202622) 46%, transparent);
+  --slip-quiet: color-mix(in srgb, var(--site-ink, #202622) 82%, transparent);
+  position: relative;
+  z-index: 5;
+  color: var(--site-ink, #202622);
+}
+
+/* The card stands further toward the window's left edge than the centred
+ * group would put it, by half the room there, at most 3rem, so the page has
+ * room around it. */
+@media (min-width: 960px) {
+  .index-slip {
+    position: fixed;
+    top: 50%;
+    left: max(1rem, calc((100% - var(--group-w)) / 2 - min((100% - var(--group-w)) / 4, 3rem)));
+    display: flex;
+    flex-direction: column;
+    width: var(--card-w);
+    max-height: calc(100dvh - 2 * var(--page-top));
+    translate: 0 -50%;
+  }
+}
+
+.index-slip .slip-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 1.3rem clamp(1.1rem, 1.6vw, 1.5rem) 1.2rem;
+  background: var(--slip-paper);
+  view-transition-name: slip-main;
+}
+
+.slip-label {
+  font-family: Jost, sans-serif;
+  font-size: 0.69rem;
+  font-weight: 400;
+  letter-spacing: 0.09em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+/* === The gutter's marks: the leaf at the head, the pilcrow for selected
+ * works, the section sign for writing, the crossing arrows for what reads
+ * alongside, and the lozenge at the item on the page === */
+
+.slip-mark {
+  display: inline-block;
+  flex: none;
+  width: var(--slip-gutter);
+  color: var(--site-ink, #202622);
+  font-family: "Linden Hill", Palatino, serif;
+  font-size: 1.04rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.slip-mark--leaf,
+.slip-mark--here {
+  color: var(--site-accent, #6f3b3f);
+}
+
+.slip-mark--leaf {
+  font-size: 1.12rem;
+}
+
+.slip-mark--here {
+  font-size: 0.98rem;
+}
+
+.slip-mark--alongside {
+  font-family: Jost, sans-serif;
+  font-size: 0.86rem;
+}
+
+/* A rule of fine dots, as an old index sets its leaders. */
+.slip-head,
+.slip-section__head {
+  background: linear-gradient(90deg, var(--slip-rule) 1px, transparent 1px) left bottom / 3px 1px repeat-x;
+}
+
+/* === The head: "Index" on the home page, elsewhere the name, which leads
+ * home, with an arrow that leans toward it === */
+
+.slip-head {
+  display: flex;
+  flex: none;
+  align-items: baseline;
+  padding: 0 0 0.9rem;
+}
+
+.slip-head .slip-label--head {
+  flex: 1;
+}
+
+.index-slip .slip-label--head {
+  border: 0;
+  color: var(--site-ink, #202622);
+  text-decoration: none;
+}
+
+.index-slip a.slip-label--head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.index-slip a.slip-label--head:is(:hover, :focus-visible) {
+  color: var(--site-link, #005077);
+}
+
+.slip-back {
+  flex: none;
+  width: 0.75rem;
+  height: 0.62rem;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  transition: translate 240ms var(--passage-ease);
+}
+
+.slip-back path {
+  vector-effect: non-scaling-stroke;
+}
+
+.index-slip a.slip-label--head:is(:hover, :focus-visible) .slip-back {
+  translate: -3px 0;
+}
+
+/* Fold belongs to the phone, where the card waits above the page. */
+.slip-fold {
+  position: relative;
+  display: none;
+  flex: none;
+  align-self: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: -0.4rem -0.4rem -0.4rem 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--site-ink, #202622);
+  cursor: pointer;
+}
+
+.slip-fold .slip-toggle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+}
+
+.slip-card__body {
+  display: grid;
+  grid-template-rows: 1fr;
+  min-height: 0;
+  transition: grid-template-rows 520ms var(--passage-ease);
+}
+
+.slip-card.is-folded .slip-card__body {
+  grid-template-rows: 0fr;
+}
+
+/* A little inline room inside the scroller, so focus marks are not clipped. */
+/* The scroller reaches a little past the text on every side but the top, so
+ * focus marks and the ink's hairline are never clipped. */
+.slip-card__inner {
+  min-height: 0;
+  margin-inline: -0.4rem;
+  margin-block-end: -0.4rem;
+  padding-inline: 0.4rem;
+  padding-block-end: 0.4rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: var(--slip-rule) transparent;
+  scrollbar-width: thin;
+}
+
+.slip-card.is-folded .slip-card__inner {
+  overflow: clip;
+}
+
+.slip-card.is-folded .slip-head {
+  padding-bottom: 0;
+  background: none;
+}
+
+/* === Sections: a mark, a label, a thin + or −, and a rule of dots beneath.
+ * One open at a time. === */
+
+.slip-section__head {
+  display: flex;
+  align-items: baseline;
+  padding: 0.95rem 0 0.9rem;
+  color: var(--site-ink, #202622);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.slip-section__head::-webkit-details-marker {
+  display: none;
+}
+
+.slip-section__head .slip-label {
+  flex: 1;
+}
+
+.slip-section__head:hover .slip-label {
+  color: var(--site-link, #005077);
+}
+
+/* The toggle is a thin + or −, which points down or up when the reader is
+ * about to open or close, as the reference's does. */
+.slip-toggle {
+  flex: none;
+  align-self: center;
+  width: 0.62rem;
+  height: 0.62rem;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+}
+
+.slip-toggle path {
+  vector-effect: non-scaling-stroke;
+  transition: opacity 160ms ease;
+}
+
+.slip-toggle__down,
+.slip-toggle__up,
+.slip-section[open] > summary .slip-toggle__v,
+.slip-fold .slip-toggle__v,
+.slip-fold :is(.slip-toggle__down, .slip-toggle__up) {
+  opacity: 0;
+}
+
+.slip-card.is-folded .slip-fold .slip-toggle__v {
+  opacity: 1;
+}
+
+@media (hover: hover) {
+  .slip-section:not([open]) > summary:hover .slip-toggle__h,
+  .slip-section[open] > summary:hover .slip-toggle__h {
+    opacity: 0;
+  }
+
+  .slip-section:not([open]) > summary:hover .slip-toggle__down,
+  .slip-section[open] > summary:hover :is(.slip-toggle__v, .slip-toggle__up) {
+    opacity: 1;
+  }
+}
+
+.slip-section:not([open]) > summary:focus-visible .slip-toggle__h,
+.slip-section[open] > summary:focus-visible .slip-toggle__h {
+  opacity: 0;
+}
+
+.slip-section:not([open]) > summary:focus-visible .slip-toggle__down,
+.slip-section[open] > summary:focus-visible :is(.slip-toggle__v, .slip-toggle__up) {
+  opacity: 1;
+}
+
+.slip-section::details-content {
+  block-size: 0;
+  overflow-y: clip;
+  transition:
+    block-size 460ms var(--passage-ease),
+    content-visibility 460ms allow-discrete;
+}
+
+.slip-section[open]::details-content {
+  block-size: auto;
+}
+
+/* === Years, and in each year its items: a short title over an italic line
+ * of record === */
+
+.slip-years,
+.slip-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.slip-years {
+  padding: 0.2rem 0 0.4rem;
+}
+
+.slip-year {
+  margin-top: 0.6rem;
+}
+
+.slip-year__label {
+  display: block;
+  margin-bottom: 0.1rem;
+  padding-left: var(--slip-gutter);
+  color: var(--slip-quiet);
+  font-family: Jost, sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.13em;
+  line-height: 1.4;
+}
+
+.slip-list--alongside {
+  padding: 0.45rem 0 0.4rem;
+}
+
+.index-slip .slip-item {
+  display: grid;
+  grid-template-columns: var(--slip-gutter) minmax(0, 1fr);
+  align-items: baseline;
+  padding: 0.3rem 0 0.36rem;
+  border: 0;
+  color: var(--site-ink, #202622);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* The lozenge rests at the item on the page and follows the reader's
+ * pointer or focus to any other, as the reference's star does. */
+.slip-item .slip-mark--here {
+  grid-column: 1;
+  grid-row: 1;
+  opacity: 0;
+  transition: opacity 140ms ease;
+}
+
+.slip-item[aria-current="page"] .slip-mark--here {
+  opacity: 1;
+}
+
+.index-slip .slip-item:is(:hover, :focus-visible):not([aria-current]) .slip-mark--here {
+  opacity: 0.55;
+}
+
+.slip-item__title {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 0.98rem;
+  line-height: 1.25;
+  text-wrap: balance;
+  transition: color 140ms ease;
+}
+
+.slip-item__meta {
+  grid-column: 2;
+  grid-row: 2;
+  margin-top: 0.08rem;
+  color: var(--slip-quiet);
+  font-size: 0.84rem;
+  font-style: italic;
+  line-height: 1.3;
+  text-wrap: pretty;
+}
+
+.index-slip .slip-item:is(:hover, :focus-visible) .slip-item__title {
+  color: var(--site-link, #005077);
+}
+
+.index-slip .slip-item[aria-current="page"] .slip-item__title {
+  color: var(--site-heading, #184034);
+  font-style: italic;
+}
+
+/* The way to a section's full list, with an arrow that leans toward it. */
+.index-slip .slip-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0.1rem 0 0.8rem var(--slip-gutter);
+  border: 0;
+  color: var(--slip-quiet);
+  text-decoration: none;
+}
+
+.slip-more__arrow {
+  flex: none;
+  width: 0.75rem;
+  height: 0.62rem;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  transition: translate 240ms var(--passage-ease);
+}
+
+.slip-more__arrow path {
+  vector-effect: non-scaling-stroke;
+}
+
+.index-slip .slip-more:is(:hover, :focus-visible) {
+  color: var(--site-link, #005077);
+}
+
+.index-slip .slip-more:is(:hover, :focus-visible) .slip-more__arrow {
+  translate: 3px 0;
+}
+
+.index-slip .slip-more[aria-current="page"] {
+  color: var(--site-heading, #184034);
+}
+
+/* An opened note lists its sections beneath its row, on a dotted rule. */
+.slip-sections {
+  margin: 0.25rem 0 0.55rem var(--slip-gutter);
+  padding: 0.1rem 0 0.1rem 0.8rem;
+  background: linear-gradient(var(--slip-rule) 1px, transparent 1px) left top / 1px 3px repeat-y;
+  list-style: none;
+}
+
+.slip-sections ol {
+  margin: 0;
+  padding: 0 0 0 0.8rem;
+  list-style: none;
+}
+
+.index-slip .slip-sections a {
+  display: block;
+  padding: 0.15rem 0;
+  border: 0;
+  color: var(--slip-quiet);
+  font-size: 0.85rem;
+  line-height: 1.3;
+  text-decoration: none;
+  transition: color 140ms ease;
+}
+
+.index-slip .slip-sections ol a {
+  font-size: 0.8rem;
+}
+
+.index-slip .slip-sections a:is(:hover, :focus-visible) {
+  color: var(--site-link, #005077);
+}
+
+.index-slip .slip-sections a[aria-current="location"] {
+  color: var(--site-heading, #184034);
+  font-style: italic;
+}
+
+.slip-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem 1.2rem;
+  margin: 0;
+  padding: 1rem 0 0 var(--slip-gutter);
+}
+
+.index-slip .slip-foot a {
+  border: 0;
+  color: var(--site-ink, #202622);
+  text-decoration: none;
+}
+
+.index-slip .slip-foot a:is(:hover, :focus-visible) {
+  color: var(--site-link, #005077);
+}
+
+/* The editorial ink sits opposite the CV as a printer's colour bar, drawn by
+ * ink-register.css. */
+
+/* One focus mark: a hairline, never a rounded ring. */
+.index-slip :is(a, button, summary):focus-visible {
+  border-radius: 0;
+  outline: 1px solid var(--site-focus, currentColor);
+  outline-offset: 2px;
+}
+
+/* A first visit from outside: the card opens after a beat. */
+html.index-first-open .slip-card__body {
+  animation: slip-first-open 900ms 420ms var(--passage-ease) both;
+}
+
+html.index-first-open .slip-card__inner {
+  overflow: clip;
+}
+
+@keyframes slip-first-open {
+  from {
+    grid-template-rows: 0fr;
+  }
+}
+
+/* === Narrow screens: the card waits above the page, folded, except on the
+ * home page, where it follows the title, open === */
+
+@media (max-width: 959px) {
+  .index-slip {
+    margin: 2.1rem 0 1.6rem;
+  }
+
+  body.is-home .index-slip {
+    margin: 2.6rem 0 1rem;
+  }
+
+  .slip-fold {
+    display: block;
+  }
+
+  .slip-back {
+    display: none;
+  }
+
+  .slip-card__inner {
+    overflow: visible;
+  }
+
+  .slip-card.is-folded .slip-card__inner {
+    overflow: clip;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slip-section::details-content,
+  .slip-card__body {
+    transition: none;
+  }
+
+  html.index-first-open .slip-card__body {
+    animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .index-slip .slip-card {
+    border: 1px solid CanvasText;
+    background: Canvas;
+  }
+
+  .slip-head,
+  .slip-section__head {
+    border-bottom: 1px dotted CanvasText;
+    background: none;
+  }
+}
+
+@media print {
+  .index-slip {
+    display: none;
+  }
+}

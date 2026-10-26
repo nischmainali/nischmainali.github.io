@@ -2,8 +2,8 @@
 
 - Last baseline study: 2026-08-05
 - Accepted production direction: **Lokta Sunlight reader + Lokta Field Note**,
-  with a build-time mathematical apparatus, the instrument register, and the
-  day and night room
+  with a build-time mathematical apparatus, the day and night room, and the
+  index card beside a trimmed page
 - Production branch: `main`
 - Accepted lineage: `experiment/toc-outside-sheet` promoted with the homepage
   paper readout and the Writing page (`45c3ed6`, 4 August 2026), then
@@ -12,8 +12,12 @@
   404, the instrument register, and the removal of the vendored theme's published
   fixtures (5 August 2026), then `experiment/day-night` promoted with the day
   and night room in place of Shade and Sunset and each ink's own night proof
-  (`3791247`, 12 October 2026)
+  (`3791247`, 12 October 2026), then `experiment/index-room` accepted with the
+  index card beside a trimmed page (`16e5a0a` and its consistency pass,
+  12 October 2026, then Nisch's review round of 26 October 2026; promote it
+  with the archive below)
 - Pre-promotion main archives, never to be deleted:
+  `archive/pre-index-card-2026-10-12` (`70fac76`),
   `archive/pre-day-night-2026-10-12` (`31f2934`),
   `archive/pre-apparatus-main-2026-08-05`,
   `archive/pre-writing-main-2026-08-04`,
@@ -61,10 +65,13 @@ recognizable gestures—not a pile of effects.
 
 ### 1. The page as an object
 
-At desktop widths the body is a centered 992 px sheet-like field with generous
-inset space. Eight minimal crop-mark strokes sit at its corners. The marks evoke
-printing and book production without drawing a literal border or card around the
-page. On smaller screens the crop marks disappear rather than crowd the content.
+At desktop widths the body is the page: a field with eight minimal crop-mark
+strokes at its corners. The marks evoke printing and book production without
+drawing a literal border or card around the page. Since 12 October 2026 the
+frame is trimmed to the text the page prints (see section 7): the page is the
+measure plus its margins, a short page lies in the middle of the room, and a
+long one starts near the top. On smaller screens the crop marks disappear
+rather than crowd the content.
 
 This is inherited from `hugo-paged`, but it is still foundational. The local
 version makes the marks more delicate than the upstream theme: it replaces the
@@ -103,6 +110,14 @@ very low opacity by day and by night.
 Treat these as typographic marginalia, not logos. They should feel discovered on
 the page. Do not multiply decorative symbols across every component or turn the
 floral mark into a loud brand stamp.
+
+The index card (section 7) is the one place where marks are set as a system,
+in its left gutter, and each mark has one role: the leaf `❧` heads the card in
+the accent ink, the pilcrow `¶` marks Selected works, the section sign `§`
+marks Writing, the crossing arrows `⇄` mark what reads alongside, and the
+lozenge `⧫` in the accent ink marks the item on the page. When search returns,
+its results carry the same marks for their kinds. Do not add a mark without a
+role, and do not give one role two marks.
 
 ### 4. The day and night room
 
@@ -185,8 +200,8 @@ role at 4.5:1 (`docs/INK_SYSTEM.md` has the method):
   paper's hue, never the light: the room keeps its brightness, and the sun pool
   takes only half the tint, so the sun stays warm. Night has no tint.
 - During a change, the text blends from the ink's own day colours to its own
-  night colours. The proof slip, its mark, and the colophon show night
-  swatches at night.
+  night colours. The ink's colour bar and the colophon (hidden for now) show
+  night swatches at night.
 
 Rules that came out of the study:
 
@@ -218,10 +233,14 @@ crossover, and hard-edge and shimmer sweeps.
 
 ### 5. An unboxed portrait
 
-On the home page the portrait occupies the right side of the introductory area.
-It has no radius, card, frame, or visible drop shadow. A gentle mask softens the
-outer edge, while a very light veil tunes it toward the surrounding page. On
-mobile it moves into normal flow and centers at a restrained width.
+On the home page the portrait is printed inside the page's trim, beside the
+title. Its top sits on the name's capitals and its right edge on the page's
+padding, so the title and the portrait make one row in the middle of the page
+(section 7). It is 19 vw wide, between 13 and 17.25 rem: 274 px at 1440 px. It
+has no radius, card, frame, or visible drop shadow. A gentle mask softens the
+outer edge, while a very light veil tunes it toward the surrounding page. By day it multiplies into the light; by night it is seen by
+the room's own low light. Below 1180 px it follows the title in normal flow at
+a restrained width.
 
 This treatment was deliberately developed across recent commits and then made
 flatter and brighter. Preserve the sense that the photograph is printed or
@@ -230,11 +249,11 @@ or a heavily filtered cutout.
 
 ### 6. Sparse navigation and quiet interaction
 
-The visible primary navigation is only `HOME` and `WRITING`, aligned to the upper
-right above a one-pixel rule. The active item is indicated by a short, dark wine
-underline. Links use a dark teal-blue (`#005077`) and usually a fine dashed or
-dotted underline. Publication links invert to white on teal on hover; most other
-links remain understated.
+The index card (section 7) is the site's navigation. The theme's top bar, which
+once carried `HOME` and `WRITING` above a one-pixel rule, is no longer printed:
+the vendored header prints it only when a menu or a logo asks for it, and none
+does. Links use a dark teal-blue (`#005077`) and usually a fine dashed or
+dotted underline; most remain understated.
 
 The theme toggle is the reference's tiny 18 px sun/moon control at half opacity.
 Whenever the crop-mark frame is present, it occupies the open upper-left corner:
@@ -250,21 +269,32 @@ outlines, springy transforms, moving links, and fleets of icon buttons.
 
 #### Editorial ink register (accepted 21 July 2026)
 
-A tiny printer's registration mark occupies the
-upper-right crop corner as the exact spatial counterpart to the upper-left
-light control. It opens one square Lokta proof slip down and inward from the
-crop intersection. The slip preserves the successful comparison register's
-hairlines, representative swatches, Linden Hill/Jost division, and paper
-texture. It adds no scrim, blur, rounded container, or toolbar.
+The ink is chosen in the index card's foot (section 7), opposite the CV, on a
+printer's colour bar: one small square patch for each of the six inks, in that
+ink's heading colour by day and its night proof by night, with no label. A
+hairline lies beneath the ink on the page, and at half strength beneath the
+patch under the pointer. Choosing a patch inks the page at once; nothing opens.
+The ink's name is the patch's tooltip and accessible name, and a change is
+announced. The patches are one radio group: the card's arrow keys reach it as
+one stop, Left and Right, Home and End move along it and ink as they go, and Up
+and Down leave it for the card's other stops.
 
-The two crop instruments have separate responsibilities. The left control
-moves the room between day and night; the right control changes editorial ink
-and a restrained tint in the day's light. Selection never restarts the WebGL
-worker or changes the light's clock. The source paper swatch stays exact in the
-proof slip. At night every ink shares the moonlit room and keeps its own night
-proof, and the slip shows night swatches. Both instruments are part of the paper
-frame on every route and leave with its top crop marks, so neither can linger
-over home content, the contents rail, or marginalia.
+From 21 July to 26 October 2026 the ink was a registration mark at the page's
+upper-right crop corner, opening a square Lokta proof slip of numbered rows,
+descriptions, and six swatches each. For a few hours of 26 October it moved
+into the card's foot as a labelled mark whose slip opened over the card; Nisch
+found the slip too much and asked for something simpler, then for the colour
+bar without its label.
+
+The two instruments have separate responsibilities and places. The light
+belongs to the room, so its control stays on the page's frame at the
+upper-left crop corner and leaves with the top crop marks. Ink is a printing
+choice, so it sits with the index, as the colour bar a printer prints beside
+the crop marks. The light control moves the room between day and night; the
+ink control changes editorial ink and a restrained tint in the day's light.
+Selection never restarts the WebGL worker or changes the light's clock. At
+night every ink shares the moonlit room and keeps its own night proof, and the
+bar shows the night proofs.
 
 Lokta Hybrid remains the canonical HTML, no-JavaScript, print, and
 storage-failure impression. On a first capable visit, the browser assigns one
@@ -281,6 +311,121 @@ its keyboard, touch, forced-color, reduced-motion, and cross-tab behavior. Nisch
 accepted this register on 21 July 2026, and Lokta Hybrid remains the canonical
 failure-safe and the colour baseline below.
 
+### 7. The index card and the trimmed page (accepted 12 October 2026)
+
+Nisch accepted this on 12 October 2026 after seven rounds, recorded in
+`docs/history/2026-10-index-card-study.md`. It adapts andrewtrousdale.com's
+index card and its two spaces, an index that controls an open space, into
+this site's paper, type, ink, and light. The reference's map, timeline,
+spinning and blinking marks, type, orange, rounded card, and two-card stack
+for an opened node were deliberately left behind. Nisch's review of 26 October
+2026 renamed the sections, replaced the pointing hand, gave the page more room
+from the card, firmed the crop marks, brought the portrait into the home
+page's frame, moved the ink into the card, hid the colophon and search, removed
+the paper pages' empty plates, and asked for a way to each section's full
+list; the study records the reasoning.
+
+**Two pieces of paper.** On every page two papers lie in the sunlit room: a
+small index card and the page it steers. The page is the stage.
+
+- The page's crop marks are trimmed to the text it prints, at the opened
+  article's measure (37.5 rem at 1440 px, never under 30 rem). The page's
+  padding runs from the trim, which the theme draws 2 em inside the body.
+- The crop marks are drawn in the ink at 72 %, each stroke 1.25 em long and
+  stopping 0.75 em short of the trim: as dark as the page's smallest type, so
+  they hold the frame without competing with the text. The theme's 52 % and
+  1 em read as faint beside a trimmed page.
+- The margin column hangs from the page's right trim, out in the room: the
+  sidenotes and a paper's links begin exactly at the trim line, as marginalia
+  on this site always passed beyond the crop. Wide code and figures may run to
+  the trim, never past it.
+- A page shorter than the window lies in the middle of the room and is at
+  least 40 rem tall, so the open card sits inside its height. A longer page
+  starts near the top and scrolls.
+- The page and its margin keep the place they would have if the card, the
+  page, and the margin were centred together in the window. The card stands
+  further toward the window's left edge, by half the room on that side and at
+  most 3 rem, fixed at the height of the eye, so the page has room around it.
+  At 1440 px the card is 296 px wide, 35 px from the window's edge and 87 px
+  from the page's trim; the text is 600 px, the margin 240 px, and the room
+  on the right 70 px.
+
+**The card lists and the page prints.** The card never opens the section the
+page beside it prints whole, so nothing appears twice. The home page opens
+Selected works; a paper opens Selected works and a note opens Writing, with
+the item on the page marked; the Selected works and Writing pages keep the
+card closed; the missing page opens Selected works as the way on.
+
+**The card.** Plain paper, a step lighter than the room by day and a step
+deeper by night, tinted only faintly by the ink, with no texture, border,
+shadow, or radius. Two type styles: Jost small capitals for labels, Linden
+Hill for titles and records. A left gutter carries the marks (section 3), and
+a rule of fine dots, as an old index sets its leaders, lies under the head and
+under each section.
+
+- The head reads `Index` on the home page and Nisch's name elsewhere, which
+  leads home, with a thin arrow that leans toward home on hover.
+- Sections are Selected works (`¶`), Writing (`§`), and, on a paper or a note
+  that has one, Alongside (`⇄`), derived in both directions from the paper's
+  links and the note's citations. Only one is open at a time. A thin + or −
+  turns into a down or up arrow when the reader is about to open or close it.
+- Each section opens to its years, and each year to its items: a short title
+  over an italic line of record (a paper's collaborators, a note's day).
+  `short_title` keeps titles to one line at 1440 px; the full title stays on
+  the page. Sections carry no note or subtitle.
+- Selected works and Writing end with `Full list` and a thin arrow that leans
+  toward it on hover: the way to the section printed whole, at `/papers/` and
+  `/blog/`, marked as the current place on its own page. The section's head
+  cannot carry the link, because it is the control that opens the section.
+- The lozenge `⧫` rests at the item on the page, whose title turns italic,
+  and follows the pointer or keyboard focus to any other item at half
+  strength. An opened note lists its sections beneath its row on a dotted
+  rule, the one being read in italic, unless the note sets `show_toc = false`.
+- The foot carries CV and, opposite it, the editorial ink as a printer's
+  colour bar of six patches (section 6). The colophon and search are hidden
+  for now: their pages are neither built nor listed, and `index.json` is not
+  generated.
+- Arrow keys move through the card, Home and End to its ends; the colour bar
+  is one stop. Tab moves through the page as usual. Focus is a hairline, never
+  a rounded ring.
+
+**Motion.** One motion each, after the reference: the card keeps one width
+and one name across pages, its content changes at once, and only its paper's
+edge glides, 800 ms on `cubic-bezier(0.16, 1, 0.3, 1)`. The page's frame
+glides to its next size on the same curve with the light control on its
+corner; the transition draws the crop strokes itself, so the corners never
+stretch. The page's printing travels with the frame, lifting away in
+150 ms before the next settles in 420 ms. A first visit from outside opens
+the card after a beat. Reduced motion makes every passage instant. Firefox,
+without cross-document transitions, simply navigates.
+
+**Narrow screens.** From 960 to 1179 px the margin column folds into the text
+flow. Below 960 px the card waits folded above the page, so the page comes
+first, except on the home page, where it follows the title page, open.
+
+**The title page.** The home page prints only the frontispiece: the name and
+its leaf, the proposition, and the affiliation, with the portrait beside them
+inside the trim. Its frame takes in the width the margin column has on other
+pages, so the card and the page keep their places and only the right trim
+moves between home and a paper. The title and the portrait make one row in
+the middle of the page, the portrait's top on the name's capitals and its
+right edge on the page's padding, 3 rem from the text. The card beside it,
+open on Selected works, is the list of work; the curriculum vitae is in the
+card's foot. There is no post, plate, list, or second navigation on the page.
+
+Rules that came out of the study:
+
+- Keep the larger goal, a calm control index and a spacious stage, above any
+  literal reading of a note.
+- The card is a printed object, not a panel: no texture, rounded corners, or
+  shadow, and no grey interface type; when it reads as too plain, add marks
+  with roles and darker ink, not ornament.
+- A frame belongs around what it frames: crop marks far from the content read
+  as an accident.
+- Never repeat a list between the card and the page.
+- Leave an empty place empty: a figure, plate, or note joins a page when its
+  content exists, never as a placeholder.
+
 ## Page grammars
 
 ### Figure labels (15 September 2026)
@@ -291,57 +436,34 @@ in place so published links and controls continue to work.
 
 ### Home
 
-The home page is a compact field-desk frontispiece, not a hero landing page. Its
-existing paper shell, crop marks, navigation clearances, and environmental light
-remain the frame. Inside that frame, one structural grid registers the italic
-name and research proposition with a portrait plate; selected work spans below
-as a compact bibliography. On desktop, the frontispiece and ledger share a
-`51rem` register. The `17.25rem` portrait's right edge meets the tapered
-ledger's right edge, while its smaller scale leaves a clear interval from the
-identity column.
+Since 12 October 2026 the home page is a title page beside the index card;
+section 7 describes it. The frontispiece keeps its four facts' order and type:
+the italic name with the large faint `❧` behind it, one exact research
+proposition, and one quiet affiliation sentence. The curriculum-vitae link
+moved to the card's foot, so it is not printed twice. There is no eyebrow,
+portrait caption, status widget, homepage subtitle, post, plate, or list.
 
-The opening has four facts only: the name, one exact research proposition, one
-quiet affiliation sentence, and a curriculum-vitae link. A large but faint `❧`
-sits behind the name as an explicit, assistively hidden ornament. It is part of
-the title composition rather than a viewport-positioned decoration. There is no
-eyebrow, portrait caption, status widget, or additional homepage subtitle.
+The previous home, a frontispiece over a selected-works ledger with one dotted
+preview control per record, Projection and Extension drawers, and lines drawn
+to a drifting preview, is preserved on `archive/pre-index-card-2026-10-12`.
+The card's Selected works section replaces the ledger, and each paper's own page
+(below) replaces the preview.
 
-Each selected work is one complete link whose year, `❡`, title, and collaborators
-share a restrained ledger row. The year remains a separate left register and the
-authors sit quietly below the title. Venue and record-type labels are deliberately
-omitted. The text measure stops a little before the right edge and the horizontal
-rules taper into the paper, so the open space reads as margin rather than a
-missing column. Rows remain close together and invert as a whole on hover or
-keyboard focus, using the active ink palette rather than fixed colors. They
-should read like bibliography entries, never product tiles or cards. The ledger
-caps at `51rem` while the frontispiece keeps its wider portrait composition.
-This is an intentional instrument margin, not a global narrowing of Home.
+### Papers
 
-Some records may include one dotted preview control when there is useful
-material to show. It opens only by click or keyboard action. Hover does not open
-it. At `90rem` and wider, two thin lines connect the control to a narrow preview
-on the right. That threshold leaves room for the `2.7rem` interval and the
-preview's full drift at the ordinary 1440 px desktop class. At narrower widths,
-the preview appears below the row and the lines are removed. The preview may
-contain a source label, one figure, one exact contribution sentence, and a few
-links. It should not become a modal, tooltip, or second publication database.
+`data/selected_works.toml` is the one source for the card's Selected works
+section, the Selected works register at `/papers/`, a page per paper at
+`/papers/<id>/` built by the content adapter `content/papers/_content.gotmpl`,
+and the search index when search returns. A work without an id, or with a
+repeated one, stops the build.
 
-All moving parts use the same animation. The control, lines, and preview follow
-a 14-second closed path that stays under six horizontal pixels and about two
-vertical pixels. The uneven path prevents an obvious reversal. Motion runs
-whenever the preview is open and does not need a URL flag. JavaScript calculates
-the line endpoints from the same panel position and creates a small SVG that
-covers only those lines. It removes the line paths as soon as the preview
-closes. Do not give these parts separate animation clocks or place the lines in
-an overflowing SVG tied to the publication row, because either choice makes the
-parts separate on screen.
-
-At narrow widths the source order becomes the composition: identity first,
-portrait second, bibliography third. The portrait remains in normal flow at
-every width, the ornament stays attached to its heading, and neither element may
-disturb the global crop-mark geometry. If future home sections are proposed,
-first ask whether the content has earned another editorial passage. Default
-answer: do not add a dashboard-like section.
+A paper's page is set like the first page of a reprint: a small-capital kicker
+(Paper, year, venue), the full title in the note title's italic, the byline,
+and the contribution in one sentence where one is written. The margin carries
+the paper's own links. A figure joins the page once there is a real one; the
+empty plates and their captions were removed on 26 October 2026. What reads
+alongside it is listed in the card, not printed. Escape on a paper's page
+returns to the home page, as the reference closes a node.
 
 #### Build-time numbering and cross-note references
 
@@ -363,10 +485,29 @@ problem.
 
 The article ending gains the two facts a technical reader needs and nothing else:
 a revision date when one exists, and a bibliographic self-citation. Both are
-plain lines in the ending's Jost register — never a copy-to-clipboard control —
-and both survive into print, where the screen navigation drops away. Revision
-stays out of the title field, where an earlier specimen proved such registers to
-be unnecessary complication.
+plain lines of type after small-capital labels — never a copy-to-clipboard
+control — and both survive into print, where the screen navigation drops away.
+Revision stays out of the title field, where an earlier specimen proved such
+registers to be unnecessary complication.
+
+Since 26 October 2026 the end matter is the note's quietest type, after Nisch
+found the old ending glaring: blue references underlined whole, accent dashes
+and arrows, a full rule, and a form-like grid. Now:
+
+- References and Notes take an italic heading, smaller than a section's. Their
+  entries are one ink at seven tenths, with hanging indents and no markers or
+  rules. A link is marked only by a dotted underline that darkens on hover, and
+  a reference written by hand as one link ends in a faint `↗`.
+- A reference's way back to its citations shows only when the reader is at
+  the reference, and the reference or note a citation led to carries the
+  index card's lozenge in the margin.
+- The record follows with no rule: a revision date and the self-citation, each
+  a line after its label, then `← Back to Writing` in the card's small
+  capitals.
+- The title's leaf, mirrored and as faint (`❧` turned with `scale: -1 1`, so
+  it comes from the same font), closes the note at the foot of its column, as
+  the leaf opened it at the head. `☙` was rejected: it falls back to a
+  monospaced font and would not match.
 
 #### Typographic corrections found in review (4 August 2026)
 
@@ -468,9 +609,17 @@ path. `/colophon/` states what the page is made of — paper, light, type, ink,
 mathematics, making — reading its ink facts from `data/inks.toml` so they cannot
 drift, with deep-linkable sections. It is a printer's colophon, not an about
 page. The 404 is authored on the same paper: crop frame, light, and ornament
-remain, with one plain line and two links. Both use `assets/css/register.css`,
-which borrows the Writing index's measure, ornament, and Jost/Linden Hill
-division rather than inventing a second grammar.
+remain, with one plain line; the card beside it, open on Papers, is the way on,
+so the page prints no links of its own. Both, and the search page, use
+`assets/css/register.css` on the trimmed page beside the card, with the card
+closed on the colophon and search. Search results carry the card's marks for
+their kinds, and the index covers the papers' records as well as the notes.
+
+Since 26 October 2026 the colophon and search are hidden. Their front matter
+sets `[build] list = 'never'` and `render = 'never'`, the card's foot no longer
+links them, and `hugo.toml` no longer outputs `index.json`. Their templates,
+styles, and script stay, so either returns by removing those lines and
+restoring its link.
 
 #### The instrument register
 
@@ -519,10 +668,11 @@ prose. It also stays a cool neutral in both lights, which is the one place the
 instrument refuses to warm with the sun. Pushing that refusal further, to a fully
 cool instrument layer indifferent to the weather, is the open experiment.
 
-Current assignment: Projection on the home ledger at 90rem and wider; Extension
-on the same ledger below that; Trace in the contents rail's reading rule and on a
-formula that genuinely overflows. One revealing gesture per context, Trace
-excepted.
+Current assignment: Trace on a formula that genuinely overflows. Projection and
+Extension left with the home ledger, and the contents rail's reading rule left
+with the rail, when the index card arrived on 12 October 2026; their code and
+the record of them remain on `archive/pre-index-card-2026-10-12`. One revealing
+gesture per context, Trace excepted.
 
 Registration was built for the article figure viewer and **rejected** on
 5 August 2026: brackets snapping to a figure's bounds before the viewer committed
@@ -541,36 +691,37 @@ is meant to prevent. The register never appears in
 reading matter — not in prose, not in the Writing index, not in the colophon body,
 not on the missing page.
 
-### Writing list
+### Writing register
 
-The public `Writing` page keeps the stable Hugo `/blog/` route. It is a compact
-paper register, not a feed, card grid, or documents shelf. A faint `❧` belongs
-to the page title. Entries have no repeated dingbat. Their identity comes from
-the exact order of title, description, date, and registration rule.
+The Writing page keeps the stable Hugo `/blog/` route, beside the card with
+the card's sections closed. It is a compact paper register, not a feed, card
+grid, or documents shelf: the title `Writing` in italic with its faint
+`❧`, then one entry per note, its date in a quiet left register, the title,
+the subtitle in italic, and the description. Rules between entries are
+hairlines. Hover and keyboard focus shift the title's ink without changing the
+entry's geometry. Hugo decides whether drafts are part of the register and of
+the card, so a draft build shows them while production omits them. The two
+private specimens, `scratch` ("Trying things out") and `scratch-apparatus`
+("Level sets of a smooth field"), are drafts that also set `[build] list =
+'never'`: a preview builds them at their addresses for review, but nothing
+lists them, and the card adds a specimen only on its own page, so its sections
+can still be read there. The
+Selected works register at `/papers/` follows the same grammar with a paper's year,
+collaborators, venue, and contribution.
 
-The register uses a `44rem` measure. Each entry is one large link with an
-italic title, one short description when the article supplies it, and a very
-small date placed last. It has no box, fill, thumbnail, tag, reading time
-label, or metadata column. A small right angle registration corner begins the
-separator. The line then loses strength toward the open right margin. This
-detail belongs to the crop mark system and must not be replaced by a Unicode
-ornament.
-
-Hover and keyboard focus shift the title ink, raise the description contrast,
-and strengthen the separator without changing the entry's geometry. Compact
-screens keep the same source order and do not create an empty marker column.
-Hugo decides whether drafts are part of the page, so an explicit draft build
-must show them while production continues to omit them. This list system was
-introduced on `experiment/docs-page` and accepted in its clean editorial form
-on 23 July 2026.
+The earlier Writing register, with its fading registration corners, was
+accepted on 23 July 2026 and is preserved on `archive/pre-index-card-2026-10-12`.
 
 ### Article
 
-Article pages give the title and floral mark the full page width, followed by a
-subtitle and a single low-contrast metadata line. The actual prose is narrowed to
-the 720 px reading measure. Categories and topics are text with delicate dotted
-baselines, not badges. Headings, blockquotes, tables, code, footnotes, and an
-optional table of contents come from the print-oriented theme vocabulary.
+Article pages give the title and floral mark the page's measure, followed by a
+subtitle and a single low-contrast metadata line. Beside the index card the
+prose takes the page's measure, 37.5 rem at 1440 px, and the sidenotes hang
+from the page's right trim (section 7). The note's contents are no longer a
+rail beside the text: the card lists the note's sections beneath its row and
+marks the one being read. Categories and topics are text with delicate dotted
+baselines, not badges. Headings, blockquotes, tables, code, and footnotes come
+from the print-oriented theme vocabulary.
 
 Preserve the distinction between wide editorial matter and the narrower reading
 column. Avoid wrapping the article in a second container, adding a sticky social
@@ -625,8 +776,9 @@ The pass adds no remote annotations, recursive popups, backlinks,
 transclusion, or second toolbar. Citation previews remain deferred even though
 the build-time bibliography is now present.
 
-The accepted `experiment/toc-outside-sheet` lineage adds one further spatial
-idea. On a
+The accepted `experiment/toc-outside-sheet` lineage added one further spatial
+idea, superseded on 12 October 2026 by the index card (section 7) and kept here
+as the record of the rail. On a
 genuinely wide viewport, the crop marks become the edge of a real reading
 sheet: the contents rail leaves that sheet completely and hangs in the quiet
 left desk field. It keeps a 1.5rem interval from the crop boundary. At the
@@ -667,8 +819,8 @@ KaTeX's metric-matched HTML stays in the document as a legacy fallback.
 
 Its governing choices are:
 
-- the title, subtitle, and floral mark remain in the wide editorial field while
-  prose uses a calmer 36rem / 576 px measure. Its 1.055rem Linden Hill body
+- the title, subtitle, and floral mark open the page, and prose uses the
+  page's measure, 30 to 37.5 rem beside the index card. Its 1.055rem Linden Hill body
   and 1.08rem opening paragraph are slightly more generous than the surrounding
   site type; mathematics keeps its previous optical size rather than scaling up
   with the prose. Code and explicitly wide figures may make only a modest
@@ -694,31 +846,14 @@ Its governing choices are:
   after the first specimen proved them to be unnecessary complication;
 - the title field ends in whitespace rather than a full-width divider. Section
   headings likewise rely on type and rhythm, not repeated horizontal rules;
-- at 1180 px and above, contents become a slim, article-local sticky rail in the
-  left margin. From 1180–1359px, the rail is 8.25rem wide with a 2.25rem inner
-  interval; its left edge lands exactly on the title's paper inset while the
-  interval remains open beside wide code and figures. At 1360px and above, the
-  outside-sheet experiment moves that same rail wholly past the left crop mark,
-  preserves a 1.5rem exterior interval, enters beside the date/epigraph, then
-  settles between 2.5rem and 4.5rem from the viewport top while scrolling. Its
-  prose measure interpolates from 36rem to the restrained 37.5rem maximum
-  described above. On an article with real marginalia, the prose axis shifts
-  left to form weighted optical channels: more air follows the denser rail,
-  while the quieter note remains visibly attached to its sentence. The two
-  outer fields themselves do not move. Reserved old-style section
-  numbers, typographic indentation, and an active ancestor trail make hierarchy
-  legible at a glance. A wine reading-progress rule and the current H2/H3 path
-  remain fixed above the independently scrolling outline, which quietly keeps
-  the active entry in view. The managed wide rail stays open and its summary
-  leaves the tab order; without JavaScript the native disclosure remains usable.
-  Below that breakpoint, contents return to the reading flow and remember the
-  reader's disclosure choice. From 768 to 1179 px, an expanded outline becomes
-  two balanced columns; on phones it returns to one. A small `top` link at the
-  far edge of the wide rail targets the article title rather than an empty URL
-  fragment;
+- the note's contents live in the index card (section 7): the note's sections
+  are listed beneath its row, and the one being read is set in italic and kept
+  in view inside the card. The exterior rail, its running section trace,
+  progress rule, and remembered phone disclosure were retired on 12 October
+  2026 and remain on `archive/pre-index-card-2026-10-12`;
 - the day/night control keeps its crop-corner placement at the page opening
-  but scrolls away with the masthead on articles, so it can never cover the TOC,
-  code, or prose;
+  but scrolls away with the masthead on articles, so it can never cover the
+  code or prose;
 - section `§` links are generated by Hugo, appear quietly on hover or focus, and
   sit inside the flow on mobile;
 - quotations, definition lists, code, tables, figures, mathematics, and endnotes
@@ -755,9 +890,8 @@ Its governing choices are:
   article pages no longer depend on Prism or the theme's DOM mutation helpers;
 - ordinary Markdown footnotes remain endnotes, while the explicit `sidenote`
   shortcode supplies optional Tufte-style right-margin notes on wide screens.
-  Their field grows fluidly from 13.25 to 16.5 rem, begins one quiet 2 rem interval
-  beyond the prose, and may cross the right crop mark: the crop frames the paper,
-  not the annotation. These use the reading face and a number hanging outside
+  Beside the index card their field is 10 to 15 rem wide and begins exactly at
+  the page's right trim: the crop frames the text, not the annotation. These use the reading face and a number hanging outside
   the note as in the slotThe reference. At smaller widths they become
   tap-to-reveal inline notes with no filled panel. Pointer or keyboard focus on
   either member of a sidenote pair inks both members and reveals one short wine
@@ -771,8 +905,9 @@ Its governing choices are:
   and same-page section destinations gain quiet Jost suffixes. Ordinary
   external links keep the existing baseline treatment. Marks stay out of TOCs,
   figure links, equation references, footnotes, and print;
-- the ending is only a rule and a text link back to Documents. It introduces no
-  call-to-action card or additional ornament.
+- the ending is two quiet lines of record and a text link back to Writing,
+  with the title's leaf mirrored behind them (see the build-time apparatus
+  above). It introduces no call-to-action card, rule, or other ornament.
 - print preserves the article hierarchy rather than imitating the screen
   environment. It removes blending, fades, controls, and marginal positioning;
   keeps equations, statements, and figures together where possible; and adds
@@ -823,10 +958,12 @@ remain deferred until real articles justify their cost.
 The private draft `content/blog/scratch.md` is the visual specimen for this
 system. Keep it as a broad regression fixture rather than turning a public post
 into a component catalogue. For future changes, verify the real Gaussian-process
-article as well as this specimen in shade and sunset, at
-1440, 1280, 1180, 1024, and approximately 390 px, including sticky/active TOC
-behavior, keyboard focus, code/table overflow, copy feedback, mathematical
-rendering, and the absence of article console errors.
+article as well as this specimen by day and by night, at
+1440, 1280, 1180, 1024, and approximately 390 px, including the card's section
+list and its tracking, keyboard focus, code/table overflow, copy feedback,
+mathematical rendering, and the absence of article console errors.
+`scripts/visual_check.py` covers overflow, console errors, transition names,
+and the card's place on every kind of page.
 
 ## Color and material palette
 
@@ -840,6 +977,12 @@ The current colors are best understood by role rather than as a large token set:
 - surface: static fine grain gathered in the shade; no paper texture;
 - legacy warm page variable: `#fbf7f0` (not the active environmental surface);
 - daylight ink: near-black;
+- secondary type (captions, dates, bylines, records, labels): each ink's
+  proofed muted ink taken a third of the way toward its body ink, by day and
+  by night, so it reads clearly, about 7–8:1 on the lit paper, while staying a
+  step below the text; the index card's secondary lines are its ink at 82 %.
+  Both were raised on 26 October 2026, when Nisch found the site a little
+  faded beside the reference's clear contrast;
 - primary link: `#005077`;
 - active navigation in light mode: `#40141f`;
 - title dingbat in light mode: `#5d3026` at very low opacity;
@@ -894,7 +1037,32 @@ serve Nisch's content.
 The site is intentionally small:
 
 - `hugo.toml` — site identity, menus, theme selection, output formats;
-- `content/_index.md` — home structure and selected works;
+- `content/_index.md` — the home page's identity (name, proposition,
+  affiliation), and the cascade that sets every page beside the index card;
+- `layouts/partials/index-slip.html`, `slip-toggle.html`, `slip-more.html`,
+  and `related.html` — the index card, its drawn toggle, the way to a
+  section's full list, and the derived Alongside pairs;
+- `layouts/partials/ink-register.html`, `assets/css/ink-register.css`, and
+  `assets/js/ink-register.js` — the editorial ink, a colour bar in the card's
+  foot;
+- `assets/css/page-frame.css`, `index-card.css`, and `index-pages.css` — the
+  trimmed page and its margin, the card, and what each kind of page prints,
+  served together as one fingerprinted `css/index.css`;
+- `assets/css/passage.css` — the cross-document passages: the card's glide,
+  the frame's glide with the light control, and the page's lift and settle;
+- `assets/js/index-room.js` — the card's small behaviours: remembered
+  sections on the home page, the phone fold, section tracking for an opened
+  note, arrow keys, and Escape on a paper;
+- `layouts/index.html` with `layouts/partials/sheet-frontispiece.html` — the
+  title page;
+- `content/papers/_content.gotmpl`, `layouts/papers/`, and
+  `layouts/partials/sheet-paper.html` — a page per paper and the Selected
+  works register, from `data/selected_works.toml`;
+- `layouts/_default/index-room.html` with `layouts/partials/sheet-list.html` —
+  the Writing register at `/blog/`;
+- `layouts/_default/search.html` with `layouts/partials/search-interface.html`,
+  `layouts/_default/index.json.json`, and `assets/js/search.js` — search on the
+  trimmed page, over notes and papers, hidden for now;
 - `content/blog/` — Writing entries and private draft test pages;
 - `static/css/custom.css` — local page/layout refinements and portrait treatment;
 - `static/css/sunlit.css` — day and night posters, root colour, handoff, and the control;
@@ -911,9 +1079,6 @@ The site is intentionally small:
   Blog posts, leaving generic pages and the vendored theme template untouched;
 - `layouts/baseof.html` and `layouts/_default/list-baseof.html` — the Hugo 0.164
   site-owned list-template bridge, kept outside the vendored theme;
-- `layouts/_default/blog.html` — the public Writing register at the stable
-  `/blog/` route, including its title ornament, optional description, compact
-  date, fading registration corner, and stable responsive source order;
 - `layouts/_markup/` — Hugo 0.164 site-owned heading, link, image, code, and
   mathematical passthrough hooks;
 - `layouts/partials/article-meta.html` and `article-end.html` — article opening
@@ -927,7 +1092,7 @@ The site is intentionally small:
 - `layouts/partials/reference-target.html` — resolves a reference to a page and
   an identifier, so a reference may name a result in another note;
 - `layouts/_default/colophon.html` with `assets/css/register.css` — the
-  colophon and the shared register grammar;
+  colophon, hidden for now, and the shared register grammar;
 - `layouts/404.html` — the authored missing page;
 - `layouts/partials/foot_custom.html` — article-specific removal of legacy
   runtime helpers and conditional local article behavior;
@@ -945,9 +1110,9 @@ The site is intentionally small:
   `static/css/math.css` — pinned KaTeX fallback assets, the local OpenType MATH
   face, native-MathML selection, and transparent overflow behavior;
 - `static/css/article.css` — the scoped Lokta Field Note reading system;
-- `assets/js/article.js` — local contents and running trace, code copy,
-  sidenote/reference numbering and coupling, figure focus, mathematical
-  overflow focus, and resize behavior; it never typesets mathematics;
+- `assets/js/article.js` — code copy, sidenote/reference numbering and
+  coupling, figure focus, mathematical overflow focus, and resize behavior; it
+  never typesets mathematics;
 - `scripts/check_content.py`, the compatibility `scripts/check_math.py`, and
   `MATHEMATICS.md` — strict source/build validation and the authoring contract
   shared with future agents;
@@ -956,8 +1121,12 @@ The site is intentionally small:
   for stable static CSS and texture paths;
 - `layouts/partials/js-asset-url.html` — Hugo-minified, content-fingerprinted
   JavaScript URLs, paired with immutable production browser-cache headers;
-- `themes/hugo-paged/layouts/partials/header.html` — pre-paint theme state and the
-  session-wide environmental motion epoch;
+- `themes/hugo-paged/layouts/partials/header.html` — pre-paint theme state, the
+  session-wide environmental motion epoch, and the theme's top bar, printed
+  only when a menu or a logo asks for it;
+- `scripts/visual_check.py` — an optional browser pass over every kind of page,
+  and every paper and note the home page's card lists, at six widths by day
+  and night (needs a running preview and Playwright);
 - `themes/hugo-paged/` — a vendored and locally modified base theme;
 - `/Users/nisch/code/site/hugo-paged` — a separate current upstream checkout for
   reference only.
@@ -1121,6 +1290,48 @@ role meets its target there. During a change, the text blended from each ink's
 day colours to its own night colours, and the colophon and slip showed night
 swatches at night. There was no console error, and `./scripts/qa.sh` passed.
 
+On 12 October 2026 the index card and the trimmed page were verified on
+`experiment/index-room` at `http://127.0.0.1:1322/`. Home, Papers, every
+paper, Field notes, both notes, the scratch specimen, the colophon, search,
+and a missing page were inspected by day and by night at 1920, 1440, 1280,
+1180, 1024, and 390 px, with Lokta Hybrid and Ef Arcadia; `visual_check.py`
+reported no overflow, console error, repeated transition name, or misplaced
+card in 168 page views. Screencasts of passages between home, a paper, a
+note, the registers, and the colophon showed the card's glide, the frame's
+glide with its controls, and the page's lift and settle, with one canvas and
+no blank frame. Removing the retired contents rail and home ledger code left
+55 screenshots of both notes at three widths pixel-identical. Keyboard order,
+arrow keys inside the card, the hairline focus mark, the phone fold, print
+without the card, and `./scripts/qa.sh` all passed.
+
+On 26 October 2026 Nisch's review notes were verified on the same branch and
+port. Home, Selected works, Writing, every paper, both notes, the scratch
+specimen, and a missing page were checked by day and by night at 1920, 1440,
+1280, 1180, 1024, and 390 px (the notes also at 320 px), with Lokta Hybrid, Ef
+Arbutus, Ef Arcadia, and Ef Cyprus. `visual_check.py`, now reading its pages
+from the card, reported no overflow, console error, repeated transition name,
+or misplaced card in 132 page views. The colophon, search, and `index.json`
+return 404, and the two specimens are listed nowhere. The colour bar inked the
+page by pointer and by Left, Right, Home, and End, reached the card's other
+stops by Up and Down, kept the chosen ink across pages, and marked it before
+paint. Escape on a paper still returns home. A citation led to its reference,
+marked with the lozenge and showing its way back. A screencast of the passage
+from home to a paper showed the frame's right trim gliding in while the card
+and the left trim stayed. The in-app browser showed the same, and
+`./scripts/qa.sh` passed.
+
+Later that day the contrast lift was measured role by role against the paper or
+room behind each text: secondary type rose from 5.2–5.9:1 to 7.2–8.4:1 by day
+and from 6.2–7.3:1 to 7.9–8.9:1 at night, with body text and headings
+unchanged. A static production build, loaded cold under a fourfold CPU
+slowdown and a fast 4G link, painted first in 0.3–0.5 s on the title page, a
+paper, and the lists, and in 0.8–1.0 s on the two notes, with no layout shift;
+a passage prefetched on hover was ready about 0.1 s after the click. The card
+script's first section measurement now waits for the first frame, which took
+its cost on the Gaussian-process note from about 180 ms to under 10 ms at the
+fourfold slowdown. Without JavaScript the card still prints, the colour bar
+hides itself, and the page keeps Lokta Hybrid.
+
 ## Known rough edges: observe before fixing
 
 These are implementation findings, not permission for a future agent to launch
@@ -1152,6 +1363,19 @@ while doing so.
 - The home portrait remains hand-made WebP in `static/` rather than going
   through Hugo's image pipeline. Its crop-sheet geometry is pinned to exact
   measurements above, so changing that markup deserves its own pass.
+- An information page (positions, education, talks, contact) waits on
+  Nisch's content: the CV PDF predates the site's paper records, and the site
+  has no contact links.
+- The search page, hidden for now, gives its query examples as "R Markdown",
+  from the base theme; replace them when search returns.
+- At 1180 px the card stands 17 px from the window's edge and the margin
+  column ends 35 px from the other; the rooms are tight there.
+- A paper's page is short until its figures are written, so its 40 rem frame
+  stands mostly empty below the record.
+- On a phone the ink is in the card's foot, so on a page where the card waits
+  folded it is one tap further away than it was at the frame's corner.
+- The card's classes still carry the first prototype's name (`index-slip`,
+  `slip-*`); renaming them is mechanical and was left for a quiet moment.
 - MathML-only output remains gated on the browser and assistive-technology
   matrix. On the current specimen the dual output measures 124 KB of HTML and
   additionally requests the 24 KB KaTeX stylesheet and several of its twenty

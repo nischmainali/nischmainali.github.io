@@ -1,0 +1,302 @@
+/*
+ * What the page prints.
+ *
+ * Each kind of page sets its own matter inside the frame (page-frame.css):
+ * the title page at home, a paper as the first page of a reprint, a section
+ * printed whole, the register pages (colophon, search, the missing page), and
+ * a field note. The card lists; the page prints.
+ */
+
+/* === The title page === */
+
+.front-name {
+  position: relative;
+  margin: 0;
+  isolation: isolate;
+  color: var(--site-heading, #184034);
+  font-size: clamp(3rem, 5vw, 3.35rem);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 0.94;
+}
+
+.front-name::before {
+  content: none;
+}
+
+.front-name__ornament {
+  position: absolute;
+  z-index: -1;
+  top: -3.6rem;
+  left: -1.2rem;
+  color: var(--site-ornament, #6f3b3f);
+  font-size: clamp(11.7rem, 13.4vw, 13rem);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 0.75;
+  opacity: 0.09;
+  pointer-events: none;
+  transform: rotate(-1.5deg);
+  user-select: none;
+}
+
+.front-proposition {
+  max-width: 30rem;
+  margin: 1.55rem 0 0;
+  font-size: 1.28rem;
+  line-height: 1.32;
+  text-wrap: pretty;
+}
+
+.front-affiliation {
+  max-width: 29rem;
+  margin: 0.9rem 0 0;
+  color: var(--site-muted, #515f51);
+  font-size: 0.94rem;
+  line-height: 1.43;
+  text-wrap: pretty;
+}
+
+.front-portrait.profile-burn {
+  width: 100%;
+  margin: 0;
+  isolation: auto;
+}
+
+body:not(.night) .front-portrait .profile-image {
+  mix-blend-mode: multiply;
+}
+
+/* At night the author's print is seen by the room's own low light. */
+body.night .front-portrait .profile-image {
+  opacity: 0.8;
+  filter: saturate(0.66) contrast(1.04) brightness(0.64);
+}
+
+/* Without the margin column the print follows the title. */
+@media (max-width: 1179px) {
+  .front-portrait.profile-burn {
+    max-width: 13rem;
+    margin-top: 2rem;
+  }
+}
+
+/* === A paper, like the first page of a reprint: its record, and where
+ * written its contribution; a figure joins once there is a real one === */
+
+.sheet--paper {
+  row-gap: 2.75rem;
+}
+
+.reprint-kicker {
+  margin: 0;
+  color: var(--site-muted, #515f51);
+  font-family: Jost, sans-serif;
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.reprint-title {
+  max-width: 27ch;
+  margin: 0.8rem 0 0;
+  color: var(--site-ink, #202622);
+  font-size: clamp(2rem, 4.2vw, 2.6rem);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.018em;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+.reprint-title::before,
+.list-title::before {
+  content: none;
+}
+
+.reprint-byline {
+  margin: 0.65rem 0 0;
+  color: var(--site-muted, #515f51);
+  font-size: 1.08rem;
+  font-style: italic;
+  line-height: 1.35;
+}
+
+.reprint-abstract {
+  margin: 1.7rem 0 0;
+  font-size: 1.16rem;
+  line-height: 1.52;
+  text-wrap: pretty;
+}
+
+.reprint-aside {
+  align-self: start;
+  padding-top: 0.15rem;
+}
+
+/* === A section, printed whole === */
+
+.list-title {
+  position: relative;
+  margin: 0;
+  isolation: isolate;
+  color: var(--site-heading, #184034);
+  font-size: clamp(2.4rem, 4.5vw, 2.9rem);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  line-height: 1;
+}
+
+.list-title__mark {
+  position: absolute;
+  z-index: -1;
+  top: -2.55rem;
+  left: -1.15rem;
+  color: var(--site-ornament, #6f3b3f);
+  font-size: 9.4rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 0.75;
+  opacity: 0.075;
+  pointer-events: none;
+  transform: rotate(-1.5deg);
+  user-select: none;
+}
+
+.list-register {
+  margin: 2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list-register li + li {
+  border-top: 1px solid color-mix(in srgb, var(--site-ink, #202622) 13%, transparent);
+}
+
+.sheet .list-entry {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  column-gap: 1rem;
+  padding: 1rem 0 1.05rem;
+  border: 0;
+  color: var(--site-ink, #202622);
+  text-decoration: none;
+}
+
+.list-entry__date {
+  grid-row: 1 / span 3;
+  color: var(--site-muted, #515f51);
+  font-size: 0.85rem;
+  font-variant-numeric: oldstyle-nums;
+  line-height: 1.6;
+}
+
+.list-entry__title {
+  font-size: 1.14rem;
+  line-height: 1.25;
+  text-wrap: pretty;
+}
+
+.list-entry__meta {
+  margin-top: 0.2rem;
+  color: var(--site-muted, #515f51);
+  font-size: 0.86rem;
+  font-style: italic;
+}
+
+.list-entry__summary {
+  max-width: 36rem;
+  margin-top: 0.4rem;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.sheet .list-entry:is(:hover, :focus-visible) .list-entry__title {
+  color: var(--site-link, #005077);
+}
+
+/* === Register pages: the colophon, search, and the missing page === */
+
+body.index-page .register-shell {
+  width: auto;
+  margin: 0;
+}
+
+body.index-page .register-opening {
+  margin-top: 0;
+}
+
+/* Search results are set like the card's items, with the card's mark for
+ * each result's kind in the gutter. */
+body.index-page .site-search-results > li {
+  display: grid;
+  grid-template-columns: 1.5rem minmax(0, 1fr);
+  align-items: baseline;
+  margin: 0 0 1.1rem;
+  padding-left: 0;
+}
+
+body.index-page .site-search-results > li::before {
+  content: none;
+}
+
+.site-search-mark {
+  grid-row: 1;
+  color: var(--site-ink, #202622);
+  font-family: "Linden Hill", Palatino, serif;
+  font-size: 1.04rem;
+  line-height: 1;
+}
+
+body.index-page .site-search-results :is(h2, .site-search-preview) {
+  grid-column: 2;
+}
+
+/* A missing page is a title page: its one fact in the middle of the sheet. */
+body.index-page .not-found {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* === A field note on the page ===
+ *
+ * The prose fills the page's measure, and the sidenotes begin at the page's
+ * right trim. */
+
+body.index-page.single.blog .article-header.article-meta {
+  margin-top: 0;
+}
+
+@media (min-width: 960px) {
+  body.index-page.single.blog {
+    --article-measure: var(--measure);
+  }
+
+  body.index-page.single.blog .article-shell {
+    width: var(--measure);
+  }
+
+  body.index-page.single.blog .article-body {
+    margin-right: 0;
+    margin-left: 0;
+  }
+}
+
+@media (min-width: 1180px) {
+  body.index-page.single.blog {
+    --article-note-width: var(--note-w);
+    --article-marginal-gap: var(--trim-pad);
+    --article-note-offset: calc(var(--note-w) + var(--trim-pad));
+    /* Wide code and figures may run to the trim, never past it. */
+    --article-breakout: calc(var(--measure) + var(--trim-pad));
+  }
+}
+
+/* Where the browser supports it, an opening quotation mark or bracket hangs
+ * into the margin so the text block keeps its edge. */
+body.index-page :is(.article-body > p, .reprint-abstract, .front-proposition, .register-intro p, .colophon-body p) {
+  hanging-punctuation: first;
+}

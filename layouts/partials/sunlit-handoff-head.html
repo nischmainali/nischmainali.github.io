@@ -37,6 +37,8 @@
       }
     } catch (error) {}
     root.setAttribute("data-sunlit-mode", mode);
+    var themeColor = document.getElementById("sunlit-theme-color");
+    if (themeColor) themeColor.content = themeColor.getAttribute(mode === "night" ? "data-night-color" : "data-day-color");
 
     var key = "sunlit-handoff-frame-v1";
     var maximumAge = 12 * 60 * 60 * 1000;

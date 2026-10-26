@@ -13,6 +13,9 @@ The root documents define the current site.
 The following documents record studies that informed accepted work. They are
 useful references, but they do not override the current design rules.
 
+- [`history/2026-10-index-card-study.md`](history/2026-10-index-card-study.md)
+  records how the index card and the trimmed page were reached. They replaced
+  the homepage described in the two homepage studies below.
 - [`HOMEPAGE_DESIGN_STUDY.md`](HOMEPAGE_DESIGN_STUDY.md) records the homepage
   research and candidate directions.
 - [`HOMEPAGE_PAPER_READOUT_EXPERIMENT.md`](HOMEPAGE_PAPER_READOUT_EXPERIMENT.md)

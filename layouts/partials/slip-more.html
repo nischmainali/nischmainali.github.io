@@ -1,0 +1,4 @@
+{{- /* slip-more.html — at the end of a section in the index card, the way to
+      the section's full list, with an arrow that leans toward it. Takes
+      {href, here}: here is true on the list's own page. */ -}}
+<a class="slip-more" href="{{ .href | relURL }}"{{ if .here }} aria-current="page"{{ end }}><span class="slip-label">Full list</span><svg class="slip-more__arrow" viewBox="0 0 12 10" width="12" height="10" aria-hidden="true" focusable="false"><path d="M1 5H10.5M7 1.5L10.5 5L7 8.5"/></svg></a>

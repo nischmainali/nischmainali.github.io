@@ -8,6 +8,10 @@ lastmod = 2026-07-15
 subtitle = "A private specimen for the article reading system"
 categories = ["Notes"]
 tags = ["Typography", "Gaussian Process"]
+# A private specimen: built in drafts at its own address for review, never
+# listed in the card, the Writing register, or the feed.
+[build]
+  list = 'never'
 +++
 
 {{< epigraph attribution="Rabindranath Tagore" source="Stray Birds" >}}

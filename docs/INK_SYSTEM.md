@@ -1,7 +1,8 @@
 # Editorial ink system
 
 Status: accepted and on `main` · Prepared: 21 July 2026 · Promoted: 4 August 2026
-· Day and night proofs: accepted and promoted 12 October 2026
+· Day and night proofs: accepted and promoted 12 October 2026 · Colour bar in
+the index card: 26 October 2026, on `experiment/index-room`
 
 ## Purpose
 
@@ -11,11 +12,17 @@ restrained tint in the day's paper, while typography, crop geometry, article
 measure, marginalia, mathematics, the room's light, grain, and motion stay
 fixed.
 
-The control occupies the crop frame's upper-right corner, opposite the light
-control. The left instrument changes the atmosphere; the right instrument
-changes the ink. Its registration-mark button opens a square Lokta proof slip
-down and inward from the crop intersection. The slip uses no scrim, blur,
-rounded card, or floating toolbar.
+The control is a printer's colour bar in the index card's foot, opposite the
+CV: one small square patch for each ink, in that ink's heading colour by day
+and its night proof by night, with no label. A hairline lies beneath the ink on
+the page. Choosing a patch inks the page at once; nothing opens. The light
+belongs to the room and its control stays on the page's frame; ink is a choice
+about the printing and sits with the index.
+
+Until 26 October 2026 the control was a registration mark at the crop frame's
+upper-right corner, opposite the light control, opening a square Lokta proof
+slip of numbered rows, descriptions, and swatches. Nisch found it too much;
+`archive/pre-index-card-2026-10-12` keeps it.
 
 ## Available inks
 
@@ -33,9 +40,10 @@ define a visitor's first impression.
 The upstream values come from the current 2026
 [Ef themes](https://github.com/protesilaos/ef-themes) and
 [Modus themes](https://github.com/protesilaos/modus-themes) sources. Each row
-shows six representative colors: paper, ink, link, heading, accent, and muted
+keeps six representative colors: paper, ink, link, heading, accent, and muted
 ink. By day they are the source colors; by night, the night proof on the shared
-night paper (`night_swatches` in `data/inks.toml`). The stylesheet records the
+night paper (`night_swatches` in `data/inks.toml`). The colour bar shows the
+fourth, the heading. The stylesheet records the
 complete selection, border, and syntax mapping.
 
 ## First paint and persistence
@@ -85,8 +93,7 @@ Visited links share the normal contrast-safe link color. Navigation history
 should not introduce an uncontrolled extra color into the comparison. The
 source visited inks remain recorded for later review.
 
-The source paper colors appear exactly on the proof slip and on small secondary
-washes. The room uses a lighter optical adaptation of each flat editor
+The source paper colors appear exactly on small secondary washes. The room uses a lighter optical adaptation of each flat editor
 background (`--sunlit-ink-paper`): peach for Arbutus, warm parchment for
 Cyprus, lichen for Elea, verdant paper for Arcadia, and warm ivory for Modus.
 The renderer turns it into a tint that changes the paper's hue, never the
@@ -137,23 +144,31 @@ accents, and two syntax roles lifted to clear the window. Body inks stay in a
 warm band so the room stays cozy: rose-cream for Arbutus, parchment for Cyprus,
 pale lichen for Elea, lilac-cream for Arcadia, and a near-white for Modus.
 
+**Secondary type.** The proofs hold the muted role at 4.5:1 against the darkest
+light, which read as faint on the page. Since 26 October 2026 the site's
+`--site-muted` takes each ink's muted proof a third of the way toward its body
+ink in OKLab, by day and by night: about 5.6–6.7:1 against the darkest day
+light and 7–8:1 on typical lit paper, 8.6–9.1:1 at night, while staying a
+clear step below the body ink. The proofed values themselves are unchanged.
+
 While the light changes, `body.ink-mixing` blends each role from its day proof
 to its night proof in OKLab as the room passes mid-tone, so the turnover runs
 through the ink's own colors. Print always uses Lokta Hybrid's day proof.
 
 ## Interaction contract
 
-- Enter, Space, or Arrow Down opens the selector; pointer opening leaves focus
-  on the registration mark.
-- Arrow keys, Home, and End move through the vertical radio choices.
-- The selector stays open while comparing inks.
-- Escape closes it and returns focus. Outside pointer use or keyboard focus
-  leaving the register closes it without trapping focus.
-- The active row carries a registration stroke as well as a color change.
-- Reduced motion removes the proof-slip entrance. Forced colors remove texture
-  and swatches while retaining selection and focus.
-- Opened articles let the control scroll away with the masthead so it cannot
-  cover the sticky outline, code, or marginalia.
+- The six patches are one radio group named "Ink". Each patch's accessible
+  name and tooltip is its ink's name, and a polite status announces a change.
+- A pointer press on a patch inks the page at once. The patch under the
+  pointer shows the hairline at half strength.
+- In the index card the bar is one stop for the card's arrow keys: the patch
+  of the ink on the page. Left and Right, Home and End move along the bar and
+  ink as they go; Up and Down move on through the card.
+- The active patch carries a hairline beneath it, not only its colour.
+- An inline script marks the head's resolved ink before the card is painted,
+  so the hairline never jumps; without JavaScript the bar is hidden.
+- Forced colors draw each patch as an outlined square and fill the active one
+  with the system highlight.
 
 ## Implementation map
 
@@ -162,8 +177,7 @@ through the ink's own colors. Print always uses Lokta Hybrid's day proof.
 - `layouts/partials/ink-head.html` provides the pre-paint resolver and
   fingerprinted assets.
 - `layouts/partials/ink-register.html` contains the server-rendered control.
-- `assets/css/ink-register.css` maps theme roles and draws the crop-registered
-  proof slip.
+- `assets/css/ink-register.css` maps theme roles and draws the colour bar.
 - `assets/js/ink-register.js` owns interaction, persistence, and tab sync.
 - `assets/js/sunlit.js`, `sunlit-worker.js`, and `sunlit-renderer.js` pass the
   ink's paper tint into the live room.
@@ -174,13 +188,13 @@ restart the worker, the light's clock, or a change in progress.
 
 ## Review protocol
 
-Inspect Home, Documents, the scratch opening, code and tables, mathematics,
-TOC, and marginal notes. Check the closed and open selector by day and by night
-at 1440, 1180, 1024, 768, 390, and 320 pixels. Verify pointer and keyboard
-opening, arrow selection, Escape return, focus-leave dismissal, navigation and
-reload persistence, linked overrides, tab synchronization, reduced motion,
-forced colors, printing, no-JavaScript fallback, console output, and horizontal
-overflow.
+Inspect Home, Writing, the scratch opening, code and tables, mathematics, the
+card's section list, and marginal notes. Check the colour bar by day and by
+night at 1440, 1180, 1024, 768, 390, and 320 pixels. Verify pointer choice, the
+keyboard (one stop in the card; Left, Right, Home, and End along the bar),
+navigation and reload persistence, linked overrides, tab synchronization,
+reduced motion, forced colors, printing, the no-JavaScript fallback, console
+output, and horizontal overflow.
 
 Automated screenshots must request `?ink=lokta-hybrid` (or another explicit
 ink) so a clean JavaScript browser does not exercise the intentionally random
