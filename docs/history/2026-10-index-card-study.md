@@ -1,8 +1,8 @@
 # The index card and the page: a study
 
 Status: accepted by Nisch on 12 October 2026 ("very good! Very excited by it!
-Let's keep this direction up") on `experiment/index-room`, and revised after
-Nisch's review of 26 October 2026. The accepted rules now live in
+Let's keep this direction up") on `experiment/index-room`, revised after
+Nisch's review of 26 October 2026, and promoted to `main` the same day. The accepted rules now live in
 `DESIGN_LANGUAGE.md`; this study records how they were reached.
 The main state it replaces is archived as `archive/pre-index-card-2026-10-12`.
 

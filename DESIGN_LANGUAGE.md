@@ -12,10 +12,9 @@
   404, the instrument register, and the removal of the vendored theme's published
   fixtures (5 August 2026), then `experiment/day-night` promoted with the day
   and night room in place of Shade and Sunset and each ink's own night proof
-  (`3791247`, 12 October 2026), then `experiment/index-room` accepted with the
-  index card beside a trimmed page (`16e5a0a` and its consistency pass,
-  12 October 2026, then Nisch's review round of 26 October 2026; promote it
-  with the archive below)
+  (`3791247`, 12 October 2026), then `experiment/index-room` promoted with the
+  index card beside a trimmed page (`16e5a0a`, accepted 12 October 2026, with
+  its consistency pass and Nisch's review round, `9644038`, 26 October 2026)
 - Pre-promotion main archives, never to be deleted:
   `archive/pre-index-card-2026-10-12` (`70fac76`),
   `archive/pre-day-night-2026-10-12` (`31f2934`),

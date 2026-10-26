@@ -2,7 +2,7 @@
 
 Status: accepted and on `main` · Prepared: 21 July 2026 · Promoted: 4 August 2026
 · Day and night proofs: accepted and promoted 12 October 2026 · Colour bar in
-the index card: 26 October 2026, on `experiment/index-room`
+the index card: promoted 26 October 2026
 
 ## Purpose
 
