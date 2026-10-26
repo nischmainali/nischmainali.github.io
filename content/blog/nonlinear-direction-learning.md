@@ -2,7 +2,7 @@
 author = "Nisch"
 categories = ["Notes"]
 date = 2026-08-14
-lastmod = 2026-09-15
+lastmod = 2026-10-26
 description = "A statistical mechanics account of how a Bayesian network changes its hidden weight distribution to learn one useful direction."
 short_title = "Nonlinear feature learning"
 subtitle = "A statistical mechanics account of feature learning in a Bayesian network with two trainable layers"
@@ -10,19 +10,26 @@ tags = ["Feature learning", "Neural networks", "Statistical mechanics"]
 title = "A solvable model of feature learning in a nonlinear network"
 +++
 
-{{< dropcap "M" >}}uch of the success of deep learning is attributed to feature learning, in which training changes the features represented by a network's hidden layers. Understanding how networks learn those features is therefore a central problem for a theory of deep learning. We do not yet have a general account of which features a network learns or how learning them improves prediction. There is also uncertainty about which mathematical descriptions and methods can support such an account.
+{{< dropcap "T" >}}heoretical accounts attribute much of the success of deep neural networks to feature learning, in which training reshapes the representations within hidden layers. In this picture, a theory of deep learning must explain which features a nonlinear network learns, how its weights encode them, and how its neurons represent them. Yet, we still lack a general theory that answers these questions.
 
-We regard statistical mechanics as one of the most promising directions for developing this theory. Its methods allow us to connect the behavior of many interacting neurons with quantities describing the network as a whole, including its hidden weight distribution and prediction error. Rubin and collaborators give a compelling example in a nonlinear network, where they derive a change in the hidden representation and connect it to improved generalization. We draw on their [2024 study of a feature learning transition](https://openreview.net/forum?id=3ROGsTX3IR) and their [2025 theory of adaptive feature learning](https://proceedings.mlr.press/v267/rubin25a.html).
+We study this question as part of [PIRAMID's Advancements in Learning Theory team](https://www.lesswrong.com/posts/nbSJhbLERTZFeNxY7/introducing-piramid-physics-informed-research-for-ambitious), which uses statistical physics to build foundations for mechanistic interpretability and AI safety. Our [progress and plans](https://www.lesswrong.com/posts/T2REsZneix3bmAKtL/piramid-progress-and-plans) describe a theory agenda centred on hidden weight distributions and covariances that can record learned structure. The [mean field sequence](https://www.lesswrong.com/posts/rduzFkTKx5pGKWKcL/mean-field-sequence-an-introduction) introduces this viewpoint by treating each neuron as one member of a population whose distribution must be self consistent. Statistical physics lets us connect the behavior of many interacting neurons with quantities describing the network as a whole, including its hidden weight distribution and prediction error.
 
-Working through these calculations by hand helped us develop a gears-level understanding of how the theory is built. We could see why the authors study particular quantities, which approximations make the calculation possible, and how the conclusions follow. We wrote this post to share that understanding with readers who have no statistical physics background. We use a simpler cavity derivation that studies one neuron at a time, tracking the weight distribution after each major step. We assume familiarity with neural networks, basic linear algebra, and probability.
+We consider toy and solvable models to be important signposts on the road to a comprehensive scientific understanding of feature learning and generalization. When these models are built to the standard of statistical physics, they come with precise regimes of validity, error bounds, and universality classes. This makes it easier to say which conclusions carry over to real models and which should not. Rubin and collaborators give a compelling example of this in a nonlinear network, which we consider to be foundational for developing a more general theory of learned representations. In their solvable setting, they derive the hidden weight distribution and its covariance, with an explicit phase transition that signals a change in the hidden representation connected to improved generalization. We draw on their [2024 study of a feature learning transition](https://openreview.net/forum?id=3ROGsTX3IR) and their [2025 theory of adaptive feature learning](https://proceedings.mlr.press/v267/rubin25a.html).
 
-The toy model concerns a network with two trainable layers, learning a target that depends on one unknown direction in its input space. The inputs are Gaussian with no preferred direction, so the network must identify the useful direction from their relationship to the target. The target has an easier linear component and a harder cubic component along that same direction. The components are chosen so that fitting the linear part alone leaves the cubic part unexplained, while learning their shared direction could help with both. The Bayesian formulation lets us study whether the network learns that direction through its posterior, the distribution over weights conditioned on the training data.
-
-The theory predicts a transition from a hidden weight distribution with no preferred direction to one containing populations aligned with the target direction. We can detect the learned direction in the covariance of the hidden weights, which acquires extra variation along that direction, a rank-one change. Once the hidden features align, the network can also represent the cubic component more strongly. The improvement in nonlinear prediction follows from a change in the representation, and the theory predicts a large reduction in the number of samples needed to learn it.
-
-We chose to present this calculation because it illustrates the kind of theory we want to build within [PIRAMID's Advancements in Learning Theory team](https://www.lesswrong.com/posts/nbSJhbLERTZFeNxY7/introducing-piramid-physics-informed-research-for-ambitious), and how we want to build it. Our broader aim is to use statistical physics to develop fundamental theories of learning that connect a network's behavior to its internal organization. For mechanistic interpretability and AI safety, we want to build on the explanation of how learned features improve prediction and understand how hidden representations and internal structure implement the learned function. We see the work presented here as a promising foundation for developing that theory of hidden representations.
+Working through these calculations by hand helped us develop a gears-level understanding of how the theory is built. We could see why the authors study particular quantities, which approximations make the calculation possible, and how the conclusions follow. Working through the calculations also shows where we can build on the model to develop a richer understanding. We wrote this post to share that understanding with readers who have no statistical physics background, and to provide context for [recent](https://arxiv.org/abs/2607.05735) [work](https://arxiv.org/abs/2408.05451). Instead of the mathematically heavy adaptive field theory machinery of the original papers, we use a simpler cavity derivation that studies one neuron at a time, tracking the weight distribution after each major step to make the derivation easier to follow. We assume familiarity with neural networks, basic linear algebra, and probability.
 
 ## A simple setting for feature learning {#one-direction}
+
+### Basic setup and limitations
+
+Rubin et al.'s toy model describes feature learning in a network with two trainable layers, which learns a target that depends on one unknown direction in its input space. We keep the model narrow to make the qualitative picture and its derivation easier to follow:
+
+- The inputs are Gaussian with no preferred direction, so the network must identify the useful direction from their relationship to the target. Non-isotropic or non-Gaussian inputs can mix the target modes and complicate the analysis.
+- The target has an easier linear component and a harder cubic component along that same direction. The components are chosen so that fitting the linear part alone leaves the cubic part unexplained, while learning their shared direction could help with both.
+- The network has one hidden layer, studied at Bayesian equilibrium. The Bayesian formulation lets us study whether the network learns that direction through its posterior distribution over weights conditioned on the training data. We study a static picture, which gives no information about learning dynamics.
+- We use high-dimensional approximations in the proportional regime $P\sim N\sim D$. Many of these intuitions extend to finite networks, where finite-size corrections can be calculated.
+
+The central prediction of the theory is a phase transition from a hidden weight distribution with no preferred direction to one containing populations aligned with the target direction. We can detect this learned direction in the covariance of the hidden weights, which acquires an extra rank-one variation along that direction. Once the hidden features align, the network can also represent the cubic component more strongly. The improvement in nonlinear prediction follows from a change in the representation, and the theory predicts a large reduction in the number of samples needed to learn it.
 
 We begin with a network learning to predict a number from a high-dimensional input. We choose a target that depends on one direction and give the network examples without telling it which direction is useful. We can then study whether the network learns that direction and how learning it improves prediction.
 
@@ -65,6 +72,8 @@ $$
 $$
 
 {{< plate-ref "shared-direction" >}} shows the target and the hidden weight overlap we will track.
+
+We expect the broad approach to extend beyond this setting. Learned structure appears as a change in the hidden weight statistics, which we read from the posterior.
 
 {{< scientific-plate kind="direction" id="shared-direction" title="One direction carries both target modes" caption="The target uses one scalar projection. Its linear and cubic components share that coordinate. Feature learning appears when hidden weights acquire finite overlap with the target direction." >}}
 
@@ -448,14 +457,20 @@ With $Ns_a^2=O(1)$, we have $\lambda_3=O(D^{-3})$. In the fixed-kernel estimate,
 
 ## What we are working on {#current-work}
 
-The calculation shows how alignment of hidden weights changes the network's features and improves prediction. We can build on that connection to study how networks organize learned features across neurons. The same feature can involve a few neurons with large contributions or many neurons with small contributions.
+The derivation above connects a change in the hidden weight distribution to an improvement in nonlinear prediction. Alignment with a learned direction strengthens features that help predict the cubic component. The calculation gives a concrete example of how a theory of internal representations can explain generalization. We expect the central approach laid out here to extend beyond this setting. The next challenge is to understand how this picture extends to deeper networks, away from equilibrium, and at finite widths and sample sizes.
 
-Different populations can compute the same function while having different hidden weight covariances and responses to removing neurons. For mechanistic interpretability and AI safety, we want to predict how the network's internal organization implements its function, including how many neurons participate and how strongly each contributes.
+Our work asks how networks organize and carry learned features across neuronal populations, and how these insights apply in more realistic settings. The same feature can involve a few neurons with large contributions, many neurons with small contributions, or both. It could involve factorized neurons that learn largely independently, or a population of correlated neurons that together carry the feature. At the output level, different populations can compute the same function while having different hidden weights and representation structures.
 
-Our work uses the statistical physics approach to develop a theory of how learning shapes a network's internal representations. We will explore that connection between learning theory and interpretability in later posts in the sequence.
+Understanding how features and circuits arise from learned representations can help us probe them. Under which conditions would changing a few neurons substantially affect a learned feature? How diffuse or localized are neuron contributions, and how do we know? Answering such questions would help clarify when particular probes, interventions, or control methods work and where their limitations lie. We think there is a lot of work to be done to make the relevant assumptions, limits, and settings concrete enough to inform AI safety, and that statistical physics offers the right techniques and frameworks to improve our understanding.
+
+In a series of upcoming posts, we will share: 1) results showing the coexistence of features carried weakly by the whole population and strongly by a sparse mesoscopic population, along with the ensuing phase diagram; 2) how learning multiple features with different correlation structures can cause a phase transition from shared to modular representations; and 3) implications for interpretability and control derived from these representational structures. Our aim is to explain how learning produces these different internal structures, and what those structures imply for our ability to understand and intervene on neural networks across training, post-training, and deployment scenarios.
 
 ## References {#references}
 
 [Rubin, N., Seroussi, I., & Ringel, Z. (2024). Grokking as a first order phase transition in two layer networks. International Conference on Learning Representations.](https://openreview.net/forum?id=3ROGsTX3IR)
 
 [Rubin, N., Fischer, K., Lindner, J., Seroussi, I., Ringel, Z., Krämer, M., & Helias, M. (2025). From kernels to features: A multi-scale adaptive theory of feature learning. Proceedings of the 42nd International Conference on Machine Learning, 267, 52225–52257.](https://proceedings.mlr.press/v267/rubin25a.html)
+
+[Vaintrob, D., & Hänni, K. (2026). Width-Robust Learnability in Mean-Field Bayesian Neural Networks. arXiv preprint.](https://arxiv.org/abs/2607.05735)
+
+[Hänni, K., Mendel, J., Vaintrob, D., & Chan, L. (2024). Mathematical Models of Computation in Superposition. ICML 2024 Mechanistic Interpretability Workshop.](https://arxiv.org/abs/2408.05451)
