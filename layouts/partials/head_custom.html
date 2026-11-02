@@ -40,7 +40,7 @@
 {{- /* The page's frame, the index card, and what each page prints, as one
       file. */ -}}
 {{- if $isIndexRoom -}}
-{{- $indexStyles := slice (resources.Get "css/page-frame.css") (resources.Get "css/index-card.css") (resources.Get "css/index-pages.css") | resources.Concat "css/index.css" | minify | fingerprint "md5" -}}
+{{- $indexStyles := slice (resources.Get "css/page-frame.css") (resources.Get "css/index-card.css") (resources.Get "css/index-pages.css") (resources.Get "css/garden.css") | resources.Concat "css/index.css" | minify | fingerprint "md5" -}}
 <link rel="stylesheet" href="{{ $indexStyles.RelPermalink }}">
 {{- end -}}
 {{- /* Fetch a page as soon as the reader shows intent, so passages begin at
@@ -55,3 +55,4 @@
 <link rel="stylesheet" href="{{ $registerStyles.RelPermalink }}">
 {{- end -}}
 {{ partial "sunlit-handoff-head.html" . }}
+{{ partial "garden-head.html" . }}

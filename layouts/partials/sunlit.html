@@ -5,7 +5,6 @@
   {{- $route = "article" -}}
 {{- end -}}
 
-{{- $leaf := resources.Get "images/sunlit-peepal.png" | fingerprint "md5" -}}
 <!--
   Lokta Sunlight: one room in two lights. The static wrapper is a complete
   fallback; the canvas is progressive decoration.
@@ -15,7 +14,6 @@
   data-route="{{ $route }}"
   data-engine-src="{{ partialCached "js-asset-url.html" "js/sunlit-renderer.js" "js/sunlit-renderer.js" }}"
   data-worker-src="{{ partialCached "js-asset-url.html" "js/sunlit-worker.js" "js/sunlit-worker.js" }}"
-  data-leaf-src="{{ $leaf.RelPermalink }}"
   aria-hidden="true">
   <canvas id="sunlit-canvas" aria-hidden="true"></canvas>
 </div>

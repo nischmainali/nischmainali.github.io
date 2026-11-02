@@ -15,6 +15,10 @@
 <script src="{{ partialCached "js-asset-url.html" "js/index-room.js" "js/index-room.js" }}" defer></script>
 {{- end -}}
 
+{{- with hugo.Data.gardens -}}{{- if index .pages $.RelPermalink }}
+<script src="{{ partialCached "js-asset-url.html" "js/garden.js" "js/garden.js" }}" defer></script>
+{{- end -}}{{- end -}}
+
 {{- if .Page.Store.Get "hasInteractiveScientificPlate" -}}
 <script src="{{ partialCached "js-asset-url.html" "js/scientific-plates.js" "js/scientific-plates.js" }}" defer></script>
 {{- end -}}

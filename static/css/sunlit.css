@@ -57,8 +57,9 @@ body > .crop-c {
 }
 
 /* The posters: the same light in a few gradients, for the moment before the
- * renderer's first frame and for pages without scripts. Day is a warm pool
- * slanting in from the top right; night is the moon's window patch. */
+ * renderer's first frame and for pages without scripts. Day is the shaft of
+ * sun slanting in from the top right and fading as it crosses the room;
+ * night is the moon's window patch. */
 #sunlit-scene {
   position: fixed;
   inset: 0;
@@ -69,7 +70,8 @@ body > .crop-c {
   pointer-events: none;
   contain: strict;
   background:
-    linear-gradient(336deg, transparent 40%, rgba(255, 247, 232, 0.62) 60%, rgba(255, 247, 232, 0.5) 80%, transparent 97%),
+    linear-gradient(90deg, rgba(229, 226, 220, 0.4), transparent 50%),
+    linear-gradient(336deg, transparent 24%, rgba(255, 247, 232, 0.86) 42%, rgba(255, 247, 232, 0.92) 58%, transparent 76%),
     var(--sunlit-day-shade);
 }
 

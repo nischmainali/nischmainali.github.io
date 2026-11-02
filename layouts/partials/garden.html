@@ -1,0 +1,25 @@
+{{- /*
+  garden.html — the page's garden, where one has been grown (data/gardens.json,
+  written by scripts/garden/grow.py). Each part (a note's head and foot, or a
+  shorter sheet whole) is one box hung from the sheet, with its masks and
+  height for each width it was grown at; garden.css picks the width and
+  hangs it between the sheet's trims, or the trim and the margin column's
+  edge for a note or a paper.
+*/ -}}
+{{- with hugo.Data.gardens -}}
+{{- with index .pages $.RelPermalink -}}
+{{- $margin := in (slice "note" "paper") .kind -}}
+{{- range $part, $g := .parts -}}
+{{- $style := slice -}}
+{{- $growth := slice -}}
+{{- range $width, $b := $g.widths -}}
+  {{- $leaf := resources.Get $b.leaf | fingerprint "md5" -}}
+  {{- $flower := resources.Get $b.flower | fingerprint "md5" -}}
+  {{- $birth := resources.Get $b.birth | fingerprint "md5" -}}
+  {{- $style = $style | append (printf "--g%s-h:%vpx;--g%s-leaf:url(%s);--g%s-flower:url(%s)" $width $b.h $width $leaf.RelPermalink $width $flower.RelPermalink) -}}
+  {{- $growth = $growth | append (printf "%s %s" $width $birth.RelPermalink) -}}
+{{- end }}
+<div class="garden garden--{{ $part }}{{ if $margin }} garden--margin{{ end }}" aria-hidden="true" data-garden="{{ $part }}" data-growth="{{ delimit $growth "," }}" style="{{ delimit $style ";" | safeCSS }}"><i class="garden__leaf"></i><i class="garden__flower"></i></div>
+{{- end -}}
+{{- end -}}
+{{- end -}}

@@ -1,0 +1,155 @@
+/*
+ * The garden.
+ *
+ * A botanical watermark grown round each sheet's printing, from the parts of
+ * tikz-flora (MIT). It frames the page and keeps out of it: nothing grows
+ * within about 1.4rem of text, figures or formulas, and the plants thin out
+ * as they near them. It is printed in two of the page's own inks, the leaves
+ * in the heading ink and the flowers in the accent, at watermark strength,
+ * so the ink control and the night re-ink it.
+ *
+ * The gardens are grown ahead of time by scripts/garden/grow.py, measured
+ * from the built pages at three widths, and recorded in data/gardens.json;
+ * the partial garden.html sets each width's masks and offsets as custom
+ * properties, and the media queries below pick one. A garden spans the sheet
+ * from trim to trim, or to the margin column's edge where the sheet has one,
+ * and hangs from the top trim, or the bottom one for a note's foot; between
+ * the widths it was grown at it stretches with the sheet, so it keeps its
+ * distance from the printing as the measure changes. Below 1180px the sheet
+ * has no margin column and the page keeps its printed leaves instead.
+ */
+
+.garden {
+  display: none;
+}
+
+@media (min-width: 1180px) {
+  .garden {
+    /* Watermark strength: the share of each ink the garden prints. */
+    --garden-leaf: 0.16;
+    --garden-flower: 0.19;
+    position: absolute;
+    z-index: 0;
+    top: var(--crop-band, 2rem);
+    right: var(--crop-band, 2rem);
+    left: var(--crop-band, 2rem);
+    display: block;
+    height: var(--g-h);
+    pointer-events: none;
+  }
+
+  .garden--margin {
+    right: calc(var(--crop-band, 2rem) - var(--note-w, 15rem));
+  }
+
+  .garden--foot {
+    top: auto;
+    bottom: var(--crop-band, 2rem);
+  }
+
+  .garden > i {
+    position: absolute;
+    inset: 0;
+    -webkit-mask-position: 0 0;
+    mask-position: 0 0;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+  }
+
+  .garden__leaf {
+    background-color: var(--site-heading, #184034);
+    -webkit-mask-image: var(--g-leaf);
+    mask-image: var(--g-leaf);
+    opacity: var(--garden-leaf);
+  }
+
+  .garden__flower {
+    background-color: var(--site-accent, #6f3b3f);
+    -webkit-mask-image: var(--g-flower);
+    mask-image: var(--g-flower);
+    opacity: var(--garden-flower);
+  }
+
+  /* A garden that will grow in waits unprinted until it does. The head
+   * script marks the parts this session has not seen grow. */
+  html.garden-pending-head .garden--head:not(.is-grown) > i,
+  html.garden-pending-foot .garden--foot:not(.is-grown) > i,
+  html.garden-pending-whole .garden--whole:not(.is-grown) > i {
+    opacity: 0;
+  }
+
+  /* Room at the head for the garden's arch, and at the foot for its bed. */
+  body.index-page.single.blog:has(> .garden--head) .article-header.article-meta {
+    margin-top: 3.5rem;
+  }
+
+  body.index-page.single.blog:has(> .garden--foot) .article-end {
+    margin-bottom: 4rem;
+  }
+
+  body:has(> .garden--whole) .sheet--paper {
+    padding-top: 3.5rem;
+  }
+
+  body.index-page:has(> .garden--whole) .list-title,
+  body.index-page:has(> .garden--whole) .register-opening {
+    margin-top: 3.5rem;
+  }
+
+  /* The garden takes over from the printed leaves behind the titles and the
+   * mirrored one at a note's foot; the index card keeps its own. */
+  body:has(> .garden--whole) .front-name__ornament,
+  body:has(> .garden--whole) .list-title__mark,
+  body:has(> .garden--whole) .register-title-ornament {
+    display: none;
+  }
+
+  body.single.blog:has(> .garden--head) .article-title.title::before,
+  body.single.blog:has(> .garden--foot) .article-end::before {
+    content: none;
+  }
+}
+
+/* One width's garden for each range of widths: the garden grown at 1180px
+ * from 1180px, at 1300px from 1240px, and at 1440px from 1400px up, where
+ * the sheet stops widening. */
+@media (min-width: 1180px) and (max-width: 1239.98px) {
+  .garden {
+    --g-h: var(--g1180-h);
+    --g-leaf: var(--g1180-leaf);
+    --g-flower: var(--g1180-flower);
+  }
+}
+
+@media (min-width: 1240px) and (max-width: 1399.98px) {
+  .garden {
+    --g-h: var(--g1300-h);
+    --g-leaf: var(--g1300-leaf);
+    --g-flower: var(--g1300-flower);
+  }
+}
+
+@media (min-width: 1400px) {
+  .garden {
+    --g-h: var(--g1440-h);
+    --g-leaf: var(--g1440-leaf);
+    --g-flower: var(--g1440-flower);
+  }
+}
+
+/* The growth is drawn on a canvas laid over the garden, then handed back to
+ * the static print. */
+.garden__growth {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@media print, (forced-colors: active) {
+  .garden {
+    display: none !important;
+  }
+}

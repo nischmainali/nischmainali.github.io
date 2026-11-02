@@ -1,0 +1,13 @@
+{{- /*
+  garden-head.html — before the page paints, hold back the parts of its
+  garden that will grow in: those this session has not yet seen grow, on a
+  screen wide enough for the garden, without reduced motion. garden.js grows
+  them; if it never runs, they are printed after a few seconds all the same.
+*/ -}}
+{{- with hugo.Data.gardens -}}
+{{- with index .pages $.RelPermalink -}}
+{{- $parts := slice -}}
+{{- range $part, $_ := .parts }}{{ $parts = $parts | append $part }}{{ end -}}
+<script>(function(){try{var r=document.documentElement,m=window.matchMedia;if(!m("(min-width: 1180px)").matches||m("(prefers-reduced-motion: reduce)").matches)return;var g=JSON.parse(sessionStorage.getItem("garden-grown-v1")||"{}"),c=[];{{ range $parts }}if(!g[location.pathname+"#{{ . }}"])c.push("garden-pending-{{ . }}");{{ end }}if(!c.length)return;r.classList.add.apply(r.classList,c);setTimeout(function(){if(!r.classList.contains("garden-live"))r.classList.remove.apply(r.classList,c)},4000)}catch(e){}})();</script>
+{{- end -}}
+{{- end -}}

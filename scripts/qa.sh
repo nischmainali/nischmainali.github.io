@@ -22,5 +22,7 @@ node --check assets/js/search.js
 node --check assets/js/sunlit-renderer.js
 node --check assets/js/sunlit-worker.js
 node --check assets/js/sunlit.js
+node --check assets/js/garden.js
 hugo --minify --noBuildLock --destination "$BUILD_DIR" --cacheDir "$CACHE_DIR"
 python3 scripts/check_budget.py "$BUILD_DIR"
+python3 scripts/check_gardens.py "$BUILD_DIR"

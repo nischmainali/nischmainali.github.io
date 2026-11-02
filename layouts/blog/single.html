@@ -22,6 +22,8 @@
       note's own headings; the sheet carries the note itself. */ -}}
 {{ partial "index-slip.html" (dict "page" . "state" "article") }}
 
+{{ partial "garden.html" . }}
+
 <main class="article-shell" aria-labelledby="article-title">
 <article class="h-entry article-depth-{{ $articleDepth }}">
   <header class="article-meta article-header">

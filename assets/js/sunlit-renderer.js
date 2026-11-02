@@ -2,12 +2,14 @@
  * Lokta Sunlight Renderer: day and night.
  *
  * A dependency-free WebGL2 surface that draws one room in two lights. By day
- * a window's sun pool falls across the page, slim window bars and the tips
- * of a peepal's branches in it, sun coins gathered near the leaves, grain
- * gathered in the shade. By night the moon, standing higher, lays the same
- * window down as a compact patch with its cross, its light spilling softly
- * into an ef-dream room, and a thin cloud now and then. Between them the
- * shadows carry the change while the colours blend in a straight line.
+ * a shaft of sun falls from beyond the top right corner through a blind: a
+ * few broad, soft beams that blur as they travel and as they near the
+ * reading column, the slats swaying when a breeze comes, grain gathered in
+ * the shade. The room has no foliage; the garden is printed on the page. By
+ * night the moon, standing higher, lays the window down as a compact patch
+ * with a soft cross, its light spilling into an ef-dream room, and a thin
+ * cloud now and then. Between them the shadows carry the change while the
+ * colours blend in a straight line.
  *
  * The same classic script runs in a dedicated worker or in the window for
  * the main-thread fallback. It owns no storage, controls, or scroll state;
@@ -23,7 +25,7 @@
 })(typeof self !== 'undefined' ? self : this, function(scope) {
   'use strict';
 
-  var VERSION = '2.0.0';
+  var VERSION = '3.0.0';
   var CONTEXT_ATTRIBUTES = {
     alpha: false,
     antialias: false,
@@ -35,15 +37,10 @@
   };
   var GRAIN_SIZE = 512;
   var GRAIN_SPREAD = 0.16;
-  var LEAF_SIZE = 1024;
   var CHANGE_MS = 1800;
   var REDUCED_CHANGE_MS = 480;
-  /* The session clock starts a few seconds in, so the first frame already
-   * has the leaves' and coins' settled positions. */
+  /* The session clock starts a few seconds in, past the first breeze. */
   var CLOCK_OFFSET_S = 8;
-  /* Leaf sway at the outer twigs, in CSS pixels per unit of wind; matched
-   * to the lab's spring-driven tree (change over one and two seconds). */
-  var SWAY_PX = 640;
 
   /* ---------- The two lights ---------- */
 
@@ -58,36 +55,37 @@
   }
 
   var SHARED = {
-    bow: 0.06, calm: 0.6, calmCenter: 0.46, calmFeather: 110, calmWidth: 300,
-    crossCount: 1, crossPeriod: 400, dMass: 0.25, dScale: 40, exposure: 1,
-    grainShade: 1, grainSize: 0.7, leafDisc: 0.75, leafElong: 1.3, leafGrow: 0.4,
-    leafSize: 1450, leafStretch: 1.3, len: 2600, open: 0.9, originX: 1,
-    barVar: 0, spillSoft: 380, cloudDur: 20, cloudEvery: 80
+    calm: 0.6, calmCenter: 0.46, calmFeather: 110, calmWidth: 300,
+    crossCount: 1, crossPeriod: 400, exposure: 1, grainShade: 1, grainSize: 0.7,
+    len: 2600, slatSpeed: 0.3, slatWave: 0.5, slatFeather: 320, nearLen: 300,
+    spillSoft: 380, cloudDur: 20, cloudEvery: 80
   };
 
-  /* Day: a sun pool from an afternoon window. Slim bars whose shadows lose
-   * their dark core with distance; the peepal's sparse branch tips hang into
-   * the sun, lone leaves crisp, the dense crown soft; sun coins gather near
-   * the leaves; the light is a touch warmer than the shade. */
+  /* Day: a shaft of sun from beyond the top right corner, through a blind
+   * whose slats cast a few broad, soft beams. The slats' shadows are light
+   * and blur as they travel, and further toward the reading column; when a
+   * breeze comes they sway out of step. The brightest light rolls off into
+   * the sun's own colour, a touch warmer than the shade. */
   var DAY = assign({}, SHARED, {
-    angle: 156, originY: 0.08, period: 300, barJitter: 0.2, span0: -280, span1: 560,
-    reach: 0.5, reachSoft: 560, soft0: 3, softK: 0.018, presence: 1.12, glow: 0.11,
-    falloff: 0, deepen: 0.2, cool: 1, flat: 0, cross: 0, crossAt: 500, crossShear: 0,
-    crossWidth: 20, edgeK: 0, spill: 0, calmSoft: 140,
-    dDepth: 0.5, coinNear: 0.5, motion: 0.8, wind: 0.095,
-    leafX: 1.0, leafY: -0.18, leafLod: 1.0, leafDens: 2.0, leafDepth: 0.72,
-    shade: '#e5e2dc', sun: '#fff7e8', grain: 0.005, clouds: 0
+    angle: 156, originX: 1.025, originY: 0.06, period: 170, open: 0.6, barJitter: 0.04,
+    bow: 0.5, span0: -420, span1: 300, reach: 0.72, reachSoft: 800, soft0: 12,
+    softK: 0.03, edgeK: 0.09, slatDepth: 0.8, slatSoftK: 0.015, slatCalm: 50,
+    slatAmp: 0.05, slatDrift: 3, gusts: 1, presence: 1.35, glow: 0.2, nearGlow: 0.15,
+    warmNear: 0.45, kneeAt: 0.9, kneeRange: 0.1, falloff: 0, cool: 1, flat: 0,
+    cross: 0, crossAt: 500, crossShear: 0, crossWidth: 20, spill: 0, calmSoft: 140,
+    motion: 0.8, shade: '#e5e2dc', sun: '#fff7e8', grain: 0.005, clouds: 0
   });
 
-  /* Night: ef-dream's room, the high moon drawn as a window. */
+  /* Night: ef-dream's room, the high moon drawn as a window with a soft
+   * cross, as soft as the day's beams. */
   var NIGHT = assign({}, SHARED, {
-    angle: 138, originY: -0.05, period: 400, barJitter: 0, span0: -330, span1: 470,
-    reach: 0.4, reachSoft: 60, soft0: 2.5, softK: 0.03, presence: 0.95, glow: 0.08,
-    falloff: 0.12, deepen: 0, cool: 0, flat: 0.75, cross: 0.95, crossAt: 520, crossShear: 0.3,
-    crossWidth: 22, edgeK: 0.05, spill: 0.14, calmSoft: 90,
-    dDepth: 0, coinNear: 0, motion: 0.6, wind: 0.09,
-    leafX: 0.86, leafY: 0.14, leafLod: 2.5, leafDens: 0, leafDepth: 0.62,
-    shade: '#1a181c', sun: '#3b393e', grain: 0.004, clouds: 1
+    angle: 138, originX: 1, originY: -0.05, period: 400, open: 0.9, barJitter: 0,
+    bow: 0.06, span0: -330, span1: 470, reach: 0.4, reachSoft: 60, soft0: 7,
+    softK: 0.045, edgeK: 0.05, slatDepth: 1, slatSoftK: 0, slatCalm: 0,
+    slatAmp: 0, slatDrift: 0, gusts: 0, presence: 0.95, glow: 0.08, nearGlow: 0,
+    warmNear: 0, kneeAt: 1, kneeRange: 0.15, falloff: 0.12, cool: 0, flat: 0.75,
+    cross: 0.95, crossAt: 520, crossShear: 0.3, crossWidth: 28, spill: 0.14, calmSoft: 90,
+    motion: 0.6, shade: '#1a181c', sun: '#3b393e', grain: 0.004, clouds: 1
   });
 
   /* Where the day's light starts the night-only shapes: the transom begins
@@ -207,9 +205,9 @@
     return fromLab([lerp(x[0], y[0], t), lerp(x[1], y[1], t), lerp(x[2], y[2], t)]);
   }
 
-  /* One continuous morph: the light swings steeper, the panes widen, the
-   * pool shortens into a window and the transom slides in, the peepal
-   * drifts; the colours blend. p: 0 day .. 1 night. */
+  /* One continuous morph: the light swings steeper, the beams widen and
+   * darken into the window's bars, the shaft shortens into a window and the
+   * transom slides in; the colours blend. p: 0 day .. 1 night. */
   function passage(p) {
     p = clamp(p);
     if (p <= 0) return assign({}, DAY);
@@ -228,7 +226,6 @@
     state.sun = mixColor(DAY.sun, NIGHT.sun, light);
     state.reachSoft = lerp(DAY.reachSoft, NIGHT.reachSoft, smooth(0, 0.55, g));
     state.cross = NIGHT.cross * smooth(0.25, 0.85, g);
-    state.dDepth = DAY.dDepth * (1 - smooth(0.1, 0.6, g));
     return state;
   }
 
@@ -369,9 +366,6 @@
     'uniform float u_soft0;',
     'uniform float u_softK;',
     'uniform float u_bow;',
-    'uniform float u_dDepth;',
-    'uniform float u_dScale;',
-    'uniform float u_dMass;',
     'uniform float u_motion;',
     'uniform vec3 u_shade;',
     'uniform vec3 u_sun;',
@@ -380,13 +374,10 @@
     'uniform float u_exposure;',
     'uniform float u_presence;',
     'uniform vec2 u_reach;',
-    'uniform float u_barVar;',
     'uniform float u_barJitter;',
     'uniform vec2 u_spill;',
     'uniform float u_edgeK;',
-    'uniform float u_deepen;',
     'uniform float u_cool;',
-    'uniform float u_leafGrow;',
     'uniform float u_flat;',
     'uniform vec4 u_cross;',
     'uniform vec2 u_crossB;',
@@ -396,45 +387,21 @@
     'uniform float u_cloud;',
     'uniform vec4 u_calm;',
     'uniform float u_calmSoft;',
-    'uniform sampler2D u_leaf;',
-    'uniform vec4 u_leafBox;',
-    'uniform float u_leafLod;',
-    'uniform float u_leafDepth;',
-    'uniform vec2 u_leafDisc;',
-    'uniform float u_coinNear;',
-    'uniform float u_leafDens;',
-    'uniform float u_wind;',
+    'uniform vec4 u_slat;',
+    'uniform vec4 u_slatShape;',
+    'uniform float u_gusts;',
+    'uniform vec3 u_near;',
+    'uniform vec2 u_knee;',
     '',
     'float hash(vec2 p) { vec3 p3 = fract(vec3(p.xyx) * 0.1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }',
-    'vec2 hash2(vec2 p) { return vec2(hash(p), hash(p + 17.31)); }',
-    'float vnoise(vec2 p) {',
-    '  vec2 i = floor(p), f = fract(p); vec2 u = f * f * (3.0 - 2.0 * f);',
-    '  return mix(mix(hash(i), hash(i + vec2(1, 0)), u.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), u.x), u.y);',
-    '}',
-    'float fbm(vec2 p) { return 0.55 * vnoise(p) + 0.3 * vnoise(p * 2.07 + 3.1) + 0.15 * vnoise(p * 4.13 + 7.7); }',
     'vec3 toLin(vec3 c) { return pow(c, vec3(2.2)); }',
     'vec3 toSrgb(vec3 c) { return pow(max(c, 0.0), vec3(1.0 / 2.2)); }',
     '',
-    // Leaf shadow blurred the way the sun's or moon's disc blurs it: a round
-    // penumbra, a little longer along the light.
-    'float leafSample(vec2 uv, float lod) {',
-    '  float r = u_leafDisc.x * exp2(lod) / ' + LEAF_SIZE + '.0;',
-    '  float base = max(lod - 2.0, 0.0);',
-    '  vec2 dir = vec2(cos(u_angle), sin(u_angle));',
-    '  vec2 nrm = vec2(-dir.y, dir.x);',
-    '  float s = 0.0;',
-    '  for (int i = 0; i < 16; i++) {',
-    '    float fi = float(i) + 0.5;',
-    '    float rr = sqrt(fi / 16.0);',
-    '    float a = fi * 2.39996323;',
-    '    vec2 o = (cos(a) * rr * u_leafDisc.y) * dir + (sin(a) * rr) * nrm;',
-    '    s += textureLod(u_leaf, uv + o * r, base).r;',
-    '  }',
-    '  return s / 16.0;',
-    '}',
-    '',
-    // The window's light: each bar casts its own whole soft shadow, so no
-    // shadow contains an edge; transoms cross the bars at night; the pool ends
+    // The window's light: each slat casts its own whole soft shadow, so no
+    // shadow contains an edge. The slats' shadows are softer than the frame's
+    // and soften further toward the reading column, as sunlit.place's
+    // progressive blur does, so they never stop at a seam; when a breeze comes
+    // they sway out of step. Transoms cross the bars at night; the light ends
     // at the sill's shadow. Softness grows with distance travelled.
     'float rays(vec2 p, float extraSoft, out float travelled) {',
     '  vec2 dir = vec2(cos(u_angle), sin(u_angle));',
@@ -446,15 +413,20 @@
     '  float soft = u_soft0 + u_softK * max(v, 0.0) + extraSoft;',
     '  float band = 1.0;',
     '  if (u_open < 1.0) {',
-    '    float i0 = floor(u / u_period + 0.5);',
+    '    float toward = u_calm.x * (1.0 - smoothstep(u_calm.z, u_calm.z + u_slatShape.w, abs(p.x - u_calm.y)));',
+    '    float ss = soft + u_slatShape.y * max(v, 0.0) + toward * u_slatShape.z;',
+    '    float gust = mix(1.0, 0.25 + 0.75 * smoothstep(0.45, 0.95, 0.5 + 0.5 * sin(u_time * 0.11) * sin(u_time * 0.047 + 0.6)), u_gusts);',
+    '    float us = u + gust * u_slat.w * (sin(u_time * 0.19) + 0.5 * sin(u_time * 0.31 + 1.7));',
+    '    float i0 = floor(us / u_period + 0.5);',
     '    for (int j = -3; j <= 3; j++) {',
     '      float k = i0 + float(j);',
     '      float hk = hash(vec2(k, 3.1));',
-    '      float w = u_period * (1.0 - clamp(u_open * (1.0 + u_barVar * (hk - 0.5)), 0.02, 1.0)) * (1.0 + u_barJitter * (2.0 * hk - 1.0));',
-    '      float x = u - k * u_period;',
-    '      band -= smoothstep(-soft, soft, x + 0.5 * w) - smoothstep(-soft, soft, x - 0.5 * w);',
+    '      float sway = gust * u_slat.x * (sin(u_time * u_slat.y + k * u_slat.z) + 0.4 * sin(u_time * u_slat.y * 1.7 + k * 1.3 + 2.0));',
+    '      float w = u_period * (1.0 - clamp(u_open * (1.0 + sway), 0.02, 1.0)) * (1.0 + u_barJitter * (2.0 * hk - 1.0));',
+    '      float x = us - k * u_period;',
+    '      band -= smoothstep(-ss, ss, x + 0.5 * w) - smoothstep(-ss, ss, x - 0.5 * w);',
     '    }',
-    '    band = max(band, 0.0);',
+    '    band = mix(1.0, max(band, 0.0), u_slatShape.x);',
     '  }',
     '  float es = 1.5 * (soft + u_edgeK * max(v, 0.0));',
     '  float env = smoothstep(u_span.x - es, u_span.x + es, u) * (1.0 - smoothstep(u_span.y - es, u_span.y + es, u));',
@@ -475,95 +447,35 @@
     '  return band * env * along;',
     '}',
     '',
-    // Sun coins: soft overlapping images of the sun through gaps in leaves.
-    'float dapples(vec2 p, float t) {',
-    '  vec2 dir = vec2(cos(u_angle), sin(u_angle));',
-    '  vec2 q = vec2(dot(p, dir) / 1.35, dot(p, vec2(-dir.y, dir.x))) / u_dScale;',
-    '  float sway = u_motion;',
-    '  vec2 drift = sway * vec2(sin(t * 0.37) + 0.6 * sin(t * 0.23 + 1.3), cos(t * 0.29) + 0.5 * sin(t * 0.19 + 0.4)) * 0.08;',
-    '  float sum = 0.0;',
-    '  vec2 cell = floor(q);',
-    '  for (int j = -1; j <= 1; j++) for (int i = -1; i <= 1; i++) {',
-    '    vec2 c = cell + vec2(i, j);',
-    '    vec2 h = hash2(c);',
-    '    float density = fbm(c * 0.11 + 5.0);',
-    '    if (h.x > 0.35 + 0.5 * density) continue;',
-    '    vec2 wob = sway * 0.12 * vec2(sin(t * (0.21 + 0.13 * h.y) + 6.28 * h.x), cos(t * (0.17 + 0.11 * h.x) + 6.28 * h.y));',
-    '    vec2 centre = c + 0.2 + 0.6 * hash2(c + 3.7) + drift + wob;',
-    '    float r = 0.32 + 0.38 * h.y;',
-    '    float glow = 1.0 - smoothstep(r * 0.35, r * 1.25, length(q - centre));',
-    '    glow *= 0.75 + 0.25 * sin(t * (0.11 + 0.07 * h.x) + 6.28 * h.y) * sway;',
-    '    sum += glow;',
-    '  }',
-    '  float coins = clamp(sum * 0.8, 0.0, 1.0);',
-    '  float mass = smoothstep(0.38, 0.72, fbm(q * 0.22 + drift * 0.6 + 11.0));',
-    '  return mix(coins, 1.0, 0.25) * mix(1.0, mass, u_dMass);',
-    '}',
-    '',
     'void main() {',
     '  vec2 p = vec2(v_uv.x, 1.0 - v_uv.y) * u_res;',
     '  float calm = u_calm.x * (1.0 - smoothstep(u_calm.z, u_calm.z + u_calm.w, abs(p.x - u_calm.y)));',
     '  float travelled;',
     '  float L = rays(p, calm * 28.0 + u_cloud * 90.0, travelled);',
-    '  float D = dapples(p, u_time);',
-    '  float depth = u_dDepth * (1.0 - 0.6 * calm) * smoothstep(-40.0, 200.0, travelled);',
     '  float tr3;',
     '  float Lsoft = rays(p, u_calmSoft, tr3);',
     '  L = mix(L, Lsoft, 0.7 * calm);',
-    '  float leaf = 1.0;',
-    '  float nearLeaves = 0.0;',
-    '  if (u_leafDepth > 0.0) {',
-    '    vec2 dir = vec2(cos(u_angle), sin(u_angle));',
-    '    vec2 rel = p - u_leafBox.xy;',
-    '    vec2 lr = vec2(dot(rel, dir) / u_leafBox.w, dot(rel, vec2(-dir.y, dir.x)));',
-    '    vec2 back = lr.x * dir + lr.y * vec2(-dir.y, dir.x);',
-    '    vec2 luv = back / u_leafBox.z + 0.5;',
-    '    if (luv.x > 0.0 && luv.y > 0.0 && luv.x < 1.0 && luv.y < 1.0) {',
-    '      vec2 e = min(luv, 1.0 - luv);',
-    '      float edge = smoothstep(0.0, 0.12, min(e.x, e.y));',
-    '      float grow = u_leafGrow * clamp(travelled / max(u_len * 0.6, 1.0), 0.0, 1.0);',
-    '      float crown = smoothstep(0.2, 0.75, 1.0 - textureLod(u_leaf, luv, 5.0).r);',
-    '      if (u_wind > 0.0) {',
-    // A light breeze below the leaves' flutter threshold: branches sway on
-    // their springs (about a third of a hertz), single leaves swing gently
-    // on their stalks (about one hertz), the outer twigs more than the crown,
-    // never in step.
-    '        vec2 ph = luv * 2.3;',
-    '        vec2 branch = vec2(vnoise(ph + vec2(u_time * 0.17, 0.0)), vnoise(ph.yx + vec2(u_time * 0.15, 9.0))) - 0.5;',
-    '        vec2 lp = luv * 26.0;',
-    '        vec2 swing = vec2(vnoise(lp + vec2(u_time * 0.9, 3.0)), vnoise(lp.yx + vec2(u_time * 1.1, 7.0))) - 0.5;',
-    '        luv += (branch + 0.15 * swing) * (1.0 - 0.6 * crown) * u_wind / u_leafBox.z;',
-    '      }',
-    '      float dens = u_leafDens * crown;',
-    '      if (u_coinNear > 0.0) nearLeaves = edge * smoothstep(0.02, 0.25, 1.0 - textureLod(u_leaf, luv, 7.0).r);',
-    '      leaf = mix(1.0, leafSample(luv, u_leafLod + dens + grow + calm * 1.5), edge);',
-    '    }',
-    '  }',
-    '  depth *= mix(1.0, mix(0.2, 1.0, nearLeaves), u_coinNear);',
-    '  float light = L * mix(1.0, D, depth);',
-    '  light *= mix(1.0, leaf, u_leafDepth * (1.0 - 0.55 * calm));',
     '  float breath = 1.0 - 0.015 * u_motion * (0.5 + 0.5 * sin(u_time * 0.16));',
     '  float tr2;',
     '  float halo = rays(p, 70.0 + calm * 40.0, tr2);',
     '  float spillL = 0.0;',
     '  if (u_spill.x > 0.0) { float tr5; spillL = rays(p, u_spill.y, tr5); }',
-    '  float lit = max((light * breath + halo * u_glow + spillL * u_spill.x) * u_presence * (1.0 - 0.5 * u_cloud), 0.0);',
-    '  if (lit > 1.0) lit = 1.0 + 0.15 * tanh((lit - 1.0) / 0.15);',
+    // The light is brightest where it enters, and warmest there.
+    '  float entering = exp(-max(travelled, 0.0) / max(u_near.y, 1.0));',
+    '  float lit = max((L * breath * (1.0 + u_near.x * entering) + halo * u_glow + spillL * u_spill.x) * u_presence * (1.0 - 0.5 * u_cloud), 0.0);',
+    // Highlights roll off into the light's own colour rather than past it,
+    // where the red would clip and tint the brightest light lemon.
+    '  if (lit > u_knee.x) lit = u_knee.x + u_knee.y * tanh((lit - u_knee.x) / u_knee.y);',
     '  vec3 shadeC = toLin(u_shade);',
     '  if (u_falloff > 0.0) {',
     '    float tr4;',
     '    float wide = rays(p, 480.0, tr4);',
     '    shadeC *= 1.0 - u_falloff * (1.0 - calm / max(u_calm.x, 1e-3)) * (1.0 - clamp(wide * 1.6, 0.0, 1.0));',
     '  }',
-    '  if (u_deepen > 0.0) {',
-    '    float tr6;',
-    '    float pool = clamp(rays(p, 260.0, tr6) * 1.4, 0.0, 1.0);',
-    '    float nearW = 1.0 - smoothstep(0.08 * u_len, 0.5 * u_len, tr6);',
-    '    shadeC *= 1.0 - u_deepen * pool * nearW;',
-    '  }',
     '  float deep = 1.0 - smoothstep(0.0, 0.35, halo);',
     '  shadeC = mix(shadeC, shadeC * vec3(0.985, 0.995, 1.02), u_cool * deep);',
-    '  vec3 E = mix(shadeC * u_tint, toLin(u_sun) * mix(u_tint, vec3(1.0), 0.5), lit);',
+    '  vec3 sunC = toLin(u_sun) * mix(vec3(1.0), vec3(1.0, 0.97, 0.9), u_near.z * exp(-max(travelled, 0.0) / max(u_near.y * 2.0, 1.0)));',
+    '  vec3 E = mix(shadeC * u_tint, sunC * mix(u_tint, vec3(1.0), 0.5), lit);',
     '  vec3 col = toSrgb(E * u_exposure);',
     '  float amt = u_grain.x * mix(1.0, 1.6 - 1.2 * clamp(lit, 0.0, 1.0), u_grain.z);',
     '  col += amt * (texture(u_grainTex, p / (u_grain.y * ' + GRAIN_SIZE + '.0)).r - 0.5) / ' + GRAIN_SPREAD + ';',
@@ -585,12 +497,10 @@
 
   var UNIFORMS = [
     'u_res', 'u_time', 'u_angle', 'u_origin', 'u_period', 'u_open', 'u_span', 'u_len',
-    'u_soft0', 'u_softK', 'u_bow', 'u_dDepth', 'u_dScale', 'u_dMass', 'u_motion',
-    'u_shade', 'u_sun', 'u_tint', 'u_glow', 'u_exposure', 'u_presence', 'u_reach',
-    'u_barVar', 'u_barJitter', 'u_spill', 'u_edgeK', 'u_deepen', 'u_cool', 'u_leafGrow',
+    'u_soft0', 'u_softK', 'u_bow', 'u_motion', 'u_shade', 'u_sun', 'u_tint', 'u_glow',
+    'u_exposure', 'u_presence', 'u_reach', 'u_barJitter', 'u_spill', 'u_edgeK', 'u_cool',
     'u_flat', 'u_cross', 'u_crossB', 'u_falloff', 'u_grainTex', 'u_grain', 'u_cloud',
-    'u_calm', 'u_calmSoft', 'u_leaf', 'u_leafBox', 'u_leafLod', 'u_leafDepth',
-    'u_leafDisc', 'u_coinNear', 'u_leafDens', 'u_wind'
+    'u_calm', 'u_calmSoft', 'u_slat', 'u_slatShape', 'u_gusts', 'u_near', 'u_knee'
   ];
 
   function compileShader(gl, type, source) {
@@ -657,8 +567,6 @@
     this.lastRenderedAtMs = 0;
     this.gl = null;
     this.resources = null;
-    this.leafImage = null;
-    this.leafWaiting = Boolean(this.options.leafUrl);
     this.fadeFrom = null;
 
     this.boundLoop = this._loop.bind(this);
@@ -687,7 +595,6 @@
       throw error;
     }
 
-    this._loadLeaves(this.options.leafUrl);
     if (this.options.autoStart !== false) this.start();
   }
 
@@ -733,14 +640,6 @@
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
 
-    resources.leaf = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, resources.leaf);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, 1, 1, 0, gl.RED, gl.UNSIGNED_BYTE, new Uint8Array([255]));
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    resources.leafLoaded = false;
-    if (this.leafImage) this._uploadLeaves();
   };
 
   Renderer.prototype._destroyResources = function() {
@@ -753,58 +652,7 @@
     gl.deleteBuffer(resources.buffer);
     gl.deleteVertexArray(resources.vao);
     gl.deleteTexture(resources.grain);
-    gl.deleteTexture(resources.leaf);
     this._releaseFade();
-  };
-
-  /* The peepal's silhouette is a small static image; its sway is drawn in
-   * the shader. The first visible frame waits for it, briefly. */
-  Renderer.prototype._loadLeaves = function(url) {
-    var renderer = this;
-    if (!url || typeof scope.fetch !== 'function' || typeof scope.createImageBitmap !== 'function') {
-      this.leafWaiting = false;
-      return;
-    }
-    var giveUp = scope.setTimeout(function() {
-      if (!renderer.leafWaiting) return;
-      renderer.leafWaiting = false;
-      renderer._kick();
-    }, 2500);
-    scope.fetch(url).then(function(response) {
-      if (!response.ok) throw new Error('The peepal silhouette could not be loaded');
-      return response.blob();
-    }).then(function(blob) {
-      return scope.createImageBitmap(blob);
-    }).then(function(image) {
-      scope.clearTimeout(giveUp);
-      if (renderer.disposed) return;
-      renderer.leafImage = image;
-      renderer._uploadLeaves();
-      renderer.leafWaiting = false;
-      renderer._kick();
-    }).catch(function() {
-      scope.clearTimeout(giveUp);
-      renderer.leafWaiting = false;
-      renderer._kick();
-    });
-  };
-
-  Renderer.prototype._uploadLeaves = function() {
-    var gl = this.gl;
-    if (!gl || !this.resources || this.contextLost || !this.leafImage) return;
-    gl.bindTexture(gl.TEXTURE_2D, this.resources.leaf);
-    gl.pixelStorei(gl.UNPACK_ALIGNMENT, 4);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8, gl.RGBA, gl.UNSIGNED_BYTE, this.leafImage);
-    gl.generateMipmap(gl.TEXTURE_2D);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    this.resources.leafLoaded = true;
-  };
-
-  Renderer.prototype._kick = function() {
-    if (this.disposed || this.contextLost) return;
-    this.renderFrame();
-    this._ensureLoop();
   };
 
   Renderer.prototype.resize = function(width, height, dpr, force) {
@@ -908,7 +756,6 @@
     var k = Math.min(1.35, (W / 1440) * 0.5 + 0.5);
     var narrow = W < 700;
     var still = this.reducedMotion;
-    var leaves = this.resources.leafLoaded;
     var dayness = 1 - clamp(p);
     var tintAmount = 0.6 * this.inkPaperStrength * dayness;
     var tint = this.inkPaperRatio.map(function(ratio) { return lerp(1, ratio, tintAmount); });
@@ -926,9 +773,6 @@
     gl.uniform1f(u.u_soft0, s.soft0);
     gl.uniform1f(u.u_softK, s.softK);
     gl.uniform1f(u.u_bow, s.bow);
-    gl.uniform1f(u.u_dDepth, s.dDepth);
-    gl.uniform1f(u.u_dScale, s.dScale * k);
-    gl.uniform1f(u.u_dMass, s.dMass);
     gl.uniform1f(u.u_motion, still ? 0 : s.motion);
     gl.uniform3fv(u.u_shade, hexToRgb(s.shade));
     gl.uniform3fv(u.u_sun, hexToRgb(s.sun));
@@ -937,13 +781,10 @@
     gl.uniform1f(u.u_exposure, s.exposure);
     gl.uniform1f(u.u_presence, s.presence);
     gl.uniform2f(u.u_reach, s.reach, s.reachSoft * k);
-    gl.uniform1f(u.u_barVar, s.barVar);
     gl.uniform1f(u.u_barJitter, s.barJitter);
     gl.uniform2f(u.u_spill, s.spill, s.spillSoft * k);
     gl.uniform1f(u.u_edgeK, s.edgeK);
-    gl.uniform1f(u.u_deepen, s.deepen);
     gl.uniform1f(u.u_cool, s.cool);
-    gl.uniform1f(u.u_leafGrow, s.leafGrow);
     gl.uniform1f(u.u_flat, s.flat);
     gl.uniform4f(u.u_cross, s.crossAt * k, s.crossPeriod * k, s.crossWidth * k, s.cross);
     gl.uniform2f(u.u_crossB, s.crossShear, s.crossCount);
@@ -952,20 +793,15 @@
     gl.uniform1f(u.u_cloud, still ? 0 : cloudAt(s, seconds));
     gl.uniform4f(u.u_calm, s.calm, narrow ? W / 2 : W * s.calmCenter, narrow ? W : s.calmWidth, s.calmFeather);
     gl.uniform1f(u.u_calmSoft, s.calmSoft * k);
-    gl.uniform4f(u.u_leafBox, s.leafX * W, s.leafY * H, s.leafSize * k, s.leafStretch);
-    gl.uniform1f(u.u_leafLod, s.leafLod);
-    gl.uniform1f(u.u_leafDepth, leaves ? s.leafDepth : 0);
-    gl.uniform2f(u.u_leafDisc, s.leafDisc, s.leafElong);
-    gl.uniform1f(u.u_coinNear, s.coinNear);
-    gl.uniform1f(u.u_leafDens, s.leafDens);
-    gl.uniform1f(u.u_wind, still ? 0 : s.wind * SWAY_PX * k);
+    gl.uniform4f(u.u_slat, still ? 0 : s.slatAmp, s.slatSpeed, s.slatWave, still ? 0 : s.slatDrift * k);
+    gl.uniform4f(u.u_slatShape, s.slatDepth, s.slatSoftK, s.slatCalm, s.slatFeather * k);
+    gl.uniform1f(u.u_gusts, s.gusts);
+    gl.uniform3f(u.u_near, s.nearGlow, s.nearLen * k, s.warmNear);
+    gl.uniform2f(u.u_knee, s.kneeAt, s.kneeRange);
 
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, this.resources.grain);
     gl.uniform1i(u.u_grainTex, 0);
-    gl.activeTexture(gl.TEXTURE1);
-    gl.bindTexture(gl.TEXTURE_2D, this.resources.leaf);
-    gl.uniform1i(u.u_leaf, 1);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
   };
 
@@ -1033,7 +869,7 @@
         }
       }
       this.lastRenderedAtMs = nowMs;
-      if (!this.ready && !this.leafWaiting) {
+      if (!this.ready) {
         this.ready = true;
         this.onReady({ version: VERSION });
       }
@@ -1075,7 +911,7 @@
     if (!this.active || !this.visible || this.disposed || this.contextLost || this.frameHandle != null) return;
     var changing = this._changing();
     /* Reduced motion holds a still room; only a deliberate change moves. */
-    if (this.reducedMotion && !changing && !this.leafWaiting) return;
+    if (this.reducedMotion && !changing) return;
     var interval = changing ? 0 : this.ambientFrameIntervalMs;
     var elapsed = this.lastRenderedAtMs ? this._now() - this.lastRenderedAtMs : interval;
     this.frameHandle = this._requestFrame(Math.max(0, interval - elapsed));
@@ -1157,8 +993,6 @@
       this.canvas.removeEventListener('webglcontextrestored', this.boundContextRestored, false);
     }
     this._destroyResources();
-    if (this.leafImage && typeof this.leafImage.close === 'function') this.leafImage.close();
-    this.leafImage = null;
     this.gl = null;
     this.canvas = null;
   };

@@ -91,8 +91,8 @@ decoration that has no function.
 ### Background and paper
 
 `assets/js/sunlit-renderer.js` draws one room in two lights on one canvas: a
-sun pool by day and the moon's window by night, the change between them, the
-peepal's shadow (from `assets/images/sunlit-peepal.png`), clouds, and grain.
+shaft of sun through a blind by day and the moon's window by night, the change
+between them, clouds, and grain.
 `assets/js/sunlit-worker.js` runs that renderer away from the main browser
 thread when the browser allows it.
 
@@ -106,6 +106,18 @@ complete static fallback for each light.
 Do not attach the background clock to scrolling. Do not add a second animation
 system for page changes. Any performance change must keep the paper opaque and
 must preserve the light position across links and refreshes.
+
+### The garden
+
+Each sheet carries a botanical watermark grown from the parts of
+[tikz-flora](https://github.com/wn-mitch/tikz-flora) (MIT). The gardens are
+grown ahead of time, because each is measured from the page it grows round:
+`scripts/garden/grow.py` writes their masks to `assets/gardens/` and records
+them in `data/gardens.json`, and `scripts/garden/fit.py` checks that none
+touches the text at any width. Grow a page's garden again after changing its
+text or the sheet's layout; `scripts/garden/README.md` has the steps.
+`layouts/partials/garden.html`, `assets/css/garden.css`, and
+`assets/js/garden.js` print, place, and grow it.
 
 ### Ink schemes
 

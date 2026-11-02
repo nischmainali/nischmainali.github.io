@@ -17,7 +17,7 @@
   var EPOCH_KEY = 'sunlit-motion-epoch';
   var CHANGE_KEY = 'sunlit-change-v3';
   var HANDOFF_FRAME_KEY = 'sunlit-handoff-frame-v1';
-  var HANDOFF_FRAME_VERSION = 2;
+  var HANDOFF_FRAME_VERSION = 3;
   var CHANGE_MS = 1800;
   var REDUCED_CHANGE_MS = 480;
   /* The ink turns over where light and dark text are equally legible
@@ -548,7 +548,6 @@
       reducedMotion: reducedMotion,
       inkPaper: inkPaper.color,
       inkPaperStrength: inkPaper.strength,
-      leafUrl: absoluteUrl(scene.getAttribute('data-leaf-src')),
       visible: !document.hidden,
       autoStart: true
     };

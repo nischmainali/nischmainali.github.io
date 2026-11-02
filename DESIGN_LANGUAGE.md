@@ -51,10 +51,11 @@ The two halves are equally important:
 - **Scholarly page:** bookish serif typography, restrained measure, crop marks,
   editorial hierarchy, bibliographic content, dingbats, and very little interface
   chrome.
-- **Living light:** one room in two lights. By day a warm sun pool with slim
-  window bars and peepal leaves; by night the moon's window in an ef-dream
-  room. The shadows carry the change between them rather than merely
-  recolouring the page.
+- **Living light:** one room in two lights. By day a shaft of sun through a
+  blind, falling in a few broad, soft beams; by night the moon's window in an
+  ef-dream room. The shadows carry the change between them rather than merely
+  recolouring the page. A garden grows round each sheet's printing
+  (section 8).
 
 The site should remain calm, literate, personal, slightly eccentric, and
 material. It can be playful, but the play should come from a small number of
@@ -104,7 +105,10 @@ hero type, and type scales designed to advertise rather than invite reading.
 
 The large, extremely faint `❧` behind page titles and the smaller `❡` before
 publication entries are memorable signatures. The title mark is wine-brown at
-very low opacity by day and by night.
+very low opacity by day and by night. Where a garden grows (section 8, at
+1180 px and wider), it takes over from the title's leaf and from the mirrored
+leaf at a note's foot; below that width, and in the index card, the leaves
+stay.
 
 Treat these as typographic marginalia, not logos. They should feel discovered on
 the page. Do not multiply decorative symbols across every component or turn the
@@ -123,46 +127,46 @@ role, and do not give one role two marks.
 Accepted by Nisch on 12 October 2026 after a long lab study (summarised in
 `docs/history/2026-10-sunlit-day-and-night-study.md`). It replaces Shade and
 Sunset, whose rules now live in
-`docs/history/2026-07-lokta-sunlight-shade-and-sunset.md`.
+`docs/history/2026-07-lokta-sunlight-shade-and-sunset.md`. The light was drawn
+again for the garden on 2 November 2026
+(`docs/history/2026-11-garden-and-light-study.md`): the peepal and its sun
+coins left the room, and the day's slim bars became a blind's soft beams.
 
 The page is a sheet in one room, seen in two lights. Both lights come through
-the same window, past the same peepal, and the shadows carry the change
-between them.
+the same window, and the shadows carry the change between them. The room has
+no plants: the garden is printed on the page (section 8).
 
-**Day** is an afternoon sun pool from the top right. Slim window bars cast
-their own soft shadows: each bar is a box blurred by a penumbra that grows with
-distance, so far from the window a bar loses its dark core and becomes a soft,
-translucent line, never a crease. The pool fades toward the left and ends at
-the sill's shadow. The peepal stands high and to the right, so only its sparse
-branch tips hang into the sun. Lone leaves are crisp enough to read as
-heart-shaped peepal leaves. Where the crown is dense the shadow softens instead
-of fusing into a stain. Leaf shadows are blurred by a round disc, as the sun
-blurs them, stretched a little along the light. Sun coins gather near the
-leaves rather than scattering across open light. Shadows near the window read a
-touch deeper, by contrast with the sun around them. The light is a touch warmer
-(`#fff7e8`) than the shade (`#e5e2dc`), so it reads as sunlight rather than
-brightness. Grain is static and fine, and gathers in the shade, where the sun
-burns it clean. There is no paper texture.
+**Day** is a shaft of afternoon sun from beyond the top right corner, through
+a blind. Its slats cast a few broad, soft beams, 170 px apart at 1440 px. Each
+slat's shadow lets a fifth of the sun through and is one whole soft shadow,
+its penumbra growing with distance, softer than the window frame's, and softer
+again toward the reading column, as sunlit.place's progressive blur does, so
+the beams never stop at a seam. The window itself is beyond the corner, so no
+beam ends in a cap. The shaft fades toward the left and is brightest, and a
+touch warmer, where it comes in. The light is a touch warmer (`#fff7e8`) than
+the shade (`#e5e2dc`), so it reads as sunlight rather than brightness, and its
+highlights roll off into that colour rather than past it, where the red would
+clip and tint the brightest light lemon. Grain is static and fine, and gathers
+in the shade, where the sun burns it clean. There is no paper texture.
 
 **Night** is ef-dream's room, one step deeper (`#1a181c`). The moon stands
-higher than the sun, so the window lands as a compact 2×2 patch with its cross
-and the peepal in the lower pane. Its light spills faintly into the room, and
-its outer edges soften with distance while the cross stays crisp. About once
+higher than the sun, so the window lands as a compact 2×2 patch with its
+cross. Its light spills faintly into the room, and its edges and cross are
+soft, as soft as the day's beams. About once
 every eighty seconds a thin cloud crosses the moon: the patch dims and its
 shadows soften for twenty seconds or so. Night's warmth lives in the ink:
 warm light text and each ink's own soft hues (for Lokta Hybrid, ef-dream's
 peach-cream text, gold headings and links, and rose accent). It never lives in
 a brown or amber ground. Moonlight is a pale, near-neutral silver, never blue.
 
-**Motion** is a breeze below the leaves' flutter threshold. Branches sway
-slowly on their springs and single leaves swing gently, matched to the lab's
-spring-driven tree. Coins drift and the light breathes by about one and a half
-percent over forty seconds. The reading column softens the light behind the
-text in both lights.
+**Motion** is a breeze that comes and goes. Now and then the slats sway a
+little, out of step, and the blind drifts a few pixels; then they rest. The
+light breathes by about one and a half percent over forty seconds. The reading
+column softens the light behind the text in both lights.
 
 **The change** takes 1.8 seconds each way and is one continuous morph. The
-light swings steeper, the panes widen, the pool shortens into a patch while the
-transom slides in from its far end, the peepal drifts, and the coins fade.
+light swings steeper, the beams widen and darken into the window's bars, and
+the shaft shortens into a patch while the transom slides in from its far end.
 Colours blend in a straight OKLab line with no detour hues. The room's colour
 runs a tenth of the path ahead of the window light, so the shadows never wash
 out in a grey middle. Easing is `cubic-bezier(0.45, 0.05, 0.2, 1)`, prompt to
@@ -217,18 +221,25 @@ Rules that came out of the study:
 - Light-only changes gated by the reading column show a vertical seam. Gate by
   distance along the light instead.
 - Motion stays gentle, no faster than the lab clips Nisch approved.
+- One botanical voice: the garden on the page. Leaf shadows and sun coins in
+  the light beside it muddied both, so the room has none.
+- Keep the light's sharp detail where it comes in, in the empty corner; over
+  the garden and the text, only broad, soft light. Fine slats were too sharp
+  and took attention.
+- Slats are shadows in a bright shaft. Cut as slits of light they dim the
+  shaft and lose the glow that makes it a beam.
 
 **Implementation.** `assets/js/sunlit-renderer.js` holds both lights, the
 passage between them, clouds and grain in one classic script for the worker
-or the main thread. `assets/images/sunlit-peepal.png` is the peepal's
-silhouette, posed in the day's breeze; its sway is drawn in the shader, so no
-CPU canvas is redrawn per frame. `assets/js/sunlit.js` owns the choice, the
+or the main thread. `assets/js/sunlit.js` owns the choice, the
 change, the ink turnover, the control, and the continuity frames. The canvas
 renders at the display's density within 5.2 megapixels, ambient at 30
 frames a second and changes at the display's rate. The lab at
 `/Users/nisch/code/site/sunlit-lab/` (`final.html`, `daynight.html`) keeps the
 measured references, including readability behind the text, the ink
-crossover, and hard-edge and shimmer sweeps.
+crossover, and hard-edge and shimmer sweeps; the November redraw's lab, which
+photographs the real pages with their gardens under each light, is in
+`/Users/nisch/code/site/garden-lab/light/`.
 
 ### 5. An unboxed portrait
 
@@ -424,6 +435,67 @@ Rules that came out of the study:
 - Never repeat a list between the card and the page.
 - Leave an empty place empty: a figure, plate, or note joins a page when its
   content exists, never as a placeholder.
+
+### 8. The garden (accepted 2 November 2026)
+
+A botanical watermark grows round each sheet's printing: a note's head and
+foot, each paper, the home page, the two registers, and the missing page. It
+is grown from the parts of [tikz-flora](https://github.com/wn-mitch/tikz-flora)
+(MIT): its clearance field, its steered and tapering stems, its leaves, blooms
+and sprays, its brush, and its painter, composed by the site's own
+`scripts/garden/garden.lua`. The study is
+`docs/history/2026-11-garden-and-light-study.md`.
+
+- **Round the printing, never in it.** Nothing grows within 22 px of text,
+  pictures, or formulas. Beyond that the room each plant may take is capped
+  by its distance to them, so the garden thins out as it nears the printing:
+  blooms open only in open space, leaves come nearer, fine stems and leaflets
+  nearest. Each block of text is kept clear across its whole column, since its
+  lines may run further at another width. The garden keeps off the crop
+  corners and the light control and never reaches toward the index card.
+- **Its shape.** Stems follow guides drawn round the sheet. On a note: an arch
+  over the title from the margin column's corner, a plant down the empty
+  margin column that tapers away within a screen, and a slender vine down the
+  left; at its foot, a plant beside the references and a vine under the last
+  line. On a shorter sheet: a bed along the foot, a vine up the right and over
+  the head, and one up the left. The registers and the missing page have the
+  lighter garden.
+- **Its flowers.** tikz-flora's own, adapted in small ways: four petals, as
+  the lokta shrub's (*Daphne bholua*), and narrower leaves. No baby's breath,
+  lilies, ghost blooms, ornaments, or visitors.
+- **Its ink.** Two of the page's own inks at watermark strength: leaves in the
+  heading ink at 16%, flowers in the accent at 19%. The ink control and the
+  night re-ink it.
+- **Growing in.** Once a session for each part: the head, or a shorter sheet's
+  whole garden, on arrival, and a note's foot when it scrolls into view. In
+  2.8 seconds the stems run out from the roots, the leaves open as the stems
+  reach them, and the flowers a moment later; then the canvas gives way to
+  the static print, which is the same garden. Reduced motion, a repeat visit,
+  or a browser without WebGL shows it at once; without scripts it is printed.
+- **Widths.** The garden needs the margin column, so it grows at 1180 px and
+  wider. It is grown at 1440, 1300, and 1180 px and stretched between them,
+  hung from the sheet's trims so it keeps its distance from the printing as
+  the measure changes. Below 1180 px the page keeps its printed leaves.
+
+Rules that came out of the study:
+
+- The garden frames the printing; it never sits behind words. After a change
+  to a page's text or to the sheet's layout, grow its garden again
+  (`scripts/garden/grow.py PATH`) and check it
+  (`scripts/garden/fit.py PATH`). `scripts/check_gardens.py` runs with the
+  site's check and names gardens grown for an earlier version of their page.
+- One botanical voice: no other plants, in the room or on the page.
+- Keep it at watermark strength. It is the page's ornament, not its picture.
+- Behind the body text it lowered contrast; a headpiece alone was too clean
+  for Nisch, who wanted the margins and the foot too. Both were rejected.
+
+**Implementation.** `scripts/garden/grow.py` builds the site, measures each
+page at each width, grows and paints its garden, and writes two masks (leaf
+ink, flower ink) and a growth map per width to `assets/gardens/` with
+`data/gardens.json`; the vendored tikz-flora is in `scripts/garden/vendor/`
+with its licence. `layouts/partials/garden.html` prints each garden,
+`assets/css/garden.css` places it, `layouts/partials/garden-head.html` holds
+back what will grow, and `assets/js/garden.js` grows it on a canvas.
 
 ## Page grammars
 
@@ -1338,9 +1410,11 @@ a cleanup pass. Fix them only when in scope, and preserve the visual language
 while doing so.
 
 - A midrange phone still needs GPU, memory, power, and scroll traces before any
-  renderer expansion. Keep the single canvas and the static leaf silhouette; do
-  not add animated or DOM foliage, CPU-drawn plants, or viewport filter stacks as
-  part of that test.
+  renderer expansion. Keep the single canvas; do not add animated or DOM
+  foliage, CPU-drawn plants, or viewport filter stacks as part of that test.
+- The garden grows only at 1180 px and wider. Phones keep the printed leaves;
+  a head and foot sprig for narrow sheets is a possible later pass, grown the
+  same way.
 - MathML-only output cuts the dense specimen's HTML and element count by more
   than half. Dual HTML and MathML remains the default until Safari, Chromium,
   Firefox, VoiceOver, NVDA, overflow, and print checks pass.
